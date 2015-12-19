@@ -1,0 +1,104 @@
+---
+title: "User Guide"
+author: "Pedro J. Aphalo"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{User Guide}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction
+
+## Stats
+
+```{r}
+library(ggplot2)
+library(photobiology)
+library(ggspectra)
+```
+
+```{r}
+library(knitr)
+opts_chunk$set(fig.path = 'figure/pos-', fig.align = 'center', fig.show = 'hold',
+               fig.width = 7, fig.height = 4)
+options(warnPartialMatchArgs = FALSE)
+```
+
+```{r}
+ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() + 
+  stat_peaks(span = 21, geom = "text")
+```
+
+```{r}
+ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() + 
+  stat_valleys(span = 21, geom = "text")
+```
+
+
+```{r}
+ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() + 
+  stat_peaks(span = 21, geom = "point", colour = "red") +
+  stat_valleys(span = 21, geom = "point", colour = "blue") +
+  stat_peaks(span = 51, geom = "text", colour = "red", vjust = -0.3, label.fmt = "%3.0f nm") +
+  stat_valleys(span = 51, geom = "text", colour = "blue", vjust = 1.2, label.fmt = "%3.0f nm")
+```
+
+```{r}
+ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
+  stat_color() + scale_color_identity()
+```
+
+```{r}
+ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
+  stat_color(shape = 21, color = "black") + scale_fill_identity()
+```
+
+```{r}
+ggplot(sun.spct, aes(w.length, s.e.irrad)) + 
+  stat_color(geom = "bar") + stat_color(shape = 21, color = "black", stroke = 1.2, fill = "white") +
+  scale_fill_identity() + scale_color_identity() + theme_bw()
+```
+
+```{r}
+ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
+  stat_integral()
+```
+
+```{r}
+ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
+  stat_integral(range = c(300,500), label.fmt = "%.3f", color = "red")
+```
+
+```{r}
+ggplot(sun.spct, aes(w.length, s.e.irrad)) +
+  stat_integral(geom = "hline", color = "red") +
+  geom_line() + stat_integral(label.fmt = "Mean = %.3f", color = "red", vjust = -0.3)
+```
+
+```{r}
+two_suns.spct <- rbindspct(list(sun1 = sun.spct, sun2 = sun.spct * 2))
+```
+
+```{r}
+ggplot(two_suns.spct, aes(w.length, s.e.irrad, color = spct.idx)) +
+  stat_integral(geom = "hline") +
+  geom_line() + stat_integral(label.fmt = "Mean = %.3f", vjust = -0.3, show.legend = FALSE)
+```
+
+```{r}
+ggplot(two_suns.spct, aes(w.length, s.e.irrad, color = spct.idx)) +
+  stat_integral(geom = "hline") +
+  geom_line() + 
+  stat_integral(label.fmt = "Mean = %.3f", vjust = 1.2, show.legend = FALSE) +
+  facet_grid(spct.idx~.)
+```
+
+```{r}
+ggplot(two_suns.spct, aes(w.length, s.e.irrad, color = spct.idx)) +
+  stat_integral(geom = "hline") +
+  geom_line() + 
+  stat_integral(label.fmt = "Mean = %.3f", vjust = 1.2, show.legend = FALSE) +
+  facet_grid(spct.idx~., scales = "free_y")
+```

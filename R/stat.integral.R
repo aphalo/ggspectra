@@ -48,7 +48,7 @@
 #'
 stat_integral <- function(mapping = NULL, data = NULL, geom = "text",
                        range = NULL,
-                       integral.fun = photobiology::integrate_irradiance, label.fmt = "%s",
+                       integral.fun = photobiology::integrate_xy, label.fmt = "%s",
                        position = "identity", na.rm = FALSE, show.legend = NA,
                        inherit.aes = TRUE, ...) {
   ggplot2::layer(
@@ -74,24 +74,22 @@ StatIntegral <-
                                             integral.fun,
                                             label.fmt,
                                             summary.fmt) {
-                     if (is.null(range)) {
-                       range <- range(data$x)
-                       mydata <- data
-                     } else {
-                       range <- range(range)
-                       mydata <- photobiology::trim_tails(data$x, data$y,
-                                             low.limit = range[1],
-                                             high.limit = range[2])
-                       names(mydata) <- c("x", "y")
-                     }
-                      integ.df <- data.frame(x = midpoint(mydata$x),
-                                     xmin = range[1],
-                                     xmax = range[2],
-                                     y = integral.fun(mydata$x, mydata$y) /
-                                       (range[2] - range[1]))
-                       integ.df$label <- sprintf(label.fmt, integ.df$y)
-                       integ.df
-                    },
+                     range <-
+                       photobiology::normalize_range_arg(range,
+                                                         default.range = range(data$x))
+                     mydata <- photobiology::trim_tails(data$x, data$y,
+                                                        low.limit = range[1],
+                                                        high.limit = range[2])
+ #                    names(mydata) <- c("x", "y")
+
+                     integ.df <- data.frame(x = midpoint(mydata$x),
+                                            xmin = range[1],
+                                            xmax = range[2],
+                                            y = integral.fun(mydata$x, mydata$y) /
+                                              (range[2] - range[1]))
+                     integ.df$label <- sprintf(label.fmt, integ.df$y)
+                     integ.df
+                   },
                    default_aes = ggplot2::aes(label = ..label..,
                                               x = ..x..,
                                               xmin = ..xmin..,

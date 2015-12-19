@@ -67,6 +67,7 @@ StatColor <-
                                             type) {
                    dplyr::mutate(data, color = photobiology::color(x, type))
                    },
-                   default_aes = ggplot2::aes(color = ..color..),
+                   default_aes = ggplot2::aes(color = ..color..,
+                                              fill = ..color..),
                    required_aes = c("x", "y")
   )
