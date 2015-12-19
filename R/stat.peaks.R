@@ -90,23 +90,24 @@ stat_peaks <- function(mapping = NULL, data = NULL, geom = "point",
 #' @usage NULL
 #' @export
 #' @seealso \code{\link[ggplot2]{ggplot2-ggproto}}
-StatPeaks <- ggproto("StatPeaks", Stat,
-                     compute_group = function(data,
-                                              scales,
-                                              span,
-                                              ignore_threshold,
-                                              strict,
-                                              label.fmt) {
+StatPeaks <-
+  ggplot2::ggproto("StatPeaks", ggplot2::Stat,
+                   compute_group = function(data,
+                                            scales,
+                                            span,
+                                            ignore_threshold,
+                                            strict,
+                                            label.fmt) {
                      peaks.df <- data[photobiology::find_peaks(data$y,
-                                      span = span,
-                                      ignore_threshold = ignore_threshold,
-                                      strict = strict), , drop = FALSE]
+                                                               span = span,
+                                                               ignore_threshold = ignore_threshold,
+                                                               strict = strict), , drop = FALSE]
                      peaks.df$x.label <- sprintf(label.fmt, peaks.df$x)
                      peaks.df
-                     },
-                     default_aes = aes(label = ..x.label..),
-                     required_aes = c("x", "y")
-)
+                   },
+                   default_aes = ggplot2::aes(label = ..x.label..),
+                   required_aes = c("x", "y")
+  )
 
 #' @rdname stat_peaks
 #'
@@ -133,21 +134,22 @@ stat_valleys <- function(mapping = NULL, data = NULL, geom = "point",
 #'
 #' @export
 #'
-StatValleys <- ggproto("StatValleys", Stat,
-                       compute_group = function(data,
-                                                scales,
-                                                span,
-                                                ignore_threshold,
-                                                strict,
-                                                label.fmt) {
-                         valleys.df <- data[photobiology::find_peaks(-data$y,
-                                                     span = span,
-                                                     ignore_threshold = ignore_threshold,
-                                                     strict = strict), , drop = FALSE]
-                         valleys.df$x.label <- sprintf(label.fmt, valleys.df$x)
-                         valleys.df
-                       },
-                       default_aes = aes(label = ..x.label..),
-                       required_aes = c("x", "y")
+StatValleys <-
+  ggplot2::ggproto("StatValleys", ggplot2::Stat,
+                   compute_group = function(data,
+                                            scales,
+                                            span,
+                                            ignore_threshold,
+                                            strict,
+                                            label.fmt) {
+                     valleys.df <- data[photobiology::find_peaks(-data$y,
+                                                                 span = span,
+                                                                 ignore_threshold = ignore_threshold,
+                                                                 strict = strict), , drop = FALSE]
+                     valleys.df$x.label <- sprintf(label.fmt, valleys.df$x)
+                     valleys.df
+                   },
+                   default_aes = ggplot2::aes(label = ..x.label..),
+                   required_aes = c("x", "y")
 )
 
