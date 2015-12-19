@@ -17,7 +17,7 @@ stat_valleys(mapping = NULL, data = NULL, geom = "point", span = 5,
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
-\code{\link{aes}} or \code{\link{aes_string}}. Only needs to be set
+\code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_string}}. Only needs to be set
 at the layer level if you are overriding the plot defaults.}
 
 \item{data}{A layer specific dataset - only needed if you want to override
@@ -42,6 +42,9 @@ $x$-values into character strings by means of function \code{\link{sprintf}}.}
 \item{position}{The position adjustment to use for overlapping points
 on this layer}
 
+\item{na.rm}{a logical value indicating whether NA values should be
+stripped before the computation proceeds.}
+
 \item{show.legend}{logical. Should this layer be included in the legends?
 \code{NA}, the default, includes if any aesthetics are mapped.
 \code{FALSE} never includes, and \code{TRUE} always includes.}
@@ -49,15 +52,15 @@ on this layer}
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
-the default plot specification, e.g. \code{\link{borders}}.}
+the default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 
-\item{...}{other arguments passed on to \code{\link{layer}}. This can
+\item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This can
 include aesthetics whose values you want to set, not map. See
-\code{\link{layer}} for more details.}
+\code{\link[ggplot2]{layer}} for more details.}
 }
 \description{
 \code{stat_peaks} finds at which x positions local maxima are located. If
-you want find local minima, you can use \code{\link{stat_valleys}} instead.
+you want find local minima, you can use \code{stat_valleys} instead.
 }
 \section{Computed variables}{
 
@@ -84,5 +87,7 @@ ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_point() +
 }
 \seealso{
 \code{\link[photobiology]{find_peaks}}, which is used internally.
+
+Other stats.functions: \code{\link{stat_color}}
 }
 

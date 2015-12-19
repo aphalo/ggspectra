@@ -1,10 +1,10 @@
 #' Find peaks and valleys.
 #'
 #' \code{stat_peaks} finds at which x positions local maxima are located. If
-#' you want find local minima, you can use \code{\link{stat_valleys}} instead.
+#' you want find local minima, you can use \code{stat_valleys} instead.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
-#'    \code{\link{aes}} or \code{\link{aes_string}}. Only needs to be set
+#'    \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_string}}. Only needs to be set
 #'    at the layer level if you are overriding the plot defaults.
 #' @param data A layer specific dataset - only needed if you want to override
 #'    the plot defaults.
@@ -17,10 +17,12 @@
 #' @param inherit.aes If \code{FALSE}, overrides the default aesthetics,
 #'   rather than combining with them. This is most useful for helper functions
 #'   that define both data and aesthetics and shouldn't inherit behaviour from
-#'   the default plot specification, e.g. \code{\link{borders}}.
-#' @param ... other arguments passed on to \code{\link{layer}}. This can
+#'   the default plot specification, e.g. \code{\link[ggplot2]{borders}}.
+#' @param ... other arguments passed on to \code{\link[ggplot2]{layer}}. This can
 #'   include aesthetics whose values you want to set, not map. See
-#'   \code{\link{layer}} for more details.
+#'   \code{\link[ggplot2]{layer}} for more details.
+#' @param na.rm	a logical value indicating whether NA values should be
+#'   stripped before the computation proceeds.
 #' @param ignore_threshold numeric value between 0.0 and 1.0 indicating the size
 #'   threshold below which peaks will be ignored.
 #' @param span a peak is defined as an element in a sequence which is greater
@@ -79,7 +81,7 @@ stat_peaks <- function(mapping = NULL, data = NULL, geom = "point",
 #' contains a \code{Stat*} object (like \code{StatBin}). The \code{Stat*}
 #' object is responsible for rendering the data in the plot.
 #'
-#' Each of the \code{Stat*} objects is a \code{\link{ggproto}} object, descended
+#' Each of the \code{Stat*} objects is a \code{\link[ggplot2]{ggproto}} object, descended
 #' from the top-level \code{Stat}, and each implements various methods and
 #' fields. To create a new type of Stat object, you typically will want to
 #' implement one or more of the following:
