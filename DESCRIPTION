@@ -1,6 +1,6 @@
 Package: ggspectra
 Type: Package
-Title: Plotting of Spectral Data
+Title: Extensions to ggplot2 for Radiation Spectra
 Version: 0.1.0
 Author: Pedro J. Aphalo [aut, cre]
 Maintainer: Pedro J. Aphalo <pedro.aphalo@helsinki.fi>
@@ -15,7 +15,11 @@ Depends:
     R (>= 3.2.0)
 Imports:
     photobiology (>= 0.9.1),
-    ggplot2 (>= 2.0.0)
+    photobiologyWavebands (>= 0.3.3),
+    ggplot2 (>= 2.0.0),
+    dplyr,
+    lubridate,
+    tidyr
 Suggests:
     knitr,
     rmarkdown

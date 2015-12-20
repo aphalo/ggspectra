@@ -32,7 +32,11 @@
 #' @param strict logical flag: if TRUE, an element must be strictly greater than
 #'   all other values in its window to be considered a peak. Default: FALSE.
 #' @param label.fmt character  string giving a format definition for converting
+#'   values into character strings by means of function \code{\link{sprintf}}.
+#' @param x.label.fmt character  string giving a format definition for converting
 #'   $x$-values into character strings by means of function \code{\link{sprintf}}.
+#' @param y.label.fmt character  string giving a format definition for converting
+#'   $y$-values into character strings by means of function \code{\link{sprintf}}.
 #' @section Computed variables:
 #' \describe{
 #'   \item{x.label}{x-value at the peak}
@@ -62,7 +66,7 @@ stat_peaks <- function(mapping = NULL, data = NULL, geom = "point",
                        span = 5, ignore_threshold = 0, strict = FALSE,
                        label.fmt = "%3.1f",
                        x.label.fmt = label.fmt, y.label.fmt = label.fmt,
-                       position = "identity", na.rm = FALSE, show.legend = NA,
+                       position = "identity", na.rm = FALSE, show.legend = FALSE,
                        inherit.aes = TRUE, ...) {
   ggplot2::layer(
     stat = StatPeaks, data = data, mapping = mapping, geom = geom,
@@ -113,11 +117,13 @@ StatPeaks <-
                                                                  ignore_threshold = ignore_threshold,
                                                                  strict = strict), , drop = FALSE]
                      }
-                     peaks.df$x.label <- sprintf(x.label.fmt, peaks.df$x)
-                     peaks.df$y.label <- sprintf(y.label.fmt, peaks.df$y)
-                     peaks.df
+                     dplyr::mutate(peaks.df,
+                                   x.label = sprintf(x.label.fmt, x),
+                                   y.label = sprintf(y.label.fmt, y),
+                                   color = photobiology::color(x, type = "CMF"))
                    },
                    default_aes = ggplot2::aes(label = ..x.label..,
+                                              fill = ..color..,
                                               xintercept = ..x..,
                                               yintercept = ..y..),
                    required_aes = c("x", "y")
@@ -131,7 +137,7 @@ stat_valleys <- function(mapping = NULL, data = NULL, geom = "point",
                          span = 5, ignore_threshold = 0, strict = FALSE,
                          label.fmt = "%3.1f",
                          x.label.fmt = label.fmt, y.label.fmt = label.fmt,
-                         position = "identity", na.rm = FALSE, show.legend = NA,
+                         position = "identity", na.rm = FALSE, show.legend = FALSE,
                          inherit.aes = TRUE, ...) {
   ggplot2::layer(
     stat = StatValleys, data = data, mapping = mapping, geom = geom,
@@ -169,11 +175,13 @@ StatValleys <-
                                                                  ignore_threshold = ignore_threshold,
                                                                  strict = strict), , drop = FALSE]
                      }
-                     valleys.df$x.label <- sprintf(x.label.fmt, valleys.df$x)
-                     valleys.df$y.label <- sprintf(y.label.fmt, valleys.df$y)
-                     valleys.df
+                     dplyr::mutate(valleys.df,
+                                   x.label = sprintf(x.label.fmt, x),
+                                   y.label = sprintf(y.label.fmt, y),
+                                   color = photobiology::color(x, type = "CMF"))
                    },
                    default_aes = ggplot2::aes(label = ..x.label..,
+                                              fill = ..color..,
                                               xintercept = ..x..,
                                               yintercept = ..y..),
                    required_aes = c("x", "y")
