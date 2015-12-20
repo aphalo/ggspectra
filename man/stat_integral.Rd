@@ -5,7 +5,7 @@
 \title{Integrate range under curve.}
 \usage{
 stat_integral(mapping = NULL, data = NULL, geom = "text", range = NULL,
-  integral.fun = photobiology::integrate_irradiance, label.fmt = "\%s",
+  integral.fun = photobiology::integrate_xy, label.fmt = "\%s",
   position = "identity", na.rm = FALSE, show.legend = NA,
   inherit.aes = TRUE, ...)
 }

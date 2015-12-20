@@ -61,6 +61,7 @@
 stat_peaks <- function(mapping = NULL, data = NULL, geom = "point",
                        span = 5, ignore_threshold = 0, strict = FALSE,
                        label.fmt = "%3.1f",
+                       x.label.fmt = label.fmt, y.label.fmt = label.fmt,
                        position = "identity", na.rm = FALSE, show.legend = NA,
                        inherit.aes = TRUE, ...) {
   ggplot2::layer(
@@ -70,6 +71,8 @@ stat_peaks <- function(mapping = NULL, data = NULL, geom = "point",
                   ignore_threshold = ignore_threshold,
                   strict = strict,
                   label.fmt = label.fmt,
+                  x.label.fmt = x.label.fmt,
+                  y.label.fmt = y.label.fmt,
                   na.rm = na.rm,
                   ...)
   )
@@ -99,15 +102,24 @@ StatPeaks <-
                                             span,
                                             ignore_threshold,
                                             strict,
-                                            label.fmt) {
-                     peaks.df <- data[photobiology::find_peaks(data$y,
-                                                               span = span,
-                                                               ignore_threshold = ignore_threshold,
-                                                               strict = strict), , drop = FALSE]
-                     peaks.df$x.label <- sprintf(label.fmt, peaks.df$x)
+                                            label.fmt,
+                                            x.label.fmt,
+                                            y.label.fmt) {
+                     if (is.null(span)) {
+                       peaks.df <- data[which.max(data$y), , drop = FALSE]
+                     } else {
+                       peaks.df <- data[photobiology::find_peaks(data$y,
+                                                                 span = span,
+                                                                 ignore_threshold = ignore_threshold,
+                                                                 strict = strict), , drop = FALSE]
+                     }
+                     peaks.df$x.label <- sprintf(x.label.fmt, peaks.df$x)
+                     peaks.df$y.label <- sprintf(y.label.fmt, peaks.df$y)
                      peaks.df
                    },
-                   default_aes = ggplot2::aes(label = ..x.label..),
+                   default_aes = ggplot2::aes(label = ..x.label..,
+                                              xintercept = ..x..,
+                                              yintercept = ..y..),
                    required_aes = c("x", "y")
   )
 
@@ -118,6 +130,7 @@ StatPeaks <-
 stat_valleys <- function(mapping = NULL, data = NULL, geom = "point",
                          span = 5, ignore_threshold = 0, strict = FALSE,
                          label.fmt = "%3.1f",
+                         x.label.fmt = label.fmt, y.label.fmt = label.fmt,
                          position = "identity", na.rm = FALSE, show.legend = NA,
                          inherit.aes = TRUE, ...) {
   ggplot2::layer(
@@ -127,6 +140,8 @@ stat_valleys <- function(mapping = NULL, data = NULL, geom = "point",
                   ignore_threshold = ignore_threshold,
                   strict = strict,
                   label.fmt = label.fmt,
+                  x.label.fmt = x.label.fmt,
+                  y.label.fmt = y.label.fmt,
                   na.rm = na.rm,
                   ...)
   )
@@ -143,15 +158,24 @@ StatValleys <-
                                             span,
                                             ignore_threshold,
                                             strict,
-                                            label.fmt) {
-                     valleys.df <- data[photobiology::find_peaks(-data$y,
+                                            label.fmt,
+                                            x.label.fmt,
+                                            y.label.fmt) {
+                     if (is.null(span)) {
+                       valleys.df <- data[which.min(data$y), , drop = FALSE]
+                     } else {
+                       valleys.df <- data[photobiology::find_peaks(-data$y,
                                                                  span = span,
                                                                  ignore_threshold = ignore_threshold,
                                                                  strict = strict), , drop = FALSE]
-                     valleys.df$x.label <- sprintf(label.fmt, valleys.df$x)
+                     }
+                     valleys.df$x.label <- sprintf(x.label.fmt, valleys.df$x)
+                     valleys.df$y.label <- sprintf(y.label.fmt, valleys.df$y)
                      valleys.df
                    },
-                   default_aes = ggplot2::aes(label = ..x.label..),
+                   default_aes = ggplot2::aes(label = ..x.label..,
+                                              xintercept = ..x..,
+                                              yintercept = ..y..),
                    required_aes = c("x", "y")
 )
 

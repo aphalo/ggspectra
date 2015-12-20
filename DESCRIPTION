@@ -9,9 +9,19 @@ Description: This package provides additional annotations, stats and
     for spectra.
 License: GPL (>=3)
 LazyData: TRUE
+LazyLoad: TRUE
+ByteCompile: TRUE
 Depends:
     R (>= 3.2.0)
 Imports:
     photobiology (>= 0.9.1),
     ggplot2 (>= 2.0.0)
+Suggests:
+    knitr,
+    rmarkdown
+URL: http://www.r4photobiology.info,
+    https://bitbucket.org/aphalo/ggspectra
+BugReports: https://bitbucket.org/aphalo/ggspectra
+Encoding: UTF-8
 RoxygenNote: 5.0.1
+VignetteBuilder: knitr

@@ -80,8 +80,6 @@ StatIntegral <-
                      mydata <- photobiology::trim_tails(data$x, data$y,
                                                         low.limit = range[1],
                                                         high.limit = range[2])
- #                    names(mydata) <- c("x", "y")
-
                      integ.df <- data.frame(x = midpoint(mydata$x),
                                             xmin = range[1],
                                             xmax = range[2],
@@ -95,6 +93,8 @@ StatIntegral <-
                                               xmin = ..xmin..,
                                               xmax = ..xmax..,
                                               y = ..y..,
+                                              ymax = ..y..,
+                                              ymin = 0 * ..y..,
                                               yintercept = ..y..),
                    required_aes = c("x", "y")
   )
