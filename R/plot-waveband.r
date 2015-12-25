@@ -4,33 +4,36 @@
 #' waveband object.
 #'
 #' @note Note that scales are expanded so as to make space for the annotations.
-#' The object returned is a ggplot object, and can be further manipulated.
+#'   The object returned is a ggplot object, and can be further manipulated.
 #'
 #' @param x a waveband object
 #' @param ... other arguments passed to plot.response_spct()
 #' @param w.length numeric vector of wavelengths (nm)
-#' @param range an R object on which range() returns a vector of length 2,
-#' with min annd max wavelengths (nm)
-#' @param fill value to use as response for wavelngths outside the waveband range
-#' @param unit.in the type of unit we assume as reference "energy" or "photon" based
+#' @param range an R object on which range() returns a vector of length 2, with
+#'   min annd max wavelengths (nm)
+#' @param fill value to use as response for wavelngths outside the waveband
+#'   range
+#' @param unit.in the type of unit we assume as reference "energy" or "photon"
+#'   based
 #' @param annotations a character vector
 #' @param wb.trim logical
 #' @param norm numeric normalization wavelength (nm) or character string "max"
-#' for normalization at the wavelength of highest peak.
+#'   for normalization at the wavelength of highest peak.
 #'
 #' @return a \code{ggplot} object.
 #'
-#' @note
-#' Effectiveness spectra are plotted expressing the spectral effectiveness either as
-#' $1 mol^{-1} nm$ photons of $1 J^{-1} nm$ which can selected through formal argument
-#' \code{unit.out}. The value of \code{unit.in} has no effect on the result when
-#' uisng BSWFs, as BSWFs are defined based on a certain base of expression, which is
-#' enforced. In contrast, for wavebands which only define a wavelength range, changing
-#' the assumed reference irradiance, changes the responsivity according to Plank's law.
+#' @note Effectiveness spectra are plotted expressing the spectral effectiveness
+#' either as $1 mol^{-1} nm$ photons of $1 J^{-1} nm$ which can selected through
+#' formal argument \code{unit.out}. The value of \code{unit.in} has no effect on
+#' the result when uisng BSWFs, as BSWFs are defined based on a certain base of
+#' expression, which is enforced. In contrast, for wavebands which only define a
+#' wavelength range, changing the assumed reference irradiance, changes the
+#' responsivity according to Plank's law.
 #'
-#' This function creates a response_spct object from the waveband object and plots it.
-#' Unused arguments are passed along, which means that other plot aspects can be controlled
-#' by providing arguments for the plot method of the response_spct class.
+#' This function creates a response_spct object from the waveband object and
+#' plots it. Unused arguments are passed along, which means that other plot
+#' aspects can be controlled by providing arguments for the plot method of the
+#' response_spct class.
 #'
 #' @keywords hplot
 #'
@@ -42,16 +45,17 @@
 #' library(photobiology)
 #' plot(waveband(c(400, 500)))
 #'
-plot.waveband <- function(x,
-                          ...,
-                          w.length = NULL,
-                          range = c(280, 800),
-                          fill = 0,
-                          unit.in = getOption("photobiology.radiation.unit", default="energy"),
-                          annotations = getOption("photobiology.plot.annotations",
-                                                  default = c("colour.guide", "boxes", "labels")),
-                          wb.trim = TRUE,
-                          norm = NULL) {
+plot.waveband <-
+  function(x,
+           ...,
+           w.length = NULL,
+           range = c(280, 800),
+           fill = 0,
+           unit.in = getOption("photobiology.radiation.unit", default="energy"),
+           annotations = getOption("photobiology.plot.annotations",
+                                   default = c("colour.guide", "boxes", "labels")),
+           wb.trim = TRUE,
+           norm = NULL) {
   w.band <- x
   if (!is.waveband(w.band)) {
     return(ggplot())
@@ -78,9 +82,11 @@ plot.waveband <- function(x,
     w.length <- c(w.length, hinges)
   }
   w.length <- unique(sort(w.length))
-  s.response <- calc_multipliers(w.length, w.band,
-                                 unit.out=unit.in, unit.in=unit.in,
-                                 use.cached.mult=getOption("photobiology.use.cached.mult", default = FALSE), fill=fill)
+  s.response <-
+    calc_multipliers(w.length, w.band,
+                     unit.out=unit.in, unit.in=unit.in,
+                     use.cached.mult=getOption("photobiology.use.cached.mult",
+                                               default = FALSE), fill=fill)
   if (is.null(norm)) {
     if (!is.null(w.band$norm)) {
       norm <- w.band$norm
@@ -93,7 +99,8 @@ plot.waveband <- function(x,
   } else if (unit.in %in% c("photon", "quantum")) {
     spct <- response_spct(w.length = w.length, s.q.response = s.response)
   }
-  out.ggplot <- plot(spct, w.band=w.band, annotations = annotations, wb.trim = wb.trim, norm = norm, ...)
+  out.ggplot <- plot(spct, w.band=w.band, annotations = annotations,
+                     wb.trim = wb.trim, norm = norm, ...)
   if ("title" %in% annotations) {
     out.ggplot <- out.ggplot + labs(title = deparse(substitute(x)))
   }

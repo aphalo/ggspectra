@@ -46,9 +46,9 @@
 #' @export
 #' @family stats functions
 #'
-stat_waveband <- function(mapping = NULL, data = NULL, geom = "text",
+stat_waveband <- function(mapping = NULL, data = NULL, geom = "rect",
                        w.band = NULL,
-                       integral.fun = integrate_xy,
+                       integral.fun = "mean",
                        label.fmt = "%.1f",
                        position = "identity", na.rm = FALSE, show.legend = NA,
                        inherit.aes = TRUE, ...) {
@@ -75,8 +75,24 @@ StatWaveband <-
                                             integral.fun,
                                             label.fmt,
                                             summary.fmt) {
+                     if (is.null(w.band)) {
+                       w.band <- waveband(data$x)
+                     }
                      if (!is.list(w.band) || is.waveband(w.band)) {
                        w.band <- list(w.band)
+                     }
+                     if (is.character(integral.fun)) {
+                       if (integral.fun %in% c("mean", "average")) {
+                         integral.fun <- function(xx, yy) {
+                           photobiology::integrate_xy(xx, yy) / diff(range(xx))
+                         }
+                       } else if (integral.fun == "total") {
+                         integral.fun <- phtobiology::integrate_xy
+                       } else {
+                         stop("'integral.fun' value '", integral.fun, "' not supported.")
+                       }
+                     } else {
+                       stopifnot(is.function(integral.fun))
                      }
                      integ.df <- data.frame()
                      for (wb in w.band) {
@@ -92,21 +108,20 @@ StatWaveband <-
                                          data.frame(x = midpoint(mydata$x),
                                                     xmin = range[1],
                                                     xmax = range[2],
-                                                    y = integral.fun(mydata$x, mydata$y) /
-                                                      (range[2] - range[1]),
-                                                    wb.color = color(wb)$CMF,
+                                                    y = integral.fun(mydata$x, mydata$y),
+                                                    wb.color = color(wb),
                                                     wb.name = labels(wb)$label)
                                          )
                      }
-                     integ.df$y.label <- sprintf(label.fmt, integ.df$y)
                      integ.df$ymid <- integ.df$y / 2
+                     integ.df$y.label <- sprintf(label.fmt, integ.df$y)
                      integ.df
                    },
                    default_aes = ggplot2::aes(label = ..y.label..,
                                               x = ..x..,
                                               xmin = ..xmin..,
                                               xmax = ..xmax..,
-                                              y = 0 * ..y..,
+                                              y = ..ymid..,
                                               ymax = ..y..,
                                               ymin = 0 * ..y..,
                                               yintercept = ..y..,
@@ -114,3 +129,62 @@ StatWaveband <-
                                               fill = ..wb.color..),
                    required_aes = c("x", "y")
   )
+
+#' @rdname stat_waveband
+#'
+#' @param label.y numeric position of label
+#' @param rect.alpha numeric transparency of "rect"
+#' @param guide.position character or numericguiving y positon of "guide"
+#' @param guide.width numeric y-width of the "guide"
+#'
+#' @export
+#'
+waveband_guide <- function(mapping = NULL, data = NULL,
+                          w.band = NULL,
+                          integral.fun = "mean",
+                          label.fmt = "%.1f", label.y = 0.3,
+                          guide.position = "bottom",
+                          guide.width = 0.05,
+                          rect.alpha = 0.7,
+                          position = "identity", na.rm = FALSE, show.legend = FALSE,
+                          inherit.aes = TRUE, ...){
+  if (is.character(guide.position)) {
+    ymax <- switch (guide.position,
+      bottom = 0.1,
+      middle = 0.5,
+      top    = 1.0,
+      NA
+    )
+    ymin = ymax - guide.width
+  }
+  list(
+    stat_waveband(mapping = mapping, data = data,
+                  geom = "rect",
+                  w.band = w.band,
+                  integral.fun = integral.fun,
+                  label.fmt = label.fmt,
+                  position = position,
+                  na.rm = na.rm,
+                  show.legend = show.legend,
+                  inherit.aes = inherit.aes,
+                  alpha = rect.alpha,
+                  ymax = ymax,
+                  ymin = ymin,
+                  color = "black",
+                  size = 1,
+                  ...),
+    stat_waveband(mapping = mapping, data = data,
+                  geom = "text",
+                  w.band = w.band,
+                  integral.fun = integral.fun,
+                  label.fmt = label.fmt,
+                  position = position,
+                  na.rm = na.rm,
+                  show.legend = show.legend,
+                  inherit.aes = inherit.aes,
+                  y = ymax - 0.5 * guide.width,
+                  color = "white",
+                  ...),
+    scale_fill_identity()
+  )
+}

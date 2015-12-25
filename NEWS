@@ -1,0 +1,10 @@
+ggspectra 0.1.1
+===============
+
+Add multiplot() function.
+Improve stat_waveband(). Add color_guide(), waveband_guide().
+
+ggspectra 0.1.0
+===============
+
+First preview version. Still with inconplete functionality.

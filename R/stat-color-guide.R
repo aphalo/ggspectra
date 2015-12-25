@@ -87,3 +87,24 @@ StatColorGuide <-
                                               fill = ..wl.color..),
                    required_aes = c("x")
   )
+
+#' @rdname stat_color_guide
+#'
+#' @export
+#'
+color_guide <- function(mapping = NULL, data = NULL, geom = "rect",
+                             type = "CMF", w.band=NULL, length.out = 150,
+                             position = "identity", na.rm = FALSE, show.legend = FALSE,
+                             inherit.aes = TRUE, ...) {
+  list(stat_color_guide(mapping = mapping,
+                        data = data,
+                        geom = geom,
+                        type = "CMF",
+                        w.band = w.band,
+                        length.out = length.out,
+                        show.legend = show.legend,
+                        inherit.aes = inherit.aes,
+                        ...),
+       scale_fill_identity()
+  )
+}
