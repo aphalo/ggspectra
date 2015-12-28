@@ -78,10 +78,11 @@ StatColorGuide <-
                        w.band <- trim_waveband(w.band = w.band, range = data$x, trim = TRUE)
                      }
 
-                     wb2rect_spct(w.band = w.band)
+                     z <- wb2rect_spct(w.band = w.band)
+                     names(z)[1] <- "x"
+                     z
                     },
-                   default_aes = ggplot2::aes(x = ..w.length..,
-                                              xmin = ..wl.low..,
+                   default_aes = ggplot2::aes(xmin = ..wl.low..,
                                               xmax = ..wl.high..,
                                               label = as.character(..wb.f..),
                                               fill = ..wl.color..),
@@ -89,21 +90,25 @@ StatColorGuide <-
   )
 
 #' @rdname stat_color_guide
+#' @param ymin,ymax numeric used as aesthetics for plotting the guide.
 #'
 #' @export
 #'
 color_guide <- function(mapping = NULL, data = NULL, geom = "rect",
                              type = "CMF", w.band=NULL, length.out = 150,
+                             ymin = -Inf, ymax = Inf,
                              position = "identity", na.rm = FALSE, show.legend = FALSE,
                              inherit.aes = TRUE, ...) {
   list(stat_color_guide(mapping = mapping,
                         data = data,
                         geom = geom,
-                        type = "CMF",
+                        type = type,
                         w.band = w.band,
                         length.out = length.out,
                         show.legend = show.legend,
                         inherit.aes = inherit.aes,
+                        ymin = ymin,
+                        ymax = ymax,
                         ...),
        scale_fill_identity()
   )

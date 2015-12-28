@@ -3,29 +3,35 @@
 #' \code{stat_waveband} computes areas under a curve.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
-#'    \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_string}}. Only needs to be set
-#'    at the layer level if you are overriding the plot defaults.
+#'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_string}}. Only needs
+#'   to be set at the layer level if you are overriding the plot defaults.
 #' @param data A layer specific dataset - only needed if you want to override
-#'    the plot defaults.
+#'   the plot defaults.
 #' @param geom The geometric object to use display the data
-#' @param position The position adjustment to use for overlapping points
-#'    on this layer
+#' @param position The position adjustment to use for overlapping points on this
+#'   layer
 #' @param show.legend logical. Should this layer be included in the legends?
-#'   \code{NA}, the default, includes if any aesthetics are mapped.
-#'   \code{FALSE} never includes, and \code{TRUE} always includes.
-#' @param inherit.aes If \code{FALSE}, overrides the default aesthetics,
-#'   rather than combining with them. This is most useful for helper functions
-#'   that define both data and aesthetics and shouldn't inherit behaviour from
-#'   the default plot specification, e.g. \code{\link[ggplot2]{borders}}.
-#' @param ... other arguments passed on to \code{\link[ggplot2]{layer}}. This can
-#'   include aesthetics whose values you want to set, not map. See
+#'   \code{NA}, the default, includes if any aesthetics are mapped. \code{FALSE}
+#'   never includes, and \code{TRUE} always includes.
+#' @param inherit.aes If \code{FALSE}, overrides the default aesthetics, rather
+#'   than combining with them. This is most useful for helper functions that
+#'   define both data and aesthetics and shouldn't inherit behaviour from the
+#'   default plot specification, e.g. \code{\link[ggplot2]{borders}}.
+#' @param ... other arguments passed on to \code{\link[ggplot2]{layer}}. This
+#'   can include aesthetics whose values you want to set, not map. See
 #'   \code{\link[ggplot2]{layer}} for more details.
-#' @param na.rm	a logical value indicating whether NA values should be
-#'   stripped before the computation proceeds.
+#' @param na.rm	a logical value indicating whether NA values should be stripped
+#'   before the computation proceeds.
 #' @param w.band a numeric vector of at least length two.
 #' @param integral.fun function on $x$ and $y$.
 #' @param label.fmt character string giving a format definition for converting
-#'   y-integral values into character strings by means of function \code{\link{sprintf}}.
+#'   y-integral values into character strings by means of function
+#'   \code{\link{sprintf}}.
+#' @param y.multiplier numeric Multiplier constant used to scale returned
+#'   \code{y} values.
+#' @param y.position numeric If not \code{NULL} used a constant value returned
+#'   in \code{y}.
+#'
 #' @section Computed variables:
 #' \describe{
 #'   \item{label}{intergral value as formatted text}
@@ -50,6 +56,8 @@ stat_waveband <- function(mapping = NULL, data = NULL, geom = "rect",
                        w.band = NULL,
                        integral.fun = "mean",
                        label.fmt = "%.1f",
+                       y.multiplier = 1,
+                       y.position = NULL,
                        position = "identity", na.rm = FALSE, show.legend = NA,
                        inherit.aes = TRUE, ...) {
   ggplot2::layer(
@@ -58,6 +66,8 @@ stat_waveband <- function(mapping = NULL, data = NULL, geom = "rect",
     params = list(w.band = w.band,
                   integral.fun = integral.fun,
                   label.fmt = label.fmt,
+                  y.multiplier = y.multiplier,
+                  y.position = y.position,
                   na.rm = na.rm,
                   ...)
   )
@@ -74,7 +84,8 @@ StatWaveband <-
                                             w.band,
                                             integral.fun,
                                             label.fmt,
-                                            summary.fmt) {
+                                            y.multiplier,
+                                            y.position) {
                      if (is.null(w.band)) {
                        w.band <- waveband(data$x)
                      }
@@ -108,24 +119,26 @@ StatWaveband <-
                                          data.frame(x = midpoint(mydata$x),
                                                     xmin = range[1],
                                                     xmax = range[2],
-                                                    y = integral.fun(mydata$x, mydata$y),
+                                                    yint = integral.fun(mydata$x, mydata$y),
                                                     wb.color = color(wb),
                                                     wb.name = labels(wb)$label)
                                          )
                      }
-                     integ.df$ymid <- integ.df$y / 2
-                     integ.df$y.label <- sprintf(label.fmt, integ.df$y)
+
+                     if (is.null(y.position)) {
+                       integ.df$y <- integ.df$yint * y.multiplier
+                     } else {
+                       integ.df$y <- y.position
+                     }
+                     integ.df$y.label <- sprintf(label.fmt, integ.df$yint)
                      integ.df
                    },
                    default_aes = ggplot2::aes(label = ..y.label..,
-                                              x = ..x..,
                                               xmin = ..xmin..,
                                               xmax = ..xmax..,
-                                              y = ..ymid..,
-                                              ymax = ..y..,
-                                              ymin = 0 * ..y..,
-                                              yintercept = ..y..,
-                                              color = ..wb.color..,
+                                              ymax = ..yint..,
+                                              ymin = 0 * ..yint..,
+                                              yintercept = ..yint..,
                                               fill = ..wb.color..),
                    required_aes = c("x", "y")
   )
@@ -150,9 +163,9 @@ waveband_guide <- function(mapping = NULL, data = NULL,
                           inherit.aes = TRUE, ...){
   if (is.character(guide.position)) {
     ymax <- switch (guide.position,
-      bottom = 0.1,
-      middle = 0.5,
-      top    = 1.0,
+      bottom = 0.0,
+      middle = 0.5 + guide.width / 2,
+      top    = 1.0 + guide.width,
       NA
     )
     ymin = ymax - guide.width
@@ -179,10 +192,10 @@ waveband_guide <- function(mapping = NULL, data = NULL,
                   integral.fun = integral.fun,
                   label.fmt = label.fmt,
                   position = position,
+                  y.position = ymax - 0.45 * guide.width,
                   na.rm = na.rm,
                   show.legend = show.legend,
                   inherit.aes = inherit.aes,
-                  y = ymax - 0.5 * guide.width,
                   color = "white",
                   ...),
     scale_fill_identity()

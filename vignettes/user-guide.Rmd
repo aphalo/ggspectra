@@ -200,7 +200,8 @@ ggplot(sun.spct, aes(w.length, s.e.irrad)) +
   geom_line() + scale_color_identity() + scale_fill_identity() +
   stat_waveband(w.band = c(400,500), 
                  geom = "rect", alpha = 0.5) +
-  stat_waveband(w.band = c(400,500), vjust = -0.3, geom = "text") +
+  stat_waveband(w.band = c(400,500), geom = "text",
+                y.multiplier = 0.5) +
   theme_bw()
 ```
 
@@ -210,8 +211,9 @@ ggplot(sun.spct, aes(w.length, s.e.irrad)) +
   stat_waveband(w.band = VIS_bands(), 
                  geom = "rect", alpha = 0.7) +
   stat_waveband(w.band = VIS_bands(), angle = 90, hjust = -0.1, geom = "text", 
-                 aes(label = paste(..wb.name.., " = ", ..y.label.., sep = ""))) +
-  ylim(NA, 0.9) + theme_bw()
+                 aes(label = paste(..wb.name.., " = ", ..y.label.., sep = ""),
+                     color = ..wb.color..)) +
+  ylim(NA, 1.1) + theme_bw()
 ```
 
 ## Color guide
@@ -242,16 +244,17 @@ ggplot(sun.spct, aes(w.length, s.e.irrad)) +
 
 ```{r}
 ggplot(sun.spct, aes(w.length, s.e.irrad)) +
-  color_guide(ymin = -Inf, ymax = +Inf, alpha = 0.4) + 
+  color_guide(alpha = 0.4) + 
   geom_line() +
   theme_bw()
 ```
 
 ```{r}
 ggplot(sun.spct, aes(w.length, s.e.irrad)) +
-  stat_color_guide(ymin = -Inf, ymax = +Inf, alpha = 0.4) + 
+  stat_color_guide(alpha = 0.4) + 
   stat_waveband(w.band = PAR(), ymin = -0.01, ymax = 0, color = "black", geom = "rect") +
-  stat_waveband(w.band = PAR(), vjust = 0, geom = "text", color = "black",
+  stat_waveband(w.band = PAR(), vjust = -0.5, geom = "text", color = "black",
+                y.position = 0,
                 aes(label = paste(..wb.name.., " = ", ..y.label.., sep = ""))) +  
   geom_line() + 
   scale_fill_identity() +
@@ -266,25 +269,63 @@ ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_spct()
 
 ```{r}
 ggplot(sun.spct, aes(w.length, s.e.irrad)) + 
-  geom_spct(fill = color(sun.spct)[1])
+  geom_spct(fill = color(sun.spct))
 ```
 
 ## Packaged stats and scales
 
 ### color_guide
 
-Not run as it is affected by bugs in this pacakge and in `ggplot2` 2.0.0.
+```{r}
+ggplot(sun.spct, aes(w.length, s.e.irrad)) + 
+  color_guide(ymin = -0.05, ymax = 0) +
+  geom_spct() 
+```
 
-```{r, eval=FALSE}
-ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_spct() + color_guide()
+```{r}
+ggplot(sun.spct, aes(w.length, s.e.irrad)) + 
+  color_guide() +
+  geom_spct(alpha = 0.75, colour = "white", size = 1) 
+```
+
+```{r}
+ggplot(sun.spct, aes(w.length, s.e.irrad)) + 
+  color_guide() +
+  geom_line(size = 2, colour = "white") +
+  geom_line(size = 1, colour = "black") +
+  geom_hline(yintercept = 0, colour = "grey92") +
+  theme_bw()
 ```
 
 ### waveband_guide
 
-Not run as it is affected by bugs in this pacakge and in `ggplot2` 2.0.0.
+```{r}
+ggplot(sun.spct, aes(w.length, s.e.irrad)) + 
+  geom_spct() + 
+  waveband_guide(w.band = Plant_bands())
+```
 
-```{r, eval=FALSE}
-ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_spct() + waveband_guide(w.band = Plant_bands())
+```{r}
+ggplot(sun.spct, aes(w.length, s.e.irrad)) + 
+  geom_spct() + 
+  waveband_guide(w.band = Plant_bands(), guide.position = "top") +
+  lims(y = c(NA, 1.1))
+```
+
+```{r}
+ggplot(sun.spct, aes(w.length, s.e.irrad)) + 
+  geom_spct() + 
+  waveband_guide(w.band = Plant_bands(), guide.position = "top",
+                 aes(label = sprintf("%s", ..wb.name..))) +
+  ylim(NA, 1.1) + theme_bw()
+```
+
+```{r}
+ggplot(sun.spct, aes(w.length, s.e.irrad)) + 
+  geom_spct() + 
+  waveband_guide(w.band = Plant_bands(), guide.position = "top",
+                 aes(label = paste(..wb.name.., ..y.label.., sep = ": "))) +
+  ylim(NA, 1.1)
 ```
 
 ## Plotting spectra
