@@ -4,9 +4,6 @@ ggspectra 0.1.1
 Add multiplot() function (unchanged from package photobiologygg).
 Improve stat_waveband(). Add color_guide(), waveband_guide().
 
-Add some kludges tp allow testing with ggplot2 2.0.0 which has bugs in the
-handling of aesthetics (issue reported).
-
 ggspectra 0.1.0
 ===============
 
