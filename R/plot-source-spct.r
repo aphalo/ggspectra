@@ -112,20 +112,38 @@ e_plot <- function(spct,
                                 geom = "text", vjust=+1.2, size=2.5)
   }
   if (!is.null(annotations) &&
-        length(intersect(c("labels", "summaries", "colour.guide"), annotations)) > 0L) {
+        length(intersect(c("labels", "summaries", "colour.guide", "boxs", "segments"),
+                         annotations)) > 0L) {
     plot <- plot + ylim(y.min, y.max * 1.25) + xlim(min(spct) - spread(spct) * 0.025, NA)
   }
   if ("colour.guide" %in% annotations) {
-    plot <- plot + stat_color_guide(ymax=y.max * 1.22, ymin=y.max * 1.18)
+    plot <- plot + stat_color_guide(ymax = y.max * 1.22, ymin = y.max * 1.18)
   }
-  # plot <- annotate_plot(plot=plot, spct=spct, w.band=w.band,
-  #                       y.bottom=y.max * 1.09,
-  #                       y.width=y.max * 0.085,
-  #                       integ.label = irrad.label,
-  #                       integ.fun=e_irrad,
-  #                       annotations=annotations,
-  #                       quantity=label.qty,
-  #                       ...)
+  if ("boxes" %in% annotations) {
+    plot <- plot + stat_color_guide(w.band = w.band,
+                                 ymax = y.max * 1.16,
+                                 ymin = y.max * 1.08,
+                                 color = "white",
+                                 linetype = "solid"
+                                 )
+  }
+  if ("labels" %in% annotations) {
+    plot <- plot + stat_waveband(geom = "text",
+                                 w.band = w.band,
+                                 y.position = y.max * 1.123,
+                                 color = "white",
+                                 aes(label = ..wb.name..),
+                                 size = 2)
+  }
+  if ("summaries" %in% annotations) {
+    plot <- plot + stat_waveband(geom = "text",
+                                 w.band = w.band,
+                                 y.position = y.max * 1.123,
+                                 color = "white",
+                                 aes(label = ..y.label..),
+                                 size = 2)
+  }
+
   if (is_effective(spct)) {
     plot <- plot +  annotate("text",
                              x = midpoint(spct),
@@ -338,7 +356,10 @@ plot.source_spct <-
            unit.out=getOption("photobiology.radiation.unit", default="energy"),
            label.qty = "total",
            annotations=getOption("photobiology.plot.annotations",
-                                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks")) ) {
+                                 default = c("boxes", "labels", "colour.guide", "peaks")) ) {
+    if ("color.guide" %in% annotations) {
+      annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
+    }
     if (unit.out=="photon" || unit.out=="quantum") {
       out.ggplot <- q_plot(spct = x, w.band = w.band, range = range,
                            label.qty = label.qty, annotations = annotations, ...)

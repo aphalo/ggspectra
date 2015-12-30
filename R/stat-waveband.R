@@ -105,12 +105,12 @@ StatWaveband <-
                      } else {
                        stopifnot(is.function(integral.fun))
                      }
+                     w.band <- trim_wl(w.band, data$x)
                      integ.df <- data.frame()
                      for (wb in w.band) {
                        if (is.numeric(wb)) {
                          wb <- waveband(wb)
                        }
-                       wb <- trim_wl(wb, range = data$x)
                        range <- range(wb)
                        mydata <- trim_tails(data$x, data$y,
                                                           low.limit = range[1],
@@ -131,6 +131,7 @@ StatWaveband <-
                        integ.df$y <- y.position
                      }
                      integ.df$y.label <- sprintf(label.fmt, integ.df$yint)
+#                     print(integ.df)
                      integ.df
                    },
                    default_aes = ggplot2::aes(label = ..y.label..,

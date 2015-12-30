@@ -249,9 +249,11 @@ ggplot(sun.spct, aes(w.length, s.e.irrad)) +
   theme_bw()
 ```
 
+## Multiple stats in the same plot
+
 ```{r}
 ggplot(sun.spct, aes(w.length, s.e.irrad)) +
-  stat_color_guide(alpha = 0.4) + 
+  stat_color_guide(alpha = 0.4, ymin = -Inf, ymax = Inf) + 
   stat_waveband(w.band = PAR(), ymin = -0.01, ymax = 0, color = "black", geom = "rect") +
   stat_waveband(w.band = PAR(), vjust = -0.5, geom = "text", color = "black",
                 y.position = 0,
@@ -359,7 +361,7 @@ plot(yellow_gel.spct, annotations = "colour.guide")
 ```
 
 ```{r}
-plot(sun.spct, annotations = "colour.guide") %+% geom_spct(fill = color(sun.spct)) + 
+plot(sun.spct) %+% geom_spct(fill = color(sun.spct)) + 
   geom_spct(data = yellow_gel.spct * sun.spct, color = "black", 
             fill = color(yellow_gel.spct * sun.spct))
 ```
