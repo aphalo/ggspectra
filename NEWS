@@ -4,6 +4,8 @@ ggspectra 0.1.1
 Add multiplot() function (unchanged from package photobiologygg).
 Improve stat_waveband(). Add color_guide(), waveband_guide().
 
+Get plot() methods fully functional.
+
 ggspectra 0.1.0
 ===============
 

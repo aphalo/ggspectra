@@ -115,19 +115,25 @@ ggplot(two_suns.spct, aes(w.length, s.e.irrad, color = spct.idx)) +
 ## Color from wavelength
 
 ```{r}
-ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
+ggplot(sun.spct, aes(w.length, s.e.irrad)) + 
+  geom_line() +
   stat_color() + scale_color_identity()
 ```
 
 ```{r}
-ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
-  stat_color(shape = 21, color = "black") + scale_fill_identity()
+ggplot(sun.spct, aes(w.length, s.e.irrad)) +
+  geom_line() +
+  stat_color(shape = 21, color = "black") + 
+  scale_fill_identity()
 ```
 
 ```{r}
 ggplot(sun.spct, aes(w.length, s.e.irrad)) + 
-  stat_color(geom = "bar") + stat_color(shape = 21, color = "black", stroke = 1.2, fill = "white") +
-  scale_fill_identity() + scale_color_identity() + theme_bw()
+  stat_color(geom = "bar") + 
+  geom_point(shape = 21, color = "black", stroke = 1.2, fill = "white") +
+  scale_fill_identity() + 
+  scale_color_identity() + 
+  theme_bw()
 ```
 
 ```{r}
@@ -145,41 +151,44 @@ ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
 ```
 
 ```{r}
-ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
+ggplot(sun.spct, aes(w.length, s.e.irrad)) + 
+  geom_line() +
   stat_average(range = c(300,500), label.fmt = "%.3f", color = "red")
 ```
 
 ```{r}
 ggplot(sun.spct, aes(w.length, s.e.irrad)) +
+  geom_line() + 
   stat_average(geom = "hline", color = "red") +
-  geom_line() + stat_average(label.fmt = "Mean = %.3f", color = "red", vjust = -0.3)
+  stat_average(label.fmt = "Mean = %.3f", color = "red", vjust = -0.3)
 ```
 
 ```{r}
 ggplot(two_suns.spct, aes(w.length, s.e.irrad, color = spct.idx)) +
+  geom_line() + 
   stat_average(geom = "hline") +
-  geom_line() + stat_average(label.fmt = "Mean = %.3f", vjust = -0.3, show.legend = FALSE)
+  stat_average(label.fmt = "Mean = %.3f", vjust = -0.3, show.legend = FALSE)
 ```
 
 ```{r}
 ggplot(sun.spct, aes(w.length, s.e.irrad)) +
   stat_average(range = c(400,500), geom = "rect", alpha = 0.2, fill = color(450)) +
-  geom_line() + 
-  stat_average(range = c(400,500), label.fmt = "Mean = %.3f", vjust = -0.3, geom = "text")
+  stat_average(range = c(400,500), label.fmt = "Mean = %.3f", vjust = -0.3, geom = "text") + 
+  geom_line()
 ```
 
 ```{r}
 ggplot(two_suns.spct, aes(w.length, s.e.irrad, color = spct.idx)) +
-  stat_average(geom = "hline") +
   geom_line() + 
+  stat_average(geom = "hline") +
   stat_average(label.fmt = "Mean = %.3f", vjust = 1.2, show.legend = FALSE) +
   facet_grid(spct.idx~.)
 ```
 
 ```{r}
 ggplot(two_suns.spct, aes(w.length, s.e.irrad, color = spct.idx)) +
-  stat_average(geom = "hline") +
   geom_line() + 
+  stat_average(geom = "hline") +
   stat_average(label.fmt = "Mean = %.3f", vjust = 1.2, show.legend = FALSE) +
   facet_grid(spct.idx~., scales = "free_y")
 ```
@@ -188,40 +197,44 @@ ggplot(two_suns.spct, aes(w.length, s.e.irrad, color = spct.idx)) +
 
 ```{r}
 ggplot(sun.spct, aes(w.length, s.e.irrad)) +
-  geom_line() + scale_color_identity() + scale_fill_identity() +
-  stat_waveband(w.band = PAR(), 
-                 geom = "rect", alpha = 0.5) +
-  stat_waveband(w.band = PAR(), vjust = -0.3, geom = "text") +
+  stat_waveband(w.band = PAR(), geom = "rect", alpha = 0.5) +
+  stat_waveband(w.band = PAR(), vjust = 1.2, geom = "text") +
+  geom_line() + 
+  scale_color_identity() + 
+  scale_fill_identity() +  
   theme_bw()
 ```
 
 ```{r}
 ggplot(sun.spct, aes(w.length, s.e.irrad)) +
-  geom_line() + scale_color_identity() + scale_fill_identity() +
-  stat_waveband(w.band = c(400,500), 
-                 geom = "rect", alpha = 0.5) +
-  stat_waveband(w.band = c(400,500), geom = "text",
-                y.multiplier = 0.5) +
+  stat_waveband(w.band = c(400,500), geom = "rect", alpha = 0.5) +
+  stat_waveband(w.band = c(400,500), geom = "text", y.multiplier = 0.5) +
+  geom_line() + 
+  scale_color_identity() + 
+  scale_fill_identity() +
   theme_bw()
 ```
 
 ```{r}
 ggplot(sun.spct, aes(w.length, s.e.irrad)) +
-  geom_line() + scale_color_identity() + scale_fill_identity() +
-  stat_waveband(w.band = VIS_bands(), 
-                 geom = "rect", alpha = 0.7) +
+  stat_waveband(w.band = VIS_bands(), geom = "rect", alpha = 0.7) +
   stat_waveband(w.band = VIS_bands(), angle = 90, hjust = -0.1, geom = "text", 
                  aes(label = paste(..wb.name.., " = ", ..y.label.., sep = ""),
                      color = ..wb.color..)) +
-  ylim(NA, 1.1) + theme_bw()
+  geom_line() + 
+  scale_color_identity() + 
+  scale_fill_identity() +
+  ylim(NA, 1.1) + 
+  theme_bw()
 ```
 
 ## Color guide
 
 ```{r}
 ggplot(sun.spct, aes(w.length, s.e.irrad)) +
-  geom_line() + scale_fill_identity() +
+  geom_line() + 
   stat_color_guide(w.band = VIS_bands(), ymin = -0.03, ymax = 0) + 
+  scale_fill_identity() +
   theme_bw()
 ```
  
@@ -255,7 +268,8 @@ ggplot(sun.spct, aes(w.length, s.e.irrad)) +
 ggplot(sun.spct, aes(w.length, s.e.irrad)) +
   stat_color_guide(alpha = 0.4, ymin = -Inf, ymax = Inf) + 
   stat_waveband(w.band = PAR(), ymin = -0.01, ymax = 0, color = "black", geom = "rect") +
-  stat_waveband(w.band = PAR(), vjust = -0.5, geom = "text", color = "black",
+  stat_waveband(w.band = PAR(), integral.fun = "total",
+                vjust = -0.5, geom = "text", color = "black",
                 y.position = 0,
                 aes(label = paste(..wb.name.., " = ", ..y.label.., sep = ""))) +  
   geom_line() + 
@@ -330,6 +344,14 @@ ggplot(sun.spct, aes(w.length, s.e.irrad)) +
   ylim(NA, 1.1)
 ```
 
+```{r}
+ggplot(sun.spct, aes(w.length, s.e.irrad)) + 
+  geom_spct() + 
+  waveband_guide(w.band = Plant_bands(), guide.position = "top2",
+                 aes(label = paste(..wb.name.., ..y.label.., sep = "\n"))) +
+  ylim(NA, 1.1)
+```
+
 ## Plotting spectra
 
 ```{r}
@@ -337,11 +359,36 @@ plot(sun.spct)
 ```
 
 ```{r}
+plot(sun.spct, label.qty = "mean")
+```
+
+```{r}
+plot(sun.spct, label.qty = "contribution")
+```
+
+```{r}
 plot(sun.spct, unit.out = "photon")
 ```
 
 ```{r}
+plot(sun.spct, annotations = c("segments", "labels", "color.guide"))
+```
+
+```{r}
+plot(sun.spct, 
+     annotations = c("segments", "labels", "summaries", "color.guide"))
+```
+
+```{r}
 plot(sun.spct, range = VIS())
+```
+
+```{r}
+plot(sun.spct, w.band = PAR())
+```
+
+```{r}
+plot(sun.spct, w.band = CIE())
 ```
 
 ```{r}
@@ -361,7 +408,7 @@ plot(yellow_gel.spct, annotations = "colour.guide")
 ```
 
 ```{r}
-plot(sun.spct) %+% geom_spct(fill = color(sun.spct)) + 
+plot(sun.spct) + geom_spct(fill = color(sun.spct)) + 
   geom_spct(data = yellow_gel.spct * sun.spct, color = "black", 
             fill = color(yellow_gel.spct * sun.spct))
 ```

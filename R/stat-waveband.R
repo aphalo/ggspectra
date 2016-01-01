@@ -22,7 +22,8 @@
 #'   \code{\link[ggplot2]{layer}} for more details.
 #' @param na.rm	a logical value indicating whether NA values should be stripped
 #'   before the computation proceeds.
-#' @param w.band a numeric vector of at least length two.
+#' @param w.band a waveband object or a list of waveband objects or numeric
+#'   vector of at least length two.
 #' @param integral.fun function on $x$ and $y$.
 #' @param label.fmt character string giving a format definition for converting
 #'   y-integral values into character strings by means of function
@@ -55,7 +56,7 @@
 stat_waveband <- function(mapping = NULL, data = NULL, geom = "rect",
                        w.band = NULL,
                        integral.fun = "mean",
-                       label.fmt = "%.1f",
+                       label.fmt = "%.2f",
                        y.multiplier = 1,
                        y.position = NULL,
                        position = "identity", na.rm = FALSE, show.legend = NA,
@@ -89,6 +90,10 @@ StatWaveband <-
                      if (is.null(w.band)) {
                        w.band <- waveband(data$x)
                      }
+                     if (is.any_spct(w.band) ||
+                         (is.numeric(w.band) && length(na.omit(w.band)) >= 2)) {
+                       w.band <- waveband(range(w.band, na.rm = TRUE))
+                     }
                      if (!is.list(w.band) || is.waveband(w.band)) {
                        w.band <- list(w.band)
                      }
@@ -97,10 +102,21 @@ StatWaveband <-
                          integral.fun <- function(xx, yy) {
                            photobiology::integrate_xy(xx, yy) / diff(range(xx))
                          }
+                         y.mult.fun <- function(xx, mult) {
+                           1.0 * mult
+                         }
                        } else if (integral.fun == "total") {
-                         integral.fun <- phtobiology::integrate_xy
+                         integral.fun <- photobiology::integrate_xy
+                         y.mult.fun <- function(xx, mult) {
+                           mult / diff(range(xx))
+                         }
                        } else {
-                         stop("'integral.fun' value '", integral.fun, "' not supported.")
+                         warning("'integral.fun' value '", integral.fun,
+                                 "' not yet supported.")
+                         # We use NaN rather than NA so that it prints and
+                         # propagates quietly.
+                         integral.fun <- function(xx, yy) {NaN}
+                         y.mult.fun <- function(xx, yy) {NaN}
                        }
                      } else {
                        stopifnot(is.function(integral.fun))
@@ -111,22 +127,35 @@ StatWaveband <-
                        if (is.numeric(wb)) {
                          wb <- waveband(wb)
                        }
+
                        range <- range(wb)
                        mydata <- trim_tails(data$x, data$y,
                                                           low.limit = range[1],
                                                           high.limit = range[2])
+                       if (is_effective(wb)) {
+                         warning("BSWFs not yet supported: skipping summary for '",
+                                 labels(wb)$label, "'.")
+                         # We use NaN rather than NA so that it prints and
+                         # propagates quietly.
+                         yint.tmp <- NaN
+                         ymult.tmp <- NaN
+                       } else {
+                         yint.tmp <- integral.fun(mydata$x, mydata$y)
+                         ymult.tmp <- y.mult.fun(mydata$x, y.multiplier)
+                       }
                        integ.df <- rbind(integ.df,
                                          data.frame(x = midpoint(mydata$x),
                                                     xmin = range[1],
                                                     xmax = range[2],
-                                                    yint = integral.fun(mydata$x, mydata$y),
+                                                    yint = yint.tmp,
+                                                    ymult = ymult.tmp,
                                                     wb.color = color(wb),
                                                     wb.name = labels(wb)$label)
                                          )
                      }
 
                      if (is.null(y.position)) {
-                       integ.df$y <- integ.df$yint * y.multiplier
+                       integ.df$y <- with(integ.df, yint * ymult)
                      } else {
                        integ.df$y <- y.position
                      }
@@ -137,9 +166,9 @@ StatWaveband <-
                    default_aes = ggplot2::aes(label = ..y.label..,
                                               xmin = ..xmin..,
                                               xmax = ..xmax..,
-                                              ymax = ..yint..,
+                                              ymax = ..yint.. * ymult,
                                               ymin = 0 * ..yint..,
-                                              yintercept = ..yint..,
+                                              yintercept = ..yint.. * ymult,
                                               fill = ..wb.color..),
                    required_aes = c("x", "y")
   )
@@ -161,15 +190,21 @@ waveband_guide <- function(mapping = NULL, data = NULL,
                           guide.width = 0.05,
                           rect.alpha = 0.7,
                           position = "identity", na.rm = FALSE, show.legend = FALSE,
-                          inherit.aes = TRUE, ...){
+                          inherit.aes = TRUE, ...) {
   if (is.character(guide.position)) {
-    ymax <- switch (guide.position,
+    if (guide.position %in% c("bottom2", "middle2", "top2")) {
+      guide.width <- guide.width * 1.75
+    }
+    ymax <- switch(guide.position,
       bottom = 0.0,
+      bottom2 = 0.0,
       middle = 0.5 + guide.width / 2,
-      top    = 1.0 + guide.width,
+      middle2 = 0.5 + guide.width / 2,
+      top    = 1.05 + guide.width,
+      top2    = 1.05 + guide.width,
       NA
     )
-    ymin = ymax - guide.width
+    ymin <- (ymax - guide.width)
   }
   list(
     stat_waveband(mapping = mapping, data = data,
@@ -198,6 +233,7 @@ waveband_guide <- function(mapping = NULL, data = NULL,
                   show.legend = show.legend,
                   inherit.aes = inherit.aes,
                   color = "white",
+                  size = 2,
                   ...),
     scale_fill_identity()
   )

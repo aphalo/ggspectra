@@ -24,9 +24,9 @@
 #'   stripped before the computation proceeds.
 #' @param type character one of "CMF" (color matching function) or "CC"
 #'   (color coordinates).
-#' @param w.band photobiology::waveband object.
-#' @param length.out The number of steps to use to simulate a continuos
-#'   range of colours.
+#' @param w.band photobiology::waveband object or a list of such objects or NULL.
+#' @param length.out The number of steps to use to simulate a continuous
+#'   range of colours when w.band == NULL.
 #'
 #' @section Computed variables:
 #' \describe{
@@ -46,7 +46,7 @@
 #' @family stats functions
 #'
 stat_color_guide <- function(mapping = NULL, data = NULL, geom = "rect",
-                       type = "CMF", w.band=NULL, length.out = 150,
+                       type = "CMF", w.band = NULL, length.out = 150,
                        position = "identity", na.rm = FALSE, show.legend = FALSE,
                        inherit.aes = TRUE, ...) {
   ggplot2::layer(
