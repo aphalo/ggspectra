@@ -42,9 +42,9 @@ e_rsp_plot <- function(spct,
   if (is.null(pc.out) || is.null(norm)) {
     # no rescaling needed
     if (is_normalized(spct) || is_scaled(spct)) {
-      s.irrad.label <- expression(Spectral~~energy~~response~~R[E](lambda)~~(relative~~units))
-      irrad.label.total <- "atop(R[E], (relative~~units))"
-      irrad.label.avg <- "atop(bar(R[E](lambda)), (relative~~units))"
+      s.rsp.label <- expression(Spectral~~energy~~response~~R[E](lambda)~~(relative~~units))
+      rsp.label.total <- "atop(R[E], (relative~~units))"
+      rsp.label.avg <- "atop(bar(R[E](lambda)), (relative~~units))"
       scale.factor <- 1
     } else {
       time.unit <- getTimeUnit(spct)
@@ -136,7 +136,7 @@ e_rsp_plot <- function(spct,
 
   if (label.qty == "total") {
     rsp.label <- "integral(R[E](lambda))"
-  } else if (label.qty == "average") {
+  } else if (label.qty %in% c("average", "mean")) {
     rsp.label <- "bar(R[E](lambda))"
   } else if (label.qty == "contribution") {
     rsp.label <- "atop(Contribution~~to~~total, R[E]~~(fraction))"
@@ -150,83 +150,19 @@ e_rsp_plot <- function(spct,
     rsp.label <- ""
   }
 
-  plot <- ggplot(spct, aes(x=w.length, y=s.e.response)) +
+  plot <- ggplot(spct, aes_(~w.length, ~s.e.response)) +
     scale_fill_identity() + scale_color_identity()
   plot <- plot + geom_line()
-  plot <- plot + labs(x="Wavelength (nm)", y=s.rsp.label)
+  plot <- plot + labs(x = "Wavelength (nm)", y = s.rsp.label)
 
-  if ("peaks" %in% annotations) {
-    plot <- plot + stat_peaks(span = 21, label.fmt = "%3.0f",
-                              ignore_threshold = 0.02, color = "red",
-                              geom = "text", vjust = -0.5, size = 2.5)
-  }
-  if ("valleys" %in% annotations) {
-    plot <- plot + stat_valleys(span = 21, label.fmt = "%3.0f",
-                                ignore_threshold = 0.02, color = "blue",
-                                geom = "text", vjust = +1.2, size = 2.5)
-  }
-  if (!is.null(annotations) &&
-      length(intersect(c("labels", "summaries", "colour.guide", "boxs", "segments"),
-                       annotations)) > 0L) {
-    plot <- plot + ylim(y.min, y.max * 1.25) + xlim(min(spct) - spread(spct) * 0.035, NA)
-  }
-  if ("colour.guide" %in% annotations) {
-    plot <- plot + stat_color_guide(ymax = y.max * 1.26, ymin = y.max * 1.22)
-  }
-  if ("boxes" %in% annotations) {
-    plot <- plot + stat_color_guide(w.band = w.band,
-                                    ymax = y.max * 1.20,
-                                    ymin = y.max * 1.08,
-                                    color = "white",
-                                    linetype = "solid"
-    )
-  }
-
-  if ("segments" %in% annotations) {
-    plot <- plot + stat_color_guide(w.band = w.band,
-                                    ymax = y.max * 1.10,
-                                    ymin = y.max * 1.05,
-                                    color = "white",
-                                    linetype = "solid"
-    )
-  }
-
-  if ("labels" %in% annotations && "summaries" %in% annotations) {
-    plot <- plot + stat_waveband(geom = "text",
-                                 w.band = w.band,
-                                 y.position = y.max * 1.143,
-                                 integral.fun = label.qty,
-                                 color = "white",
-                                 aes(label = paste(..wb.name.., ..y.label.., sep = "\n")),
-                                 size = rel(2))
-  } else {
-    if ("labels" %in% annotations) {
-      plot <- plot + stat_waveband(geom = "text",
-                                   w.band = w.band,
-                                   y.position = y.max * 1.143,
-                                   integral.fun = label.qty,
-                                   color = "white",
-                                   aes(label = ..wb.name..),
-                                   size = rel(2))
-    }
-    if ("summaries" %in% annotations) {
-      plot <- plot + stat_waveband(geom = "text",
-                                   w.band = w.band,
-                                   y.position = y.max * 1.143,
-                                   integral.fun = label.qty,
-                                   color = "white",
-                                   aes(label = ..y.label..),
-                                   size = rel(2))
-    }
-  }
-
-  if ("summaries" %in% annotations) {
-    plot <- plot +
-      annotate("text",
-               x = min(spct), y = y.max * 1.09 + 0.5 * y.max * 0.085,
-               size = rel(2), vjust = -0.3, hjust = 0.5, angle = 90,
-               label = irrad.label, parse = TRUE)
-  }
+  plot <- plot + decoration(w.band = w.band,
+                            y.max = y.max,
+                            y.min = y.min,
+                            x.max = max(spct),
+                            x.min = min(spct),
+                            annotations = annotations,
+                            label.qty = label.qty,
+                            summary.label = rsp.label)
 
   if (!is.na(exposure.label)) {
     plot <- plot +  annotate("text",
@@ -286,9 +222,9 @@ q_rsp_plot <- function(spct,
   if (is.null(pc.out) || is.null(norm)) {
     # no rescaling needed
     if (is_normalized(spct) || is_scaled(spct)) {
-      s.irrad.label <- expression(Spectral~~photon~~response~~R[Q](lambda)~~(relative~~units))
-      irrad.label.total <- "atop(R[Q], (relative~~units))"
-      irrad.label.avg <- "atop(bar(R[Q](lambda)), (relative~~units))"
+      s.rsp.label <- expression(Spectral~~photon~~response~~R[Q](lambda)~~(relative~~units))
+      rsp.label.total <- "atop(R[Q], (relative~~units))"
+      rsp.label.avg <- "atop(bar(R[Q](lambda)), (relative~~units))"
       scale.factor <- 1
     } else {
       time.unit <- getTimeUnit(spct)
@@ -380,7 +316,7 @@ q_rsp_plot <- function(spct,
 
   if (label.qty == "total") {
     rsp.label <- "integral(R[Q](lambda))"
-  } else if (label.qty == "average") {
+  } else if (label.qty %in% c("average", "mean")) {
     rsp.label <- "bar(R[Q](lambda))"
   } else if (label.qty == "contribution") {
     rsp.label <- "atop(Contribution~~to~~total, R[Q]~~(fraction))"
@@ -394,36 +330,18 @@ q_rsp_plot <- function(spct,
     rsp.label <- ""
   }
 
-  plot <- ggplot(spct, aes(x=w.length, y=s.q.response)) +
+  plot <- ggplot(spct, aes_(~w.length, ~s.q.response)) +
     scale_fill_identity() + scale_color_identity()
   plot <- plot + geom_line()
-  plot <- plot + labs(x="Wavelength (nm)", y=s.rsp.label)
-
-  if ("peaks" %in% annotations) {
-    plot <- plot + stat_peaks(span=21, ignore_threshold=0.02, color="red",
-                              geom = "text", vjust=-0.5, size=2.5)
-  }
-  if ("valleys" %in% annotations) {
-    plot <- plot + stat_valleys(span=21, ignore_threshold=0.02, color="blue",
-                                geom = "text", vjust=+1.2, size=2.5)
-  }
-  if (!is.null(annotations) &&
-      length(intersect(c("labels", "summaries", "colour.guide"), annotations)) > 0L) {
-    plot <- plot + ylim(y.min, y.max * 1.25) + xlim(min(spct) - spread(spct) * 0.025, NA)
-  }
-  if ("colour.guide" %in% annotations) {
-    plot <- plot + stat_color_guide(ymax=y.max * 1.22, ymin=y.max * 1.18)
-  }
-  # if ("labels" %in% annotations || "summaries" %in% annotations) {
-  #   plot <- annotate_plot(plot = plot, spct = spct, w.band = w.band,
-  #                         y.bottom = y.max * 1.09,
-  #                         y.width = y.max * 0.085,
-  #                         annotations = annotations,
-  #                         integ.label = rsp.label,
-  #                         integ.fun = q_response,
-  #                         quantity = label.qty,
-  #                         ...)
-  # }
+  plot <- plot + labs(x = "Wavelength (nm)", y = s.rsp.label)
+  plot <- plot + decoration(w.band = w.band,
+                            y.max = y.max,
+                            y.min = y.min,
+                            x.max = max(spct),
+                            x.min = min(spct),
+                            annotations = annotations,
+                            label.qty = label.qty,
+                            summary.label = rsp.label)
 
   if (!is.na(exposure.label)) {
     plot <- plot +  annotate("text",
@@ -485,6 +403,9 @@ plot.response_spct <-
            annotations=getOption("photobiology.plot.annotations",
                                  default = c("boxes", "labels", "summaries", "colour.guide", "peaks")),
            norm = "max" ) {
+    if ("color.guide" %in% annotations) {
+      annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
+    }
     if (unit.out=="photon" || unit.out=="quantum") {
       out.ggplot <- q_rsp_plot(spct=x, w.band=w.band, range=range,
                                pc.out=pc.out, label.qty=label.qty, annotations=annotations, norm = norm, ...)

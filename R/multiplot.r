@@ -20,6 +20,10 @@
 #' @note Modified from example by Winston Chang found in the Cookbook for R
 #' Licenced under CC BY-SA
 #'
+#' @examples
+#' library(photobiology)
+#' multiplot(plot(sun.spct), plot(yellow_gel.spct), cols = 2)
+#'
 #' @export
 #'
 multiplot <- function(..., plotlist=NULL, cols=1, layout=NULL) {

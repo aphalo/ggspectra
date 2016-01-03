@@ -51,7 +51,7 @@ plot.waveband <-
            w.length = NULL,
            range = c(280, 800),
            fill = 0,
-           unit.in = getOption("photobiology.radiation.unit", default="energy"),
+           unit.in = getOption("photobiology.radiation.unit", default = "energy"),
            annotations = getOption("photobiology.plot.annotations",
                                    default = c("colour.guide", "boxes", "labels")),
            wb.trim = TRUE,
@@ -86,7 +86,7 @@ plot.waveband <-
     calc_multipliers(w.length, w.band,
                      unit.out=unit.in, unit.in=unit.in,
                      use.cached.mult=getOption("photobiology.use.cached.mult",
-                                               default = FALSE), fill=fill)
+                                               default = FALSE), fill = fill)
   if (is.null(norm)) {
     if (!is.null(w.band$norm)) {
       norm <- w.band$norm

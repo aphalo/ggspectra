@@ -99,86 +99,19 @@ e_plot <- function(spct,
   spct[["s.e.irrad"]] <- spct[["s.e.irrad"]] * scale.factor
   y.max <- max(spct[["s.e.irrad"]], na.rm = TRUE)
   y.min <- 0
-  plot <- ggplot(spct, aes(x = w.length, y = s.e.irrad)) +
+  plot <- ggplot(spct, aes_(~w.length, ~s.e.irrad)) +
     scale_fill_identity() + scale_color_identity()
   plot <- plot + geom_line()
   plot <- plot + labs(x = "Wavelength (nm)", y = s.irrad.label)
-  if ("peaks" %in% annotations) {
-    plot <- plot + stat_peaks(span = 21, label.fmt = "%3.0f",
-                              ignore_threshold = 0.02, color = "red",
-                              geom = "text", vjust = -0.5, size = 2.5)
-  }
-  if ("valleys" %in% annotations) {
-    plot <- plot + stat_valleys(span = 21, label.fmt = "%3.0f",
-                                ignore_threshold = 0.02, color = "blue",
-                                geom = "text", vjust = +1.2, size = 2.5)
-  }
-  if (!is.null(annotations) &&
-        length(intersect(c("labels", "summaries", "colour.guide", "boxs", "segments"),
-                         annotations)) > 0L) {
-    plot <- plot + ylim(y.min, y.max * 1.25) + xlim(min(spct) - spread(spct) * 0.035, NA)
-  }
-  if ("colour.guide" %in% annotations) {
-    plot <- plot + stat_color_guide(ymax = y.max * 1.26, ymin = y.max * 1.22)
-  }
-  if ("boxes" %in% annotations) {
-    plot <- plot + stat_color_guide(w.band = w.band,
-                                 ymax = y.max * 1.20,
-                                 ymin = y.max * 1.08,
-                                 color = "white",
-                                 linetype = "solid"
-                                 )
-    label.color <- "white"
-    pos.shift <- 0.00
-  }
 
-  if ("segments" %in% annotations) {
-    plot <- plot + stat_color_guide(w.band = w.band,
-                                    ymax = y.max * 1.10,
-                                    ymin = y.max * 1.07,
-                                    color = "white",
-                                    linetype = "solid"
-    )
-    label.color <- "black"
-    pos.shift <- 0.01
-  }
-
-  if ("labels" %in% annotations && "summaries" %in% annotations) {
-    plot <- plot + stat_waveband(geom = "text",
-                                 w.band = w.band,
-                                 y.position = y.max * 1.143 + pos.shift,
-                                 integral.fun = label.qty,
-                                 color = label.color,
-                                 aes(label = paste(..wb.name.., ..y.label.., sep = "\n")),
-                                 size = rel(2))
-  } else {
-    if ("labels" %in% annotations) {
-      plot <- plot + stat_waveband(geom = "text",
-                                   w.band = w.band,
-                                   y.position = y.max * 1.143 + pos.shift,
-                                   integral.fun = label.qty,
-                                   color = label.color,
-                                   aes(label = ..wb.name..),
-                                   size = rel(2))
-    }
-    if ("summaries" %in% annotations) {
-      plot <- plot + stat_waveband(geom = "text",
-                                   w.band = w.band,
-                                   y.position = y.max * 1.143 + pos.shift,
-                                   integral.fun = label.qty,
-                                   color = label.color,
-                                   aes(label = ..y.label..),
-                                   size = rel(2))
-    }
-  }
-
-  if ("summaries" %in% annotations) {
-    plot <- plot +
-      annotate("text",
-               x = min(spct), y = y.max * 1.09 + 0.5 * y.max * 0.085,
-               size = rel(2), vjust = -0.3, hjust = 0.5, angle = 90,
-               label = irrad.label, parse = TRUE)
-  }
+  plot <- plot + decoration(w.band = w.band,
+                            y.max = y.max,
+                            y.min = y.min,
+                            x.max = max(spct),
+                            x.min = min(spct),
+                            annotations = annotations,
+                            label.qty = label.qty,
+                            summary.label = irrad.label)
 
   if (is_effective(spct)) {
     plot <- plot +  annotate("text",
@@ -280,7 +213,7 @@ q_plot <- function(spct,
   }
   if (label.qty == "total") {
     irrad.label <- irrad.label.total
-  } else if (label.qty == "average") {
+  } else if (label.qty %in% c("average", "mean")) {
     irrad.label <- irrad.label.avg
   } else if (label.qty == "contribution") {
     irrad.label <- "atop(Contribution~~to~~total, Q~~(fraction))"
@@ -303,82 +236,19 @@ q_plot <- function(spct,
   spct[["s.q.irrad"]] <- spct[["s.q.irrad"]] * scale.factor
   y.max <- max(spct[["s.q.irrad"]], na.rm = TRUE)
   y.min <- 0
-  plot <- ggplot(spct, aes(x=w.length, y=s.q.irrad)) +
+  plot <- ggplot(spct, aes_(~w.length, ~s.q.irrad)) +
     scale_fill_identity() + scale_color_identity()
   plot <- plot + geom_line()
-  plot <- plot + labs(x="Wavelength (nm)", y=s.irrad.label)
-  if ("peaks" %in% annotations) {
-    plot <- plot + stat_peaks(span = 21, label.fmt = "%3.0f",
-                              ignore_threshold = 0.02, color = "red",
-                              geom = "text", vjust = -0.5, size = 2.5)
-  }
-  if ("valleys" %in% annotations) {
-    plot <- plot + stat_valleys(span = 21, label.fmt = "%3.0f",
-                                ignore_threshold = 0.02, color = "blue",
-                                geom = "text", vjust = +1.2, size = 2.5)
-  }
-  if (!is.null(annotations) &&
-      length(intersect(c("labels", "summaries", "colour.guide", "boxs", "segments"),
-                       annotations)) > 0L) {
-    plot <- plot + ylim(y.min, y.max * 1.25) + xlim(min(spct) - spread(spct) * 0.035, NA)
-  }
-  if ("colour.guide" %in% annotations) {
-    plot <- plot + stat_color_guide(ymax = y.max * 1.26, ymin = y.max * 1.22)
-  }
-  if ("boxes" %in% annotations) {
-    plot <- plot + stat_color_guide(w.band = w.band,
-                                    ymax = y.max * 1.20,
-                                    ymin = y.max * 1.08,
-                                    color = "white",
-                                    linetype = "solid"
-    )
-  }
+  plot <- plot + labs(x = "Wavelength (nm)", y = s.irrad.label)
 
-  if ("segments" %in% annotations) {
-    plot <- plot + stat_color_guide(w.band = w.band,
-                                    ymax = y.max * 1.10,
-                                    ymin = y.max * 1.05,
-                                    color = "white",
-                                    linetype = "solid"
-    )
-  }
-
-  if ("labels" %in% annotations && "summaries" %in% annotations) {
-    plot <- plot + stat_waveband(geom = "text",
-                                 w.band = w.band,
-                                 y.position = y.max * 1.143,
-                                 integral.fun = label.qty,
-                                 color = "white",
-                                 aes(label = paste(..wb.name.., ..y.label.., sep = "\n")),
-                                 size = rel(2))
-  } else {
-    if ("labels" %in% annotations) {
-      plot <- plot + stat_waveband(geom = "text",
-                                   w.band = w.band,
-                                   y.position = y.max * 1.143,
-                                   integral.fun = label.qty,
-                                   color = "white",
-                                   aes(label = ..wb.name..),
-                                   size = rel(2))
-    }
-    if ("summaries" %in% annotations) {
-      plot <- plot + stat_waveband(geom = "text",
-                                   w.band = w.band,
-                                   y.position = y.max * 1.143,
-                                   integral.fun = label.qty,
-                                   color = "white",
-                                   aes(label = ..y.label..),
-                                   size = rel(2))
-    }
-  }
-
-  if ("summaries" %in% annotations) {
-    plot <- plot +
-      annotate("text",
-               x = min(spct), y = y.max * 1.09 + 0.5 * y.max * 0.085,
-               size = rel(2), vjust = -0.3, hjust = 0.5, angle = 90,
-               label = irrad.label, parse = TRUE)
-  }
+  plot <- plot + decoration(w.band = w.band,
+                            y.max = y.max,
+                            y.min = y.min,
+                            x.max = max(spct),
+                            x.min = min(spct),
+                            annotations = annotations,
+                            label.qty = label.qty,
+                            summary.label = irrad.label)
 
   if (is_effective(spct)) {
     plot <- plot +  annotate("text",

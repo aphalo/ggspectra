@@ -41,7 +41,7 @@
 #' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
 #'   stat_average(geom = "hline")
 #' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
-#'  stat_average(label.fmt = "%.3f", color = "red")#' @export
+#'  stat_average(label.fmt = "%.3f", color = "red")
 #'
 #' @export
 #' @family stats functions

@@ -1,0 +1,150 @@
+---
+title: "`ggspectra` `r packageVersion('ggspectra')`<br>Plotting Guide"
+author: "Pedro J. Aphalo"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{User Guide}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction
+
+## Stats
+
+```{r}
+library(ggplot2)
+library(photobiology)
+library(photobiologyFilters)
+library(photobiologyReflectors)
+library(photobiologyLEDs)
+library(photobiologyPlants)
+library(photobiologyWavebands)
+library(ggspectra)
+```
+
+```{r setup, include = FALSE, eval = FALSE}
+library(svglite)
+knitr::opts_chunk$set(
+  dev = "svglite",
+  fig.ext = ".svg"
+)
+```
+
+```{r}
+library(knitr)
+opts_chunk$set(fig.path = 'figure/pos-', fig.align = 'center', fig.show = 'hold',
+               fig.width = 7, fig.height = 4)
+options(warnPartialMatchArgs = FALSE)
+```
+
+## Plotting source_spct
+
+```{r}
+plot(sun.spct)
+```
+
+```{r}
+plot(sun.spct, label.qty = "mean")
+```
+
+```{r}
+plot(sun.spct, label.qty = "contribution")
+```
+
+```{r}
+plot(sun.spct, unit.out = "photon")
+```
+
+```{r}
+plot(sun.spct, annotations = c("segments", "labels", "color.guide"))
+```
+
+```{r}
+plot(sun.spct, 
+     annotations = c("segments", "labels", "summaries", "color.guide"))
+```
+
+```{r}
+plot(sun.spct, range = VIS())
+```
+
+```{r}
+plot(sun.spct, w.band = PAR())
+```
+
+```{r}
+plot(sun.spct, w.band = CIE())
+```
+
+```{r}
+plot(sun.daily.spct)
+```
+
+```{r}
+plot(LUMITRONIX_white.spct)
+```
+
+## Plotting filter_spct
+
+```{r}
+plot(rosco.mspct$Moss_Green_EColour89)
+```
+
+```{r}
+plot(rosco.mspct$Moss_Green_EColour89, plot.qty = "absorbance")
+```
+
+```{r}
+plot(rosco.mspct$Moss_Green_EColour89, plot.qty = "transmittance", pc.out = TRUE)
+```
+
+## Plotting reflector_spct
+
+```{r}
+plot(gold.spct)
+```
+
+## Plotting object_spct
+
+```{r}
+plot(Solidago_upper_adax.spct, w.band = Plant_bands())
+```
+
+```{r}
+plot(as.filter_spct(Solidago_upper_adax.spct), w.band = Plant_bands())
+```
+
+```{r}
+plot(as.reflector_spct(Solidago_upper_adax.spct), w.band = Plant_bands())
+```
+
+## Plotting response_spct
+
+```{r}
+plot(sun.daily.spct * CIE(), w.band = Plant_bands())
+```
+
+```{r}
+plot(McCree_Oat.spct, w.band = PAR())
+```
+
+```{r}
+plot(McCree_Oat.spct, w.band = PAR(), unit.out = "photon", label.qty = "mean")
+```
+
+## Plotting cps_spct
+
+```{r}
+my.spct <- cps_spct(w.length = 250:800, cps = 1e3)
+plot(my.spct)
+```
+
+## Plotting raw_spct
+
+```{r}
+my.spct <- raw_spct(w.length = 250:800, counts = 32000)
+plot(my.spct)
+
+```

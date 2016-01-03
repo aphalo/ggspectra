@@ -1,12 +1,12 @@
 #' Plot an instrument counts spectrum.
 #'
 #' This function returns a ggplot object with an annotated plot of a
-#' cps_spct object.
+#' raw_spct object.
 #'
 #' @note Note that scales are expanded so as to make space for the annotations.
 #' The object returned is a ggplot objects, and can be further manipulated.
 #'
-#' @param spct a cps_spct object
+#' @param spct a raw_spct object
 #' @param w.band list of waveband objects
 #' @param range an R object on which range() returns a vector of length 2,
 #' with min annd max wavelengths (nm)
@@ -22,7 +22,7 @@
 #'
 #' @keywords internal
 #'
-cps_plot <- function(spct,
+raw_plot <- function(spct,
                      w.band,
                      range,
                      pc.out,
@@ -30,8 +30,8 @@ cps_plot <- function(spct,
                      annotations,
                      norm,
                      ...) {
-  if (!is.cps_spct(spct)) {
-    stop("cps_plot() can only plot response_spct objects.")
+  if (!is.raw_spct(spct)) {
+    stop("raw_plot() can only plot response_spct objects.")
   }
   if (!is.null(range)) {
     trim_spct(spct, range = range, byref = TRUE)
@@ -42,15 +42,15 @@ cps_plot <- function(spct,
   } else if (!is.null(norm)) {
     if (is.character(norm)) {
       if (norm %in% c("max", "maximum")) {
-        idx <- which.max(spct[["cps"]])
+        idx <- which.max(spct[["counts"]])
       } else {
         warning("Invalid character '", norm, "'value in 'norm'")
         return(ggplot())
       }
-      scale.factor <- 1 / spct[idx, "cps"]
+      scale.factor <- 1 / spct[idx, "counts"]
       norm <- spct[idx, "w.length"]
     } else if (is.numeric(norm) && norm >= min(spct) && norm <= max(spct)) {
-      scale.factor <- 1 / interpolate_spct(spct, norm)[["cps"]]
+      scale.factor <- 1 / interpolate_spct(spct, norm)[["counts"]]
     } else if (is.numeric(norm)) {
       warning("'norm = ", norm, "' value outside spectral data range of ",
               round(min(spct)), " to ", round(max(spct)), " (nm)")
@@ -71,22 +71,22 @@ cps_plot <- function(spct,
     if (is.numeric(norm)) {
       norm <- signif(norm, digits = 4)
     }
-    s.cps.label <-
-      bquote(Pixel~~response~~rate~~N( italic(lambda) )/N( .(norm))~~(.(multiplier.label)))
-    cps.label <- ""
+    s.counts.label <-
+      bquote(Pixel~~response~~N( italic(lambda) )/N( .(norm))~~(.(multiplier.label)))
+    counts.label <- ""
   } else {
-    s.cps.label <-
-      expression(Pixel~~response~~rate~~N(lambda)~~(counts~~s^{-1}))
-    cps.label <- ""
+    s.counts.label <-
+      expression(Pixel~~response~~N(lambda)~~(counts))
+    counts.label <- ""
   }
 
-  spct[["cps"]] <- spct[["cps"]] * scale.factor
-  y.max <- max(spct[["cps"]], na.rm = TRUE)
+  spct[["counts"]] <- spct[["counts"]] * scale.factor
+  y.max <- max(spct[["counts"]], na.rm = TRUE)
   y.min <- 0
   plot <- ggplot(spct)  +
     scale_fill_identity() + scale_color_identity()
   plot <- plot + geom_line()
-  plot <- plot + labs(x = "Wavelength (nm)", y = s.cps.label)
+  plot <- plot + labs(x = "Wavelength (nm)", y = s.counts.label)
 
   plot <- plot + decoration(w.band = w.band,
                             y.max = y.max,
@@ -95,7 +95,7 @@ cps_plot <- function(spct,
                             x.min = min(spct),
                             annotations = annotations,
                             label.qty = label.qty,
-                            summary.label = cps.label)
+                            summary.label = counts.label)
 
 return(plot)
 
@@ -110,7 +110,7 @@ return(plot)
 #' @note Note that scales are expanded so as to make space for the annotations.
 #' The object returned is a ggplot objects, and can be further manipulated.
 #'
-#' @param x a cps_spct object
+#' @param x a raw_spct object
 #' @param ... other arguments passed along, such as \code{label.qty}
 #' @param w.band a single waveband object or a list of waveband objects
 #' @param range an R object on which range() returns a vector of length 2,
@@ -130,11 +130,11 @@ return(plot)
 #'
 #' @family plot functions
 #'
-plot.cps_spct <-
+plot.raw_spct <-
   function(x, ...,
            w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(), PAR())),
            range = NULL,
-           unit.out = "cps",
+           unit.out = "counts",
            pc.out = FALSE,
            label.qty = "average",
            annotations = getOption("photobiology.plot.annotations",
@@ -144,7 +144,7 @@ plot.cps_spct <-
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }
 
-    out.ggplot <- cps_plot(spct = x, w.band = w.band, range = range,
+    out.ggplot <- raw_plot(spct = x, w.band = w.band, range = range,
                            label.qty = label.qty,
                            pc.out = pc.out,
                            annotations = annotations, norm = norm, ...)

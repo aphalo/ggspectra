@@ -71,7 +71,7 @@ T_plot <- function(spct,
   }
   if (label.qty == "total") {
     Tfr.label <- Tfr.label.total
-  } else if (label.qty == "average") {
+  } else if (label.qty %in% c("average", "mean")) {
     Tfr.label <- Tfr.label.avg
   } else if (label.qty == "contribution") {
     Tfr.label <- "atop(Contribution~~to~~total, T~~(fraction))"
@@ -87,49 +87,29 @@ T_plot <- function(spct,
   y.max <- 1
   y.min <- 0
 
-  plot <- ggplot(spct, aes(x=w.length, y=Tfr)) +
+  plot <- ggplot(spct, aes_(~w.length, ~Tfr)) +
     scale_fill_identity() + scale_color_identity()
   plot <- plot + geom_line()
-  if ("peaks" %in% annotations) {
-    plot <- plot + stat_peaks(span=21, ignore_threshold=0.02, color="red",
-                              geom = "text", vjust=-0.5, size=2.5)
-  }
-  if ("valleys" %in% annotations) {
-    plot <- plot + stat_valleys(span=21, ignore_threshold=0.02, color="blue",
-                                geom = "text", vjust=+1.2, size=2.5)
-  }
-  plot <- plot +
-    labs(x="Wavelength (nm)", y=s.Tfr.label)
+  plot <- plot + labs(x="Wavelength (nm)", y=s.Tfr.label)
 
-  if ("colour.guide" %in% annotations) {
-    plot <- plot + stat_color_guide(ymax=y.max * 1.22, ymin=y.max * 1.18)
-  }
-  # plot <- annotate_plot(plot=plot, spct=spct, w.band=w.band,
-  #                       y.bottom=y.max * 1.09,
-  #                       y.width=y.max * 0.085,
-  #                       annotations = annotations,
-  #                       integ.label = Tfr.label,
-  #                       integ.fun = transmittance,
-  #                       scale.factor = scale.factor,
-  #                       quantity = label.qty,
-  #                       ...)
-  if (!is.null(annotations) &&
-      length(intersect(c("labels", "summaries", "colour.guide"), annotations)) > 0L) {
-    y.limits <- c(0, y.max * 1.25)
-    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
-  } else {
-    y.limits <- c(0, 1)
-    x.limits <- range(spct)
-  }
-  if (pc.out) {
-    plot <- plot +
-      scale_y_continuous(labels = percent, breaks = c(0, 0.25, 0.5, 0.75, 1),
-                         limits = y.limits)
-  } else {
-    plot <- plot +
-      scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
-  }
-  plot <- plot + scale_x_continuous(limits = x.limits)
+  plot <- plot + decoration(w.band = w.band,
+                            y.max = y.max,
+                            y.min = y.min,
+                            x.max = max(spct),
+                            x.min = min(spct),
+                            annotations = annotations,
+                            label.qty = label.qty,
+                            summary.label = Tfr.label)
+
+  # if (pc.out) {
+  #   plot <- plot +
+  #     scale_y_continuous(labels = percent, breaks = c(0, 0.25, 0.5, 0.75, 1),
+  #                        limits = y.limits)
+  # } else {
+  #   plot <- plot +
+  #     scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
+  # }
+  # plot <- plot + scale_x_continuous(limits = x.limits)
 
   return(plot)
 
@@ -188,7 +168,7 @@ A_plot <- function(spct,
   }
   if (label.qty == "total") {
     A.label <- A.label.total
-  } else if (label.qty == "average") {
+  } else if (label.qty %in% c("average", "mean")) {
     A.label <- A.label.avg
   } else if (label.qty == "contribution") {
     A.label <- "atop(Contribution~~to~~total, A~~(fraction))"
@@ -204,37 +184,19 @@ A_plot <- function(spct,
 
   y.max <- max(spct[["A"]], na.rm = TRUE)
   y.min <- 0
-  plot <- ggplot(spct, aes(x=w.length, y=A)) +
+  plot <- ggplot(spct, aes_(~w.length, ~A)) +
     scale_fill_identity() + scale_color_identity()
   plot <- plot + geom_line()
-  plot <- plot +
-    labs(x="Wavelength (nm)", y=s.A.label)
-  if ("peaks" %in% annotations) {
-    plot <- plot + stat_peaks(span=21, ignore_threshold=0.02, color="red",
-                              geom = "text", vjust=-0.5, size=2.5)
-  }
-  if ("valleys" %in% annotations) {
-    plot <- plot + stat_valleys(span=21, ignore_threshold=0.02, color="blue",
-                                geom = "text", vjust=+1.2, size=2.5)
-  }
-  if (!is.null(annotations) &&
-        length(intersect(c("labels", "summaries", "colour.guide"), annotations)) > 0L) {
-    plot <- plot + ylim(y.min, y.max * 1.25) + xlim(min(spct) - spread(spct) * 0.025, NA)
-  }
-  plot <- plot +
-    labs(x="Wavelength (nm)", y=s.A.label)
+  plot <- plot + labs(x="Wavelength (nm)", y=s.A.label)
 
-  if ("colour.guide" %in% annotations) {
-    plot <- plot + stat_color_guide(ymax=y.max * 1.22, ymin=y.max * 1.18)
-  }
-  # plot <- annotate_plot(plot=plot, spct=spct, w.band=w.band,
-  #                       y.bottom=y.max * 1.09,
-  #                       y.width=y.max * 0.085,
-  #                       annotations = annotations,
-  #                       integ.label = A.label,
-  #                       integ.fun=absorbance,
-  #                       quantity=label.qty,
-  #                       ...)
+  plot <- plot + decoration(w.band = w.band,
+                            y.max = y.max,
+                            y.min = y.min,
+                            x.max = max(spct),
+                            x.min = min(spct),
+                            annotations = annotations,
+                            label.qty = label.qty,
+                            summary.label = A.label)
 
   return(plot)
 
@@ -312,7 +274,7 @@ R_plot <- function(spct,
   }
   if (label.qty == "total") {
     Rfr.label <- Rfr.label.total
-  } else if (label.qty == "average") {
+  } else if (label.qty %in% c("average", "mean")) {
     Rfr.label <- Rfr.label.avg
   } else if (label.qty == "contribution") {
     Rfr.label <- "atop(Contribution~~to~~total, R~~(fraction))"
@@ -327,46 +289,34 @@ R_plot <- function(spct,
   }
   y.max <- 1
   y.min <- 0
-  plot <- ggplot(spct, aes(x=w.length, y=Rfr)) +
+  plot <- ggplot(spct, aes_(~w.length, ~Rfr)) +
     scale_fill_identity() + scale_color_identity()
   plot <- plot + geom_line()
-  if ("peaks" %in% annotations) {
-    plot <- plot + stat_peaks(span=21, ignore_threshold=0.02, color="red",
-                              geom = "text", vjust=-0.5, size=2.5)
-  }
-  if ("valleys" %in% annotations) {
-    plot <- plot + stat_valleys(span=21, ignore_threshold=0.02, color="blue",
-                                geom = "text", vjust=+1.2, size=2.5)
-  }
-  plot <- plot +
-    labs(x="Wavelength (nm)", y=s.Rfr.label)
+  plot <- plot + labs(x="Wavelength (nm)", y=s.Rfr.label)
 
-  if ("colour.guide" %in% annotations) {
-    plot <- plot + stat_color_guide(ymax=y.max * 1.22, ymin=y.max * 1.18)
-  }
-  # plot <- annotate_plot(plot=plot, spct=spct, w.band=w.band,
-  #                       y.bottom=y.max * 1.09,
-  #                       y.width=y.max * 0.085,
-  #                       annotations = annotations,
-  #                       integ.label = Rfr.label,
-  #                       integ.fun = reflectance,
-  #                       scale.factor = scale.factor,
-  #                       quantity = label.qty,
-  #                       ...)
-  if (!is.null(annotations) &&
-      length(intersect(c("labels", "summaries", "colour.guide"), annotations)) > 0L) {
-    y.limits <- c(0, y.max * 1.25)
-    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
-  } else {
-    y.limits <- c(0, 1)
-    x.limits <- range(spct)
-  }
-  if (pc.out) {
-    plot <- plot + scale_y_continuous(labels = percent, breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
-  } else {
-    plot <- plot + scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
-  }
-  plot <- plot + scale_x_continuous(limits = x.limits)
+  plot <- plot + decoration(w.band = w.band,
+                            y.max = y.max,
+                            y.min = y.min,
+                            x.max = max(spct),
+                            x.min = min(spct),
+                            annotations = annotations,
+                            label.qty = label.qty,
+                            summary.label = Rfr.label)
+
+  # if (!is.null(annotations) &&
+  #     length(intersect(c("labels", "summaries", "colour.guide"), annotations)) > 0L) {
+  #   y.limits <- c(0, y.max * 1.25)
+  #   x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
+  # } else {
+  #   y.limits <- c(0, 1)
+  #   x.limits <- range(spct)
+  # }
+  # if (pc.out) {
+  #   plot <- plot + scale_y_continuous(labels = percent, breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
+  # } else {
+  #   plot <- plot + scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
+  # }
+  # plot <- plot + scale_x_continuous(limits = x.limits)
 
   return(plot)
 
@@ -430,10 +380,10 @@ O_plot <- function(spct,
   tmp.spct <- dplyr::as_data_frame(spct)[c("w.length", "Tfr", "Afr", "Rfr")]
   molten.spct <- tidyr::gather(tmp.spct, variable, value, -w.length)
   setGenericSpct(molten.spct, multiple.wl = 3L)
-  plot <- ggplot(molten.spct, aes(x=w.length, y = value)) +
+  plot <- ggplot(molten.spct, aes_(~w.length, ~value)) +
     scale_fill_identity()
   if (stacked) {
-    plot <- plot + geom_area(aes(alpha = variable), fill = "black", colour = NA)
+    plot <- plot + geom_area(aes_(alpha = ~variable), fill = "black", colour = NA)
     plot <- plot + scale_alpha_discrete(range = c(0.55, 0.25),
                                         breaks = c("Rfr", "Afr", "Tfr"),
                                         labels = c(Tfr = expression(T(lambda)),
@@ -441,43 +391,38 @@ O_plot <- function(spct,
                                                    Rfr = expression(R(lambda))),
                                         guide = guide_legend(title = NULL))
   } else {
-    plot <- plot + geom_line(aes(colour = variable))
+    plot <- plot + geom_line(aes_(colour = ~variable))
     plot <- plot + scale_colour_hue(labels = c(Tfr = expression(T(lambda)),
                                                Afr = expression(A(lambda)),
                                                Rfr = expression(R(lambda))),
                                     guide = guide_legend(title = NULL))
   }
-  plot <- plot +
-    labs(x="Wavelength (nm)", y=s.Rfr.label)
+  plot <- plot + labs(x="Wavelength (nm)", y=s.Rfr.label)
 
   annotations <- intersect(annotations, c("labels", "boxes", "segments", "colour.guide"))
 
-  if ("colour.guide" %in% annotations) {
-    plot <- plot + stat_color_guide(ymax=y.max * 1.22, ymin=y.max * 1.18)
-  }
-  # plot <- annotate_plot(plot=plot, spct=spct, w.band=w.band,
-  #                       y.bottom=y.max * 1.09,
-  #                       y.width=y.max * 0.085,
-  #                       annotations = annotations,
-  #                       integ.label = Rfr.label,
-  #                       integ.fun = reflectance,
-  #                       scale.factor = scale.factor,
-  #                       quantity = label.qty,
-  #                       ...)
-  if (!is.null(annotations) &&
-      length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide"), annotations)) > 0L) {
-    y.limits <- c(0, y.max * 1.25)
-    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
-  } else {
-    y.limits <- c(0, 1)
-    x.limits <- range(spct)
-  }
-  if (pc.out) {
-    plot <- plot + scale_y_continuous(labels = percent, breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
-  } else {
-    plot <- plot + scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
-  }
-  plot <- plot + scale_x_continuous(limits = x.limits)
+  plot <- plot + decoration(w.band = w.band,
+                            y.max = y.max,
+                            y.min = y.min,
+                            x.max = max(spct),
+                            x.min = min(spct),
+                            annotations = annotations,
+                            label.qty = label.qty,
+                            summary.label = "")
+  # if (!is.null(annotations) &&
+  #     length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide"), annotations)) > 0L) {
+  #   y.limits <- c(0, y.max * 1.25)
+  #   x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
+  # } else {
+  #   y.limits <- c(0, 1)
+  #   x.limits <- range(spct)
+  # }
+  # if (pc.out) {
+  #   plot <- plot + scale_y_continuous(labels = percent, breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
+  # } else {
+  #   plot <- plot + scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
+  # }
+  # plot <- plot + scale_x_continuous(limits = x.limits)
 
   return(plot)
 
@@ -514,30 +459,34 @@ O_plot <- function(spct,
 #'
 #' @family plot functions
 #'
-plot.filter_spct <- function(x, ...,
-                             w.band=getOption("photobiology.plot.bands", default=list(UVC(), UVB(), UVA(), PAR())),
-                             range=NULL,
-                             plot.qty=getOption("photobiology.filter.qty", default="transmittance"),
-                             pc.out=FALSE,
-                             label.qty="average",
-                             annotations=getOption("photobiology.plot.annotations",
-                                                   default = c("boxes", "labels", "summaries", "colour.guide", "peaks")) ) {
-  if (plot.qty == "transmittance") {
-    out.ggplot <- T_plot(spct = x, w.band = w.band, range = range,
-                          pc.out = pc.out, label.qty = label.qty, annotations = annotations, ...)
-  } else if (plot.qty == "absorbance") {
-    out.ggplot <- A_plot(spct = x, w.band = w.band, range = range,
-                         label.qty = label.qty, annotations = annotations, ...)
-  } else {
-    message("Supplied value for 'plot.qty' not supported")
-    return(NA)
+plot.filter_spct <-
+  function(x, ...,
+           w.band = getOption("photobiology.plot.bands",
+                            default = list(UVC(), UVB(), UVA(), PAR())),
+           range = NULL,
+           plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
+           pc.out = FALSE,
+           label.qty = "average",
+           annotations = getOption("photobiology.plot.annotations",
+                                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks")) ) {
+    if ("color.guide" %in% annotations) {
+      annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
+    }
+    if (plot.qty == "transmittance") {
+      out.ggplot <- T_plot(spct = x, w.band = w.band, range = range,
+                           pc.out = pc.out, label.qty = label.qty,
+                           annotations = annotations, ...)
+    } else if (plot.qty == "absorbance") {
+      out.ggplot <- A_plot(spct = x, w.band = w.band, range = range,
+                           label.qty = label.qty, annotations = annotations, ...)
+    } else {
+      stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
+    }
+    if ("title" %in% annotations) {
+      out.ggplot <- out.ggplot + labs(title = deparse(substitute(x)))
+    }
+    out.ggplot
   }
-  if ("title" %in% annotations) {
-    out.ggplot <- out.ggplot + labs(title = deparse(substitute(x)))
-  }
-  out.ggplot
-}
-
 
 #' Plot a reflector spectrum, especialization of generic plot function
 #'
@@ -580,8 +529,12 @@ plot.reflector_spct <-
            label.qty="average",
            annotations=getOption("photobiology.plot.annotations",
                                  default = c("boxes", "labels", "summaries", "colour.guide", "peaks")) ) {
+    if ("color.guide" %in% annotations) {
+      annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
+    }
     out.ggplot <- R_plot(spct = x, w.band = w.band,  range = range,
-                         pc.out = pc.out, label.qty = label.qty, annotations = annotations, ...)
+                         pc.out = pc.out, label.qty = label.qty,
+                         annotations = annotations, ...)
     if ("title" %in% annotations) {
       out.ggplot <- out.ggplot + labs(title = deparse(substitute(x)))
     }
@@ -632,8 +585,12 @@ plot.object_spct <-
            annotations=getOption("photobiology.plot.annotations",
                                  default = c("boxes", "labels", "colour.guide", "peaks")),
            stacked = TRUE) {
+    if ("color.guide" %in% annotations) {
+      annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
+    }
     out.ggplot <- O_plot(spct = x, w.band = w.band,  range = range,
-                         pc.out = pc.out, label.qty = label.qty, annotations = annotations, stacked = stacked, ...)
+                         pc.out = pc.out, label.qty = label.qty,
+                         annotations = annotations, stacked = stacked, ...)
     if ("title" %in% annotations) {
       out.ggplot <- out.ggplot + labs(title = deparse(substitute(x)))
     }

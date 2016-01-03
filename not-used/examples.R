@@ -1,5 +1,7 @@
 library(photobiology)
 library(ggplot2)
+library(ggspectra)
+
 ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
   stat_peaks(span = 21, geom = "text")
 
@@ -15,14 +17,3 @@ ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
 ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
   stat_color() + scale_color_identity()
 
-ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
-  stat_integral()
-
-ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
-  stat_integral(range = c(300,500), label.fmt = "%.3f", color = "red") +
-
-ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
-  stat_integral(geom = "hline")
-
-ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
-  stat_integral(label.fmt = "%.3f", color = "red")

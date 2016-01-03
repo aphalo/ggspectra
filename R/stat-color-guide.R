@@ -40,7 +40,11 @@
 #' library(photobiology)
 #' library(ggplot2)
 #' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
-#'   stat_color()
+#'   stat_color_guide(ymax = -0.02, ymin = -0.04) +
+#'   scale_fill_identity()
+#'
+#' ggplot(sun.spct, aes(w.length, s.e.irrad)) +
+#'     color_guide(alpha = 0.33) + geom_line()
 #'
 #' @export
 #' @family stats functions
