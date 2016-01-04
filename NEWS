@@ -1,3 +1,16 @@
+ggspectra 0.1.2
+===============
+
+Add text explaining examples to User Guide.
+
+Rename several stats and functions with more descriptive names.
+
+stat_color_guide() -> stat_wl_strip()
+stat_average() -> stat_wl_summary()
+stat_waveband() -> stat_wb_summary()
+color_guide() -> wl_guide()
+waveband_guide() -> wb_guide()
+
 ggspectra 0.1.1
 ===============
 

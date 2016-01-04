@@ -1,6 +1,6 @@
 #' Calculate colours from wavelength.
 #'
-#' \code{stat_color_guide} computes color definitions according to human vision.
+#' \code{stat_wl_strip} computes color definitions according to human vision.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'    \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_string}}. Only needs to be set
@@ -40,16 +40,16 @@
 #' library(photobiology)
 #' library(ggplot2)
 #' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
-#'   stat_color_guide(ymax = -0.02, ymin = -0.04) +
+#'   stat_wl_strip(ymax = -0.02, ymin = -0.04) +
 #'   scale_fill_identity()
 #'
 #' ggplot(sun.spct, aes(w.length, s.e.irrad)) +
-#'     color_guide(alpha = 0.33) + geom_line()
+#'     wl_guide(alpha = 0.33) + geom_line()
 #'
 #' @export
 #' @family stats functions
 #'
-stat_color_guide <- function(mapping = NULL, data = NULL, geom = "rect",
+stat_wl_strip <- function(mapping = NULL, data = NULL, geom = "rect",
                        type = "CMF", w.band = NULL, length.out = 150,
                        position = "identity", na.rm = FALSE, show.legend = FALSE,
                        inherit.aes = TRUE, ...) {
@@ -93,19 +93,19 @@ StatColorGuide <-
                    required_aes = c("x")
   )
 
-#' @rdname stat_color_guide
+#' @rdname stat_wl_strip
 #' @param ymin,ymax numeric used as aesthetics for plotting the guide.
 #'
 #' @export
 #'
-color_guide <- function(mapping = NULL, data = NULL, geom = "rect",
+wl_guide <- function(mapping = NULL, data = NULL,
                              type = "CMF", w.band=NULL, length.out = 150,
                              ymin = -Inf, ymax = Inf,
                              position = "identity", na.rm = FALSE, show.legend = FALSE,
                              inherit.aes = TRUE, ...) {
-  list(stat_color_guide(mapping = mapping,
+  list(stat_wl_strip(mapping = mapping,
                         data = data,
-                        geom = geom,
+                        geom = "rect",
                         type = type,
                         w.band = w.band,
                         length.out = length.out,

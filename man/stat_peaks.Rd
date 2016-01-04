@@ -94,8 +94,9 @@ ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_point() +
 \seealso{
 \code{\link[photobiology]{find_peaks}}, which is used internally.
 
-Other stats functions: \code{\link{stat_average}},
-  \code{\link{stat_color_guide}}, \code{\link{stat_color}},
-  \code{\link{stat_waveband}}
+Other stats functions: \code{\link{stat_color}},
+  \code{\link{stat_wb_summary}},
+  \code{\link{stat_wl_strip}},
+  \code{\link{stat_wl_summary}}
 }
 

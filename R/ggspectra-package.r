@@ -13,8 +13,8 @@
 #' \tabular{ll}{
 #' Package: \tab photobiologygg\cr
 #' Type: \tab Package\cr
-#' Version: \tab 0.1.1\cr
-#' Date: \tab 2015-12-25\cr
+#' Version: \tab 0.1.2\cr
+#' Date: \tab 2016-01-04\cr
 #' License: \tab GPL (>= 3.0)\cr
 #' URL: \tab \url{http://www.r4photobiology.info},\cr
 #' }

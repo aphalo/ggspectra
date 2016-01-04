@@ -11,7 +11,7 @@ library(ggspectra)
 #    fig.ext = ".svg"
 #  )
 
-## ------------------------------------------------------------------------
+## ---- include=FALSE, echo=FALSE------------------------------------------
 library(knitr)
 opts_chunk$set(fig.path = 'figure/pos-', fig.align = 'center', fig.show = 'hold',
                fig.width = 7, fig.height = 4)
@@ -25,6 +25,9 @@ ggplot(sun.spct) + geom_line()
 
 ## ------------------------------------------------------------------------
 ggplot(two_suns.spct) + aes(color = spct.idx) + geom_line()
+
+## ------------------------------------------------------------------------
+ggplot(two_suns.spct, aes(w.length, s.e.irrad, color = spct.idx)) + geom_line()
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct, unit.out = "photon") + geom_line()
@@ -50,6 +53,14 @@ ggplot(sun.spct) + geom_line() +
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + geom_line() + 
+  stat_peaks(span = 21, shape = 4, color = "red", size = 2)
+
+## ------------------------------------------------------------------------
+ggplot(sun.spct) + geom_line() + 
+  stat_peaks(span = 21, geom = "text")
+
+## ------------------------------------------------------------------------
+ggplot(sun.spct) + geom_line() + 
   stat_peaks(shape = 21, span = 25, size = 2) + scale_fill_identity() +
   stat_peaks(geom = "label", span = 25, vjust = "bottom", size = 3, 
              color = "white", label.fmt = "%3.0f")
@@ -61,15 +72,7 @@ ggplot(sun.spct) + geom_line() +
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + geom_line() + 
-  stat_peaks(span = 21, shape = 4, color = "red", size = 2)
-
-## ------------------------------------------------------------------------
-ggplot(sun.spct) + geom_line() + 
-  stat_peaks(span = 21, geom = "text")
-
-## ------------------------------------------------------------------------
-ggplot(sun.spct) + geom_line() + 
-  stat_peaks(span = 21, geom = "text", aes(label = ..y.label..))
+  stat_peaks(span = 21, geom = "text", label.fmt = "%3.2f", aes(label = ..y.label..))
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + geom_line() + 
@@ -98,7 +101,6 @@ ggplot(two_suns.spct) + aes(color = spct.idx) +
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + 
-  geom_line() +
   stat_color() + scale_color_identity()
 
 ## ------------------------------------------------------------------------
@@ -122,49 +124,48 @@ ggplot(two_suns.spct) + aes(shape = spct.idx) +
   facet_grid(spct.idx~., scales = "free_y")
 
 ## ------------------------------------------------------------------------
-ggplot(sun.spct) + geom_line() + stat_average()
+ggplot(sun.spct) + geom_line() + stat_wl_summary()
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + 
   geom_line() +
-  stat_average(range = c(300,500), label.fmt = "%.3f", color = "red")
+  stat_wl_summary(label.fmt = "%.3f", color = "red")
+
+## ------------------------------------------------------------------------
+ggplot(sun.spct) + 
+  stat_wl_summary(range = c(300,350), geom = "rect") +
+  geom_line()
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) +
   geom_line() + 
-  stat_average(geom = "hline", color = "red") +
-  stat_average(label.fmt = "Mean = %.3f", color = "red", vjust = -0.3)
-
-## ------------------------------------------------------------------------
-ggplot(two_suns.spct) + aes(color = spct.idx) +
-  geom_line() + 
-  stat_average(geom = "hline") +
-  stat_average(label.fmt = "Mean = %.3f", vjust = -0.3, show.legend = FALSE)
+  stat_wl_summary(geom = "hline", color = "red") +
+  stat_wl_summary(label.fmt = "Mean = %.3f", color = "red", vjust = -0.3)
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) +
-  stat_average(range = c(400,500), geom = "rect", alpha = 0.2, fill = color(450)) +
-  stat_average(range = c(400,500), label.fmt = "Mean = %.3f", vjust = -0.3, geom = "text") + 
+  stat_wl_summary(range = c(400,500), geom = "rect", alpha = 0.2, fill = color(450)) +
+  stat_wl_summary(range = c(400,500), label.fmt = "Mean = %.3f", vjust = -0.3, geom = "text") + 
   geom_line()
 
 ## ------------------------------------------------------------------------
 ggplot(two_suns.spct) + aes(color = spct.idx) +
   geom_line() + 
-  stat_average(geom = "hline") +
-  stat_average(label.fmt = "Mean = %.3f", vjust = 1.2, show.legend = FALSE) +
+  stat_wl_summary(geom = "hline") +
+  stat_wl_summary(label.fmt = "Mean = %.3f", vjust = 1.2, show.legend = FALSE) +
   facet_grid(spct.idx~.)
 
 ## ------------------------------------------------------------------------
 ggplot(two_suns.spct) + aes(color = spct.idx) +
   geom_line() + 
-  stat_average(geom = "hline") +
-  stat_average(label.fmt = "Mean = %.3f", vjust = 1.2, show.legend = FALSE) +
+  stat_wl_summary(geom = "hline") +
+  stat_wl_summary(label.fmt = "Mean = %.3f", vjust = 1.2, show.legend = FALSE) +
   facet_grid(spct.idx~., scales = "free_y")
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) +
-  stat_waveband(w.band = PAR(), geom = "rect", alpha = 0.5) +
-  stat_waveband(w.band = PAR(), vjust = 1.2, geom = "text") +
+  stat_wb_summary(w.band = PAR(), geom = "rect", alpha = 0.5) +
+  stat_wb_summary(w.band = PAR(), vjust = 1.2, geom = "text") +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -172,8 +173,8 @@ ggplot(sun.spct) +
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) +
-  stat_waveband(w.band = c(400,500), geom = "rect", alpha = 0.5) +
-  stat_waveband(w.band = c(400,500), geom = "text", y.multiplier = 0.5) +
+  stat_wb_summary(w.band = c(400,500), geom = "rect", alpha = 0.5) +
+  stat_wb_summary(w.band = c(400,500), geom = "text", y.multiplier = 0.5) +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +
@@ -181,8 +182,8 @@ ggplot(sun.spct) +
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) +
-  stat_waveband(w.band = VIS_bands(), geom = "rect", alpha = 0.7) +
-  stat_waveband(w.band = VIS_bands(), angle = 90, hjust = -0.1, geom = "text", 
+  stat_wb_summary(w.band = VIS_bands(), geom = "rect", alpha = 0.7) +
+  stat_wb_summary(w.band = VIS_bands(), angle = 90, hjust = -0.1, geom = "text", 
                  aes(label = paste(..wb.name.., " = ", ..y.label.., sep = ""),
                      color = ..wb.color..)) +
   geom_line() + 
@@ -192,35 +193,43 @@ ggplot(sun.spct) +
   theme_bw()
 
 ## ------------------------------------------------------------------------
+my.data <- data.frame(x = 300:800)
+ggplot(my.data, aes(x)) + stat_wl_strip(ymin = -1, ymax = 1) +
+    scale_fill_identity()
+
+## ------------------------------------------------------------------------
 ggplot(sun.spct) +
-  geom_line() + 
-  stat_color_guide(w.band = VIS_bands(), ymin = -0.03, ymax = 0) + 
+  geom_line() +
+  stat_wl_strip(ymin = -Inf, ymax = -0.025) + 
   scale_fill_identity() +
   theme_bw()
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) +
   geom_line() + 
-  color_guide(w.band = VIS_bands(), ymax = -0.025) + 
+  stat_wl_strip(w.band = VIS_bands(), ymin = -Inf, ymax = -0.025) + 
+  scale_fill_identity() +
   theme_bw()
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) +
-  geom_line() +
-  color_guide(ymax = -0.025) + 
-  theme_bw()
-
-## ------------------------------------------------------------------------
-ggplot(sun.spct) +
-  color_guide(alpha = 0.4) + 
+  stat_wl_strip(w.band = VIS_bands(), ymin = -Inf, ymax = Inf, alpha = 0.4) + 
+  scale_fill_identity() +
   geom_line() +
   theme_bw()
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) +
-  stat_color_guide(alpha = 0.4, ymin = -Inf, ymax = Inf) + 
-  stat_waveband(w.band = PAR(), ymin = -0.01, ymax = 0, color = "black", geom = "rect") +
-  stat_waveband(w.band = PAR(), integral.fun = "total",
+  stat_wl_strip(alpha = 0.4, ymin = -Inf, ymax = Inf) + 
+  scale_fill_identity() +
+  geom_line() +
+  theme_bw()
+
+## ------------------------------------------------------------------------
+ggplot(sun.spct) +
+  stat_wl_strip(alpha = 0.4, ymin = -Inf, ymax = Inf) + 
+  stat_wb_summary(w.band = PAR(), ymin = -0.01, ymax = 0, color = "black", geom = "rect") +
+  stat_wb_summary(w.band = PAR(), integral.fun = "total",
                 vjust = -0.5, geom = "text", color = "black",
                 y.position = 0,
                 aes(label = paste(..wb.name.., " = ", ..y.label.., sep = ""))) +  
@@ -236,18 +245,28 @@ ggplot(sun.spct) +
   geom_spct(fill = color(sun.spct))
 
 ## ------------------------------------------------------------------------
-ggplot(sun.spct) + 
-  color_guide(ymin = -0.05, ymax = 0) +
-  geom_spct() 
+ggplot(sun.spct * yellow_gel.spct) + 
+  geom_spct(fill = color(sun.spct * yellow_gel.spct))
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + 
-  color_guide() +
+  wl_guide(alpha = 0.4) +
+  geom_line() +
+  theme_bw()
+
+## ------------------------------------------------------------------------
+ggplot(sun.spct) + 
+  wl_guide(ymax = -0.025) +
+  geom_line() 
+
+## ------------------------------------------------------------------------
+ggplot(sun.spct) + 
+  wl_guide() +
   geom_spct(alpha = 0.75, colour = "white", size = 1) 
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + 
-  color_guide() +
+  wl_guide() +
   geom_line(size = 2, colour = "white") +
   geom_line(size = 1, colour = "black") +
   geom_hline(yintercept = 0, colour = "grey92") +
@@ -256,32 +275,32 @@ ggplot(sun.spct) +
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + 
   geom_spct() + 
-  waveband_guide(w.band = Plant_bands())
+  wb_guide(w.band = Plant_bands())
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + 
   geom_spct() + 
-  waveband_guide(w.band = Plant_bands(), guide.position = "top") +
+  wb_guide(w.band = Plant_bands(), guide.position = "top") +
   lims(y = c(NA, 1.1))
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + 
   geom_spct() + 
-  waveband_guide(w.band = Plant_bands(), guide.position = "top",
+  wb_guide(w.band = Plant_bands(), guide.position = "top",
                  aes(label = sprintf("%s", ..wb.name..))) +
   ylim(NA, 1.1) + theme_bw()
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + 
   geom_spct() + 
-  waveband_guide(w.band = Plant_bands(), guide.position = "top",
+  wb_guide(w.band = Plant_bands(), guide.position = "top",
                  aes(label = paste(..wb.name.., ..y.label.., sep = ": "))) +
   ylim(NA, 1.1)
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + 
   geom_spct() + 
-  waveband_guide(w.band = Plant_bands(), guide.position = "top2",
+  wb_guide(w.band = Plant_bands(), guide.position = "top2",
                  aes(label = paste(..wb.name.., ..y.label.., sep = "\n"))) +
   ylim(NA, 1.1)
 

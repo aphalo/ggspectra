@@ -43,10 +43,10 @@ decoration <- function(w.band,
     z <- c(z, ylim(y.min, y.max * 1.25), xlim(x.min - (x.max - x.min) * 0.035, x.max))
   }
   if ("colour.guide" %in% annotations) {
-    z <- c(z, stat_color_guide(ymax = y.max * 1.26, ymin = y.max * 1.22))
+    z <- c(z, stat_wl_strip(ymax = y.max * 1.26, ymin = y.max * 1.22))
   }
   if ("boxes" %in% annotations) {
-    z <- c(z, stat_color_guide(w.band = w.band,
+    z <- c(z, stat_wl_strip(w.band = w.band,
                                     ymax = y.max * 1.20,
                                     ymin = y.max * 1.08,
                                     color = "white",
@@ -57,7 +57,7 @@ decoration <- function(w.band,
   }
 
   if ("segments" %in% annotations) {
-    z <- c(z, stat_color_guide(w.band = w.band,
+    z <- c(z, stat_wl_strip(w.band = w.band,
                                     ymax = y.max * 1.10,
                                     ymin = y.max * 1.07,
                                     color = "white",
@@ -68,7 +68,7 @@ decoration <- function(w.band,
   }
 
   if ("labels" %in% annotations && "summaries" %in% annotations) {
-    z <- c(z, stat_waveband(geom = "text",
+    z <- c(z, stat_wb_summary(geom = "text",
                                  w.band = w.band,
                                  y.position = y.max * 1.143 + pos.shift,
                                  integral.fun = label.qty,
@@ -77,7 +77,7 @@ decoration <- function(w.band,
                                  size = rel(2)))
   } else {
     if ("labels" %in% annotations) {
-      z <- c(z, stat_waveband(geom = "text",
+      z <- c(z, stat_wb_summary(geom = "text",
                                    w.band = w.band,
                                    y.position = y.max * 1.143 + pos.shift,
                                    integral.fun = label.qty,
@@ -86,7 +86,7 @@ decoration <- function(w.band,
                                    size = rel(2)))
     }
     if ("summaries" %in% annotations) {
-      z <- c(z,  stat_waveband(geom = "text",
+      z <- c(z,  stat_wb_summary(geom = "text",
                                    w.band = w.band,
                                    y.position = y.max * 1.143 + pos.shift,
                                    integral.fun = label.qty,

@@ -11,6 +11,12 @@ vignette: >
 
 ## Introduction
 
+Package `ggspectra` extends `ggplot2` with stats, geoms and annotations suitable for light spectra. It also defines `ggplot()` and  `plot()` methods specialized for the classes defined in package `photobiology` for storing different types of spectral data.
+
+The new elements can be freely combined with methods and functions defined in packages `ggplot2`, `scales` and `cowplot`.
+
+Although the package uses internally `ggplot2`, `photobiology` and `photobiologyWavebands` it does not re-export these packages, which need to loaded if used.
+
 ```{r}
 library(ggplot2)
 library(photobiology)
@@ -26,12 +32,14 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r}
+```{r, include=FALSE, echo=FALSE}
 library(knitr)
 opts_chunk$set(fig.path = 'figure/pos-', fig.align = 'center', fig.show = 'hold',
                fig.width = 7, fig.height = 4)
 options(warnPartialMatchArgs = FALSE)
 ```
+
+We bind two spectra, to later on demonstrate grouping.
 
 ```{r}
 two_suns.spct <- rbindspct(list(sun1 = sun.spct, sun2 = sun.spct * 2))
@@ -39,13 +47,25 @@ two_suns.spct <- rbindspct(list(sun1 = sun.spct, sun2 = sun.spct * 2))
 
 ## ggplot() methods for spectra
 
+The only difference between these specializations and the base `ggplot()` method is that the aesthetics for $x$ and $y$ have suitable defaults. These are just defaults, so if needed they can still be supplied with a `mapping` argument with an user-defined `aes()`.
+
 ```{r}
 ggplot(sun.spct) + geom_line()
 ```
 
+It is possible to the defaults by means of `+` and `aes()` as shown below.
+
 ```{r}
 ggplot(two_suns.spct) + aes(color = spct.idx) + geom_line()
 ```
+
+If a mapping is supplied directly through `ggplot`, $x$ and $y$ should be included.
+
+```{r}
+ggplot(two_suns.spct, aes(w.length, s.e.irrad, color = spct.idx)) + geom_line()
+```
+
+In the case of `ggplot.source_spct()` an additional parameter allows setting the type of units to use in the plot. This not only sets a suitable `aes()` for $y$ but also if needed converts the spectral data. The two possible values are `"energy"` and `"photon"` and the default, depends on option `photobiology.radiation.unit`.
 
 ```{r}
 ggplot(sun.spct, unit.out = "photon") + geom_line()
@@ -55,31 +75,60 @@ ggplot(sun.spct, unit.out = "photon") + geom_line()
 ggplot(yellow_gel.spct) + geom_line()
 ```
 
+In the case of `ggplot.filter_spct()` the additional parameter is called `plot.qty` and allows choosing between `"transmittance"` and `"absorbance"`.
+
 ```{r}
 ggplot(yellow_gel.spct, plot.qty = "absorbance") + geom_line()
 ```
 
+The names of the additional parameters are consistent with those by method `plot()` in this package and in the now deprecated package `photobiologygg`.
+
 ## Stats
 
+Several `ggplot` stats are defined by this package. All of them target light spectra, as they expect $x$ to represent wavelengths expressed in nanometres. However, they should behave correctly as long as this is true, with any `ggplot` object, based on any data format acceptable to `ggplot`. The name of the original variable is irrelevant, and it is the user responsibility to supply the correct variables through `aes()`. Of course, when using the spectral classes defined in package `photobiology` the defaults easy this task.
 
 ### Peaks and valleys
+
+These stats do not fit peaks, simply search for local maxima and local minima in the data as supplied. The stats set several aesthetics based on calculated values. Not all of these are used by the default geom, make using other geoms easy. Furthermore text labels are formatted with `sptintf()` and these two stats accept format definitions through parameter `label.fmt`. Both the $x$ and $y$ values at the maxima or minima are returned. The stats use internally function `photobiology::find_peaks()` and arguments are passed down to it.
 
 ```{r}
 ggplot(sun.spct) + geom_line() + stat_peaks()
 ```
 
+Because of the conversion, the location of maxima and minima when an spectrum is expressed in photon and energy based units may differ. This is expected and not a bug.
+
 ```{r}
 ggplot(sun.spct, unit.out = "photon") + geom_line() + stat_peaks()
 ```
+
+The complement to `stat_peaks()` is `stat_valleys`.
 
 ```{r}
 ggplot(sun.spct) + geom_line() + stat_valleys()
 ```
 
+One of the values calculated and mapped is the colour as seen by humans corresponding to the wavelength at the location of peaks and valleys. The colour is mapped to the `fill` aesthetic, so using a 'filled' shape results in a colourful plot. The _identity_ scale is needed so that the correct colours are displayed using the colour definitions in the calculated data instead of a palette.
+
 ```{r}
 ggplot(sun.spct) + geom_line() + 
   stat_peaks(shape = 21) + scale_fill_identity()
 ```
+
+We can use any of the aesthetics affecting the default _geom_, `"point"`.
+
+```{r}
+ggplot(sun.spct) + geom_line() + 
+  stat_peaks(span = 21, shape = 4, color = "red", size = 2)
+```
+
+We can use several other _geoms_ as needed, demonstrated here with _geom_ `"text"`.
+
+```{r}
+ggplot(sun.spct) + geom_line() + 
+  stat_peaks(span = 21, geom = "text")
+```
+
+The same stat can be included more than once in the same plot, using different _geoms_. We here in addition demonstrate the use of several different parameters. The `span` argument determines the number of consecutive observations tested when searching for a local extreme, and it should be an odd integer number. In addition we here demonstrate the use of a _geom_ new to `ggplot2` 2.0.0 called `"label"` which again results in colourful labels by default.
 
 ```{r}
 ggplot(sun.spct) + geom_line() + 
@@ -88,26 +137,22 @@ ggplot(sun.spct) + geom_line() +
              color = "white", label.fmt = "%3.0f")
 ```
 
+Setting `span` to `NULL` results in the span set to the range of the data, and so in this case the stat returns the global extreme, instead of a local one. In this case we use geoms `"vline"` and `"hline"` taking advantage that suitable aesthetics are set by the stats.
+
 ```{r}
 ggplot(sun.spct) + geom_line() + 
   stat_peaks(span = NULL, geom = "vline", linetype = "dotted") +
   stat_peaks(span = NULL, geom = "hline", linetype = "dotted")
 ```
 
-```{r}
-ggplot(sun.spct) + geom_line() + 
-  stat_peaks(span = 21, shape = 4, color = "red", size = 2)
-```
+By default the `label` aesthetic is mapped to a calculated label `..x.label..` giving the wavelength in nanometres. This mapping can be changed to give to a label giving the $y$-value at the peak.
 
 ```{r}
 ggplot(sun.spct) + geom_line() + 
-  stat_peaks(span = 21, geom = "text")
+  stat_peaks(span = 21, geom = "text", label.fmt = "%3.2f", aes(label = ..y.label..))
 ```
 
-```{r}
-ggplot(sun.spct) + geom_line() + 
-  stat_peaks(span = 21, geom = "text", aes(label = ..y.label..))
-```
+As _aesthetics_ can use values computed on-the-fly we can even use `paste()` to map a label that combines both values and adds additional text.
 
 ```{r}
 ggplot(sun.spct) + geom_line() + 
@@ -117,6 +162,7 @@ ggplot(sun.spct) + geom_line() +
              aes(label = paste(..y.label.., "at", ..x.label.. , "nm")))
 ```
 
+Finally we demonstrate that both stats can be simultaneously used. One can also choose to use different spans as demonstrated here, resulting in more maxima being marked by points than labelled with text.
 ```{r}
 ggplot(sun.spct) + geom_line() + 
   stat_peaks(span = 21, geom = "point", colour = "red") +
@@ -126,6 +172,8 @@ ggplot(sun.spct) + geom_line() +
   stat_valleys(span = 51, geom = "text", colour = "blue", 
                vjust = 1.2, label.fmt = "%3.0f nm")
 ```
+
+This final example shows a few additional tricks used in the case to mark and label the maximum of the spectrum. This example also demonstrates why it is important that these are stats. The peaks are searched and labels generated once for each group, in this case each _facet_.
 
 ```{r}
 ggplot(two_suns.spct) + aes(color = spct.idx) +
@@ -139,11 +187,14 @@ ggplot(two_suns.spct) + aes(color = spct.idx) +
 
 ## Color from wavelength
 
+This stat calculates the colour corresponding to each $x$-value (assumed expressed in nanometres) and adds it to the data. It does not summarize the data like `stat_summary()` nor does it subset the data like `stat_peaks`, consequently the plot does not require any additional _geom_ to have all observations plotted. It sets both _color_ and _fill_ aesthetics to a suitable default.
+
 ```{r}
 ggplot(sun.spct) + 
-  geom_line() +
   stat_color() + scale_color_identity()
 ```
+
+By use of a filled _shape_ and adding a black border by overriding the default _color_ aesthetic and over-plotting these point on top of a line, we obtain a better separation from the background.
 
 ```{r}
 ggplot(sun.spct) +
@@ -151,6 +202,8 @@ ggplot(sun.spct) +
   stat_color(shape = 21, color = "black") + 
   scale_fill_identity()
 ```
+
+With a _trick_ using many narrow _bars_ we can fill the area under the line with a the calculated colours. This works satisfactorily as the data set has a small wavelength step, as in this case we are using a bar of uniform colour for each wavelength value in the data set.
 
 ```{r}
 ggplot(sun.spct) + 
@@ -161,6 +214,8 @@ ggplot(sun.spct) +
   theme_bw()
 ```
 
+As final example we demonstrate a plot with _facets_ and _shape_ based groups.
+
 ```{r}
 ggplot(two_suns.spct) + aes(shape = spct.idx) +
   stat_color() + scale_color_identity() +
@@ -170,79 +225,104 @@ ggplot(two_suns.spct) + aes(shape = spct.idx) +
 
 ## Averages and similar summaries
 
+### Summaries by wavelength range
+
+Our `stat_wl_summary()` is quite different to `ggplot2`s `stat_summary()`. One could criticize that it calculates summaries using a grouping that is not based on a _ggplot_ _aesthetic_. This is a deviation from the grammar of graphics but allows the calculation of summaries for an arbitrary region of the range of $x$-values in the spectral data.
+
+The summary is calculated for a range of wavelengths, and the `range` argument defaults to the range of wavelengths in each group defined by other aesthetics. The default _geom_ is `"text"`.
+
 ```{r}
-ggplot(sun.spct) + geom_line() + stat_average()
+ggplot(sun.spct) + geom_line() + stat_wl_summary()
 ```
+
+Here with some additional formatting for the label.
 
 ```{r}
 ggplot(sun.spct) + 
   geom_line() +
-  stat_average(range = c(300,500), label.fmt = "%.3f", color = "red")
+  stat_wl_summary(label.fmt = "%.3f", color = "red")
 ```
 
-```{r}
-ggplot(sun.spct) +
-  geom_line() + 
-  stat_average(geom = "hline", color = "red") +
-  stat_average(label.fmt = "Mean = %.3f", color = "red", vjust = -0.3)
-```
+We can optionally supply an argument for `range` to limit the summary to a certain part of the spectrum, in which case the use of the default `"text"` _geom_ is misleading. We add the line last so that it is drawn on top of the rectangle.
 
 ```{r}
-ggplot(two_suns.spct) + aes(color = spct.idx) +
-  geom_line() + 
-  stat_average(geom = "hline") +
-  stat_average(label.fmt = "Mean = %.3f", vjust = -0.3, show.legend = FALSE)
-```
-
-```{r}
-ggplot(sun.spct) +
-  stat_average(range = c(400,500), geom = "rect", alpha = 0.2, fill = color(450)) +
-  stat_average(range = c(400,500), label.fmt = "Mean = %.3f", vjust = -0.3, geom = "text") + 
+ggplot(sun.spct) + 
+  stat_wl_summary(range = c(300,350), geom = "rect") +
   geom_line()
 ```
 
-```{r}
-ggplot(two_suns.spct) + aes(color = spct.idx) +
-  geom_line() + 
-  stat_average(geom = "hline") +
-  stat_average(label.fmt = "Mean = %.3f", vjust = 1.2, show.legend = FALSE) +
-  facet_grid(spct.idx~.)
-```
-
-```{r}
-ggplot(two_suns.spct) + aes(color = spct.idx) +
-  geom_line() + 
-  stat_average(geom = "hline") +
-  stat_average(label.fmt = "Mean = %.3f", vjust = 1.2, show.legend = FALSE) +
-  facet_grid(spct.idx~., scales = "free_y")
-```
-
-### Wavebands
+Here we show how to add horizontal line and label for the overall mean, by adding the same stat twice, using different values for `geom`.
 
 ```{r}
 ggplot(sun.spct) +
-  stat_waveband(w.band = PAR(), geom = "rect", alpha = 0.5) +
-  stat_waveband(w.band = PAR(), vjust = 1.2, geom = "text") +
+  geom_line() + 
+  stat_wl_summary(geom = "hline", color = "red") +
+  stat_wl_summary(label.fmt = "Mean = %.3f", color = "red", vjust = -0.3)
+```
+
+Or we can add the _aesthetic_ twice with two different geoms to get the value plotted as a rectangular area and the value as formatted text. We use `vjust` to move the text above the end of the bar, instead of it being centred on the value itself.
+
+```{r}
+ggplot(sun.spct) +
+  stat_wl_summary(range = c(400,500), geom = "rect", alpha = 0.2, fill = color(450)) +
+  stat_wl_summary(range = c(400,500), label.fmt = "Mean = %.3f", vjust = -0.3, geom = "text") + 
+  geom_line()
+```
+
+An example using the `color` _aesthetic_ for grouping and moving the text label down. Setting 
+
+```{r}
+ggplot(two_suns.spct) + aes(color = spct.idx) +
+  geom_line() + 
+  stat_wl_summary(geom = "hline") +
+  stat_wl_summary(label.fmt = "Mean = %.3f", vjust = 1.2, show.legend = FALSE) +
+  facet_grid(spct.idx~.)
+```
+
+Same example as above but using a free scale for $y$, still working as expected.
+
+```{r}
+ggplot(two_suns.spct) + aes(color = spct.idx) +
+  geom_line() + 
+  stat_wl_summary(geom = "hline") +
+  stat_wl_summary(label.fmt = "Mean = %.3f", vjust = 1.2, show.legend = FALSE) +
+  facet_grid(spct.idx~., scales = "free_y")
+```
+
+### Summaries by waveband
+
+Our `stat_wb_summary()` is quite different to `ggplot2`s `stat_summary()`. One could criticize that it calculates summaries using a grouping that is not based on a _ggplot_ _aesthetic_. This is a deviation from the grammar of graphics but allows the calculation of summaries for an arbitrary waveband of the spectrum based on `photobiology::waveband` objects, or lists of such objects. In contrast to `stat_wl_summary()` this allows the use of several ranges, and also of different weighting functions.
+
+The first example uses a `waveband` object created on-the-fly and defining a range of wavelengths.
+
+```{r}
+ggplot(sun.spct) +
+  stat_wb_summary(w.band = PAR(), geom = "rect", alpha = 0.5) +
+  stat_wb_summary(w.band = PAR(), vjust = 1.2, geom = "text") +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
   theme_bw()
 ```
 
+If a numeric vector or a spectrum is supplied as argument to `waveband`, its range is calculated and used to construct a temporary `waveband` object.
+
 ```{r}
 ggplot(sun.spct) +
-  stat_waveband(w.band = c(400,500), geom = "rect", alpha = 0.5) +
-  stat_waveband(w.band = c(400,500), geom = "text", y.multiplier = 0.5) +
+  stat_wb_summary(w.band = c(400,500), geom = "rect", alpha = 0.5) +
+  stat_wb_summary(w.band = c(400,500), geom = "text", y.multiplier = 0.5) +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +
   theme_bw()
 ```
 
+Lists of wavebands, either user-defined or as in this case using constructor defined in package `photobiologyWavebands` can be also used.
+
 ```{r}
 ggplot(sun.spct) +
-  stat_waveband(w.band = VIS_bands(), geom = "rect", alpha = 0.7) +
-  stat_waveband(w.band = VIS_bands(), angle = 90, hjust = -0.1, geom = "text", 
+  stat_wb_summary(w.band = VIS_bands(), geom = "rect", alpha = 0.7) +
+  stat_wb_summary(w.band = VIS_bands(), angle = 90, hjust = -0.1, geom = "text", 
                  aes(label = paste(..wb.name.., " = ", ..y.label.., sep = ""),
                      color = ..wb.color..)) +
   geom_line() + 
@@ -252,46 +332,65 @@ ggplot(sun.spct) +
   theme_bw()
 ```
 
-## Color guide
+## Wavelength colours at new $x$-values 
+
+The `stat_wl_summary()` and `stat_wb_summary()` return a _reduced_ data set with fewer rows than the original data. `stat_wl_strip()` depending on the input, can also return a data set with more rows than the input data. This is the default behaviour, with `w.band` with argument `NULL`. This _stat_ operates only on the variable mapped to the $x$ _aesthetic_, a $y$-mapping is not required as input.
 
 ```{r}
-ggplot(sun.spct) +
-  geom_line() + 
-  stat_color_guide(w.band = VIS_bands(), ymin = -0.03, ymax = 0) + 
-  scale_fill_identity() +
-  theme_bw()
+my.data <- data.frame(x = 300:800)
+ggplot(my.data, aes(x)) + stat_wl_strip(ymin = -1, ymax = 1) +
+    scale_fill_identity()
 ```
- 
-which can be simplified by use of `color_guide()` which adds both the statistics and the scale. We addionaly leave `ymin` at its default of `-Inf` so that it is clipped at the edge of the plotting area.
 
-```{r}
-ggplot(sun.spct) +
-  geom_line() + 
-  color_guide(w.band = VIS_bands(), ymax = -0.025) + 
-  theme_bw()
-```
+The default _geom_ is `"rect"` which with suitable mappings of `ymin` and `ymax` _aesthetics_ can be used to add a colour guide to the $x$-axis (if its scale maps wavelengths in nanometres). When `w.band` is `NULL` a long series of contiguous wavebands is generated to create the illusion of a continuous colour gradient.
 
 ```{r}
 ggplot(sun.spct) +
   geom_line() +
-  color_guide(ymax = -0.025) + 
+  stat_wl_strip(ymin = -Inf, ymax = -0.025) + 
+  scale_fill_identity() +
   theme_bw()
 ```
 
+When a list of wavebands is supplied, it is used for the calculation of colours. These calculations do not use the spectral irradiance, they simply assume a flat spectrum, so the represent the colours of the wavelengths, rather than the colour of the light described by the spectral irradiance.
+
 ```{r}
 ggplot(sun.spct) +
-  color_guide(alpha = 0.4) + 
+  geom_line() + 
+  stat_wl_strip(w.band = VIS_bands(), ymin = -Inf, ymax = -0.025) + 
+  scale_fill_identity() +
+  theme_bw()
+```
+
+`stat_wl_strip()` can also used to produce a background layer with colours corresponding to _wavebands_. Here we use `alpha = 0.5` to add transparency.
+
+```{r}
+ggplot(sun.spct) +
+  stat_wl_strip(w.band = VIS_bands(), ymin = -Inf, ymax = Inf, alpha = 0.4) + 
+  scale_fill_identity() +
+  geom_line() +
+  theme_bw()
+```
+
+By default an almost continuous colour gradient can be generated for the background.
+
+```{r}
+ggplot(sun.spct) +
+  stat_wl_strip(alpha = 0.4, ymin = -Inf, ymax = Inf) + 
+  scale_fill_identity() +
   geom_line() +
   theme_bw()
 ```
 
 ## Multiple stats in the same plot
 
+The _stats_ described above can be used together to produce more complex plots. This is just one possibility out of a vast range. Be aware that when adding many layers to the same plot, the order of the layers and adjusting their transparency using the `alpha` _aesthetic_ is very important, and best tuned by trial and error.
+
 ```{r}
 ggplot(sun.spct) +
-  stat_color_guide(alpha = 0.4, ymin = -Inf, ymax = Inf) + 
-  stat_waveband(w.band = PAR(), ymin = -0.01, ymax = 0, color = "black", geom = "rect") +
-  stat_waveband(w.band = PAR(), integral.fun = "total",
+  stat_wl_strip(alpha = 0.4, ymin = -Inf, ymax = Inf) + 
+  stat_wb_summary(w.band = PAR(), ymin = -0.01, ymax = 0, color = "black", geom = "rect") +
+  stat_wb_summary(w.band = PAR(), integral.fun = "total",
                 vjust = -0.5, geom = "text", color = "black",
                 y.position = 0,
                 aes(label = paste(..wb.name.., " = ", ..y.label.., sep = ""))) +  
@@ -302,96 +401,146 @@ ggplot(sun.spct) +
 
 ## Geometries
 
+A simple _geom_ called `"spct"` is defined. It differs from _geom_ `"area"` only in the default `position` which is `"stacked"` for _geom_ `"area"` and `"identity"` for _geom_ `"spct"` which is usually better for spectra.
+
 ```{r}
 ggplot(sun.spct) + geom_spct()
 ```
+
+Using as fill the _color_ calculated from the spectral data is different to earlier examples in that the spectral irradiance is actually taken into account in the calculation of the colour, instead of just the wavelength range.
 
 ```{r}
 ggplot(sun.spct) + 
   geom_spct(fill = color(sun.spct))
 ```
 
-## Packaged stats and scales
+```{r}
+ggplot(sun.spct * yellow_gel.spct) + 
+  geom_spct(fill = color(sun.spct * yellow_gel.spct))
+```
 
-### color_guide
+## Packaged stats, geoms plus scales
+
+Some of the examples in previous sections can be simplified by use of `wl_guide()` and `wb_guide()` which add both the statistics and the scale, and provide a default _mapping_ for both `ymin` and `ymax`. This is handy for simple plots, but it can generate spurious warnings due to the replacement of existing scales with identical ones. In general only one of `wl_guide()` or `wb_guide()` should be used in a plot, and each one, only once. They just save some typing for the simplest uses, but are not suitable for complex _decorations_.
+
+### wl_guide
+
+The examples for `stat_wl_strip` can be simplified by use of `wl_guide()` which adds both the statistics and the scale, and provides default _mappings_ for both `ymin` (`-Inf`) and `ymax` (`Inf`). Another important difference is that the `"rect"` _geom_ used cannot be set to a different one by the user.
 
 ```{r}
 ggplot(sun.spct) + 
-  color_guide(ymin = -0.05, ymax = 0) +
-  geom_spct() 
+  wl_guide(alpha = 0.4) +
+  geom_line() +
+  theme_bw()
 ```
 
 ```{r}
 ggplot(sun.spct) + 
-  color_guide() +
+  wl_guide(ymax = -0.025) +
+  geom_line() 
+```
+
+This example produces a plot with a very different look than earlier ones, but can also be achieved with a very succinct statement.
+
+```{r}
+ggplot(sun.spct) + 
+  wl_guide() +
   geom_spct(alpha = 0.75, colour = "white", size = 1) 
 ```
 
+In the next example we demonstrate a trick achieved by overploting two line of different width (`size`) to make the spectrum visible on a background of variable luminosity.
+
 ```{r}
 ggplot(sun.spct) + 
-  color_guide() +
+  wl_guide() +
   geom_line(size = 2, colour = "white") +
   geom_line(size = 1, colour = "black") +
   geom_hline(yintercept = 0, colour = "grey92") +
   theme_bw()
 ```
 
-### waveband_guide
+### wb_guide
+
+The examples for `stat_wb_summary` can be simplified by use of `wb_guide()` which adds both the statistics and the scale, and provides a default _mapping_ for both `ymin` and `ymax`. Furthermore, this function adds two layers using `"stat_wb_summary"`, one with _geom_ `"rect"` and one with _geom_ `"text"`. Another important difference is that these _geoms_ cannot be set by the user.
+
+First a very simple example for a list of _wavebands_, using defaults for other arguments. The default is to show the mean of the spectrum for the region covered by the waveband.
 
 ```{r}
 ggplot(sun.spct) + 
   geom_spct() + 
-  waveband_guide(w.band = Plant_bands())
+  wb_guide(w.band = Plant_bands())
 ```
 
+Here we put the _guide_ at the top of the frame or panel.
+
 ```{r}
 ggplot(sun.spct) + 
   geom_spct() + 
-  waveband_guide(w.band = Plant_bands(), guide.position = "top") +
+  wb_guide(w.band = Plant_bands(), guide.position = "top") +
   lims(y = c(NA, 1.1))
 ```
 
+We here change the labels to give the name of the wavebands rather than the calculated mean spectral irradiance for the band.
+
 ```{r}
 ggplot(sun.spct) + 
   geom_spct() + 
-  waveband_guide(w.band = Plant_bands(), guide.position = "top",
+  wb_guide(w.band = Plant_bands(), guide.position = "top",
                  aes(label = sprintf("%s", ..wb.name..))) +
   ylim(NA, 1.1) + theme_bw()
 ```
 
-```{r}
-ggplot(sun.spct) + 
-  geom_spct() + 
-  waveband_guide(w.band = Plant_bands(), guide.position = "top",
-                 aes(label = paste(..wb.name.., ..y.label.., sep = ": "))) +
-  ylim(NA, 1.1)
-```
+We can build a label as shown in earlier sections, containing both the name and value.
 
 ```{r}
 ggplot(sun.spct) + 
   geom_spct() + 
-  waveband_guide(w.band = Plant_bands(), guide.position = "top2",
+  wb_guide(w.band = Plant_bands(), guide.position = "top",
+                 aes(label = paste(..wb.name.., ..y.label.., sep = ": "))) +
+  ylim(NA, 1.1)
+```
+
+We can build a label as shown in earlier sections, containing both the name and value. If we include a _new line_ character in the character string, each label will be occupy two lines. In this case we need to set `guide.position = "top2"` to reserve enough space for the labels.
+
+```{r}
+ggplot(sun.spct) + 
+  geom_spct() + 
+  wb_guide(w.band = Plant_bands(), guide.position = "top2",
                  aes(label = paste(..wb.name.., ..y.label.., sep = "\n"))) +
   ylim(NA, 1.1)
 ```
 
 ## Plotting spectra
 
+The most automatic way of plotting spectral data stored in one of the classes defined in package `photobiology` is to use the `plot()`methods. These go much further than the `plot()` method defined in base-R for numeric data, as these classes store metadata that allows the automatic construction of axis labels as quantities and units are well defined.
+
+Here we use the same example `source_spct` object from package `photobiology` used earlier in the User Guide. In contrast to earlier examples, here we obtain with a very simple statement a very complete and properly annotated plot of the solar spectrum at ground level.
+
 ```{r}
 plot(sun.spct)
 ```
+
+Although the defaults provide a useful plot, the `plot()` method accepts arguments for several parameters that allow to tweak the looks and contents of the plots significantly, without having to do any explicit manipulation of the spectral data.
+
+This first example, shows means instead of integrals in the labels. Note that the units and quantity labels for the waveband summaries have also changed automatically.
 
 ```{r}
 plot(sun.spct, label.qty = "mean")
 ```
 
+Two `label.qty` values need explanation. The first one, `"contribution"` uses for labels the relative contribution of the integral of each waveband, to the sum of the integrals of all wavebands. The second one, `"participation"` uses for labels the integral for each waveband divided by the integral of the whole spectrum. Consequently, this second option should be interpreted with caution, as the spectral data is unlikely in many cases to include the whole emission or absorption spectrum.
+
 ```{r}
 plot(sun.spct, label.qty = "contribution")
 ```
 
+We can change the basis of expression of spectral irradiance and irradiance from `"energy"` to `"photon"`. Be aware that by design, all values, summaries and spectral data will always use the same base of expression.
+
 ```{r}
 plot(sun.spct, unit.out = "photon")
 ```
+
+Which _annotations_ are included can be also controlled through parameter `annotations`.
 
 ```{r}
 plot(sun.spct, annotations = c("segments", "labels", "color.guide"))
@@ -401,6 +550,8 @@ plot(sun.spct, annotations = c("segments", "labels", "color.guide"))
 plot(sun.spct, 
      annotations = c("segments", "labels", "summaries", "color.guide"))
 ```
+
+Arguments `range` and `w.band` play very different roles. The first one determines the `range` of wavelengths to include in the data plotted, which is slightly different to the effect of `ggplot2::xlim()` as `range` is used to _trim_ (see `photobiology::trim_wl()`) the spectral data __before__ passing it to `ggplot`. The second one, `w.band` is only used for the _annotations_ and decorations. It should be however noted, that a `waveband` object is a valid argument for both `range` and `w.band`.
 
 ```{r}
 plot(sun.spct, range = VIS())
@@ -414,9 +565,13 @@ plot(sun.spct, w.band = PAR())
 plot(sun.spct, w.band = CIE())
 ```
 
+The time unit is also stored in the metadata, as demonstrated here. The units in axis labels have suitably adapted to the different units.
+
 ```{r}
 plot(sun.daily.spct)
 ```
+
+Even though the `plot()` methods can return a finished plot, the returned object is a `ggplot` object and can be built upon by adding additional elements like _facets_, _aesthetics_ and even additional _layers_.
 
 ```{r}
 plot(two_suns.spct) + facet_wrap(~spct.idx)
@@ -430,8 +585,28 @@ plot(two_suns.spct) + aes(linetype = spct.idx)
 plot(yellow_gel.spct, annotations = "colour.guide")
 ```
 
+Here we demonstrate something that may look like a bug, but is not. The annotations are based only on the data supplied as argument to `plot()` (or in other cases `ggplot()`) because these are the only data visible in all _layers_. The `data` argument in `geom_spct()` only affects the data seen by this _geom_. This way of building a plot is very different than when using _grouping_ within a single data set, and it is best to avoid it in most situations.
+
 ```{r}
 plot(sun.spct) + geom_spct(fill = color(sun.spct)) + 
   geom_spct(data = yellow_gel.spct * sun.spct, color = "black", 
             fill = color(yellow_gel.spct * sun.spct))
 ```
+
+However, if one really needs to, one can add a suitable _stat_ using 'local' data. As this is just a demonstration, I will avoid adding all the additional arguments needed to make the annotations of peaks match those produced by `plot()`.
+
+```{r}
+plot(sun.spct) + geom_spct(fill = color(sun.spct)) + 
+  geom_spct(data = yellow_gel.spct * sun.spct, color = "black", 
+            fill = color(yellow_gel.spct * sun.spct)) +
+  stat_peaks(data = yellow_gel.spct * sun.spct, color = "yellow", 
+             ignore_threshold = 0.1, span = 21)
+```
+
+As with any `ggplot` object, the 'looks' of the returned object depends on both the local and global `ggplot` _theme_.
+
+```{r}
+theme_set(theme_bw(8))
+plot(yellow_gel.spct, annotations = "colour.guide")
+```
+

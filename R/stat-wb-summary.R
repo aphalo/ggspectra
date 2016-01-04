@@ -1,6 +1,6 @@
 #' Integrate ranges under curve.
 #'
-#' \code{stat_waveband} computes areas under a curve.
+#' \code{stat_wb_summary} computes areas under a curve.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_string}}. Only needs
@@ -48,12 +48,12 @@
 #' library(photobiology)
 #' library(ggplot2)
 #' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
-#'   stat_waveband()
+#'   stat_wb_summary()
 #'
 #' @export
 #' @family stats functions
 #'
-stat_waveband <- function(mapping = NULL, data = NULL, geom = "rect",
+stat_wb_summary <- function(mapping = NULL, data = NULL, geom = "rect",
                        w.band = NULL,
                        integral.fun = "mean",
                        label.fmt = "%.2f",
@@ -173,7 +173,7 @@ StatWaveband <-
                    required_aes = c("x", "y")
   )
 
-#' @rdname stat_waveband
+#' @rdname stat_wb_summary
 #'
 #' @param label.y numeric position of label
 #' @param rect.alpha numeric transparency of "rect"
@@ -182,7 +182,7 @@ StatWaveband <-
 #'
 #' @export
 #'
-waveband_guide <- function(mapping = NULL, data = NULL,
+wb_guide <- function(mapping = NULL, data = NULL,
                           w.band = NULL,
                           integral.fun = "mean",
                           label.fmt = "%.1f", label.y = 0.3,
@@ -207,7 +207,7 @@ waveband_guide <- function(mapping = NULL, data = NULL,
     ymin <- (ymax - guide.width)
   }
   list(
-    stat_waveband(mapping = mapping, data = data,
+    stat_wb_summary(mapping = mapping, data = data,
                   geom = "rect",
                   w.band = w.band,
                   integral.fun = integral.fun,
@@ -222,7 +222,7 @@ waveband_guide <- function(mapping = NULL, data = NULL,
                   color = "black",
                   size = 1,
                   ...),
-    stat_waveband(mapping = mapping, data = data,
+    stat_wb_summary(mapping = mapping, data = data,
                   geom = "text",
                   w.band = w.band,
                   integral.fun = integral.fun,

@@ -1,6 +1,6 @@
 #' Average area under curve for regions.
 #'
-#' \code{stat_average} computes the area under a curve.
+#' \code{stat_wl_summary} computes the area under a curve.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'    \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_string}}. Only needs to be set
@@ -39,14 +39,14 @@
 #' library(photobiology)
 #' library(ggplot2)
 #' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
-#'   stat_average(geom = "hline")
+#'   stat_wl_summary(geom = "hline")
 #' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
-#'  stat_average(label.fmt = "%.3f", color = "red")
+#'  stat_wl_summary(label.fmt = "%.3f", color = "red")
 #'
 #' @export
 #' @family stats functions
 #'
-stat_average <- function(mapping = NULL, data = NULL, geom = "text",
+stat_wl_summary <- function(mapping = NULL, data = NULL, geom = "text",
                        range = NULL,
                        integral.fun = photobiology::integrate_xy, label.fmt = "%s",
                        position = "identity", na.rm = FALSE, show.legend = NA,
