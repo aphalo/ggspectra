@@ -6,12 +6,12 @@
 \title{Find peaks and valleys.}
 \usage{
 stat_peaks(mapping = NULL, data = NULL, geom = "point", span = 5,
-  ignore_threshold = 0, strict = FALSE, label.fmt = "\%3.1f",
+  ignore_threshold = 0, strict = FALSE, label.fmt = "\%.3g",
   x.label.fmt = label.fmt, y.label.fmt = label.fmt, position = "identity",
   na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, ...)
 
 stat_valleys(mapping = NULL, data = NULL, geom = "point", span = 5,
-  ignore_threshold = 0, strict = FALSE, label.fmt = "\%3.1f",
+  ignore_threshold = 0, strict = FALSE, label.fmt = "\%.3g",
   x.label.fmt = label.fmt, y.label.fmt = label.fmt, position = "identity",
   na.rm = FALSE, show.legend = FALSE, inherit.aes = TRUE, ...)
 }
@@ -95,6 +95,7 @@ ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_point() +
 \code{\link[photobiology]{find_peaks}}, which is used internally.
 
 Other stats functions: \code{\link{stat_color}},
+  \code{\link{stat_wb_irrad}},
   \code{\link{stat_wb_summary}},
   \code{\link{stat_wl_strip}},
   \code{\link{stat_wl_summary}}

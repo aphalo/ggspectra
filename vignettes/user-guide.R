@@ -63,7 +63,7 @@ ggplot(sun.spct) + geom_line() +
 ggplot(sun.spct) + geom_line() + 
   stat_peaks(shape = 21, span = 25, size = 2) + scale_fill_identity() +
   stat_peaks(geom = "label", span = 25, vjust = "bottom", size = 3, 
-             color = "white", label.fmt = "%3.0f")
+             color = "white")
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + geom_line() + 
@@ -72,13 +72,12 @@ ggplot(sun.spct) + geom_line() +
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + geom_line() + 
-  stat_peaks(span = 21, geom = "text", label.fmt = "%3.2f", aes(label = ..y.label..))
+  stat_peaks(span = 21, geom = "text", aes(label = ..y.label..))
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + geom_line() + 
   stat_peaks(span = NULL) +
   stat_peaks(span = NULL, geom = "text", vjust = -0.5, size = 2.5,
-             y.label.fmt = "%.3f",
              aes(label = paste(..y.label.., "at", ..x.label.. , "nm")))
 
 ## ------------------------------------------------------------------------
@@ -94,8 +93,8 @@ ggplot(sun.spct) + geom_line() +
 ggplot(two_suns.spct) + aes(color = spct.idx) +
   geom_line() + ylim(NA, 1.8) +
   stat_peaks(span = NULL, color = "black") +
-  stat_peaks(span = NULL, geom = "text", vjust = -0.5, size = 3,
-             y.label.fmt = "%.3f", color = "black", 
+  stat_peaks(span = NULL, geom = "text", vjust = -0.5, size = 3, 
+             color = "black", 
              aes(label = paste(..y.label.., "at", ..x.label.. , "nm"))) +
   facet_grid(spct.idx~.)
 
@@ -128,11 +127,6 @@ ggplot(sun.spct) + geom_line() + stat_wl_summary()
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + 
-  geom_line() +
-  stat_wl_summary(label.fmt = "%.3f", color = "red")
-
-## ------------------------------------------------------------------------
-ggplot(sun.spct) + 
   stat_wl_summary(range = c(300,350), geom = "rect") +
   geom_line()
 
@@ -140,26 +134,26 @@ ggplot(sun.spct) +
 ggplot(sun.spct) +
   geom_line() + 
   stat_wl_summary(geom = "hline", color = "red") +
-  stat_wl_summary(label.fmt = "Mean = %.3f", color = "red", vjust = -0.3)
+  stat_wl_summary(label.fmt = "Mean = %.3g", color = "red", vjust = -0.3)
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) +
   stat_wl_summary(range = c(400,500), geom = "rect", alpha = 0.2, fill = color(450)) +
-  stat_wl_summary(range = c(400,500), label.fmt = "Mean = %.3f", vjust = -0.3, geom = "text") + 
+  stat_wl_summary(range = c(400,500), label.fmt = "Mean = %.3g", vjust = -0.3, geom = "text") + 
   geom_line()
 
 ## ------------------------------------------------------------------------
 ggplot(two_suns.spct) + aes(color = spct.idx) +
   geom_line() + 
   stat_wl_summary(geom = "hline") +
-  stat_wl_summary(label.fmt = "Mean = %.3f", vjust = 1.2, show.legend = FALSE) +
+  stat_wl_summary(label.fmt = "Mean = %.3g", vjust = 1.2, show.legend = FALSE) +
   facet_grid(spct.idx~.)
 
 ## ------------------------------------------------------------------------
 ggplot(two_suns.spct) + aes(color = spct.idx) +
   geom_line() + 
   stat_wl_summary(geom = "hline") +
-  stat_wl_summary(label.fmt = "Mean = %.3f", vjust = 1.2, show.legend = FALSE) +
+  stat_wl_summary(label.fmt = "Mean = %.3g", vjust = 1.2, show.legend = FALSE) +
   facet_grid(spct.idx~., scales = "free_y")
 
 ## ------------------------------------------------------------------------
@@ -348,4 +342,15 @@ plot(yellow_gel.spct, annotations = "colour.guide")
 plot(sun.spct) + geom_spct(fill = color(sun.spct)) + 
   geom_spct(data = yellow_gel.spct * sun.spct, color = "black", 
             fill = color(yellow_gel.spct * sun.spct))
+
+## ------------------------------------------------------------------------
+plot(sun.spct) + geom_spct(fill = color(sun.spct)) + 
+  geom_spct(data = yellow_gel.spct * sun.spct, color = "black", 
+            fill = color(yellow_gel.spct * sun.spct)) +
+  stat_peaks(data = yellow_gel.spct * sun.spct, color = "yellow", 
+             ignore_threshold = 0.1, span = 21)
+
+## ------------------------------------------------------------------------
+theme_set(theme_bw(8))
+plot(yellow_gel.spct, annotations = "colour.guide")
 

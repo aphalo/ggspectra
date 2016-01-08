@@ -323,6 +323,46 @@ ggplot(sun.spct) +
   theme_bw()
 ```
 
+### Irradiances by waveband
+
+```{r}
+ggplot(sun.spct) +
+  stat_wb_irrad(w.band = PAR(), geom = "rect", alpha = 0.5,
+                unit.in = "energy", time.unit = "second") +
+  stat_wb_irrad(w.band = PAR(), vjust = 1.2, geom = "text",
+                unit.in = "energy", time.unit = "second") +
+  geom_line() + 
+  scale_color_identity() + 
+  scale_fill_identity() +  
+  theme_bw()
+```
+
+```{r}
+ggplot(sun.spct) +
+  stat_wb_irrad(w.band = CIE(), geom = "rect", alpha = 0.5,
+                unit.in = "energy", time.unit = "second") +
+  stat_wb_irrad(w.band = CIE(), vjust = 1.2, geom = "text",
+                unit.in = "energy", time.unit = "second") +
+  geom_line() + 
+  scale_color_identity() + 
+  scale_fill_identity() +  
+  theme_bw()
+```
+
+```{r}
+ggplot(sun.spct) +
+  stat_wb_irrad(w.band = VIS_bands(), geom = "rect", alpha = 0.5,
+                unit.in = "energy", time.unit = "second") +
+  stat_wb_irrad(w.band = VIS_bands(), angle = 90, geom = "text",
+                unit.in = "energy", time.unit = "second", y.position = 0.05, hjust = 0,
+                 aes(label = paste(..wb.name.., ..y.label.., sep = " = "),
+                     color = "black")) +
+  geom_line() + 
+  scale_color_identity() + 
+  scale_fill_identity() +  
+  theme_bw()
+```
+
 ## Wavelength colours at new $x$-values 
 
 The `stat_wl_summary()` and `stat_wb_summary()` return a _reduced_ data set with fewer rows than the original data. `stat_wl_strip()` depending on the input, can also return a data set with more rows than the input data. This is the default behaviour, with `w.band` with argument `NULL`. This _stat_ operates only on the variable mapped to the $x$ _aesthetic_, a $y$-mapping is not required as input.
@@ -499,6 +539,32 @@ ggplot(sun.spct) +
   wb_guide(w.band = Plant_bands(), guide.position = "top2",
                  aes(label = paste(..wb.name.., ..y.label.., sep = "\n"))) +
   ylim(NA, 1.1)
+```
+
+## irrad_guide()
+
+```{r}
+ggplot(sun.spct) + 
+  geom_spct() + 
+  irrad_guide(w.band = Plant_bands(), time.unit = "second", unit.in = "energy")
+```
+
+```{r}
+ggplot(sun.spct) + 
+  geom_spct() + 
+  irrad_guide(w.band = CIE(), time.unit = "second", unit.in = "energy")
+```
+
+```{r, eval=FALSE}
+ggplot(sun.daily.spct) + 
+  geom_spct() + 
+  irrad_guide(w.band = CIE(), time.unit = "day", unit.in = "energy")
+```
+
+```{r, eval=FALSE}
+ggplot(sun.spct, unit.out = "photon") + 
+  geom_spct() + 
+  irrad_guide(w.band = PAR(), time.unit = "second", unit.in = "photon", label.mult = 1e6)
 ```
 
 ## Plotting spectra

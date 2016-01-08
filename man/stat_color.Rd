@@ -61,6 +61,7 @@ ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
 \code{\link[photobiology]{color}}, which is used internally.
 
 Other stats functions: \code{\link{stat_peaks}},
+  \code{\link{stat_wb_irrad}},
   \code{\link{stat_wb_summary}},
   \code{\link{stat_wl_strip}},
   \code{\link{stat_wl_summary}}
