@@ -1,0 +1,83 @@
+---
+title: "Test with other ggplot extensions"
+author: "Pedro J. Aphalo"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{est with other ggplot extensions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Setup
+
+```{r}
+library(ggplot2)
+library(photobiology)
+library(photobiologyWavebands)
+library(ggspectra)
+library(photobiologyPlants)
+```
+
+```{r, include=FALSE, echo=FALSE}
+library(knitr)
+opts_chunk$set(fig.path = 'figure/pos-', fig.align = 'center', fig.show = 'hold',
+               fig.width = 7, fig.height = 4)
+options(warnPartialMatchArgs = FALSE)
+```
+
+We bind two spectra, to later on demonstrate grouping.
+
+```{r}
+two_suns.spct <- rbindspct(list(sun1 = sun.spct, sun2 = sun.spct * 2))
+```
+
+## ggrepel
+
+```{r}
+library(ggrepel)
+
+```
+
+
+```{r}
+ggplot(sun.spct) + geom_line() + 
+  stat_peaks(span = 11, geom = "text_repel", color = "red")
+```
+
+```{r}
+ggplot(sun.spct) + geom_line() + 
+  stat_peaks(span = 11, geom = "label_repel", color = "white") +
+  scale_fill_identity()
+```
+
+```{r}
+ggplot(two_suns.spct) + geom_line() + 
+  stat_peaks(span = 11, geom = "label_repel", color = "white", size = rel(2)) +
+  scale_fill_identity() +
+  facet_wrap(~spct.idx)
+```
+
+## cowplot
+
+```{r}
+library(cowplot)
+theme_set(theme_cowplot(10))
+```
+
+```{r}
+plot(sun.spct, unit.out = "photon")
+```
+
+```{r}
+plot(sun.spct, w.band = VIS_bands(), unit.out = "photon")
+```
+
+```{r, fig.width = 7, fig.height = 9}
+theme_set(theme_cowplot(8))
+p1 <- plot(sun.spct, unit.out = "photon")
+p2 <- plot(yellow_gel.spct)
+p3 <- plot(Solidago_upper_adax.spct)
+plot_grid(p1, p2, p3, ncol = 1, align = "V")
+```
+
