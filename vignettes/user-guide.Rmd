@@ -134,7 +134,7 @@ The same stat can be included more than once in the same plot, using different _
 ggplot(sun.spct) + geom_line() + 
   stat_peaks(shape = 21, span = 25, size = 2) + scale_fill_identity() +
   stat_peaks(geom = "label", span = 25, vjust = "bottom", size = 3, 
-             color = "white", label.fmt = "%3.0f")
+             color = "white")
 ```
 
 Setting `span` to `NULL` results in the span set to the range of the data, and so in this case the stat returns the global extreme, instead of a local one. In this case we use geoms `"vline"` and `"hline"` taking advantage that suitable aesthetics are set by the stats.
@@ -149,7 +149,7 @@ By default the `label` aesthetic is mapped to a calculated label `..x.label..` g
 
 ```{r}
 ggplot(sun.spct) + geom_line() + 
-  stat_peaks(span = 21, geom = "text", label.fmt = "%3.2f", aes(label = ..y.label..))
+  stat_peaks(span = 21, geom = "text", aes(label = ..y.label..))
 ```
 
 As _aesthetics_ can use values computed on-the-fly we can even use `paste()` to map a label that combines both values and adds additional text.
@@ -158,7 +158,6 @@ As _aesthetics_ can use values computed on-the-fly we can even use `paste()` to 
 ggplot(sun.spct) + geom_line() + 
   stat_peaks(span = NULL) +
   stat_peaks(span = NULL, geom = "text", vjust = -0.5, size = 2.5,
-             y.label.fmt = "%.3f",
              aes(label = paste(..y.label.., "at", ..x.label.. , "nm")))
 ```
 
@@ -179,8 +178,8 @@ This final example shows a few additional tricks used in the case to mark and la
 ggplot(two_suns.spct) + aes(color = spct.idx) +
   geom_line() + ylim(NA, 1.8) +
   stat_peaks(span = NULL, color = "black") +
-  stat_peaks(span = NULL, geom = "text", vjust = -0.5, size = 3,
-             y.label.fmt = "%.3f", color = "black", 
+  stat_peaks(span = NULL, geom = "text", vjust = -0.5, size = 3, 
+             color = "black", 
              aes(label = paste(..y.label.., "at", ..x.label.. , "nm"))) +
   facet_grid(spct.idx~.)
 ```
@@ -235,14 +234,6 @@ The summary is calculated for a range of wavelengths, and the `range` argument d
 ggplot(sun.spct) + geom_line() + stat_wl_summary()
 ```
 
-Here with some additional formatting for the label.
-
-```{r}
-ggplot(sun.spct) + 
-  geom_line() +
-  stat_wl_summary(label.fmt = "%.3f", color = "red")
-```
-
 We can optionally supply an argument for `range` to limit the summary to a certain part of the spectrum, in which case the use of the default `"text"` _geom_ is misleading. We add the line last so that it is drawn on top of the rectangle.
 
 ```{r}
@@ -257,7 +248,7 @@ Here we show how to add horizontal line and label for the overall mean, by addin
 ggplot(sun.spct) +
   geom_line() + 
   stat_wl_summary(geom = "hline", color = "red") +
-  stat_wl_summary(label.fmt = "Mean = %.3f", color = "red", vjust = -0.3)
+  stat_wl_summary(label.fmt = "Mean = %.3g", color = "red", vjust = -0.3)
 ```
 
 Or we can add the _aesthetic_ twice with two different geoms to get the value plotted as a rectangular area and the value as formatted text. We use `vjust` to move the text above the end of the bar, instead of it being centred on the value itself.
@@ -265,7 +256,7 @@ Or we can add the _aesthetic_ twice with two different geoms to get the value pl
 ```{r}
 ggplot(sun.spct) +
   stat_wl_summary(range = c(400,500), geom = "rect", alpha = 0.2, fill = color(450)) +
-  stat_wl_summary(range = c(400,500), label.fmt = "Mean = %.3f", vjust = -0.3, geom = "text") + 
+  stat_wl_summary(range = c(400,500), label.fmt = "Mean = %.3g", vjust = -0.3, geom = "text") + 
   geom_line()
 ```
 
@@ -275,7 +266,7 @@ An example using the `color` _aesthetic_ for grouping and moving the text label 
 ggplot(two_suns.spct) + aes(color = spct.idx) +
   geom_line() + 
   stat_wl_summary(geom = "hline") +
-  stat_wl_summary(label.fmt = "Mean = %.3f", vjust = 1.2, show.legend = FALSE) +
+  stat_wl_summary(label.fmt = "Mean = %.3g", vjust = 1.2, show.legend = FALSE) +
   facet_grid(spct.idx~.)
 ```
 
@@ -285,7 +276,7 @@ Same example as above but using a free scale for $y$, still working as expected.
 ggplot(two_suns.spct) + aes(color = spct.idx) +
   geom_line() + 
   stat_wl_summary(geom = "hline") +
-  stat_wl_summary(label.fmt = "Mean = %.3f", vjust = 1.2, show.legend = FALSE) +
+  stat_wl_summary(label.fmt = "Mean = %.3g", vjust = 1.2, show.legend = FALSE) +
   facet_grid(spct.idx~., scales = "free_y")
 ```
 

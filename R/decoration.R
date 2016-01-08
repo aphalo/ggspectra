@@ -28,12 +28,12 @@ decoration <- function(w.band,
                        ) {
   z <- list()
   if ("peaks" %in% annotations) {
-    z <- c(z, stat_peaks(span = 21, label.fmt = "%3.0f",
+    z <- c(z, stat_peaks(span = 21, label.fmt = "%.4g",
                               ignore_threshold = 0.02, color = "red",
                               geom = "text", vjust = -0.5, size = 2.5))
   }
   if ("valleys" %in% annotations) {
-    z <- c(z, stat_valleys(span = 21, label.fmt = "%3.0f",
+    z <- c(z, stat_valleys(span = 21, label.fmt = "%.4g",
                                 ignore_threshold = 0.02, color = "blue",
                                 geom = "text", vjust = +1.2, size = 2.5))
   }

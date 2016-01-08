@@ -64,7 +64,7 @@
 #'
 stat_peaks <- function(mapping = NULL, data = NULL, geom = "point",
                        span = 5, ignore_threshold = 0, strict = FALSE,
-                       label.fmt = "%3.1f",
+                       label.fmt = "%.3g",
                        x.label.fmt = label.fmt, y.label.fmt = label.fmt,
                        position = "identity", na.rm = FALSE, show.legend = FALSE,
                        inherit.aes = TRUE, ...) {
@@ -135,7 +135,7 @@ StatPeaks <-
 #'
 stat_valleys <- function(mapping = NULL, data = NULL, geom = "point",
                          span = 5, ignore_threshold = 0, strict = FALSE,
-                         label.fmt = "%3.1f",
+                         label.fmt = "%.3g",
                          x.label.fmt = label.fmt, y.label.fmt = label.fmt,
                          position = "identity", na.rm = FALSE, show.legend = FALSE,
                          inherit.aes = TRUE, ...) {

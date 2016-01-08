@@ -48,7 +48,7 @@
 #'
 stat_wl_summary <- function(mapping = NULL, data = NULL, geom = "text",
                        range = NULL,
-                       integral.fun = photobiology::integrate_xy, label.fmt = "%s",
+                       integral.fun = photobiology::integrate_xy, label.fmt = "%.3g",
                        position = "identity", na.rm = FALSE, show.legend = NA,
                        inherit.aes = TRUE, ...) {
   ggplot2::layer(
