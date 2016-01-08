@@ -124,7 +124,7 @@ StatWaveband <-
                      w.band <- trim_wl(w.band, data$x)
                      integ.df <- data.frame()
                      for (wb in w.band) {
-                       if (is.numeric(wb)) {
+                       if (is.numeric(wb)) { # user supplied a list of numeric vectors
                          wb <- waveband(wb)
                        }
 
