@@ -280,16 +280,16 @@ ggplot(two_suns.spct) + aes(color = spct.idx) +
   facet_grid(spct.idx~., scales = "free_y")
 ```
 
-### Summaries by waveband
+### Means by waveband
 
-Our `stat_wb_summary()` is quite different to `ggplot2`s `stat_summary()`. One could criticize that it calculates summaries using a grouping that is not based on a _ggplot_ _aesthetic_. This is a deviation from the grammar of graphics but allows the calculation of summaries for an arbitrary waveband of the spectrum based on `photobiology::waveband` objects, or lists of such objects. In contrast to `stat_wl_summary()` this allows the use of several ranges, and also of different weighting functions.
+Our `stat_wb_mean()` is quite different to `ggplot2`s `stat_summary()`. One could criticize that it calculates summaries using a grouping that is not based on a _ggplot_ _aesthetic_. This is a deviation from the grammar of graphics but allows the calculation of summaries for an arbitrary waveband of the spectrum based on `photobiology::waveband` objects, or lists of such objects. In contrast to `stat_wl_summary()` this allows the use of several ranges, and also of different weighting functions. This function returns both mean and total values for each waveband. It differes from `stat_wb_total()` only in the default _aesthetics_ set.
 
 The first example uses a `waveband` object created on-the-fly and defining a range of wavelengths.
 
 ```{r}
 ggplot(sun.spct) +
-  stat_wb_summary(w.band = PAR(), geom = "rect", alpha = 0.5) +
-  stat_wb_summary(w.band = PAR(), vjust = 1.2, geom = "text") +
+  stat_wb_mean(w.band = PAR(), geom = "rect", alpha = 0.5) +
+  stat_wb_mean(w.band = PAR(), geom = "text") +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -300,8 +300,8 @@ If a numeric vector or a spectrum is supplied as argument to `waveband`, its ran
 
 ```{r}
 ggplot(sun.spct) +
-  stat_wb_summary(w.band = c(400,500), geom = "rect", alpha = 0.5) +
-  stat_wb_summary(w.band = c(400,500), geom = "text", y.multiplier = 0.5) +
+  stat_wb_mean(w.band = c(400,500), geom = "rect", alpha = 0.5) +
+  stat_wb_mean(w.band = c(400,500), geom = "text") +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +
@@ -311,26 +311,80 @@ ggplot(sun.spct) +
 Lists of wavebands, either user-defined or as in this case using constructor defined in package `photobiologyWavebands` can be also used.
 
 ```{r}
+ggplot(yellow_gel.spct) +
+  stat_wb_mean(w.band = Plant_bands(), geom = "rect", alpha = 0.7) +
+  stat_wb_mean(w.band = Plant_bands(), angle = 90, hjust = 0, geom = "text", ypos.fixed = 0.1, 
+                 aes(label = paste(..wb.name.., " = ", ..y.label.., sep = ""))) +
+  geom_line() + 
+  scale_fill_identity() +
+  theme_bw()
+```
+
+### Totals by waveband
+
+Our `stat_wb_total()` is quite different to `ggplot2`s `stat_summary()`. One could criticize that it calculates summaries using a grouping that is not based on a _ggplot_ _aesthetic_. This is a deviation from the grammar of graphics but allows the calculation of summaries for an arbitrary waveband of the spectrum based on `photobiology::waveband` objects, or lists of such objects. In contrast to `stat_wl_summary()` this allows the use of several ranges, and also of different weighting functions. This function returns both mean and total values for each waveband. It differes from `stat_wb_mean()` only in the default _aesthetics_ set.
+
+The first example uses a `waveband` object created on-the-fly and defining a range of wavelengths.
+
+```{r}
 ggplot(sun.spct) +
-  stat_wb_summary(w.band = VIS_bands(), geom = "rect", alpha = 0.7) +
-  stat_wb_summary(w.band = VIS_bands(), angle = 90, hjust = -0.1, geom = "text", 
-                 aes(label = paste(..wb.name.., " = ", ..y.label.., sep = ""),
-                     color = ..wb.color..)) +
+  stat_wb_total(w.band = PAR(), geom = "rect", alpha = 0.5) +
+  stat_wb_total(w.band = PAR(), geom = "text") +
+  geom_line() + 
+  scale_color_identity() + 
+  scale_fill_identity() +  
+  theme_bw()
+```
+
+If a numeric vector or a spectrum is supplied as argument to `waveband`, its range is calculated and used to construct a temporary `waveband` object.
+
+```{r}
+ggplot(sun.spct) +
+  stat_wb_total(w.band = c(400,500), geom = "rect", alpha = 0.5) +
+  stat_wb_total(w.band = c(400,500), geom = "text") +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +
-  ylim(NA, 1.1) + 
+  theme_bw()
+```
+
+Lists of wavebands, either user-defined or as in this case using constructor defined in package `photobiologyWavebands` can be also used.
+
+```{r}
+ggplot(yellow_gel.spct) +
+  stat_wb_total(w.band = Plant_bands(), geom = "rect", alpha = 0.4, color = "white",
+                ypos.fixed = 1) +
+  stat_wb_mean(w.band = Plant_bands(), geom = "text", label.fmt = "%1.2f",
+               ypos.fixed = 1) +
+  geom_line() + 
+  scale_fill_identity() +
   theme_bw()
 ```
 
 ### Irradiances by waveband
 
+The _stat_s in previous sections can be used for unweighted irradiances, but not for BSWFs. These `irrad` _stat_s have additional formal parameters for passing metadata, and use method `photobiology::irrad()` internaly on a `photobiology::source_spct` object constructed from the
+data for $x$ and $y$ _aesthetics_. Function `stat_wb_sirrad()` is equivalent to `stat_wb_mean()` and function `stat_wb_irrad()` is equivalent to `stat_wb_total()` following the same convention naming as in package `photobiology`.
+
 ```{r}
 ggplot(sun.spct) +
   stat_wb_irrad(w.band = PAR(), geom = "rect", alpha = 0.5,
                 unit.in = "energy", time.unit = "second") +
-  stat_wb_irrad(w.band = PAR(), vjust = 1.2, geom = "text",
+  stat_wb_irrad(w.band = PAR(), geom = "text",
                 unit.in = "energy", time.unit = "second") +
+  geom_line() + 
+  scale_color_identity() + 
+  scale_fill_identity() +  
+  theme_bw()
+```
+
+```{r}
+ggplot(sun.spct, unit.out = "photon") +
+  stat_wb_irrad(w.band = PAR(), geom = "rect", alpha = 0.5,
+                unit.in = "photon", time.unit = "second") +
+  stat_wb_irrad(w.band = PAR(), geom = "text",
+                unit.in = "photon", time.unit = "second", 
+                aes(label = sprintf("%s = %.3g", ..wb.name.., ..yint.. * 1e6))) +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -341,7 +395,7 @@ ggplot(sun.spct) +
 ggplot(sun.spct) +
   stat_wb_irrad(w.band = CIE(), geom = "rect", alpha = 0.5,
                 unit.in = "energy", time.unit = "second") +
-  stat_wb_irrad(w.band = CIE(), vjust = 1.2, geom = "text",
+  stat_wb_irrad(w.band = CIE(), geom = "text",
                 unit.in = "energy", time.unit = "second") +
   geom_line() + 
   scale_color_identity() + 
@@ -350,11 +404,91 @@ ggplot(sun.spct) +
 ```
 
 ```{r}
-ggplot(sun.spct) +
+ggplot(sun.daily.spct) +
+  stat_wb_irrad(w.band = CIE(), geom = "rect", alpha = 0.5,
+                unit.in = "energy", time.unit = "day") +
+  stat_wb_irrad(w.band = CIE(), geom = "text",
+                unit.in = "energy", time.unit = "day", label.mult = 1e-3) +
+  geom_line() + 
+  scale_color_identity() + 
+  scale_fill_identity() +  
+  theme_bw()
+```
+
+```{r}
+ggplot(sun.spct, unit.out = "photon") +
   stat_wb_irrad(w.band = VIS_bands(), geom = "rect", alpha = 0.5,
+                unit.in = "photon", time.unit = "second") +
+  stat_wb_irrad(w.band = VIS_bands(), geom = "text",
+                unit.in = "photon", time.unit = "second", 
+                label.mult = 1e6, size = rel(2)) +
+  geom_line() + 
+  scale_color_identity() + 
+  scale_fill_identity() +  
+  theme_bw()
+```
+
+### Spectral irradiances by waveband
+
+```{r}
+ggplot(sun.spct) +
+  stat_wb_sirrad(w.band = PAR(), geom = "rect", alpha = 0.5,
                 unit.in = "energy", time.unit = "second") +
-  stat_wb_irrad(w.band = VIS_bands(), angle = 90, geom = "text",
-                unit.in = "energy", time.unit = "second", y.position = 0.05, hjust = 0,
+  stat_wb_sirrad(w.band = PAR(), geom = "text",
+                unit.in = "energy", time.unit = "second") +
+  geom_line() + 
+  scale_color_identity() + 
+  scale_fill_identity() +  
+  theme_bw()
+```
+
+```{r}
+ggplot(sun.spct, unit.out = "photon") +
+  stat_wb_sirrad(w.band = PAR(), geom = "rect", alpha = 0.5,
+                unit.in = "photon", time.unit = "second") +
+  stat_wb_sirrad(w.band = PAR(), geom = "text",
+                unit.in = "photon", time.unit = "second", 
+                aes(label = sprintf("%s = %.3g", ..wb.name.., ..yint.. * 1e6))) +
+  stat_wb_sirrad(w.band = PAR(), geom = "text",
+                unit.in = "photon", time.unit = "second", 
+                mapping = aes(label = sprintf("%s = %.3g", ..wb.name.., ..ymean.. * 1e6)), 
+                ypos.mult = -0.5) +
+  geom_line() + 
+  scale_color_identity() + 
+  scale_fill_identity() +  
+  theme_bw()
+```
+
+```{r}
+ggplot(sun.spct) +
+  stat_wb_sirrad(w.band = CIE(), geom = "rect", alpha = 0.5,
+                unit.in = "energy", time.unit = "second") +
+  stat_wb_sirrad(w.band = CIE(), geom = "text",
+                unit.in = "energy", time.unit = "second") +
+  geom_line() + 
+  scale_color_identity() + 
+  scale_fill_identity() +  
+  theme_bw()
+```
+
+```{r}
+ggplot(sun.daily.spct) +
+  stat_wb_sirrad(w.band = CIE(), geom = "rect", alpha = 0.5,
+                unit.in = "energy", time.unit = "day") +
+  stat_wb_sirrad(w.band = CIE(), geom = "text",
+                unit.in = "energy", time.unit = "day", label.mult = 1e-3) +
+  geom_line() + 
+  scale_color_identity() + 
+  scale_fill_identity() +  
+  theme_bw()
+```
+
+```{r}
+ggplot(sun.spct) +
+  stat_wb_sirrad(w.band = VIS_bands(), geom = "rect", alpha = 0.5,
+                unit.in = "energy", time.unit = "second") +
+  stat_wb_sirrad(w.band = VIS_bands(), angle = 90, geom = "text",
+                unit.in = "energy", time.unit = "second", ypos.fixed = 0.05, hjust = 0,
                  aes(label = paste(..wb.name.., ..y.label.., sep = " = "),
                      color = "black")) +
   geom_line() + 
@@ -363,9 +497,52 @@ ggplot(sun.spct) +
   theme_bw()
 ```
 
+```{r}
+ggplot(sun.spct) +
+  stat_wb_sirrad(w.band = VIS_bands(), geom = "rect", alpha = 0.5,
+                unit.in = "energy", time.unit = "second") +
+  stat_wb_irrad(w.band = VIS_bands(), angle = 90, geom = "text",
+                unit.in = "energy", time.unit = "second", ypos.fixed = 0.05, hjust = 0,
+                 aes(label = paste(..wb.name.., ..y.label.., sep = " = "),
+                     color = "black")) +
+  geom_line() + 
+  scale_color_identity() + 
+  scale_fill_identity() +  
+  theme_bw()
+```
+
+
+```{r}
+my.bands <- split_bands(c(300,800), length.out = 10)
+ggplot(sun.spct) +
+  stat_wb_sirrad(w.band = my.bands, geom = "rect", alpha = 0.5,
+                unit.in = "energy", time.unit = "second") +
+  stat_wb_irrad(w.band = my.bands, angle = 90, geom = "text",
+                unit.in = "energy", time.unit = "second", ypos.fixed = 0.05, hjust = 0,
+                color = "black") +
+  geom_line() + 
+  scale_color_identity() + 
+  scale_fill_identity() +  
+  theme_bw()
+```
+
+```{r}
+my.bands <- split_bands(c(300,800), length.out = 10)
+ggplot(sun.spct, unit.out = "photon") +
+  stat_wb_sirrad(w.band = my.bands, geom = "rect", alpha = 0.5,
+                unit.in = "photon", time.unit = "second") +
+  stat_wb_sirrad(w.band = my.bands, geom = "text", angle = 90,
+                unit.in = "photon", time.unit = "second", 
+                color = "black") +
+  geom_line() + 
+  scale_color_identity() + 
+  scale_fill_identity() +  
+  theme_bw()
+```
+
 ## Wavelength colours at new $x$-values 
 
-The `stat_wl_summary()` and `stat_wb_summary()` return a _reduced_ data set with fewer rows than the original data. `stat_wl_strip()` depending on the input, can also return a data set with more rows than the input data. This is the default behaviour, with `w.band` with argument `NULL`. This _stat_ operates only on the variable mapped to the $x$ _aesthetic_, a $y$-mapping is not required as input.
+The `stat_wl_summary()` and `stat_wb_mean()` return a _reduced_ data set with fewer rows than the original data. `stat_wl_strip()` depending on the input, can also return a data set with more rows than the input data. This is the default behaviour, with `w.band` with argument `NULL`. This _stat_ operates only on the variable mapped to the $x$ _aesthetic_, a $y$-mapping is not required as input.
 
 ```{r}
 my.data <- data.frame(x = 300:800)
@@ -418,12 +595,11 @@ ggplot(sun.spct) +
 The _stats_ described above can be used together to produce more complex plots. This is just one possibility out of a vast range. Be aware that when adding many layers to the same plot, the order of the layers and adjusting their transparency using the `alpha` _aesthetic_ is very important, and best tuned by trial and error.
 
 ```{r}
-ggplot(sun.spct) +
+ggplot(sun.spct, unit.out = "photon") +
   stat_wl_strip(alpha = 0.4, ymin = -Inf, ymax = Inf) + 
-  stat_wb_summary(w.band = PAR(), ymin = -0.01, ymax = 0, color = "black", geom = "rect") +
-  stat_wb_summary(w.band = PAR(), integral.fun = "total",
-                vjust = -0.5, geom = "text", color = "black",
-                y.position = 0,
+  stat_wb_total(w.band = PAR(), color = "black", geom = "rect") +
+  stat_wb_total(w.band = PAR(), label.mult = 1e6,
+                geom = "text", color = "black",
                 aes(label = paste(..wb.name.., " = ", ..y.label.., sep = ""))) +  
   geom_line() + 
   scale_fill_identity() +
@@ -492,7 +668,7 @@ ggplot(sun.spct) +
 
 ### wb_guide
 
-The examples for `stat_wb_summary` can be simplified by use of `wb_guide()` which adds both the statistics and the scale, and provides a default _mapping_ for both `ymin` and `ymax`. Furthermore, this function adds two layers using `"stat_wb_summary"`, one with _geom_ `"rect"` and one with _geom_ `"text"`. Another important difference is that these _geoms_ cannot be set by the user.
+The examples for `stat_wb_mean` can be simplified by use of `wb_guide()` which adds both the statistics and the scale, and provides a default _mapping_ for both `ymin` and `ymax`. Furthermore, this function adds two layers using `"stat_wb_mean"`, one with _geom_ `"rect"` and one with _geom_ `"text"`. Another important difference is that these _geoms_ cannot be set by the user.
 
 First a very simple example for a list of _wavebands_, using defaults for other arguments. The default is to show the mean of the spectrum for the region covered by the waveband.
 
@@ -539,32 +715,6 @@ ggplot(sun.spct) +
   wb_guide(w.band = Plant_bands(), guide.position = "top2",
                  aes(label = paste(..wb.name.., ..y.label.., sep = "\n"))) +
   ylim(NA, 1.1)
-```
-
-## irrad_guide()
-
-```{r}
-ggplot(sun.spct) + 
-  geom_spct() + 
-  irrad_guide(w.band = Plant_bands(), time.unit = "second", unit.in = "energy")
-```
-
-```{r}
-ggplot(sun.spct) + 
-  geom_spct() + 
-  irrad_guide(w.band = CIE(), time.unit = "second", unit.in = "energy")
-```
-
-```{r, eval=FALSE}
-ggplot(sun.daily.spct) + 
-  geom_spct() + 
-  irrad_guide(w.band = CIE(), time.unit = "day", unit.in = "energy")
-```
-
-```{r, eval=FALSE}
-ggplot(sun.spct, unit.out = "photon") + 
-  geom_spct() + 
-  irrad_guide(w.band = PAR(), time.unit = "second", unit.in = "photon", label.mult = 1e6)
 ```
 
 ## Plotting spectra

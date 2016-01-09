@@ -1,6 +1,10 @@
-#' Integrate ranges under curve.
+#' Integrate ranges under spectral curve.
 #'
-#' \code{stat_wb_summary} computes areas under a curve.
+#' \code{stat_wb_total} computes means under a curve. It first integrates the
+#'   area under a spectral curve and also the mean expressed per nanaometre of
+#'   wavelength for each waveband in the input. Sets suitable default aestheics
+#'   for "rect", "hline", "vline", "text" and "label" geoms displaying "totals"
+#'   per waveband.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_string}}. Only needs
@@ -28,9 +32,9 @@
 #' @param label.fmt character string giving a format definition for converting
 #'   y-integral values into character strings by means of function
 #'   \code{\link{sprintf}}.
-#' @param y.multiplier numeric Multiplier constant used to scale returned
+#' @param ypos.mult numeric Multiplier constant used to scale returned
 #'   \code{y} values.
-#' @param y.position numeric If not \code{NULL} used a constant value returned
+#' @param ypos.fixed numeric If not \code{NULL} used a constant value returned
 #'   in \code{y}.
 #'
 #' @section Computed variables:
@@ -39,7 +43,8 @@
 #'   \item{x}{w.band-midpoint}
 #'   \item{xmin}{w.band minimum}
 #'   \item{xmax}{w.band maximum}
-#'   \item{y}{integral value as numeric}
+#'   \item{ymean}{Mean value as numeric}
+#'   \item{yint}{Integral value as numeric}
 #' }
 #'
 #' @import photobiology
@@ -53,22 +58,24 @@
 #' @export
 #' @family stats functions
 #'
-stat_wb_summary <- function(mapping = NULL, data = NULL, geom = "rect",
+stat_wb_total <- function(mapping = NULL, data = NULL, geom = "rect",
                        w.band = NULL,
-                       integral.fun = "mean",
+                       integral.fun = photobiology::integrate_xy,
+                       label.mult = 1,
                        label.fmt = "%.3g",
-                       y.multiplier = 1,
-                       y.position = NULL,
+                       ypos.mult = 1.07,
+                       ypos.fixed = NULL,
                        position = "identity", na.rm = FALSE, show.legend = NA,
                        inherit.aes = TRUE, ...) {
   ggplot2::layer(
-    stat = StatWaveband, data = data, mapping = mapping, geom = geom,
+    stat = StatWbTotal, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(w.band = w.band,
                   integral.fun = integral.fun,
+                  label.mult = label.mult,
                   label.fmt = label.fmt,
-                  y.multiplier = y.multiplier,
-                  y.position = y.position,
+                  ypos.mult = ypos.mult,
+                  ypos.fixed = ypos.fixed,
                   na.rm = na.rm,
                   ...)
   )
@@ -78,15 +85,16 @@ stat_wb_summary <- function(mapping = NULL, data = NULL, geom = "rect",
 #' @format NULL
 #' @usage NULL
 #' @export
-StatWaveband <-
-  ggplot2::ggproto("StatWaveband", ggplot2::Stat,
+StatWbTotal <-
+  ggplot2::ggproto("StatWbTotal", ggplot2::Stat,
                    compute_group = function(data,
                                             scales,
                                             w.band,
                                             integral.fun,
+                                            label.mult,
                                             label.fmt,
-                                            y.multiplier,
-                                            y.position) {
+                                            ypos.mult,
+                                            ypos.fixed) {
                      if (is.null(w.band)) {
                        w.band <- waveband(data$x)
                      }
@@ -97,30 +105,7 @@ StatWaveband <-
                      if (!is.list(w.band) || is.waveband(w.band)) {
                        w.band <- list(w.band)
                      }
-                     if (is.character(integral.fun)) {
-                       if (integral.fun %in% c("mean", "average")) {
-                         integral.fun <- function(xx, yy) {
-                           photobiology::integrate_xy(xx, yy) / diff(range(xx))
-                         }
-                         y.mult.fun <- function(xx, mult) {
-                           1.0 * mult
-                         }
-                       } else if (integral.fun == "total") {
-                         integral.fun <- photobiology::integrate_xy
-                         y.mult.fun <- function(xx, mult) {
-                           mult / diff(range(xx))
-                         }
-                       } else {
-                         warning("'integral.fun' value '", integral.fun,
-                                 "' not yet supported.")
-                         # We use NaN rather than NA so that it prints and
-                         # propagates quietly.
-                         integral.fun <- function(xx, yy) {NaN}
-                         y.mult.fun <- function(xx, yy) {NaN}
-                       }
-                     } else {
-                       stopifnot(is.function(integral.fun))
-                     }
+                     stopifnot(is.function(integral.fun))
                      w.band <- trim_wl(w.band, data$x)
                      integ.df <- data.frame()
                      for (wb in w.band) {
@@ -129,51 +114,48 @@ StatWaveband <-
                        }
 
                        range <- range(wb)
-                       mydata <- trim_tails(data$x, data$y,
-                                                          low.limit = range[1],
-                                                          high.limit = range[2])
+                       mydata <- trim_tails(data$x, data$y, use.hinges = TRUE,
+                                            low.limit = range[1],
+                                            high.limit = range[2])
                        if (is_effective(wb)) {
-                         warning("BSWFs not yet supported: skipping summary for '",
+                         warning("BSWFs not supported by summary: using wavelength range for ",
                                  labels(wb)$label, "'.")
-                         # We use NaN rather than NA so that it prints and
-                         # propagates quietly.
-                         yint.tmp <- NaN
-                         ymult.tmp <- NaN
-                       } else {
-                         yint.tmp <- integral.fun(mydata$x, mydata$y)
-                         ymult.tmp <- y.mult.fun(mydata$x, y.multiplier)
+                         wb <- waveband(wb)
                        }
+                       yint.tmp <- integral.fun(mydata$x, mydata$y)
+                       ymean.tmp <- yint.tmp / spread(wb)
                        integ.df <- rbind(integ.df,
                                          data.frame(x = midpoint(mydata$x),
-                                                    xmin = range[1],
-                                                    xmax = range[2],
+                                                    xmin = min(wb),
+                                                    xmax = max(wb),
+                                                    ymin = min(data$y),
+                                                    ymax = max(data$y),
                                                     yint = yint.tmp,
-                                                    ymult = ymult.tmp,
+                                                    ymean = ymean.tmp,
                                                     wb.color = color(wb),
                                                     wb.name = labels(wb)$label)
                                          )
                      }
-
-                     if (is.null(y.position)) {
-                       integ.df$y <- with(integ.df, yint * ymult)
+                     if (is.null(ypos.fixed)) {
+                       integ.df$y <- with(integ.df, ymin + (ymax - ymin) * ypos.mult)
                      } else {
-                       integ.df$y <- y.position
+                       integ.df$y <- ypos.fixed
                      }
-                     integ.df$y.label <- sprintf(label.fmt, integ.df$yint)
+                     integ.df$y.label <- sprintf(label.fmt, integ.df$yint * label.mult)
 #                     print(integ.df)
                      integ.df
                    },
                    default_aes = ggplot2::aes(label = ..y.label..,
                                               xmin = ..xmin..,
                                               xmax = ..xmax..,
-                                              ymax = ..yint.. * ymult,
-                                              ymin = 0 * ..yint..,
-                                              yintercept = ..yint.. * ymult,
+                                              ymin = ..y.. - (..ymax.. - ..ymin..) * 0.03,
+                                              ymax = ..y.. + (..ymax.. - ..ymin..) * 0.03,
+                                              yintercept = ..ymean..,
                                               fill = ..wb.color..),
                    required_aes = c("x", "y")
   )
 
-#' @rdname stat_wb_summary
+#' @rdname stat_wb_mean
 #'
 #' @param label.y numeric position of label
 #' @param rect.alpha numeric transparency of "rect"
@@ -182,9 +164,9 @@ StatWaveband <-
 #'
 #' @export
 #'
-wb_guide <- function(mapping = NULL, data = NULL,
+wb_mean_guide <- function(mapping = NULL, data = NULL,
                           w.band = NULL,
-                          integral.fun = "mean",
+                          integral.fun = photobiology::integrate_xy,
                           label.fmt = "%.3g", label.y = 0.3,
                           guide.position = "bottom",
                           guide.width = 0.05,
@@ -207,7 +189,7 @@ wb_guide <- function(mapping = NULL, data = NULL,
     ymin <- (ymax - guide.width)
   }
   list(
-    stat_wb_summary(mapping = mapping, data = data,
+    stat_wb_mean(mapping = mapping, data = data,
                   geom = "rect",
                   w.band = w.band,
                   integral.fun = integral.fun,
@@ -222,13 +204,12 @@ wb_guide <- function(mapping = NULL, data = NULL,
                   color = "black",
                   size = 1,
                   ...),
-    stat_wb_summary(mapping = mapping, data = data,
+    stat_wb_mean(mapping = mapping, data = data,
                   geom = "text",
                   w.band = w.band,
                   integral.fun = integral.fun,
                   label.fmt = label.fmt,
                   position = position,
-                  y.position = ymax - 0.45 * guide.width,
                   na.rm = na.rm,
                   show.legend = show.legend,
                   inherit.aes = inherit.aes,

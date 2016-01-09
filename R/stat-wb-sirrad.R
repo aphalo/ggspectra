@@ -1,6 +1,6 @@
-#' Integrate irradiance for wavebands.
+#' Integrate spectral irradiance for wavebands.
 #'
-#' \code{stat_wb_irrad} computes areas under a curve.
+#' \code{stat_wb_sirrad} computes areas under a curve.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_string}}. Only needs
@@ -58,25 +58,26 @@
 #' @examples
 #' library(photobiology)
 #' library(ggplot2)
-#' ggplot(sun.spct, unit.out = "photon") + geom_line() +
-#'   stat_wb_irrad(unit.in = "photon", time.unit = "second")
+#' ggplot(sun.spct, unit.out = "photon") +
+#'   stat_wb_sirrad(unit.in = "photon", time.unit = "second") +
+#'    geom_line()
 #'
 #' @export
 #' @family stats functions
 #'
-stat_wb_irrad <- function(mapping = NULL, data = NULL, geom = "text",
+stat_wb_sirrad <- function(mapping = NULL, data = NULL, geom = "text",
                        w.band = NULL,
                        time.unit,
                        unit.in,
-                       label.qty = "total",
+                       label.qty = "mean",
                        label.mult = 1,
                        label.fmt = "%.3g",
-                       ypos.mult = 1.07,
+                       ypos.mult = 0.55,
                        ypos.fixed = NULL,
                        position = "identity", na.rm = FALSE, show.legend = NA,
                        inherit.aes = TRUE, ...) {
   ggplot2::layer(
-    stat = StatWbIrrad, data = data, mapping = mapping, geom = geom,
+    stat = StatWbSIrrad, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(w.band = w.band,
                   time.unit = time.unit,
@@ -95,8 +96,8 @@ stat_wb_irrad <- function(mapping = NULL, data = NULL, geom = "text",
 #' @format NULL
 #' @usage NULL
 #' @export
-StatWbIrrad <-
-  ggplot2::ggproto("StatWbIrrad", ggplot2::Stat,
+StatWbSIrrad <-
+  ggplot2::ggproto("StatWbSIrrad", ggplot2::Stat,
                    compute_group = function(data,
                                             scales,
                                             w.band,
@@ -154,9 +155,8 @@ StatWbIrrad <-
                                                     wb.name = labels(wb)$label)
                                          )
                      }
-
                      if (is.null(ypos.fixed)) {
-                       integ.df$y <- with(integ.df, ymin + (ymax - ymin) * ypos.mult)
+                       integ.df$y <- with(integ.df, ymin + (ymean - ymin) * ypos.mult)
                      } else {
                        integ.df$y <- ypos.fixed
                      }
@@ -166,8 +166,8 @@ StatWbIrrad <-
                    default_aes = ggplot2::aes(label = ..y.label..,
                                               xmin = ..xmin..,
                                               xmax = ..xmax..,
-                                              ymin = ..y.. - (..ymax.. - ..ymin..) * 0.03,
-                                              ymax = ..y.. + (..ymax.. - ..ymin..) * 0.03,
+                                              ymin = 0,
+                                              ymax = ..ymean..,
                                               yintercept = ..ymean..,
                                               fill = ..wb.color..),
                    required_aes = c("x", "y")

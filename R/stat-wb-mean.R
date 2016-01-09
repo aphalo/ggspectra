@@ -1,6 +1,9 @@
-#' Integrate irradiance for wavebands.
+#' Integrate ranges under curve.
 #'
-#' \code{stat_wb_irrad} computes areas under a curve.
+#' \code{stat_wb_mean} computes means under a curve. It first integrates the
+#'   area under a spectral curve and also the mean expressed per nanaometre of
+#'   wavelength for each waveband in the input. Sets suitable default aestheics
+#'   for "rect", "hline", "vline", "text" and "label" geoms.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_string}}. Only needs
@@ -24,11 +27,7 @@
 #'   before the computation proceeds.
 #' @param w.band a waveband object or a list of waveband objects or numeric
 #'   vector of at least length two.
-#' @param unit.in character One of "photon","quantum" or "energy"
-#' @param time.unit character or lubridate::duration
-#' @param label.qty character
-#' @param label.mult numeric Scaling factor applied to y-integral values before
-#'   conversion into character strings.
+#' @param integral.fun function on $x$ and $y$.
 #' @param label.fmt character string giving a format definition for converting
 #'   y-integral values into character strings by means of function
 #'   \code{\link{sprintf}}.
@@ -39,18 +38,12 @@
 #'
 #' @section Computed variables:
 #' \describe{
-#'   \item{y.label}{integral value as formatted text}
+#'   \item{label}{intergral value as formatted text}
 #'   \item{x}{w.band-midpoint}
 #'   \item{xmin}{w.band minimum}
 #'   \item{xmax}{w.band maximum}
-#'   \item{ymin}{data$y minimum}
-#'   \item{ymax}{data$y maximum}
-#'   \item{yeff}{Effective irradiance as numeric value}
-#'   \item{ymean}{Mean unweighted spectral irradiance for range of wavabnd}
-#'   \item{yint}{Waveband unweighted irradiance for range of wavabnd}
-#'   \item{y}{Scaled mean value as numeric, or \code{y.position} if not \code{NULL}}
-#'   \item{wb.name}{character}
-#'   \item{wb.color}{character}
+#'   \item{ymean}{Mean value as numeric}
+#'   \item{yint}{Integral value as numeric}
 #' }
 #'
 #' @import photobiology
@@ -58,31 +51,25 @@
 #' @examples
 #' library(photobiology)
 #' library(ggplot2)
-#' ggplot(sun.spct, unit.out = "photon") + geom_line() +
-#'   stat_wb_irrad(unit.in = "photon", time.unit = "second")
+#' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
+#'   stat_wb_summary()
 #'
 #' @export
 #' @family stats functions
 #'
-stat_wb_irrad <- function(mapping = NULL, data = NULL, geom = "text",
+stat_wb_mean <- function(mapping = NULL, data = NULL, geom = "rect",
                        w.band = NULL,
-                       time.unit,
-                       unit.in,
-                       label.qty = "total",
-                       label.mult = 1,
+                       integral.fun = photobiology::integrate_xy,
                        label.fmt = "%.3g",
-                       ypos.mult = 1.07,
+                       ypos.mult = 0.55,
                        ypos.fixed = NULL,
                        position = "identity", na.rm = FALSE, show.legend = NA,
                        inherit.aes = TRUE, ...) {
   ggplot2::layer(
-    stat = StatWbIrrad, data = data, mapping = mapping, geom = geom,
+    stat = StatWbMean, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(w.band = w.band,
-                  time.unit = time.unit,
-                  unit.in = unit.in,
-                  label.qty = label.qty,
-                  label.mult = label.mult,
+                  integral.fun = integral.fun,
                   label.fmt = label.fmt,
                   ypos.mult = ypos.mult,
                   ypos.fixed = ypos.fixed,
@@ -95,15 +82,12 @@ stat_wb_irrad <- function(mapping = NULL, data = NULL, geom = "text",
 #' @format NULL
 #' @usage NULL
 #' @export
-StatWbIrrad <-
-  ggplot2::ggproto("StatWbIrrad", ggplot2::Stat,
+StatWbMean <-
+  ggplot2::ggproto("StatWbMean", ggplot2::Stat,
                    compute_group = function(data,
                                             scales,
                                             w.band,
-                                            time.unit,
-                                            unit.in,
-                                            label.qty,
-                                            label.mult,
+                                            integral.fun,
                                             label.fmt,
                                             ypos.mult,
                                             ypos.fixed) {
@@ -117,59 +101,117 @@ StatWbIrrad <-
                      if (!is.list(w.band) || is.waveband(w.band)) {
                        w.band <- list(w.band)
                      }
+                     stopifnot(is.function(integral.fun))
                      w.band <- trim_wl(w.band, data$x)
-                     if (unit.in == "energy") {
-                       tmp.spct <- source_spct(w.length = data$x, s.e.irrad = data$y,
-                                               time.unit = time.unit)
-                     } else if (unit.in %in% c("photon", "quantum")) {
-                       tmp.spct <- source_spct(w.length = data$x, s.q.irrad = data$y,
-                                               time.unit = time.unit)
-                     } else {
-                       stop("Bad 'unit.in' argument.")
-                     }
                      integ.df <- data.frame()
                      for (wb in w.band) {
                        if (is.numeric(wb)) { # user supplied a list of numeric vectors
                          wb <- waveband(wb)
                        }
-                       yeff.tmp <- irrad(tmp.spct, wb, quantity = label.qty,
-                                         use.hinges = TRUE,
-                                         unit.out = unit.in)
-                       yint.tmp <- irrad(tmp.spct, waveband(range(wb)), quantity = "total",
-                                         use.hinges = TRUE,
-                                         unit.out = unit.in)
-                       ymean.tmp <- irrad(tmp.spct, waveband(range(wb)), quantity = "mean",
-                                          use.hinges = TRUE,
-                                          unit.out = unit.in)
+
+                       range <- range(wb)
+                       mydata <- trim_tails(data$x, data$y, use.hinges = TRUE,
+                                            low.limit = range[1],
+                                            high.limit = range[2])
+                       if (is_effective(wb)) {
+                         warning("BSWFs not supported by summary: using wavelength range for ",
+                                 labels(wb)$label, "'.")
+                         wb <- waveband(wb)
+                       }
+                       yint.tmp <- integral.fun(mydata$x, mydata$y)
+                       ymean.tmp <- yint.tmp / spread(wb)
                        integ.df <- rbind(integ.df,
-                                         data.frame(x = midpoint(wb),
+                                         data.frame(x = midpoint(mydata$x),
                                                     xmin = min(wb),
                                                     xmax = max(wb),
-                                                    yeff = yeff.tmp,
-                                                    yint = yint.tmp,
-                                                    ymax = max(data$y),
                                                     ymin = min(data$y),
+                                                    ymax = max(data$y),
+                                                    yint = yint.tmp,
                                                     ymean = ymean.tmp,
                                                     wb.color = color(wb),
                                                     wb.name = labels(wb)$label)
                                          )
                      }
-
                      if (is.null(ypos.fixed)) {
-                       integ.df$y <- with(integ.df, ymin + (ymax - ymin) * ypos.mult)
+                       integ.df$y <- with(integ.df, ymin + (ymean - ymin) * ypos.mult)
                      } else {
                        integ.df$y <- ypos.fixed
                      }
-                     integ.df$y.label <- sprintf(label.fmt, integ.df$yeff * label.mult)
+                     integ.df$y.label <- sprintf(label.fmt, integ.df$ymean)
+#                     print(integ.df)
                      integ.df
                    },
                    default_aes = ggplot2::aes(label = ..y.label..,
                                               xmin = ..xmin..,
                                               xmax = ..xmax..,
-                                              ymin = ..y.. - (..ymax.. - ..ymin..) * 0.03,
-                                              ymax = ..y.. + (..ymax.. - ..ymin..) * 0.03,
+                                              ymax = ..ymean..,
+                                              ymin = 0,
                                               yintercept = ..ymean..,
                                               fill = ..wb.color..),
                    required_aes = c("x", "y")
   )
 
+#' @rdname stat_wb_mean
+#'
+#' @param label.y numeric position of label
+#' @param rect.alpha numeric transparency of "rect"
+#' @param guide.position character or numericguiving y positon of "guide"
+#' @param guide.width numeric y-width of the "guide"
+#'
+#' @export
+#'
+wb_mean_guide <- function(mapping = NULL, data = NULL,
+                          w.band = NULL,
+                          integral.fun = photobiology::integrate_xy,
+                          label.fmt = "%.3g", label.y = 0.3,
+                          guide.position = "bottom",
+                          guide.width = 0.05,
+                          rect.alpha = 0.7,
+                          position = "identity", na.rm = FALSE, show.legend = FALSE,
+                          inherit.aes = TRUE, ...) {
+  if (is.character(guide.position)) {
+    if (guide.position %in% c("bottom2", "middle2", "top2")) {
+      guide.width <- guide.width * 1.75
+    }
+    ymax <- switch(guide.position,
+      bottom = 0.0,
+      bottom2 = 0.0,
+      middle = 0.5 + guide.width / 2,
+      middle2 = 0.5 + guide.width / 2,
+      top    = 1.05 + guide.width,
+      top2    = 1.05 + guide.width,
+      NA
+    )
+    ymin <- (ymax - guide.width)
+  }
+  list(
+    stat_wb_mean(mapping = mapping, data = data,
+                  geom = "rect",
+                  w.band = w.band,
+                  integral.fun = integral.fun,
+                  label.fmt = label.fmt,
+                  position = position,
+                  na.rm = na.rm,
+                  show.legend = show.legend,
+                  inherit.aes = inherit.aes,
+                  alpha = rect.alpha,
+                  ymax = ymax,
+                  ymin = ymin,
+                  color = "black",
+                  size = 1,
+                  ...),
+    stat_wb_mean(mapping = mapping, data = data,
+                  geom = "text",
+                  w.band = w.band,
+                  integral.fun = integral.fun,
+                  label.fmt = label.fmt,
+                  position = position,
+                  na.rm = na.rm,
+                  show.legend = show.legend,
+                  inherit.aes = inherit.aes,
+                  color = "white",
+                  size = 2,
+                  ...),
+    scale_fill_identity()
+  )
+}
