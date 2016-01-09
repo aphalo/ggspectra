@@ -28,6 +28,8 @@
 #' @param w.band a waveband object or a list of waveband objects or numeric
 #'   vector of at least length two.
 #' @param integral.fun function on $x$ and $y$.
+#' @param label.mult numeric Scaling factor applied to y-integral values before
+#'   conversion into character strings.
 #' @param label.fmt character string giving a format definition for converting
 #'   y-integral values into character strings by means of function
 #'   \code{\link{sprintf}}.
