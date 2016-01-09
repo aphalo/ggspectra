@@ -60,6 +60,7 @@
 stat_wb_mean <- function(mapping = NULL, data = NULL, geom = "rect",
                        w.band = NULL,
                        integral.fun = photobiology::integrate_xy,
+                       label.mult = 1,
                        label.fmt = "%.3g",
                        ypos.mult = 0.55,
                        ypos.fixed = NULL,
@@ -70,6 +71,7 @@ stat_wb_mean <- function(mapping = NULL, data = NULL, geom = "rect",
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(w.band = w.band,
                   integral.fun = integral.fun,
+                  label.mult = label.mult,
                   label.fmt = label.fmt,
                   ypos.mult = ypos.mult,
                   ypos.fixed = ypos.fixed,
@@ -88,6 +90,7 @@ StatWbMean <-
                                             scales,
                                             w.band,
                                             integral.fun,
+                                            label.mult,
                                             label.fmt,
                                             ypos.mult,
                                             ypos.fixed) {
@@ -137,7 +140,7 @@ StatWbMean <-
                      } else {
                        integ.df$y <- ypos.fixed
                      }
-                     integ.df$y.label <- sprintf(label.fmt, integ.df$ymean)
+                     integ.df$y.label <- sprintf(label.fmt, integ.df$ymean * label.mult)
 #                     print(integ.df)
                      integ.df
                    },
@@ -151,67 +154,3 @@ StatWbMean <-
                    required_aes = c("x", "y")
   )
 
-#' @rdname stat_wb_mean
-#'
-#' @param label.y numeric position of label
-#' @param rect.alpha numeric transparency of "rect"
-#' @param guide.position character or numericguiving y positon of "guide"
-#' @param guide.width numeric y-width of the "guide"
-#'
-#' @export
-#'
-wb_mean_guide <- function(mapping = NULL, data = NULL,
-                          w.band = NULL,
-                          integral.fun = photobiology::integrate_xy,
-                          label.fmt = "%.3g", label.y = 0.3,
-                          guide.position = "bottom",
-                          guide.width = 0.05,
-                          rect.alpha = 0.7,
-                          position = "identity", na.rm = FALSE, show.legend = FALSE,
-                          inherit.aes = TRUE, ...) {
-  if (is.character(guide.position)) {
-    if (guide.position %in% c("bottom2", "middle2", "top2")) {
-      guide.width <- guide.width * 1.75
-    }
-    ymax <- switch(guide.position,
-      bottom = 0.0,
-      bottom2 = 0.0,
-      middle = 0.5 + guide.width / 2,
-      middle2 = 0.5 + guide.width / 2,
-      top    = 1.05 + guide.width,
-      top2    = 1.05 + guide.width,
-      NA
-    )
-    ymin <- (ymax - guide.width)
-  }
-  list(
-    stat_wb_mean(mapping = mapping, data = data,
-                  geom = "rect",
-                  w.band = w.band,
-                  integral.fun = integral.fun,
-                  label.fmt = label.fmt,
-                  position = position,
-                  na.rm = na.rm,
-                  show.legend = show.legend,
-                  inherit.aes = inherit.aes,
-                  alpha = rect.alpha,
-                  ymax = ymax,
-                  ymin = ymin,
-                  color = "black",
-                  size = 1,
-                  ...),
-    stat_wb_mean(mapping = mapping, data = data,
-                  geom = "text",
-                  w.band = w.band,
-                  integral.fun = integral.fun,
-                  label.fmt = label.fmt,
-                  position = position,
-                  na.rm = na.rm,
-                  show.legend = show.legend,
-                  inherit.aes = inherit.aes,
-                  color = "white",
-                  size = 2,
-                  ...),
-    scale_fill_identity()
-  )
-}
