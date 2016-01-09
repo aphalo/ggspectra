@@ -1,10 +1,10 @@
 #' Integrate ranges under spectral curve.
 #'
-#' \code{stat_wb_total} computes means under a curve. It first integrates the
+#' \code{stat_wb_contribution} computes means under a curve. It first integrates the
 #'   area under a spectral curve and also the mean expressed per nanaometre of
 #'   wavelength for each waveband in the input. Sets suitable default aestheics
-#'   for "rect", "hline", "vline", "text" and "label" geoms displaying "totals"
-#'   per waveband.
+#'   for "rect", "hline", "vline", "text" and "label" geoms displaying "contributions"
+#'   per waveband to the total of the spectral integral.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_string}}. Only needs
@@ -54,12 +54,12 @@
 #' library(photobiologyWavebands)
 #' library(ggplot2)
 #' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
-#'   stat_wb_total(w.band = VIS())
+#'   stat_wb_contribution(w.band = VIS_bands())
 #'
 #' @export
 #' @family stats functions
 #'
-stat_wb_total <- function(mapping = NULL, data = NULL, geom = "rect",
+stat_wb_contribution <- function(mapping = NULL, data = NULL, geom = "rect",
                        w.band = NULL,
                        integral.fun = photobiology::integrate_xy,
                        label.mult = 1,
@@ -69,7 +69,7 @@ stat_wb_total <- function(mapping = NULL, data = NULL, geom = "rect",
                        position = "identity", na.rm = FALSE, show.legend = NA,
                        inherit.aes = TRUE, ...) {
   ggplot2::layer(
-    stat = StatWbTotal, data = data, mapping = mapping, geom = geom,
+    stat = StatWbContrib, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(w.band = w.band,
                   integral.fun = integral.fun,
@@ -86,8 +86,8 @@ stat_wb_total <- function(mapping = NULL, data = NULL, geom = "rect",
 #' @format NULL
 #' @usage NULL
 #' @export
-StatWbTotal <-
-  ggplot2::ggproto("StatWbTotal", ggplot2::Stat,
+StatWbContrib <-
+  ggplot2::ggproto("StatWbContrib", ggplot2::Stat,
                    compute_group = function(data,
                                             scales,
                                             w.band,
@@ -142,6 +142,7 @@ StatWbTotal <-
                      } else {
                        integ.df$y <- ypos.fixed
                      }
+                     integ.df$yint <- integ.df$yint / integral.fun(data$x, data$y)
                      integ.df$y.label <- sprintf(label.fmt, integ.df$yint * label.mult)
 #                     print(integ.df)
                      integ.df

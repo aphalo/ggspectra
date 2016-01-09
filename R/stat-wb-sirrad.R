@@ -161,6 +161,7 @@ StatWbSIrrad <-
                        integ.df$y <- ypos.fixed
                      }
                      integ.df$y.label <- sprintf(label.fmt, integ.df$yeff * label.mult)
+                     integ.df$y.label <- sprintf(label.fmt, integ.df$yeff * label.mult)
                      integ.df
                    },
                    default_aes = ggplot2::aes(label = ..y.label..,

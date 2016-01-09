@@ -93,6 +93,7 @@ T_plot <- function(spct,
   plot <- plot + labs(x="Wavelength (nm)", y=s.Tfr.label)
 
   plot <- plot + decoration(w.band = w.band,
+                            label.mult = scale.factor,
                             y.max = y.max,
                             y.min = y.min,
                             x.max = max(spct),
@@ -101,17 +102,23 @@ T_plot <- function(spct,
                             label.qty = label.qty,
                             summary.label = Tfr.label)
 
-  # if (pc.out) {
-  #   plot <- plot +
-  #     scale_y_continuous(labels = percent, breaks = c(0, 0.25, 0.5, 0.75, 1),
-  #                        limits = y.limits)
-  # } else {
-  #   plot <- plot +
-  #     scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
-  # }
-  # plot <- plot + scale_x_continuous(limits = x.limits)
+  if (!is.null(annotations) &&
+      length(intersect(c("labels", "summaries", "colour.guide"), annotations)) > 0L) {
+    y.limits <- c(0, y.max * 1.25)
+    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
+  } else {
+    y.limits <- c(0, 1)
+    x.limits <- range(spct)
+  }
+  if (pc.out) {
+    plot <- plot + scale_y_continuous(labels = scales::percent, breaks = c(0, 0.25, 0.5, 0.75, 1),
+                                      limits = y.limits)
+  } else {
+    plot <- plot + scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1),
+                                      limits = y.limits)
+  }
 
-  return(plot)
+  plot + scale_x_continuous(limits = x.limits)
 
 }
 
@@ -198,7 +205,16 @@ A_plot <- function(spct,
                             label.qty = label.qty,
                             summary.label = A.label)
 
-  return(plot)
+  if (!is.null(annotations) &&
+      length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide"), annotations)) > 0L) {
+    y.limits <- c(0, y.max * 1.25)
+    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
+  } else {
+    y.limits <- c(0, 1)
+    x.limits <- range(spct)
+  }
+  plot <- plot + scale_y_continuous(limits = y.limits)
+  plot + scale_x_continuous(limits = x.limits)
 
 }
 
@@ -303,22 +319,22 @@ R_plot <- function(spct,
                             label.qty = label.qty,
                             summary.label = Rfr.label)
 
-  # if (!is.null(annotations) &&
-  #     length(intersect(c("labels", "summaries", "colour.guide"), annotations)) > 0L) {
-  #   y.limits <- c(0, y.max * 1.25)
-  #   x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
-  # } else {
-  #   y.limits <- c(0, 1)
-  #   x.limits <- range(spct)
-  # }
-  # if (pc.out) {
-  #   plot <- plot + scale_y_continuous(labels = percent, breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
-  # } else {
-  #   plot <- plot + scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
-  # }
-  # plot <- plot + scale_x_continuous(limits = x.limits)
-
-  return(plot)
+  if (!is.null(annotations) &&
+      length(intersect(c("labels", "summaries", "colour.guide"), annotations)) > 0L) {
+    y.limits <- c(0, y.max * 1.25)
+    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
+  } else {
+    y.limits <- c(0, 1)
+    x.limits <- range(spct)
+  }
+  if (pc.out) {
+    plot <- plot + scale_y_continuous(labels = scales::percent, breaks = c(0, 0.25, 0.5, 0.75, 1),
+                                      limits = y.limits)
+  } else {
+    plot <- plot + scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1),
+                                      limits = y.limits)
+  }
+  plot + scale_x_continuous(limits = x.limits)
 
 }
 
@@ -409,22 +425,21 @@ O_plot <- function(spct,
                             annotations = annotations,
                             label.qty = label.qty,
                             summary.label = "")
-  # if (!is.null(annotations) &&
-  #     length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide"), annotations)) > 0L) {
-  #   y.limits <- c(0, y.max * 1.25)
-  #   x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
-  # } else {
-  #   y.limits <- c(0, 1)
-  #   x.limits <- range(spct)
-  # }
-  # if (pc.out) {
-  #   plot <- plot + scale_y_continuous(labels = percent, breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
-  # } else {
-  #   plot <- plot + scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
-  # }
-  # plot <- plot + scale_x_continuous(limits = x.limits)
+  if (!is.null(annotations) &&
+      length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide"), annotations)) > 0L) {
+    y.limits <- c(0, y.max * 1.25)
+    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
+  } else {
+    y.limits <- c(0, 1)
+    x.limits <- range(spct)
+  }
+  if (pc.out) {
+    plot <- plot + scale_y_continuous(labels = scales::percent, breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
+  } else {
+    plot <- plot + scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
+  }
 
-  return(plot)
+ plot + scale_x_continuous(limits = x.limits)
 
 }
 

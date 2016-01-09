@@ -174,7 +174,16 @@ e_rsp_plot <- function(spct,
                              size = rel(3) )
   }
 
-  return(plot)
+  if (!is.null(annotations) &&
+      length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide"), annotations)) > 0L) {
+    y.limits <- c(0, y.max * 1.25)
+    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
+  } else {
+    y.limits <- c(0, 1)
+    x.limits <- range(spct)
+  }
+  plot <- plot + scale_y_continuous(limits = y.limits)
+  plot + scale_x_continuous(limits = x.limits)
 
 }
 
@@ -353,7 +362,16 @@ q_rsp_plot <- function(spct,
                              size = rel(3) )
   }
 
-  return(plot)
+  if (!is.null(annotations) &&
+      length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide"), annotations)) > 0L) {
+    y.limits <- c(0, y.max * 1.25)
+    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
+  } else {
+    y.limits <- c(0, 1)
+    x.limits <- range(spct)
+  }
+  plot <- plot + scale_y_continuous(limits = y.limits)
+  plot + scale_x_continuous(limits = x.limits)
 
 }
 

@@ -50,9 +50,10 @@
 #'
 #' @examples
 #' library(photobiology)
+#' library(photobiologyWavebands)
 #' library(ggplot2)
 #' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
-#'   stat_wb_summary()
+#'   stat_wb_mean(w.band = VIS())
 #'
 #' @export
 #' @family stats functions

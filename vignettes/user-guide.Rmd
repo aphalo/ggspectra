@@ -45,6 +45,12 @@ We bind two spectra, to later on demonstrate grouping.
 two_suns.spct <- rbindspct(list(sun1 = sun.spct, sun2 = sun.spct * 2))
 ```
 
+We change the default theme.
+
+```{r}
+theme_set(theme_bw())
+```
+
 ## ggplot() methods for spectra
 
 The only difference between these specializations and the base `ggplot()` method is that the aesthetics for $x$ and $y$ have suitable defaults. These are just defaults, so if needed they can still be supplied with a `mapping` argument with an user-defined `aes()`.
@@ -448,11 +454,11 @@ ggplot(sun.spct, unit.out = "photon") +
                 unit.in = "photon", time.unit = "second") +
   stat_wb_sirrad(w.band = PAR(), geom = "text",
                 unit.in = "photon", time.unit = "second", 
-                aes(label = sprintf("%s = %.3g", ..wb.name.., ..yint.. * 1e6))) +
+                aes(label = sprintf("Total %s = %.3g", ..wb.name.., ..yint.. * 1e6))) +
   stat_wb_sirrad(w.band = PAR(), geom = "text",
                 unit.in = "photon", time.unit = "second", 
-                mapping = aes(label = sprintf("%s = %.3g", ..wb.name.., ..ymean.. * 1e6)), 
-                ypos.mult = -0.5) +
+                mapping = aes(label = sprintf("Mean %s = %.3g", ..wb.name.., ..ymean.. * 1e6)), 
+                ypos.mult = 0.45) +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -498,11 +504,11 @@ ggplot(sun.spct) +
 ```
 
 ```{r}
-ggplot(sun.spct) +
+ggplot(sun.spct, unit.out = "photon") +
   stat_wb_sirrad(w.band = VIS_bands(), geom = "rect", alpha = 0.5,
-                unit.in = "energy", time.unit = "second") +
-  stat_wb_irrad(w.band = VIS_bands(), angle = 90, geom = "text",
-                unit.in = "energy", time.unit = "second", ypos.fixed = 0.05, hjust = 0,
+                unit.in = "photon", time.unit = "second") +
+  stat_wb_irrad(w.band = VIS_bands(), angle = 90, geom = "text", label.mult = 1e6,
+                unit.in = "photon", time.unit = "second", ypos.fixed = 1e-7, hjust = 0,
                  aes(label = paste(..wb.name.., ..y.label.., sep = " = "),
                      color = "black")) +
   geom_line() + 
@@ -532,7 +538,7 @@ ggplot(sun.spct, unit.out = "photon") +
   stat_wb_sirrad(w.band = my.bands, geom = "rect", alpha = 0.5,
                 unit.in = "photon", time.unit = "second") +
   stat_wb_sirrad(w.band = my.bands, geom = "text", angle = 90,
-                unit.in = "photon", time.unit = "second", 
+                unit.in = "photon", time.unit = "second", label.mult = 1e6,
                 color = "black") +
   geom_line() + 
   scale_color_identity() + 
@@ -637,8 +643,7 @@ The examples for `stat_wl_strip` can be simplified by use of `wl_guide()` which 
 ```{r}
 ggplot(sun.spct) + 
   wl_guide(alpha = 0.4) +
-  geom_line() +
-  theme_bw()
+  geom_line()
 ```
 
 ```{r}
@@ -666,57 +671,6 @@ ggplot(sun.spct) +
   theme_bw()
 ```
 
-### wb_guide
-
-The examples for `stat_wb_mean` can be simplified by use of `wb_guide()` which adds both the statistics and the scale, and provides a default _mapping_ for both `ymin` and `ymax`. Furthermore, this function adds two layers using `"stat_wb_mean"`, one with _geom_ `"rect"` and one with _geom_ `"text"`. Another important difference is that these _geoms_ cannot be set by the user.
-
-First a very simple example for a list of _wavebands_, using defaults for other arguments. The default is to show the mean of the spectrum for the region covered by the waveband.
-
-```{r}
-ggplot(sun.spct) + 
-  geom_spct() + 
-  wb_guide(w.band = Plant_bands())
-```
-
-Here we put the _guide_ at the top of the frame or panel.
-
-```{r}
-ggplot(sun.spct) + 
-  geom_spct() + 
-  wb_guide(w.band = Plant_bands(), guide.position = "top") +
-  lims(y = c(NA, 1.1))
-```
-
-We here change the labels to give the name of the wavebands rather than the calculated mean spectral irradiance for the band.
-
-```{r}
-ggplot(sun.spct) + 
-  geom_spct() + 
-  wb_guide(w.band = Plant_bands(), guide.position = "top",
-                 aes(label = sprintf("%s", ..wb.name..))) +
-  ylim(NA, 1.1) + theme_bw()
-```
-
-We can build a label as shown in earlier sections, containing both the name and value.
-
-```{r}
-ggplot(sun.spct) + 
-  geom_spct() + 
-  wb_guide(w.band = Plant_bands(), guide.position = "top",
-                 aes(label = paste(..wb.name.., ..y.label.., sep = ": "))) +
-  ylim(NA, 1.1)
-```
-
-We can build a label as shown in earlier sections, containing both the name and value. If we include a _new line_ character in the character string, each label will be occupy two lines. In this case we need to set `guide.position = "top2"` to reserve enough space for the labels.
-
-```{r}
-ggplot(sun.spct) + 
-  geom_spct() + 
-  wb_guide(w.band = Plant_bands(), guide.position = "top2",
-                 aes(label = paste(..wb.name.., ..y.label.., sep = "\n"))) +
-  ylim(NA, 1.1)
-```
-
 ## Plotting spectra
 
 The most automatic way of plotting spectral data stored in one of the classes defined in package `photobiology` is to use the `plot()`methods. These go much further than the `plot()` method defined in base-R for numeric data, as these classes store metadata that allows the automatic construction of axis labels as quantities and units are well defined.
@@ -739,6 +693,18 @@ Two `label.qty` values need explanation. The first one, `"contribution"` uses fo
 
 ```{r}
 plot(sun.spct, label.qty = "contribution")
+```
+
+```{r}
+plot(sun.spct, label.qty = "relative")
+```
+
+```{r}
+plot(sun.spct, label.qty = "mean", unit.out = "photon")
+```
+
+```{r}
+plot(sun.spct, label.qty = "relative.pc")
 ```
 
 We can change the basis of expression of spectral irradiance and irradiance from `"energy"` to `"photon"`. Be aware that by design, all values, summaries and spectral data will always use the same base of expression.
@@ -781,7 +747,7 @@ plot(sun.daily.spct)
 Even though the `plot()` methods can return a finished plot, the returned object is a `ggplot` object and can be built upon by adding additional elements like _facets_, _aesthetics_ and even additional _layers_.
 
 ```{r}
-plot(two_suns.spct) + facet_wrap(~spct.idx)
+plot(two_suns.spct, label.qty = "mean") + facet_wrap(~spct.idx)
 ```
 
 ```{r}
@@ -789,7 +755,7 @@ plot(two_suns.spct) + aes(linetype = spct.idx)
 ```
 
 ```{r}
-plot(yellow_gel.spct, annotations = "colour.guide")
+plot(yellow_gel.spct, pc.out = TRUE)
 ```
 
 Here we demonstrate something that may look like a bug, but is not. The annotations are based only on the data supplied as argument to `plot()` (or in other cases `ggplot()`) because these are the only data visible in all _layers_. The `data` argument in `geom_spct()` only affects the data seen by this _geom_. This way of building a plot is very different than when using _grouping_ within a single data set, and it is best to avoid it in most situations.

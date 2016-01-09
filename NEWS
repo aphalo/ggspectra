@@ -1,6 +1,17 @@
-ggspectra 0.1.2
+ggspectra 0.1.3
 ===============
 
+Remove wb_guide()
+Remove wb_wb_summary()
+Add stat_wb_mean(), stat_wb_total(), stat_wb_contribution(), stat_wb_relative()
+Add stat_wb_irrad(), stat_wb_sirrad()
+
+Implement 100% of the old functionality of the plot() methods, but without using
+any annotations. In other words, now all calcualtions work as expected with
+grouping and panels. Some aesthetics may require tweaking in the case of
+grouping.
+
+Tested with packages ggrepel and cowplot.
 
 ggspectra 0.1.2
 ===============

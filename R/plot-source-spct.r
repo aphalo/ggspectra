@@ -104,7 +104,14 @@ e_plot <- function(spct,
   plot <- plot + geom_line()
   plot <- plot + labs(x = "Wavelength (nm)", y = s.irrad.label)
 
+  if (label.qty == "total") {
+    label.qty <- "irrad"
+  } else if (label.qty %in% c("mean", "average")) {
+    label.qty <- "sirrad"
+  }
   plot <- plot + decoration(w.band = w.band,
+                            unit.out = "energy",
+                            time.unit = getTimeUnit(spct),
                             y.max = y.max,
                             y.min = y.min,
                             x.max = max(spct),
@@ -131,7 +138,16 @@ e_plot <- function(spct,
                              size = rel(3) )
   }
 
-  return(plot)
+  if (!is.null(annotations) &&
+      length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide"), annotations)) > 0L) {
+    y.limits <- c(0, y.max * 1.25)
+    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
+  } else {
+    y.limits <- c(0, 1)
+    x.limits <- range(spct)
+  }
+  plot <- plot + scale_y_continuous(limits = y.limits)
+  plot + scale_x_continuous(limits = x.limits)
 
 }
 
@@ -241,7 +257,14 @@ q_plot <- function(spct,
   plot <- plot + geom_line()
   plot <- plot + labs(x = "Wavelength (nm)", y = s.irrad.label)
 
+  if (label.qty == "total") {
+    label.qty <- "irrad"
+  } else if (label.qty %in% c("mean", "average")) {
+    label.qty <- "sirrad"
+  }
   plot <- plot + decoration(w.band = w.band,
+                            unit.out = "photon",
+                            time.unit = getTimeUnit(spct),
                             y.max = y.max,
                             y.min = y.min,
                             x.max = max(spct),
@@ -268,7 +291,16 @@ q_plot <- function(spct,
                              size = rel(3) )
   }
 
-  return(plot)
+  if (!is.null(annotations) &&
+      length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide"), annotations)) > 0L) {
+    y.limits <- c(0, y.max * 1.25)
+    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
+  } else {
+    y.limits <- c(0, 1)
+    x.limits <- range(spct)
+  }
+  plot <- plot + scale_y_continuous(limits = y.limits)
+  plot + scale_x_continuous(limits = x.limits)
 
 }
 
@@ -315,7 +347,7 @@ plot.source_spct <-
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }
-    if (unit.out == "photon" || unit.out == "quantum") {
+    if (unit.out %in% c("photon", "quantum")) {
       out.ggplot <- q_plot(spct = x, w.band = w.band, range = range,
                            label.qty = label.qty, annotations = annotations, ...)
     } else if (unit.out == "energy") {
