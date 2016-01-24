@@ -1,3 +1,8 @@
+ggspectra 0.1.4
+===============
+
+Improve documentation.
+
 ggspectra 0.1.3
 ===============
 
@@ -7,7 +12,7 @@ Add stat_wb_mean(), stat_wb_total(), stat_wb_contribution(), stat_wb_relative()
 Add stat_wb_irrad(), stat_wb_sirrad()
 
 Implement 100% of the old functionality of the plot() methods, but without using
-any annotations. In other words, now all calcualtions work as expected with
+any annotations. In other words, now all calculations work as expected with
 grouping and panels. Some aesthetics may require tweaking in the case of
 grouping.
 
@@ -33,7 +38,7 @@ Add multiplot() function (unchanged from package photobiologygg).
 Improve stat_waveband(). Add color_guide(), waveband_guide().
 
 Add ggplot() methods for spectra, which use default mappings if mapping not
-explicitly suplied as argument to call.
+explicitly supplied as argument to call.
 
 Make plot() methods almost fully functional. "contribution" and "participation"
 summary values not yet implemented. Neither summaries for BSWFs. If requested
@@ -42,4 +47,4 @@ these summaries will show as "NaN" (not a number) in the plots.
 ggspectra 0.1.0
 ===============
 
-First preview version. Still with inconplete functionality.
+First preview version. Still with incomplete functionality.

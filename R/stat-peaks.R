@@ -37,11 +37,36 @@
 #'   $x$-values into character strings by means of function \code{\link{sprintf}}.
 #' @param y.label.fmt character  string giving a format definition for converting
 #'   $y$-values into character strings by means of function \code{\link{sprintf}}.
+#'
 #' @section Computed variables:
 #' \describe{
-#'   \item{x.label}{x-value at the peak}
+#'   \item{x}{x-value at the peak (or valley) as numeric}
+#'   \item{y}{y-value at the peak (or valley) as numeric}
+#'   \item{x.label}{x-value at the peak (or valley) as character}
+#'   \item{y.label}{y-value at the peak (or valley) as character}
+#'   \item{color}{color definition calculated by assuming that x-values are
+#'   wavelengths expressed in nanometres.}
 #' }
+#'
 #' @seealso \code{\link[photobiology]{find_peaks}}, which is used internally.
+#'
+#' @details These stats use \code{geom_point} by default as it is the geom most
+#'   likely to work well in almost any situation without need of tweaking. The
+#'   default aesthetics set by these stats allow their direct use with
+#'   \code{geom_text}, \code{geom_label}, \code{geom_line}, \code{geom_rug},
+#'   \code{geom_hline} and \code{geom_vline}. The formatting of the labels
+#'   returned can be controlled by the user.
+#'
+#' @note These stats work nicely together with geoms
+#'   \code{\link[ggrepel]{geom_text_repel}} and
+#'   \code{\link[ggrepel]{geom_label_repel}} from package
+#'   \code{\link[ggrepel]{ggrepel}} to solve the problem of overlapping labels
+#'   by displacing them. To discard overlapping labels use \code{check_overlap =
+#'   TRUE} as argument to \code{geom_text}.
+#'  By default the labels are character values suitable to be plotted as is, but
+#'  with a suitable \code{label.fmt} labels suitable for parsing by the geoms
+#'  (e.g. into expressions containing greek letters or super or subscripts) can
+#'  be also easily obtained.
 #'
 #' @examples
 #' library(photobiology)

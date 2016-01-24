@@ -14,8 +14,7 @@
 #'
 #' @return A list of ggplot "components" that can be added to a ggplot object
 #'   with operator "+". The length of the list depends on the value of argument
-#'   \code{annotations} and the class of argument for \code{spct} used in the
-#'   call.
+#'   \code{annotations}.
 #'
 decoration <- function(w.band,
                        y.max,

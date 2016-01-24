@@ -1,8 +1,8 @@
 Package: ggspectra
 Type: Package
 Title: Extensions to ggplot2 for Radiation Spectra
-Version: 0.1.3.9000
-Date: 2016-01-14
+Version: 0.1.4
+Date: 2016-01-24
 Author: Pedro J. Aphalo [aut, cre]
 Maintainer: Pedro J. Aphalo <pedro.aphalo@helsinki.fi>
 Description: This package provides additional annotations, stats and
@@ -28,6 +28,5 @@ Suggests:
 URL: http://www.r4photobiology.info,
     https://bitbucket.org/aphalo/ggspectra
 BugReports: https://bitbucket.org/aphalo/ggspectra
-Encoding: UTF-8
 RoxygenNote: 5.0.1
 VignetteBuilder: knitr
