@@ -56,7 +56,8 @@ ggplot(sun.spct) + geom_line() +
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + geom_line() + 
-  stat_peaks(span = 21, shape = 4, color = "red", size = 2)
+  stat_peaks(span = 21, shape = 4, color = "red", size = 2) +
+  stat_peaks(span = 21, color = "red", geom = "rug", sides = "b")
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + geom_line() + 

@@ -123,6 +123,7 @@ stat_peaks <- function(mapping = NULL, data = NULL, geom = "point",
 #' @format NULL
 #' @usage NULL
 #' @export
+#' @keywords internal
 #' @seealso \code{\link[ggplot2]{ggplot2-ggproto}}
 StatPeaks <-
   ggplot2::ggproto("StatPeaks", ggplot2::Stat,

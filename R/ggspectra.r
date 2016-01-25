@@ -1,29 +1,21 @@
-#' Extensions to ggplot2 for Radiation Spectra
-#'
+#' @details
 #' Pakage \code{ggspectra} is a package with extensions to ggplot2 for plotting
 #' spectral data. It defines plot() especializations for the classes in
-#' package photobiology. It adds new statistics.
+#' package photobiology. It adds new statistics useful when the x-aesthetic
+#' is mapped to a numeric variable giving wavelengths in nanometres. It also
+#' adds a geom suitable for plotting spectral data and specializations of
+#' method \code{ggplot} for objects of the spectral classes defined in
+#' package \package{photobiology}.
 #'
-#' @docType package
-#' @keywords misc
-#' @name ggspectra-package
-#' @aliases ggspectra
-#' @author Pedro J. Aphalo
-#' @details
-#' \tabular{ll}{
-#' Package: \tab photobiologygg\cr
-#' Type: \tab Package\cr
-#' Version: \tab 0.1.4\cr
-#' Date: \tab 2016-01-24\cr
-#' License: \tab GPL (>= 3.0)\cr
-#' URL: \tab \url{http://www.r4photobiology.info},\cr
-#' }
 #' @references
 #' \code{ggplot2} web site at \url{http://ggplot2.org/}\cr
 #' \code{ggplot2} source code at \url{https://github.com/hadley/ggplot2}\cr
 #' Function \code{multiplot} from \url{http://www.cookbook-r.com/}
 #'
+#' @author Pedro J. Aphalo
+#'
 #' @import photobiology photobiologyWavebands ggplot2
+#'
 #' @note
 #' This package is a rewrite of package \code{photobiologygg} making use of the
 #' new features of \code{ggplot2} 2.0.0 which makes writing this kind of
@@ -56,4 +48,4 @@
 #'
 #' plot(sun.spct)
 #'
-NULL
+"_PACKAGE"
