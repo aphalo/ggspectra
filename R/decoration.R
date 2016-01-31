@@ -82,7 +82,7 @@ decoration <- function(w.band,
 
   if ("labels" %in% annotations || "summaries" %in% annotations) {
     if ("labels" %in% annotations && "summaries" %in% annotations) {
-      mapping <- aes(label = paste(..wb.name.., ..y.label.., sep = "\n"))
+      mapping <- aes_(label = quote(paste(..wb.name.., ..y.label.., sep = "\n")))
     } else if ("labels" %in% annotations) {
       mapping <- aes_(label = ~..wb.name..)
     } else if ("summaries" %in% annotations) {

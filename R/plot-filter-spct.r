@@ -394,7 +394,7 @@ O_plot <- function(spct,
   y.min <- 0
   spct[["Afr"]] <- 1.0 - spct[["Tfr"]] - spct[["Rfr"]]
   tmp.spct <- dplyr::as_data_frame(spct)[c("w.length", "Tfr", "Afr", "Rfr")]
-  molten.spct <- tidyr::gather(tmp.spct, variable, value, -w.length)
+  molten.spct <- tidyr::gather_(tmp.spct, "variable", "value", c("Tfr", "Afr", "Rfr"))
   setGenericSpct(molten.spct, multiple.wl = 3L)
   plot <- ggplot(molten.spct, aes_(~w.length, ~value)) +
     scale_fill_identity()

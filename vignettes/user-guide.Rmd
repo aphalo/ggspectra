@@ -289,7 +289,7 @@ ggplot(two_suns.spct) + aes(color = spct.idx) +
 
 ### Means by waveband
 
-Our `stat_wb_mean()` is quite different to `ggplot2`s `stat_summary()`. One could criticize that it calculates summaries using a grouping that is not based on a _ggplot_ _aesthetic_. This is a deviation from the grammar of graphics but allows the calculation of summaries for an arbitrary waveband of the spectrum based on `photobiology::waveband` objects, or lists of such objects. In contrast to `stat_wl_summary()` this allows the use of several ranges, and also of different weighting functions. This function returns both mean and total values for each waveband. It differes from `stat_wb_total()` only in the default _aesthetics_ set.
+Our `stat_wb_mean()` is quite different to `ggplot2`s `stat_summary()`. One could criticize that it calculates summaries using a grouping that is not based on a _ggplot_ _aesthetic_. This is a deviation from the grammar of graphics but allows the calculation of summaries for an arbitrary waveband of the spectrum based on `photobiology::waveband` objects, or lists of such objects. In contrast to `stat_wl_summary()` this allows the use of several ranges, and also of different weighting functions. This function returns both mean and total values for each waveband. It differs from `stat_wb_total()` only in the default _aesthetics_ set.
 
 The first example uses a `waveband` object created on-the-fly and defining a range of wavelengths.
 
@@ -329,7 +329,7 @@ ggplot(yellow_gel.spct) +
 
 ### Totals by waveband
 
-Our `stat_wb_total()` is quite different to `ggplot2`s `stat_summary()`. One could criticize that it calculates summaries using a grouping that is not based on a _ggplot_ _aesthetic_. This is a deviation from the grammar of graphics but allows the calculation of summaries for an arbitrary waveband of the spectrum based on `photobiology::waveband` objects, or lists of such objects. In contrast to `stat_wl_summary()` this allows the use of several ranges, and also of different weighting functions. This function returns both mean and total values for each waveband. It differes from `stat_wb_mean()` only in the default _aesthetics_ set.
+Our `stat_wb_total()` is quite different to `ggplot2`s `stat_summary()`. One could criticize that it calculates summaries using a grouping that is not based on a _ggplot_ _aesthetic_. This is a deviation from the grammar of graphics but allows the calculation of summaries for an arbitrary waveband of the spectrum based on `photobiology::waveband` objects, or lists of such objects. In contrast to `stat_wl_summary()` this allows the use of several ranges, and also of different weighting functions. This function returns both mean and total values for each waveband. It differs from `stat_wb_mean()` only in the default _aesthetics_ set.
 
 The first example uses a `waveband` object created on-the-fly and defining a range of wavelengths.
 
@@ -370,7 +370,7 @@ ggplot(yellow_gel.spct) +
 
 ### Irradiances by waveband
 
-The _stat_s in previous sections can be used for unweighted irradiances, but not for BSWFs. These `irrad` _stat_s have additional formal parameters for passing metadata, and use method `photobiology::irrad()` internaly on a `photobiology::source_spct` object constructed from the
+The _stat_s in previous sections can be used for unweighted irradiances, but not for BSWFs. These `irrad` _stat_s have additional formal parameters for passing metadata, and use method `photobiology::irrad()` internally on a `photobiology::source_spct` object constructed from the
 data for $x$ and $y$ _aesthetics_. Function `stat_wb_sirrad()` is equivalent to `stat_wb_mean()` and function `stat_wb_irrad()` is equivalent to `stat_wb_total()` following the same convention naming as in package `photobiology`.
 
 ```{r}
@@ -784,17 +784,55 @@ theme_set(theme_bw(8))
 plot(yellow_gel.spct, annotations = "colour.guide")
 ```
 
+## Ploting collections of spectra
+
+```{r}
+two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct * 2))
+```
+
+Plot as separate plots. This approach is specially useful with heterogeneous generic_mspct objects, although it works with any collection of spectra.
+
+```{r, fig.width = 7, fig.height = 8}
+multiplot(plotlist = mslply(two_suns.mspct, plot))
+```
+
+Plot with one panel per spectrum by first converting the collection-of-spectra
+into a spectrum object.
+
+```{r, fig.width = 7, fig.height = 8}
+plot(rbindspct(two_suns.mspct)) + facet_wrap(~spct.idx, ncol = 1)
+```
+
+Plot using grouping with tweaking of annotations by first converting the collection-of-spectra into a spectrum object.
+
+```{r}
+plot(rbindspct(two_suns.mspct), 
+     annotations = c("color.guide", "labels", "boxes", "peaks")) + 
+  aes(linetype = spct.idx)
+```
+
+Plot using "lower-level" functions.
+
+```{r}
+ggplot(rbindspct(two_suns.mspct)) + 
+  aes(linetype = spct.idx) +
+  wl_guide(ymax = -0.05) +
+  geom_line()
+```
+
 ## Ploting wavebands
+
+A `plot()` method for `waveband` objects is also provided.
 
 ```{r}
 plot(VIS())
 ```
 
 ```{r}
-plot(CIE())
+plot(CIE(), range = CIE())
 ```
 
 ```{r}
-plot(DNA_N(), range = c(250, 400))
+plot(DNA_N(), range = c(270, 420))
 ```
 

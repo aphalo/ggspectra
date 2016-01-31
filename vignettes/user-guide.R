@@ -517,11 +517,31 @@ theme_set(theme_bw(8))
 plot(yellow_gel.spct, annotations = "colour.guide")
 
 ## ------------------------------------------------------------------------
+two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct * 2))
+
+## ---- fig.width = 7, fig.height = 8--------------------------------------
+multiplot(plotlist = mslply(two_suns.mspct, plot))
+
+## ---- fig.width = 7, fig.height = 8--------------------------------------
+plot(rbindspct(two_suns.mspct)) + facet_wrap(~spct.idx, ncol = 1)
+
+## ------------------------------------------------------------------------
+plot(rbindspct(two_suns.mspct), 
+     annotations = c("color.guide", "labels", "boxes", "peaks")) + 
+  aes(linetype = spct.idx)
+
+## ------------------------------------------------------------------------
+ggplot(rbindspct(two_suns.mspct)) + 
+  aes(linetype = spct.idx) +
+  wl_guide(ymax = -0.05) +
+  geom_line()
+
+## ------------------------------------------------------------------------
 plot(VIS())
 
 ## ------------------------------------------------------------------------
-plot(CIE())
+plot(CIE(), range = CIE())
 
 ## ------------------------------------------------------------------------
-plot(DNA_N(), range = c(250, 400))
+plot(DNA_N(), range = c(270, 420))
 

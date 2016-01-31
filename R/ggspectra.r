@@ -1,11 +1,11 @@
 #' @details
 #' Pakage \code{ggspectra} is a package with extensions to ggplot2 for plotting
-#' spectral data. It defines plot() especializations for the classes in
-#' package photobiology. It adds new statistics useful when the x-aesthetic
-#' is mapped to a numeric variable giving wavelengths in nanometres. It also
-#' adds a geom suitable for plotting spectral data and specializations of
-#' method \code{ggplot} for objects of the spectral classes defined in
-#' package \code{\link[photobiology]{photobiology}}.
+#' radiation spectra. It is of little use for other types of data as most
+#' functions depend on x aesthetic being mapped to a variable containing
+#' wavelength values expressed in nanometres. It works well together with
+#' some other extensions to package 'ggplot2' such as pacakegs 'ggrepel' and
+#' 'cowplot'. This package is very tightly dependent on package
+#' \code{\link[photobiology]{photobiology}}.
 #'
 #' @references
 #' \code{ggplot2} web site at \url{http://ggplot2.org/}\cr
@@ -17,13 +17,14 @@
 #' @import photobiology photobiologyWavebands ggplot2
 #'
 #' @note
-#' This package is a rewrite of package \code{photobiologygg} making use of the
-#' new features of \code{ggplot2} 2.0.0 which makes writing this kind of
-#' extensions really easy.
+#' This package makes use of the new features of 'ggplot2' 2.0.0 that make
+#' writing this kind of extensions really easy and is consequently not
+#' compatible with earlier versions of 'ggplot2'.
 #'
 #' @examples
 #' library(ggplot2)
 #' library(photobiology)
+#' library(photobiologyWavebands)
 #'
 #' # maximum
 #' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
@@ -47,5 +48,7 @@
 #'   stat_color() + scale_color_identity()
 #'
 #' plot(sun.spct)
+#' plot(sun.daily.spct)
+#' plot(polyester.spct, UV_bands(), range = UV())
 #'
 "_PACKAGE"

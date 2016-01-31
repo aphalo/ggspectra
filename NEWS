@@ -3,7 +3,7 @@ ggspectra 0.1.6
 
 Clean documentation and code for CRAN submission.
 Add examples of plotting of waveband objects as these were removed from
-the vignette of package 'photobiologyWavabands'.
+the vignette of package 'photobiologyWavebands'.
 
 ggspectra 0.1.5
 ===============
