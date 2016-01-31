@@ -38,9 +38,9 @@
 #' @examples
 #' library(photobiology)
 #' library(ggplot2)
-#' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
-#'   stat_wl_summary(geom = "hline")
-#' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
+#' # ggplot() methods for spectral objects set a default mapping for x and y.
+#' ggplot(sun.spct) + geom_line() + stat_wl_summary(geom = "hline")
+#' ggplot(sun.spct) + geom_line() +
 #'  stat_wl_summary(label.fmt = "%.3f", color = "red")
 #'
 #' @export

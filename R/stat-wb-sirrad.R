@@ -58,6 +58,7 @@
 #' @examples
 #' library(photobiology)
 #' library(ggplot2)
+#' # ggplot() methods for spectral objects set a default mapping for x and y.
 #' ggplot(sun.spct, unit.out = "photon") +
 #'   stat_wb_sirrad(unit.in = "photon", time.unit = "second") +
 #'    geom_line()

@@ -61,6 +61,8 @@
 #' supplied mapping. If user supplies a mapping, it is used as is, and
 #' variables should be present in the spectral object. In contrast, when
 #' using the default mapping, unit conversion is done on the fly when needed.
+#' To add to the default mapping, aes() can be used by itself to compose
+#' the ggplot.
 #'
 #' @name ggplot
 #'

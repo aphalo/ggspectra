@@ -13,7 +13,7 @@ vignette: >
 
 Package `ggspectra` extends `ggplot2` with stats, geoms and annotations suitable for light spectra. It also defines `ggplot()` and  `plot()` methods specialized for the classes defined in package `photobiology` for storing different types of spectral data.
 
-The new elements can be freely combined with methods and functions defined in packages `ggplot2`, `scales` and `cowplot`.
+The new elements can be freely combined with methods and functions defined in packages `ggplot2`, `scales`, `ggrepel` and `cowplot`.
 
 Although the package uses internally `ggplot2`, `photobiology` and `photobiologyWavebands` it does not re-export these packages, which need to loaded if used.
 
@@ -782,5 +782,19 @@ As with any `ggplot` object, the 'looks' of the returned object depends on both 
 ```{r}
 theme_set(theme_bw(8))
 plot(yellow_gel.spct, annotations = "colour.guide")
+```
+
+## Ploting wavebands
+
+```{r}
+plot(VIS())
+```
+
+```{r}
+plot(CIE())
+```
+
+```{r}
+plot(DNA_N(), range = c(250, 400))
 ```
 

@@ -470,7 +470,11 @@ O_plot <- function(spct,
 #'
 #' @examples
 #' library(photobiology)
+#' plot(yellow_gel.spct)
+#' plot(yellow_gel.spct, pc.out = TRUE)
+#'
 #' plot(polyester.spct)
+#' plot(polyester.spct, plot.qty = "absorbance")
 #'
 #' @family plot functions
 #'
@@ -587,6 +591,8 @@ plot.reflector_spct <-
 #'
 #' library(photobiology)
 #' plot(black_body.spct)
+#' plot(white_body.spct)
+#' plot(clear_body.spct)
 #'
 #' @family plot functions
 #'

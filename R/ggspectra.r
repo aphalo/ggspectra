@@ -5,7 +5,7 @@
 #' is mapped to a numeric variable giving wavelengths in nanometres. It also
 #' adds a geom suitable for plotting spectral data and specializations of
 #' method \code{ggplot} for objects of the spectral classes defined in
-#' package \package{photobiology}.
+#' package \code{\link[photobiology]{photobiology}}.
 #'
 #' @references
 #' \code{ggplot2} web site at \url{http://ggplot2.org/}\cr

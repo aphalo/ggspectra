@@ -39,4 +39,5 @@ implement one or more of the following:
 \code{\link[ggplot2]{ggplot2-ggproto}}
 }
 \keyword{datasets}
+\keyword{internal}
 

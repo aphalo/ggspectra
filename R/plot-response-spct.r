@@ -408,6 +408,8 @@ q_rsp_plot <- function(spct,
 #' @examples
 #' library(photobiology)
 #' plot(photodiode.spct)
+#' plot(photodiode.spct, unit.out = "photon")
+#'
 #'
 #' @family plot functions
 #'

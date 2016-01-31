@@ -54,8 +54,8 @@
 #' library(photobiology)
 #' library(photobiologyWavebands)
 #' library(ggplot2)
-#' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
-#'   stat_wb_mean(w.band = VIS())
+#' # ggplot() methods for spectral objects set a default mapping for x and y.
+#' ggplot(sun.spct) + geom_line() + stat_wb_mean(w.band = VIS())
 #'
 #' @export
 #' @family stats functions

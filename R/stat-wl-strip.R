@@ -39,12 +39,12 @@
 #' @examples
 #' library(photobiology)
 #' library(ggplot2)
-#' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
+#' # ggplot() methods for spectral objects set a default mapping for x and y.
+#' ggplot(sun.spct) + geom_line() +
 #'   stat_wl_strip(ymax = -0.02, ymin = -0.04) +
 #'   scale_fill_identity()
 #'
-#' ggplot(sun.spct, aes(w.length, s.e.irrad)) +
-#'     wl_guide(alpha = 0.33) + geom_line()
+#' ggplot(sun.spct) + wl_guide(alpha = 0.33) + geom_line()
 #'
 #' @export
 #' @family stats functions

@@ -99,7 +99,14 @@ plot.waveband <-
   } else if (unit.in %in% c("photon", "quantum")) {
     spct <- response_spct(w.length = w.length, s.q.response = s.response)
   }
-  out.ggplot <- plot(spct, w.band=w.band, annotations = annotations,
+  if (is_effective(w.band)) {
+    w.band.range <-
+      waveband(w.band,
+               wb.name = paste("Range of", labels(w.band)[["label"]]))
+  } else {
+    w.band.range <- w.band
+  }
+  out.ggplot <- plot(spct, w.band=w.band.range, annotations = annotations,
                      wb.trim = wb.trim, norm = norm, ...)
   if ("title" %in% annotations) {
     out.ggplot <- out.ggplot + labs(title = deparse(substitute(x)))
