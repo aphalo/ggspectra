@@ -50,9 +50,7 @@
 #' library(photobiology)
 #' library(ggplot2)
 #' ggplot(sun.spct) + geom_line()
-#' ggplot(sun.spct) + geom_line(color = "red")
 #' ggplot(sun.spct, unit.out = "photon") + geom_line()
-#' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line()
 #'
 #' ggplot(yellow_gel.spct) + geom_line()
 #' ggplot(yellow_gel.spct, plot.qty = "absorbance") + geom_line()

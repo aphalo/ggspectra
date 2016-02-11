@@ -10,7 +10,7 @@
 
 <meta name="author" content="Pedro J. Aphalo" />
 
-<meta name="date" content="2016-01-31" />
+<meta name="date" content="2016-02-05" />
 
 <title>ggspectra 0.1.6 User Guide</title>
 
@@ -72,7 +72,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="header">
 <h1 class="title"><code>ggspectra</code> 0.1.6<br>User Guide</h1>
 <h4 class="author"><em>Pedro J. Aphalo</em></h4>
-<h4 class="date"><em>2016-01-31</em></h4>
+<h4 class="date"><em>2016-02-05</em></h4>
 </div>
 
 
@@ -248,7 +248,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="means-by-waveband" class="section level3">
 <h3>Means by waveband</h3>
-<p>Our <code>stat_wb_mean()</code> is quite different to <code>ggplot2</code>s <code>stat_summary()</code>. One could criticize that it calculates summaries using a grouping that is not based on a <em>ggplot</em> <em>aesthetic</em>. This is a deviation from the grammar of graphics but allows the calculation of summaries for an arbitrary waveband of the spectrum based on <code>photobiology::waveband</code> objects, or lists of such objects. In contrast to <code>stat_wl_summary()</code> this allows the use of several ranges, and also of different weighting functions. This function returns both mean and total values for each waveband. It differes from <code>stat_wb_total()</code> only in the default <em>aesthetics</em> set.</p>
+<p>Our <code>stat_wb_mean()</code> is quite different to <code>ggplot2</code>s <code>stat_summary()</code>. One could criticize that it calculates summaries using a grouping that is not based on a <em>ggplot</em> <em>aesthetic</em>. This is a deviation from the grammar of graphics but allows the calculation of summaries for an arbitrary waveband of the spectrum based on <code>photobiology::waveband</code> objects, or lists of such objects. In contrast to <code>stat_wl_summary()</code> this allows the use of several ranges, and also of different weighting functions. This function returns both mean and total values for each waveband. It differs from <code>stat_wb_total()</code> only in the default <em>aesthetics</em> set.</p>
 <p>The first example uses a <code>waveband</code> object created on-the-fly and defining a range of wavelengths.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(sun.spct) +
 <span class="st">  </span><span class="kw">stat_wb_mean</span>(<span class="dt">w.band =</span> <span class="kw">PAR</span>(), <span class="dt">geom =</span> <span class="st">&quot;rect&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>) +
@@ -279,7 +279,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="totals-by-waveband" class="section level3">
 <h3>Totals by waveband</h3>
-<p>Our <code>stat_wb_total()</code> is quite different to <code>ggplot2</code>s <code>stat_summary()</code>. One could criticize that it calculates summaries using a grouping that is not based on a <em>ggplot</em> <em>aesthetic</em>. This is a deviation from the grammar of graphics but allows the calculation of summaries for an arbitrary waveband of the spectrum based on <code>photobiology::waveband</code> objects, or lists of such objects. In contrast to <code>stat_wl_summary()</code> this allows the use of several ranges, and also of different weighting functions. This function returns both mean and total values for each waveband. It differes from <code>stat_wb_mean()</code> only in the default <em>aesthetics</em> set.</p>
+<p>Our <code>stat_wb_total()</code> is quite different to <code>ggplot2</code>s <code>stat_summary()</code>. One could criticize that it calculates summaries using a grouping that is not based on a <em>ggplot</em> <em>aesthetic</em>. This is a deviation from the grammar of graphics but allows the calculation of summaries for an arbitrary waveband of the spectrum based on <code>photobiology::waveband</code> objects, or lists of such objects. In contrast to <code>stat_wl_summary()</code> this allows the use of several ranges, and also of different weighting functions. This function returns both mean and total values for each waveband. It differs from <code>stat_wb_mean()</code> only in the default <em>aesthetics</em> set.</p>
 <p>The first example uses a <code>waveband</code> object created on-the-fly and defining a range of wavelengths.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(sun.spct) +
 <span class="st">  </span><span class="kw">stat_wb_total</span>(<span class="dt">w.band =</span> <span class="kw">PAR</span>(), <span class="dt">geom =</span> <span class="st">&quot;rect&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>) +
@@ -311,7 +311,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="irradiances-by-waveband" class="section level3">
 <h3>Irradiances by waveband</h3>
-<p>The _stat_s in previous sections can be used for unweighted irradiances, but not for BSWFs. These <code>irrad</code> _stat_s have additional formal parameters for passing metadata, and use method <code>photobiology::irrad()</code> internaly on a <code>photobiology::source_spct</code> object constructed from the data for <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> <em>aesthetics</em>. Function <code>stat_wb_sirrad()</code> is equivalent to <code>stat_wb_mean()</code> and function <code>stat_wb_irrad()</code> is equivalent to <code>stat_wb_total()</code> following the same convention naming as in package <code>photobiology</code>.</p>
+<p>The _stat_s in previous sections can be used for unweighted irradiances, but not for BSWFs. These <code>irrad</code> _stat_s have additional formal parameters for passing metadata, and use method <code>photobiology::irrad()</code> internally on a <code>photobiology::source_spct</code> object constructed from the data for <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> <em>aesthetics</em>. Function <code>stat_wb_sirrad()</code> is equivalent to <code>stat_wb_mean()</code> and function <code>stat_wb_irrad()</code> is equivalent to <code>stat_wb_total()</code> following the same convention naming as in package <code>photobiology</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(sun.spct) +
 <span class="st">  </span><span class="kw">stat_wb_irrad</span>(<span class="dt">w.band =</span> <span class="kw">PAR</span>(), <span class="dt">geom =</span> <span class="st">&quot;rect&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>,
                 <span class="dt">unit.in =</span> <span class="st">&quot;energy&quot;</span>, <span class="dt">time.unit =</span> <span class="st">&quot;second&quot;</span>) +
