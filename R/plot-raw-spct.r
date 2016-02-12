@@ -36,29 +36,35 @@ raw_plot <- function(spct,
   if (!is.null(range)) {
     trim_spct(spct, range = range, byref = TRUE)
   }
+  counts.cols <- names(spct)[grep("^counts", names(spct))]
+#  other.cols <- setdiff(names(x), counts.cols)
   if (is.null(norm)) {
     # we will use the original data
     scale.factor <- 1
-  } else if (!is.null(norm)) {
-    if (is.character(norm)) {
-      if (norm %in% c("max", "maximum")) {
-        idx <- which.max(spct[["counts"]])
-      } else {
-        warning("Invalid character '", norm, "'value in 'norm'")
+  } else {
+    for (col in counts.cols) {
+      if (is.character(norm)) {
+        if (norm %in% c("max", "maximum")) {
+          idx <- which.max(spct[[col]])
+        } else {
+          warning("Invalid character '", norm, "'value in 'norm'")
+          return(ggplot())
+        }
+        scale.factor <- 1 / spct[idx, col]
+        norm <- spct[idx, "w.length"]
+      } else if (is.numeric(norm) && norm >= min(spct) && norm <= max(spct)) {
+        scale.factor <- 1 / interpolate_spct(spct, norm)[[col]]
+      } else if (is.numeric(norm)) {
+        warning("'norm = ", norm, "' value outside spectral data range of ",
+                round(min(spct)), " to ", round(max(spct)), " (nm)")
         return(ggplot())
+      } else {
+        stop("'norm' should be numeric or character")
       }
-      scale.factor <- 1 / spct[idx, "counts"]
-      norm <- spct[idx, "w.length"]
-    } else if (is.numeric(norm) && norm >= min(spct) && norm <= max(spct)) {
-      scale.factor <- 1 / interpolate_spct(spct, norm)[["counts"]]
-    } else if (is.numeric(norm)) {
-      warning("'norm = ", norm, "' value outside spectral data range of ",
-              round(min(spct)), " to ", round(max(spct)), " (nm)")
-      return(ggplot())
-    } else {
-      stop("'norm' should be numeric or character")
+      spct[[col]] <-  spct[[col]] * scale.factor
     }
   }
+
 
   if (scale.factor != 1) {
     if (!pc.out) {
@@ -80,10 +86,15 @@ raw_plot <- function(spct,
     counts.label <- ""
   }
 
-  spct[["counts"]] <- spct[["counts"]] * scale.factor
+  spct <- reshape2::melt(spct,
+                         id.vars = "w.length",
+                         measure.vars = counts.cols,
+                         variable.name = "scan",
+                         value.name = "counts")
+  setRawSpct(spct, multiple.wl = length(counts.cols))
   y.max <- max(spct[["counts"]], na.rm = TRUE)
   y.min <- 0
-  plot <- ggplot(spct)  +
+  plot <- ggplot(spct, aes_(x = ~w.length, y = ~counts, linetype = ~scan)) +
     scale_fill_identity() + scale_color_identity()
   plot <- plot + geom_line()
   plot <- plot + labs(x = "Wavelength (nm)", y = s.counts.label)
@@ -98,7 +109,9 @@ raw_plot <- function(spct,
                             summary.label = counts.label)
 
   if (!is.null(annotations) &&
-      length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide"), annotations)) > 0L) {
+      length(intersect(c("boxes", "segments", "labels",
+                         "summaries", "colour.guide"),
+                       annotations)) > 0L) {
     y.limits <- c(0, y.max * 1.25)
     x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
   } else {
@@ -148,7 +161,7 @@ plot.raw_spct <-
            label.qty = "average",
            annotations = getOption("photobiology.plot.annotations",
                                  default = c("boxes", "labels", "colour.guide", "peaks")),
-           norm = NULL ) {
+           norm = NULL) {
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }

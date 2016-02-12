@@ -1,3 +1,8 @@
+ggspectra 0.1.7
+===============
+
+Revise plot.raw_spct() to handle multiple "counts" columns.
+
 ggspectra 0.1.6
 ===============
 
