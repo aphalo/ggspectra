@@ -30,7 +30,7 @@ T_plot <- function(spct,
   if (!is.filter_spct(spct)) {
     stop("T_plot() can only plot filter_spct objects.")
   }
-  A2T(spct, byref=TRUE)
+  A2T(spct, byref = TRUE)
   Tfr.type <- getTfrType(spct)
   if (!is.null(range)) {
     trim_spct(spct, range = range, byref = TRUE)
@@ -90,7 +90,7 @@ T_plot <- function(spct,
   plot <- ggplot(spct, aes_(~w.length, ~Tfr)) +
     scale_fill_identity() + scale_color_identity()
   plot <- plot + geom_line()
-  plot <- plot + labs(x="Wavelength (nm)", y=s.Tfr.label)
+  plot <- plot + labs(x = "Wavelength (nm)", y = s.Tfr.label)
 
   plot <- plot + decoration(w.band = w.band,
                             label.mult = scale.factor,
@@ -152,7 +152,7 @@ A_plot <- function(spct,
   if (!is.filter_spct(spct)) {
     stop("T_plot() can only plot filter_spct objects.")
   }
-  T2A(spct, action="replace", byref=TRUE)
+  T2A(spct, action = "replace", byref = TRUE)
   if (!is.null(range)) {
     trim_spct(spct, range = range, byref = TRUE)
   }
@@ -160,11 +160,11 @@ A_plot <- function(spct,
   if (!length(Tfr.type)) {
     Tfr.type <- "unknown"
   }
-  if (Tfr.type=="internal") {
+  if (Tfr.type == "internal") {
     s.A.label <- expression(Internal~~spectral~~absorbance~~A[int](lambda)~~(AU))
     A.label.total  <- "atop(A[int], (AU %*% nm))"
     A.label.avg  <- "atop(bar(A[int](lambda)), (AU))"
-  } else if (Tfr.type=="total") {
+  } else if (Tfr.type == "total") {
     s.A.label <- expression(Total~~spectral~~absorbance~~A[tot](lambda)~~(AU))
     A.label.total  <- "atop(A[tot], (AU %*% nm))"
     A.label.avg  <- "atop(bar(A[tot](lambda)), (AU))"
@@ -194,7 +194,7 @@ A_plot <- function(spct,
   plot <- ggplot(spct, aes_(~w.length, ~A)) +
     scale_fill_identity() + scale_color_identity()
   plot <- plot + geom_line()
-  plot <- plot + labs(x="Wavelength (nm)", y=s.A.label)
+  plot <- plot + labs(x = "Wavelength (nm)", y = s.A.label)
 
   plot <- plot + decoration(w.band = w.band,
                             y.max = y.max,
@@ -254,7 +254,7 @@ R_plot <- function(spct,
     trim_spct(spct, range = range, byref = TRUE)
   }
   Rfr.type <- getRfrType(spct)
-  if (length(Rfr.type)==0) {
+  if (length(Rfr.type) == 0) {
     Rfr.type <- "unknown"
   }
   if (!pc.out) {
@@ -308,7 +308,7 @@ R_plot <- function(spct,
   plot <- ggplot(spct, aes_(~w.length, ~Rfr)) +
     scale_fill_identity() + scale_color_identity()
   plot <- plot + geom_line()
-  plot <- plot + labs(x="Wavelength (nm)", y=s.Rfr.label)
+  plot <- plot + labs(x = "Wavelength (nm)", y = s.Rfr.label)
 
   plot <- plot + decoration(w.band = w.band,
                             y.max = y.max,
@@ -376,11 +376,11 @@ O_plot <- function(spct,
     trim_spct(spct, range = range, byref = TRUE)
   }
    Rfr.type <- getRfrType(spct)
-    if (length(Rfr.type)==0) {
+    if (length(Rfr.type) == 0) {
     Rfr.type <- "unknown"
   }
   Tfr.type <- getTfrType(spct)
-  if (length(Tfr.type)==0) {
+  if (length(Tfr.type) == 0) {
     Tfr.type <- "unknown"
   }
   if (Rfr.type == "specular") {
@@ -413,7 +413,7 @@ O_plot <- function(spct,
                                                Rfr = expression(R(lambda))),
                                     guide = guide_legend(title = NULL))
   }
-  plot <- plot + labs(x="Wavelength (nm)", y=s.Rfr.label)
+  plot <- plot + labs(x = "Wavelength (nm)", y = s.Rfr.label)
 
   annotations <- intersect(annotations, c("labels", "boxes", "segments", "colour.guide"))
 
@@ -487,7 +487,8 @@ plot.filter_spct <-
            pc.out = FALSE,
            label.qty = "average",
            annotations = getOption("photobiology.plot.annotations",
-                                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks")) ) {
+                                 default = c("boxes", "labels", "summaries",
+                                             "colour.guide", "peaks")) ) {
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }
@@ -541,13 +542,15 @@ plot.filter_spct <-
 #'
 plot.reflector_spct <-
   function(x, ...,
-           w.band=getOption("photobiology.plot.bands", default=list(UVC(), UVB(), UVA(), PAR())),
-           range=NULL,
-           plot.qty=getOption("photobiology.reflector.qty", default="reflectance"),
-           pc.out=FALSE,
-           label.qty="average",
-           annotations=getOption("photobiology.plot.annotations",
-                                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks")) ) {
+           w.band=getOption("photobiology.plot.bands",
+                            default = list(UVC(), UVB(), UVA(), PAR())),
+           range = NULL,
+           plot.qty = getOption("photobiology.reflector.qty", default = "reflectance"),
+           pc.out = FALSE,
+           label.qty = "average",
+           annotations = getOption("photobiology.plot.annotations",
+                                 default = c("boxes", "labels", "summaries",
+                                             "colour.guide", "peaks")) ) {
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }
@@ -598,13 +601,15 @@ plot.reflector_spct <-
 #'
 plot.object_spct <-
   function(x, ...,
-           w.band=getOption("photobiology.plot.bands", default=list(UVC(), UVB(), UVA(), PAR())),
-           range=NULL,
-           plot.qty=NULL,
-           pc.out=FALSE,
-           label.qty="average",
+           w.band = getOption("photobiology.plot.bands",
+                              default = list(UVC(), UVB(), UVA(), PAR())),
+           range = NULL,
+           plot.qty = NULL,
+           pc.out = FALSE,
+           label.qty = "average",
            annotations=getOption("photobiology.plot.annotations",
-                                 default = c("boxes", "labels", "colour.guide", "peaks")),
+                                 default = c("boxes", "labels",
+                                             "colour.guide", "peaks")),
            stacked = TRUE) {
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")

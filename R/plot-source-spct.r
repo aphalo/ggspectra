@@ -292,7 +292,8 @@ q_plot <- function(spct,
   }
 
   if (!is.null(annotations) &&
-      length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide"), annotations)) > 0L) {
+      length(intersect(c("boxes", "segments", "labels", "summaries",
+                         "colour.guide"), annotations)) > 0L) {
     y.limits <- c(0, y.max * 1.25)
     x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
   } else {
@@ -341,12 +342,14 @@ q_plot <- function(spct,
 #'
 plot.source_spct <-
   function(x, ...,
-           w.band=getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(), PAR())),
+           w.band=getOption("photobiology.plot.bands",
+                            default = list(UVC(), UVB(), UVA(), PAR())),
            range=NULL,
            unit.out=getOption("photobiology.radiation.unit", default = "energy"),
            label.qty = "total",
            annotations=getOption("photobiology.plot.annotations",
-                                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks")) ) {
+                                 default = c("boxes", "labels", "summaries",
+                                             "colour.guide", "peaks")) ) {
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }

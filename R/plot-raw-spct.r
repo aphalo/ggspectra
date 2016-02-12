@@ -4,18 +4,20 @@
 #' raw_spct object.
 #'
 #' @note Note that scales are expanded so as to make space for the annotations.
-#' The object returned is a ggplot objects, and can be further manipulated.
+#'   The object returned is a ggplot objects, and can be further manipulated.
+#'   When spct has more than one column with spectral data, each of these
+#'   columns is normalized individually.
 #'
 #' @param spct a raw_spct object
 #' @param w.band list of waveband objects
-#' @param range an R object on which range() returns a vector of length 2,
-#' with min annd max wavelengths (nm)
+#' @param range an R object on which range() returns a vector of length 2, with
+#'   min annd max wavelengths (nm)
 #' @param pc.out logical, if TRUE use percents instead of fraction of one
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels
 #' @param annotations a character vector
 #' @param norm numeric normalization wavelength (nm) or character string "max"
-#' for normalization at the wavelength of highest peak.
+#'   for normalization at the wavelength of highest peak.
 #' @param ... other arguments
 #'
 #' @return a \code{ggplot} object.
@@ -50,8 +52,8 @@ raw_plot <- function(spct,
           warning("Invalid character '", norm, "'value in 'norm'")
           return(ggplot())
         }
-        scale.factor <- 1 / spct[idx, col]
-        norm <- spct[idx, "w.length"]
+        scale.factor <- 1 / as.numeric(spct[idx, col])
+        norm <- as.numeric(spct[idx, "w.length"])
       } else if (is.numeric(norm) && norm >= min(spct) && norm <= max(spct)) {
         scale.factor <- 1 / interpolate_spct(spct, norm)[[col]]
       } else if (is.numeric(norm)) {
@@ -64,7 +66,6 @@ raw_plot <- function(spct,
       spct[[col]] <-  spct[[col]] * scale.factor
     }
   }
-
 
   if (scale.factor != 1) {
     if (!pc.out) {
@@ -94,7 +95,7 @@ raw_plot <- function(spct,
   setRawSpct(spct, multiple.wl = length(counts.cols))
   y.max <- max(spct[["counts"]], na.rm = TRUE)
   y.min <- 0
-  plot <- ggplot(spct, aes_(x = ~w.length, y = ~counts, linetype = ~scan)) +
+  plot <- ggplot(spct) + aes_(linetype = ~scan) +
     scale_fill_identity() + scale_color_identity()
   plot <- plot + geom_line()
   plot <- plot + labs(x = "Wavelength (nm)", y = s.counts.label)
@@ -154,13 +155,15 @@ raw_plot <- function(spct,
 #'
 plot.raw_spct <-
   function(x, ...,
-           w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(), PAR())),
+           w.band = getOption("photobiology.plot.bands",
+                              default = list(UVC(), UVB(), UVA(), PAR())),
            range = NULL,
            unit.out = "counts",
            pc.out = FALSE,
            label.qty = "average",
            annotations = getOption("photobiology.plot.annotations",
-                                 default = c("boxes", "labels", "colour.guide", "peaks")),
+                                 default = c("boxes", "labels",
+                                             "colour.guide", "peaks")),
            norm = NULL) {
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")

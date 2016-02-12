@@ -102,8 +102,8 @@ e_rsp_plot <- function(spct,
         if (idx == "summary") {
           scale.factor <- 1 / summary.value
         } else {
-          scale.factor <- 1 / spct[idx, "s.e.response"]
-          norm <- spct[idx, "w.length"]
+          scale.factor <- 1 / as.numeric(spct[idx, "s.e.response"])
+          norm <- as.numeric(spct[idx, "w.length"])
         }
       } else if (is.numeric(norm) && norm >= min(spct) && norm <= max(spct)) {
         scale.factor <- 1 / interpolate_spct(spct, norm)[["s.e.response"]]
@@ -175,7 +175,8 @@ e_rsp_plot <- function(spct,
   }
 
   if (!is.null(annotations) &&
-      length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide"), annotations)) > 0L) {
+      length(intersect(c("boxes", "segments", "labels", "summaries",
+                         "colour.guide"), annotations)) > 0L) {
     y.limits <- c(0, y.max * 1.25)
     x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
   } else {
@@ -291,8 +292,8 @@ q_rsp_plot <- function(spct,
         if (idx == "summary") {
           scale.factor <- 1 / summary.value
         } else {
-          scale.factor <- 1 / spct[idx, "s.q.response"]
-          norm <- spct[idx, "w.length"]
+          scale.factor <- 1 / as.numeric(spct[idx, "s.q.response"])
+          norm <- as.numeric(spct[idx, "w.length"])
         }
       } else if (is.numeric(norm) && norm >= min(spct) && norm <= max(spct)) {
         scale.factor <- 1 / interpolate_spct(spct, norm)$s.q.response
@@ -363,7 +364,8 @@ q_rsp_plot <- function(spct,
   }
 
   if (!is.null(annotations) &&
-      length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide"), annotations)) > 0L) {
+      length(intersect(c("boxes", "segments", "labels", "summaries",
+                         "colour.guide"), annotations)) > 0L) {
     y.limits <- c(0, y.max * 1.25)
     x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
   } else {
@@ -415,23 +417,27 @@ q_rsp_plot <- function(spct,
 #'
 plot.response_spct <-
   function(x, ...,
-           w.band=getOption("photobiology.plot.bands", default=list(UVC(), UVB(), UVA(), PAR())),
+           w.band=getOption("photobiology.plot.bands",
+                            default=list(UVC(), UVB(), UVA(), PAR())),
            range=NULL,
            unit.out=getOption("photobiology.radiation.unit", default="energy"),
            pc.out=FALSE,
            label.qty="total",
            annotations=getOption("photobiology.plot.annotations",
-                                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks")),
+                                 default = c("boxes", "labels", "summaries",
+                                             "colour.guide", "peaks")),
            norm = "max" ) {
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }
     if (unit.out=="photon" || unit.out=="quantum") {
       out.ggplot <- q_rsp_plot(spct=x, w.band=w.band, range=range,
-                               pc.out=pc.out, label.qty=label.qty, annotations=annotations, norm = norm, ...)
+                               pc.out=pc.out, label.qty=label.qty,
+                               annotations=annotations, norm = norm, ...)
     } else if (unit.out=="energy") {
       out.ggplot <- e_rsp_plot(spct=x, w.band=w.band, range=range,
-                               pc.out=pc.out, label.qty=label.qty, annotations=annotations, norm = norm, ...)
+                               pc.out=pc.out, label.qty=label.qty,
+                               annotations=annotations, norm = norm, ...)
     } else {
       stop("Invalid 'unit.out' argument value: '", unit.out, "'")
     }

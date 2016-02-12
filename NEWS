@@ -2,6 +2,7 @@ ggspectra 0.1.7
 ===============
 
 Revise plot.raw_spct() to handle multiple "counts" columns.
+Revise plot.cps_spct() to handle multiple "cps" columns.
 
 ggspectra 0.1.6
 ===============
