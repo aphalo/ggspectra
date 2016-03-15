@@ -1,8 +1,8 @@
 Package: ggspectra
 Type: Package
 Title: Extensions to 'ggplot2' for Radiation Spectra
-Version: 0.1.6.9000
-Date: 2016-02-12
+Version: 0.1.6.9001
+Date: 2016-03-15
 Author: Pedro J. Aphalo [aut, cre]
 Maintainer: Pedro J. Aphalo <pedro.aphalo@helsinki.fi>
 Description: Additional annotations, stats and scales for plotting "light"
@@ -17,7 +17,7 @@ ByteCompile: TRUE
 Depends:
     R (>= 3.2.0)
 Imports:
-    photobiology (>= 0.9.5.9007),
+    photobiology (>= 0.9.5.9011),
     photobiologyWavebands (>= 0.3.5),
     ggplot2 (>= 2.0.0),
     scales (>= 0.3.0),
