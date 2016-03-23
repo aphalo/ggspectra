@@ -44,12 +44,12 @@ decoration <- function(w.band,
   if ("peaks" %in% annotations) {
     z <- c(z, stat_peaks(span = 21, label.fmt = "%.4g",
                          ignore_threshold = 0.02, color = "red",
-                         geom = "text", vjust = -0.5, size = 2.5))
+                         geom = "text", vjust = -0.5, size = rel(2.5)))
   }
   if ("valleys" %in% annotations) {
     z <- c(z, stat_valleys(span = 21, label.fmt = "%.4g",
                            ignore_threshold = 0.02, color = "blue",
-                           geom = "text", vjust = +1.2, size = 2.5))
+                           geom = "text", vjust = +1.2, size = rel(2.5)))
   }
   if (!is.null(annotations) &&
       length(intersect(c("labels", "summaries", "colour.guide", "boxes", "segments"),
@@ -97,7 +97,7 @@ decoration <- function(w.band,
                                 ypos.fixed = y.max * 1.143 + pos.shift,
                                 color = label.color,
                                 mapping = mapping,
-                                size = rel(2)))
+                                size = rel(2.5)))
     } else {
       z <- c(z, stat_wb_summary(geom = "text",
                                 w.band = w.band,
@@ -105,7 +105,7 @@ decoration <- function(w.band,
                                 ypos.fixed = y.max * 1.143 + pos.shift,
                                 color = label.color,
                                 mapping = mapping,
-                                size = rel(2)))
+                                size = rel(2.5)))
     }
   }
 

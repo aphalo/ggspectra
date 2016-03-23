@@ -66,16 +66,16 @@
 #' @family stats functions
 #'
 stat_wb_irrad <- function(mapping = NULL, data = NULL, geom = "text",
-                       w.band = NULL,
-                       time.unit,
-                       unit.in,
-                       label.qty = "total",
-                       label.mult = 1,
-                       label.fmt = "%.3g",
-                       ypos.mult = 1.07,
-                       ypos.fixed = NULL,
-                       position = "identity", na.rm = FALSE, show.legend = NA,
-                       inherit.aes = TRUE, ...) {
+                          w.band = NULL,
+                          time.unit,
+                          unit.in,
+                          label.qty = "total",
+                          label.mult = 1,
+                          label.fmt = "%.3g",
+                          ypos.mult = 1.07,
+                          ypos.fixed = NULL,
+                          position = "identity", na.rm = FALSE, show.legend = NA,
+                          inherit.aes = TRUE, ...) {
   ggplot2::layer(
     stat = StatWbIrrad, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
