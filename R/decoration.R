@@ -9,6 +9,7 @@
 #' @param annotations character vector
 #' @param label.qty character
 #' @param summary.label character
+#' @param text.size numeric
 #'
 #' @keywords internal
 #'
@@ -26,7 +27,8 @@ decoration <- function(w.band,
                        label.mult = 1,
                        summary.label,
                        unit.out = NULL,
-                       time.unit = NULL) {
+                       time.unit = NULL,
+                       text.size = 2.5) {
   if (grepl(".pc", label.qty, fixed = TRUE)) {
     label.mult = 100
     label.qty <- sub(".pc", "", label.qty, fixed = TRUE)
@@ -42,14 +44,14 @@ decoration <- function(w.band,
                             function(...) {NULL})
   z <- list()
   if ("peaks" %in% annotations) {
-    z <- c(z, stat_peaks(span = 21, label.fmt = "%.4g",
+    z <- c(z, stat_peaks(span = 31, label.fmt = "%.4g",
                          ignore_threshold = 0.02, color = "red",
-                         geom = "text", vjust = -0.5, size = rel(2.5)))
+                         geom = "text", vjust = -0.5, size = text.size))
   }
   if ("valleys" %in% annotations) {
-    z <- c(z, stat_valleys(span = 21, label.fmt = "%.4g",
+    z <- c(z, stat_valleys(span = 31, label.fmt = "%.4g",
                            ignore_threshold = 0.02, color = "blue",
-                           geom = "text", vjust = +1.2, size = rel(2.5)))
+                           geom = "text", vjust = +1.2, size = text.size))
   }
   if (!is.null(annotations) &&
       length(intersect(c("labels", "summaries", "colour.guide", "boxes", "segments"),
@@ -97,7 +99,7 @@ decoration <- function(w.band,
                                 ypos.fixed = y.max * 1.143 + pos.shift,
                                 color = label.color,
                                 mapping = mapping,
-                                size = rel(2.5)))
+                                size = text.size))
     } else {
       z <- c(z, stat_wb_summary(geom = "text",
                                 w.band = w.band,
@@ -105,7 +107,7 @@ decoration <- function(w.band,
                                 ypos.fixed = y.max * 1.143 + pos.shift,
                                 color = label.color,
                                 mapping = mapping,
-                                size = rel(2.5)))
+                                size = text.size))
     }
   }
 

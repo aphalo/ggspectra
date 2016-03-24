@@ -18,6 +18,7 @@
 #' @param annotations a character vector
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
+#' @param text.size numeric size of text in the plot decorations.
 #' @param ... other arguments
 #'
 #' @return a \code{ggplot} object.
@@ -31,6 +32,7 @@ cps_plot <- function(spct,
                      label.qty,
                      annotations,
                      norm,
+                     text.size,
                      ...) {
   if (!is.cps_spct(spct)) {
     stop("cps_plot() can only plot response_spct objects.")
@@ -107,7 +109,8 @@ cps_plot <- function(spct,
                             x.min = min(spct),
                             annotations = annotations,
                             label.qty = label.qty,
-                            summary.label = cps.label)
+                            summary.label = cps.label,
+                            text.size = text.size)
 
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide"), annotations)) > 0L) {
@@ -142,6 +145,7 @@ cps_plot <- function(spct,
 #' @param annotations a character vector ("summaries" is ignored)
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
+#' @param text.size numeric size of text in the plot decorations.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -162,7 +166,8 @@ plot.cps_spct <-
            annotations = getOption("photobiology.plot.annotations",
                                  default = c("boxes", "labels",
                                              "colour.guide", "peaks")),
-           norm = NULL ) {
+           norm = NULL,
+           text.size = 2.5) {
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }
@@ -170,7 +175,9 @@ plot.cps_spct <-
     out.ggplot <- cps_plot(spct = x, w.band = w.band, range = range,
                            label.qty = label.qty,
                            pc.out = pc.out,
-                           annotations = annotations, norm = norm, ...)
+                           annotations = annotations, norm = norm,
+                           text.size = text.size,
+                           ...)
     if ("title" %in% annotations) {
       out.ggplot <- out.ggplot + labs(title = deparse(substitute(x)))
     }

@@ -473,11 +473,20 @@ plot(sun.spct, label.qty = "relative.pc")
 plot(sun.spct, unit.out = "photon")
 
 ## ------------------------------------------------------------------------
+plot(sun.spct, 
+     annotations = c("segments", "labels", "summaries", "color.guide"))
+
+## ------------------------------------------------------------------------
+plot(sun.spct, 
+     annotations = NULL)
+
+## ------------------------------------------------------------------------
 plot(sun.spct, annotations = c("segments", "labels", "color.guide"))
 
 ## ------------------------------------------------------------------------
 plot(sun.spct, 
-     annotations = c("segments", "labels", "summaries", "color.guide"))
+     annotations = c("segments", "labels", "color.guide"), 
+     text.size = 3.5)
 
 ## ------------------------------------------------------------------------
 plot(sun.spct, range = VIS())
@@ -515,6 +524,7 @@ plot(sun.spct) + geom_spct(fill = color(sun.spct)) +
 ## ------------------------------------------------------------------------
 theme_set(theme_bw(8))
 plot(yellow_gel.spct, annotations = "colour.guide")
+theme_set(theme_bw())
 
 ## ------------------------------------------------------------------------
 two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct * 2))

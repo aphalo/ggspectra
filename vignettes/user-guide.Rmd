@@ -717,12 +717,25 @@ plot(sun.spct, unit.out = "photon")
 Which _annotations_ are included can be also controlled through parameter `annotations`.
 
 ```{r}
-plot(sun.spct, annotations = c("segments", "labels", "color.guide"))
+plot(sun.spct, 
+     annotations = c("segments", "labels", "summaries", "color.guide"))
 ```
 
 ```{r}
 plot(sun.spct, 
-     annotations = c("segments", "labels", "summaries", "color.guide"))
+     annotations = NULL)
+```
+
+```{r}
+plot(sun.spct, annotations = c("segments", "labels", "color.guide"))
+```
+
+The size of the font used for the annotations is controlled by argument `text.size`.
+
+```{r}
+plot(sun.spct, 
+     annotations = c("segments", "labels", "color.guide"), 
+     text.size = 3.5)
 ```
 
 Arguments `range` and `w.band` play very different roles. The first one determines the `range` of wavelengths to include in the data plotted, which is slightly different to the effect of `ggplot2::xlim()` as `range` is used to _trim_ (see `photobiology::trim_wl()`) the spectral data __before__ passing it to `ggplot`. The second one, `w.band` is only used for the _annotations_ and decorations. It should be however noted, that a `waveband` object is a valid argument for both `range` and `w.band`.
@@ -782,6 +795,7 @@ As with any `ggplot` object, the 'looks' of the returned object depends on both 
 ```{r}
 theme_set(theme_bw(8))
 plot(yellow_gel.spct, annotations = "colour.guide")
+theme_set(theme_bw())
 ```
 
 ## Ploting collections of spectra

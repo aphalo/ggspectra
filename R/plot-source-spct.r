@@ -13,6 +13,7 @@
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels
 #' @param annotations a character vector
+#' @param text.size numeric size of text in the plot decorations.
 #' @param ... other arguments passed to annotate_plot()
 #'
 #' @return a \code{ggplot} object.
@@ -24,6 +25,7 @@ e_plot <- function(spct,
                    range,
                    label.qty,
                    annotations,
+                   text.size,
                    ...) {
   if (!is.source_spct(spct)) {
     stop("e_plot() can only plot source_spct objects.")
@@ -118,7 +120,8 @@ e_plot <- function(spct,
                             x.min = min(spct),
                             annotations = annotations,
                             label.qty = label.qty,
-                            summary.label = irrad.label)
+                            summary.label = irrad.label,
+                            text.size = text.size)
 
   if (is_effective(spct)) {
     plot <- plot +  annotate("text",
@@ -166,6 +169,7 @@ e_plot <- function(spct,
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels
 #' @param annotations a character vector
+#' @param text.size numeric size of text in the plot decorations.
 #' @param ... other arguments passed to annotate_plot()
 #'
 #' @return a \code{ggplot} object.
@@ -177,6 +181,7 @@ q_plot <- function(spct,
                    range,
                    label.qty,
                    annotations,
+                   text.size,
                    ...) {
   if (!is.source_spct(spct)) {
     stop("q_plot() can only plot source_spct objects.")
@@ -271,7 +276,8 @@ q_plot <- function(spct,
                             x.min = min(spct),
                             annotations = annotations,
                             label.qty = label.qty,
-                            summary.label = irrad.label)
+                            summary.label = irrad.label,
+                            text.size = text.size)
 
   if (is_effective(spct)) {
     plot <- plot +  annotate("text",
@@ -323,6 +329,7 @@ q_plot <- function(spct,
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels
 #' @param annotations a character vector
+#' @param text.size numeric size of text in the plot decorations.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -349,16 +356,21 @@ plot.source_spct <-
            label.qty = "total",
            annotations=getOption("photobiology.plot.annotations",
                                  default = c("boxes", "labels", "summaries",
-                                             "colour.guide", "peaks")) ) {
+                                             "colour.guide", "peaks")),
+           text.size = 2.5) {
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }
     if (unit.out %in% c("photon", "quantum")) {
       out.ggplot <- q_plot(spct = x, w.band = w.band, range = range,
-                           label.qty = label.qty, annotations = annotations, ...)
+                           label.qty = label.qty, annotations = annotations,
+                           text.size = text.size,
+                           ...)
     } else if (unit.out == "energy") {
       out.ggplot <- e_plot(spct = x, w.band = w.band, range = range,
-                           label.qty = label.qty, annotations = annotations, ...)
+                           label.qty = label.qty, annotations = annotations,
+                           text.size = text.size,
+                           ...)
     } else {
       stop("Invalid 'radiation.unit' argument value: '", unit.out, "'")
     }

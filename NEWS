@@ -3,6 +3,10 @@ ggspectra 0.1.7
 
 Revise plot.raw_spct() to handle multiple "counts" columns.
 Revise plot.cps_spct() to handle multiple "cps" columns.
+Add text.size parameter to all plot() methods. Can be used to control the size
+of the font used for text decorations related to wavebands, peaks and valleys.
+Increase slightly the default font size for plot decorations, and decrease the
+number of peaks and valleys labeled by the plot() methods.
 
 ggspectra 0.1.6
 ===============

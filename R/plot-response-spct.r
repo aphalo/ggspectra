@@ -16,6 +16,7 @@
 #' @param annotations a character vector
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
+#' @param text.size numeric size of text in the plot decorations.
 #' @param ... other arguments passed to e_response()
 #'
 #' @return a \code{ggplot} object.
@@ -29,6 +30,7 @@ e_rsp_plot <- function(spct,
                        label.qty,
                        annotations,
                        norm,
+                       text.size,
                        ...) {
   if (!is.response_spct(spct)) {
     stop("e_Rsp_plot() can only plot response_spct objects.")
@@ -162,7 +164,8 @@ e_rsp_plot <- function(spct,
                             x.min = min(spct),
                             annotations = annotations,
                             label.qty = label.qty,
-                            summary.label = rsp.label)
+                            summary.label = rsp.label,
+                            text.size = text.size)
 
   if (!is.na(exposure.label)) {
     plot <- plot +  annotate("text",
@@ -206,6 +209,7 @@ e_rsp_plot <- function(spct,
 #' @param annotations a character vector
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
+#' @param text.size numeric size of text in the plot decorations.
 #' @param ... other arguments passed to q_response()
 #'
 #' @return a \code{ggplot} object.
@@ -219,6 +223,7 @@ q_rsp_plot <- function(spct,
                        label.qty,
                        annotations,
                        norm,
+                       text.size,
                        ...) {
   if (!is.response_spct(spct)) {
     stop("q_Rsp_plot() can only plot response_spct objects.")
@@ -351,7 +356,8 @@ q_rsp_plot <- function(spct,
                             x.min = min(spct),
                             annotations = annotations,
                             label.qty = label.qty,
-                            summary.label = rsp.label)
+                            summary.label = rsp.label,
+                            text.size = text.size)
 
   if (!is.na(exposure.label)) {
     plot <- plot +  annotate("text",
@@ -377,8 +383,6 @@ q_rsp_plot <- function(spct,
 
 }
 
-
-
 #' Plot a response spectrum, especialization of generic plot function.
 #'
 #' This function returns a ggplot object with an annotated plot of a
@@ -400,6 +404,7 @@ q_rsp_plot <- function(spct,
 #' @param annotations a character vector
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
+#' @param text.size numeric size of text in the plot decorations.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -426,18 +431,23 @@ plot.response_spct <-
            annotations=getOption("photobiology.plot.annotations",
                                  default = c("boxes", "labels", "summaries",
                                              "colour.guide", "peaks")),
-           norm = "max" ) {
+           norm = "max",
+           text.size = 2.5) {
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }
     if (unit.out=="photon" || unit.out=="quantum") {
       out.ggplot <- q_rsp_plot(spct=x, w.band=w.band, range=range,
                                pc.out=pc.out, label.qty=label.qty,
-                               annotations=annotations, norm = norm, ...)
+                               annotations=annotations, norm = norm,
+                               text.size = text.size,
+                               ...)
     } else if (unit.out=="energy") {
       out.ggplot <- e_rsp_plot(spct=x, w.band=w.band, range=range,
                                pc.out=pc.out, label.qty=label.qty,
-                               annotations=annotations, norm = norm, ...)
+                               annotations=annotations, norm = norm,
+                               text.size = text.size,
+                               ...)
     } else {
       stop("Invalid 'unit.out' argument value: '", unit.out, "'")
     }

@@ -19,6 +19,7 @@
 #' @param wb.trim logical
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
+#' @param text.size numeric size of text in the plot decorations.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -55,7 +56,8 @@ plot.waveband <-
            annotations = getOption("photobiology.plot.annotations",
                                    default = c("colour.guide", "boxes", "labels")),
            wb.trim = TRUE,
-           norm = NULL) {
+           norm = NULL,
+           text.size = 2.5) {
   w.band <- x
   if (!is.waveband(w.band)) {
     return(ggplot())
@@ -107,7 +109,8 @@ plot.waveband <-
     w.band.range <- w.band
   }
   out.ggplot <- plot(spct, w.band=w.band.range, annotations = annotations,
-                     wb.trim = wb.trim, norm = norm, ...)
+                     wb.trim = wb.trim, norm = norm,
+                     text.size = text.size, ...)
   if ("title" %in% annotations) {
     out.ggplot <- out.ggplot + labs(title = deparse(substitute(x)))
   }
