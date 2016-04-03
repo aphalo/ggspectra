@@ -17,17 +17,17 @@ ByteCompile: TRUE
 Depends:
     R (>= 3.2.0)
 Imports:
-    photobiology (>= 0.9.5.9011),
-    photobiologyWavebands (>= 0.3.5),
-    ggplot2 (>= 2.0.0),
-    scales (>= 0.3.0),
+    photobiology (>= 0.9.6),
+    photobiologyWavebands (>= 0.4.0),
+    ggplot2 (>= 2.1.0),
+    scales (>= 0.4.0),
     dplyr (>= 0.4.3),
     lubridate (>= 1.5.0),
-    tidyr (>= 0.4.0),
+    tidyr (>= 0.4.1),
     reshape2 (>= 1.4.1)
 Suggests:
-    knitr,
-    rmarkdown
+    knitr (>= 1.12.3),
+    rmarkdown (>= 0.9.5)
 URL: http://www.r4photobiology.info,
     https://bitbucket.org/aphalo/ggspectra
 BugReports: https://bitbucket.org/aphalo/ggspectra
