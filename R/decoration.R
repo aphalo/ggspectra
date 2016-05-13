@@ -33,6 +33,9 @@ decoration <- function(w.band,
     label.mult = 100
     label.qty <- sub(".pc", "", label.qty, fixed = TRUE)
   }
+  if (!"summaries" %in% annotations) {
+    label.qty <- "none"
+  }
   stat_wb_summary <- switch(label.qty,
                             total = stat_wb_total,
                             mean = stat_wb_mean,
@@ -41,7 +44,8 @@ decoration <- function(w.band,
                             sirrad = stat_wb_sirrad,
                             contribution = stat_wb_contribution,
                             relative = stat_wb_relative,
-                            function(...) {NULL})
+                            none = function(...) {NA_real_},
+                            function(...) {NA_real_})
   z <- list()
   if ("peaks" %in% annotations) {
     z <- c(z, stat_peaks(span = 31, label.fmt = "%.4g",
@@ -52,10 +56,6 @@ decoration <- function(w.band,
     z <- c(z, stat_valleys(span = 31, label.fmt = "%.4g",
                            ignore_threshold = 0.02, color = "blue",
                            geom = "text", vjust = +1.2, size = text.size))
-  }
-  if (!is.null(annotations) &&
-      length(intersect(c("labels", "summaries", "colour.guide", "boxes", "segments"),
-                       annotations)) > 0L) {
   }
   if ("colour.guide" %in% annotations) {
     z <- c(z, stat_wl_strip(ymax = y.max * 1.26, ymin = y.max * 1.22))
@@ -70,7 +70,6 @@ decoration <- function(w.band,
     label.color <- "white"
     pos.shift <- 0.00
   }
-
   if ("segments" %in% annotations) {
     z <- c(z, stat_wl_strip(w.band = w.band,
                             ymax = y.max * 1.10,
@@ -81,7 +80,6 @@ decoration <- function(w.band,
     label.color <- "black"
     pos.shift <- 0.01
   }
-
   if ("labels" %in% annotations || "summaries" %in% annotations) {
     if ("labels" %in% annotations && "summaries" %in% annotations) {
       mapping <- aes_(label = quote(paste(..wb.name.., ..y.label.., sep = "\n")))
@@ -90,34 +88,37 @@ decoration <- function(w.band,
     } else if ("summaries" %in% annotations) {
       mapping <- aes_(label = ~..y.label..)
     }
-    if (label.qty %in% c("irrad", "sirrad")) {
-      z <- c(z, stat_wb_summary(geom = "text",
-                                unit.in = unit.out,
-                                time.unit = time.unit,
-                                w.band = w.band,
-                                label.mult = label.mult,
-                                ypos.fixed = y.max * 1.143 + pos.shift,
-                                color = label.color,
-                                mapping = mapping,
-                                size = text.size))
+    if ("summaries" %in% annotations) {
+      if (label.qty %in% c("irrad", "sirrad")) {
+        z <- c(z, stat_wb_summary(geom = "text",
+                                  unit.in = unit.out,
+                                  time.unit = time.unit,
+                                  w.band = w.band,
+                                  label.mult = label.mult,
+                                  ypos.fixed = y.max * 1.143 + pos.shift,
+                                  color = label.color,
+                                  mapping = mapping,
+                                  size = text.size))
+      } else {
+        z <- c(z, stat_wb_summary(geom = "text",
+                                  w.band = w.band,
+                                  label.mult = label.mult,
+                                  ypos.fixed = y.max * 1.143 + pos.shift,
+                                  color = label.color,
+                                  mapping = mapping,
+                                  size = text.size))
+      }
+      z <- c(z,
+             annotate("text",
+                      x = x.min, y = y.max * 1.09 + 0.5 * y.max * 0.085,
+                      size = rel(2), vjust = -0.3, hjust = 0.5, angle = 90,
+                      label = summary.label, parse = TRUE))
     } else {
-      z <- c(z, stat_wb_summary(geom = "text",
-                                w.band = w.band,
-                                label.mult = label.mult,
-                                ypos.fixed = y.max * 1.143 + pos.shift,
-                                color = label.color,
-                                mapping = mapping,
-                                size = text.size))
+      z <- c(z, stat_wb_label(w.band = w.band,
+                              ypos.fixed = y.max * 1.143 + pos.shift,
+                              color = label.color,
+                              size = text.size))
     }
   }
-
-  if ("summaries" %in% annotations) {
-    z <- c(z,
-           annotate("text",
-                    x = x.min, y = y.max * 1.09 + 0.5 * y.max * 0.085,
-                    size = rel(2), vjust = -0.3, hjust = 0.5, angle = 90,
-                    label = summary.label, parse = TRUE))
-  }
-
   z
 }

@@ -8,6 +8,8 @@ of the font used for text decorations related to wavebands, peaks and valleys.
 Increase slightly the default font size for plot decorations, and decrease the
 number of peaks and valleys labelled by the plot() methods.
 Fix existing bug revealed by dplyr update.
+Fix bug in decoration() affecting plot.objects_spct().
+Add stat_wb_label().
 
 ggspectra 0.1.6
 ===============

@@ -439,7 +439,7 @@ O_plot <- function(spct,
                             summary.label = "",
                             text.size = text.size)
   if (!is.null(annotations) &&
-      length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide"), annotations)) > 0L) {
+      length(intersect(c("boxes", "segments", "labels", "colour.guide"), annotations)) > 0L) {
     y.limits <- c(0, y.max * 1.25)
     x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
   } else {
