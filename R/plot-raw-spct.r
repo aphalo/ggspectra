@@ -173,6 +173,15 @@ plot.raw_spct <-
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }
+    if (is.null(w.band)) {
+      if (is.null(range)) {
+        w.band <- photobiology::waveband(x)
+      } else if (is.waveband(range)) {
+        w.band <- range
+      } else {
+        w.band <-  photobiology::waveband(range, wb.name = "Total")
+      }
+    }
 
     out.ggplot <- raw_plot(spct = x, w.band = w.band, range = range,
                            label.qty = label.qty,

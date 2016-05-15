@@ -436,6 +436,16 @@ plot.response_spct <-
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }
+    if (is.null(w.band)) {
+      if (is.null(range)) {
+        w.band <- photobiology::waveband(x)
+      } else if (is.waveband(range)) {
+        w.band <- range
+      } else {
+        w.band <-  photobiology::waveband(range, wb.name = "Total")
+      }
+    }
+
     if (unit.out=="photon" || unit.out=="quantum") {
       out.ggplot <- q_rsp_plot(spct=x, w.band=w.band, range=range,
                                pc.out=pc.out, label.qty=label.qty,

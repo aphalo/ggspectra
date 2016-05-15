@@ -34,7 +34,6 @@ e_plot <- function(spct,
   if (!is.null(range)) {
     trim_spct(spct, range = range, byref = TRUE)
   }
-
   exposure.label <- NA
   if (is_normalized(spct) || is_scaled(spct)) {
     s.irrad.label <- "Spectral~~energy~~exposure~~E(lambda)~~(relative~~units)"
@@ -361,6 +360,16 @@ plot.source_spct <-
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }
+    if (is.null(w.band)) {
+      if (is.null(range)) {
+        w.band <- photobiology::waveband(x)
+      } else if (is.waveband(range)) {
+        w.band <- range
+      } else {
+        w.band <-  photobiology::waveband(range, wb.name = "Total")
+      }
+    }
+
     if (unit.out %in% c("photon", "quantum")) {
       out.ggplot <- q_plot(spct = x, w.band = w.band, range = range,
                            label.qty = label.qty, annotations = annotations,

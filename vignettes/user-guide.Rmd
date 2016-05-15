@@ -752,6 +752,23 @@ plot(sun.spct, w.band = PAR())
 plot(sun.spct, w.band = CIE())
 ```
 
+```{r}
+plot(sun.spct, w.band = NULL)
+```
+
+```{r}
+plot(sun.spct, w.band = NULL, range = c(400,700))
+```
+
+```{r}
+plot(sun.spct, w.band = NULL, range = PAR())
+```
+
+```{r}
+plot(sun.spct, w.band = UVB(), range = c(400,700))
+```
+
+
 The time unit is also stored in the metadata, as demonstrated here. The units in axis labels have suitably adapted to the different units.
 
 ```{r}

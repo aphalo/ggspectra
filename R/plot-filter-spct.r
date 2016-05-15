@@ -507,6 +507,16 @@ plot.filter_spct <-
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }
+    if (is.null(w.band)) {
+      if (is.null(range)) {
+        w.band <- photobiology::waveband(x)
+      } else if (is.waveband(range)) {
+        w.band <- range
+      } else {
+        w.band <-  photobiology::waveband(range, wb.name = "Total")
+      }
+    }
+
     if (plot.qty == "transmittance") {
       out.ggplot <- T_plot(spct = x, w.band = w.band, range = range,
                            pc.out = pc.out, label.qty = label.qty,
@@ -575,6 +585,16 @@ plot.reflector_spct <-
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }
+    if (is.null(w.band)) {
+      if (is.null(range)) {
+        w.band <- photobiology::waveband(x)
+      } else if (is.waveband(range)) {
+        w.band <- range
+      } else {
+        w.band <-  photobiology::waveband(range, wb.name = "Total")
+      }
+    }
+
     out.ggplot <- R_plot(spct = x, w.band = w.band,  range = range,
                          pc.out = pc.out, label.qty = label.qty,
                          annotations = annotations,
@@ -639,6 +659,16 @@ plot.object_spct <-
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }
+    if (is.null(w.band)) {
+      if (is.null(range)) {
+        w.band <- photobiology::waveband(x)
+      } else if (is.waveband(range)) {
+        w.band <- range
+      } else {
+        w.band <-  photobiology::waveband(range, wb.name = "Total")
+      }
+    }
+
     out.ggplot <- O_plot(spct = x, w.band = w.band,  range = range,
                          pc.out = pc.out, label.qty = label.qty,
                          annotations = annotations, stacked = stacked,

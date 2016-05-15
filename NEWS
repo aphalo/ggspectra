@@ -1,6 +1,7 @@
 ggspectra 0.1.7
 ===============
 
+Add stat_wb_label().
 Revise plot.raw_spct() to handle multiple "counts" columns.
 Revise plot.cps_spct() to handle multiple "cps" columns.
 Add text.size parameter to all plot() methods. Can be used to control the size
@@ -9,7 +10,7 @@ Increase slightly the default font size for plot decorations, and decrease the
 number of peaks and valleys labelled by the plot() methods.
 Fix existing bug revealed by dplyr update.
 Fix bug in decoration() affecting plot.objects_spct().
-Add stat_wb_label().
+Fix other minor bugs.
 
 ggspectra 0.1.6
 ===============
