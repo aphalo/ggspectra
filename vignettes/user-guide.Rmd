@@ -371,7 +371,7 @@ ggplot(yellow_gel.spct) +
 ### Irradiances by waveband
 
 The _stat_s in previous sections can be used for unweighted irradiances, but not for BSWFs. These `irrad` _stat_s have additional formal parameters for passing metadata, and use method `photobiology::irrad()` internally on a `photobiology::source_spct` object constructed from the
-data for $x$ and $y$ _aesthetics_. Function `stat_wb_sirrad()` is equivalent to `stat_wb_mean()` and function `stat_wb_irrad()` is equivalent to `stat_wb_total()` following the same convention naming as in package `photobiology`.
+data for $x$ and $y$ _aesthetics_. Function `stat_wb_sirrad()` is equivalent to `stat_wb_mean()` and function `stat_wb_irrad()` is equivalent to `stat_wb_total()` following the same naming convention as in package `photobiology`. 
 
 ```{r}
 ggplot(sun.spct) +
@@ -398,36 +398,49 @@ ggplot(sun.spct, unit.out = "photon") +
   theme_bw()
 ```
 
+Also following the same naming convention as in package `photobiology`, `e` and `q` versions of these functions default to energy and photon based quantities to `"seconds"` for time unit.
+
 ```{r}
 ggplot(sun.spct) +
-  stat_wb_irrad(w.band = CIE(), geom = "rect", alpha = 0.5,
-                unit.in = "energy", time.unit = "second") +
-  stat_wb_irrad(w.band = CIE(), geom = "text",
-                unit.in = "energy", time.unit = "second") +
+  stat_wb_e_irrad(w.band = PAR(), geom = "rect", alpha = 0.5) +
+  stat_wb_e_irrad(w.band = PAR(), geom = "text") +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
   theme_bw()
 ```
+
+We can also use `waveband` objects describing _biological spectral weighting functions_ (BSWFs), such as CIE's erythema function.
+
+```{r}
+ggplot(sun.spct) +
+  stat_wb_e_irrad(w.band = CIE(), geom = "rect", alpha = 0.5) +
+  stat_wb_e_irrad(w.band = CIE(), geom = "text") +
+  geom_line() + 
+  scale_color_identity() + 
+  scale_fill_identity() +  
+  theme_bw()
+```
+
+For daily data we need to override the default time unit.
 
 ```{r}
 ggplot(sun.daily.spct) +
-  stat_wb_irrad(w.band = CIE(), geom = "rect", alpha = 0.5,
-                unit.in = "energy", time.unit = "day") +
-  stat_wb_irrad(w.band = CIE(), geom = "text",
-                unit.in = "energy", time.unit = "day", label.mult = 1e-3) +
+  stat_wb_e_irrad(w.band = CIE(), geom = "rect", alpha = 0.5,
+                  time.unit = "day") +
+  stat_wb_e_irrad(w.band = CIE(), geom = "text",
+                  time.unit = "day", label.mult = 1e-3) +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
   theme_bw()
 ```
 
+Here we pass a list of `waveband` objects.
 ```{r}
 ggplot(sun.spct, unit.out = "photon") +
-  stat_wb_irrad(w.band = VIS_bands(), geom = "rect", alpha = 0.5,
-                unit.in = "photon", time.unit = "second") +
-  stat_wb_irrad(w.band = VIS_bands(), geom = "text",
-                unit.in = "photon", time.unit = "second", 
+  stat_wb_q_irrad(w.band = VIS_bands(), geom = "rect", alpha = 0.5) +
+  stat_wb_q_irrad(w.band = VIS_bands(), geom = "text",
                 label.mult = 1e6, size = rel(2)) +
   geom_line() + 
   scale_color_identity() + 
@@ -439,10 +452,8 @@ ggplot(sun.spct, unit.out = "photon") +
 
 ```{r}
 ggplot(sun.spct) +
-  stat_wb_sirrad(w.band = PAR(), geom = "rect", alpha = 0.5,
-                unit.in = "energy", time.unit = "second") +
-  stat_wb_sirrad(w.band = PAR(), geom = "text",
-                unit.in = "energy", time.unit = "second") +
+  stat_wb_e_sirrad(w.band = PAR(), geom = "rect", alpha = 0.5) +
+  stat_wb_e_sirrad(w.band = PAR(), geom = "text") +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -451,13 +462,10 @@ ggplot(sun.spct) +
 
 ```{r}
 ggplot(sun.spct, unit.out = "photon") +
-  stat_wb_sirrad(w.band = PAR(), geom = "rect", alpha = 0.5,
-                unit.in = "photon", time.unit = "second") +
-  stat_wb_sirrad(w.band = PAR(), geom = "text",
-                unit.in = "photon", time.unit = "second", 
-                aes(label = sprintf("Total %s = %.3g", ..wb.name.., ..yint.. * 1e6))) +
-  stat_wb_sirrad(w.band = PAR(), geom = "text",
-                unit.in = "photon", time.unit = "second", 
+  stat_wb_q_sirrad(w.band = PAR(), geom = "rect", alpha = 0.5) +
+  stat_wb_q_sirrad(w.band = PAR(), geom = "text",
+                 aes(label = sprintf("Total %s = %.3g", ..wb.name.., ..yint.. * 1e6))) +
+  stat_wb_q_sirrad(w.band = PAR(), geom = "text",
                 mapping = aes(label = sprintf("Mean %s = %.3g", ..wb.name.., ..ymean.. * 1e6)), 
                 ypos.mult = 0.45) +
   geom_line() + 
@@ -468,10 +476,8 @@ ggplot(sun.spct, unit.out = "photon") +
 
 ```{r}
 ggplot(sun.spct) +
-  stat_wb_sirrad(w.band = CIE(), geom = "rect", alpha = 0.5,
-                unit.in = "energy", time.unit = "second") +
-  stat_wb_sirrad(w.band = CIE(), geom = "text",
-                unit.in = "energy", time.unit = "second") +
+  stat_wb_e_sirrad(w.band = CIE(), geom = "rect", alpha = 0.5) +
+  stat_wb_e_sirrad(w.band = CIE(), geom = "text") +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -480,10 +486,10 @@ ggplot(sun.spct) +
 
 ```{r}
 ggplot(sun.daily.spct) +
-  stat_wb_sirrad(w.band = CIE(), geom = "rect", alpha = 0.5,
-                unit.in = "energy", time.unit = "day") +
-  stat_wb_sirrad(w.band = CIE(), geom = "text",
-                unit.in = "energy", time.unit = "day", label.mult = 1e-3) +
+  stat_wb_e_sirrad(w.band = CIE(), geom = "rect", alpha = 0.5,
+                   time.unit = "day") +
+  stat_wb_e_sirrad(w.band = CIE(), geom = "text",
+                   time.unit = "day", label.mult = 1e-3) +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -492,12 +498,11 @@ ggplot(sun.daily.spct) +
 
 ```{r}
 ggplot(sun.spct) +
-  stat_wb_sirrad(w.band = VIS_bands(), geom = "rect", alpha = 0.5,
-                unit.in = "energy", time.unit = "second") +
-  stat_wb_sirrad(w.band = VIS_bands(), angle = 90, geom = "text",
-                unit.in = "energy", time.unit = "second", ypos.fixed = 0.05, hjust = 0,
-                 aes(label = paste(..wb.name.., ..y.label.., sep = " = "),
-                     color = "black")) +
+  stat_wb_e_sirrad(w.band = VIS_bands(), geom = "rect", alpha = 0.5) +
+  stat_wb_e_sirrad(w.band = VIS_bands(), angle = 90, geom = "text",
+                   ypos.fixed = 0.05, hjust = 0,
+                   aes(label = paste(..wb.name.., ..y.label.., sep = " = "),
+                       color = "black")) +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -506,12 +511,11 @@ ggplot(sun.spct) +
 
 ```{r}
 ggplot(sun.spct, unit.out = "photon") +
-  stat_wb_sirrad(w.band = VIS_bands(), geom = "rect", alpha = 0.5,
-                unit.in = "photon", time.unit = "second") +
-  stat_wb_irrad(w.band = VIS_bands(), angle = 90, geom = "text", label.mult = 1e6,
-                unit.in = "photon", time.unit = "second", ypos.fixed = 1e-7, hjust = 0,
-                 aes(label = paste(..wb.name.., ..y.label.., sep = " = "),
-                     color = "black")) +
+  stat_wb_q_sirrad(w.band = VIS_bands(), geom = "rect", alpha = 0.5) +
+  stat_wb_q_irrad(w.band = VIS_bands(), angle = 90, geom = "text", 
+                  label.mult = 1e6, ypos.fixed = 1e-7, hjust = 0,
+                  aes(label = paste(..wb.name.., ..y.label.., sep = " = "),
+                      color = "black")) +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -522,11 +526,9 @@ ggplot(sun.spct, unit.out = "photon") +
 ```{r}
 my.bands <- split_bands(c(300,800), length.out = 10)
 ggplot(sun.spct) +
-  stat_wb_sirrad(w.band = my.bands, geom = "rect", alpha = 0.5,
-                unit.in = "energy", time.unit = "second") +
-  stat_wb_irrad(w.band = my.bands, angle = 90, geom = "text",
-                unit.in = "energy", time.unit = "second", ypos.fixed = 0.05, hjust = 0,
-                color = "black") +
+  stat_wb_e_sirrad(w.band = my.bands, geom = "rect", alpha = 0.5) +
+  stat_wb_e_irrad(w.band = my.bands, angle = 90, geom = "text",
+                  ypos.fixed = 0.05, hjust = 0, color = "black") +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -536,15 +538,29 @@ ggplot(sun.spct) +
 ```{r}
 my.bands <- split_bands(c(300,800), length.out = 10)
 ggplot(sun.spct, unit.out = "photon") +
-  stat_wb_sirrad(w.band = my.bands, geom = "rect", alpha = 0.5,
-                unit.in = "photon", time.unit = "second") +
-  stat_wb_sirrad(w.band = my.bands, geom = "text", angle = 90,
-                unit.in = "photon", time.unit = "second", label.mult = 1e6,
-                color = "black") +
+  stat_wb_q_sirrad(w.band = my.bands, geom = "rect", alpha = 0.5) +
+  stat_wb_q_sirrad(w.band = my.bands, geom = "text", angle = 90, 
+                   label.mult = 1e6, color = "black") +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
   theme_bw()
+```
+
+## Labels from wavebands
+
+Sometimes we may want to only annotate a plot with waveband names and regions without calculating any summary quantity. `stat_wb_label()` fills this role. Although the same result can be achieved with some of the summary statistics, if no summary is needed this statistic can avoid unnecessary computations, and more importantly used in plots where the $y$ is not mapped, is only the $x$ easthetic is required.
+
+```{r}
+ggplot(data.frame(w.length = 300:800), aes(w.length)) +
+  stat_wb_label(w.band = VIS_bands(), geom = "rect", ymax = Inf, ymin = -Inf) +
+  stat_wb_label(w.band = VIS_bands(), angle = 90, color = "white") +
+  scale_fill_identity() + 
+  scale_y_continuous(labels = NULL) +
+  scale_x_continuous(breaks = seq(from = 300, to = 800, by = 25)) +
+  labs(x = "Wavelength (nm)", title = "Colours according to ISO standard") +
+  theme_minimal()
+
 ```
 
 ## Wavelength colours at new $x$-values 

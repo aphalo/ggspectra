@@ -1,7 +1,8 @@
 ggspectra 0.1.7
 ===============
 
-Add stat_wb_label().
+Add stat_wb_label(), stat_wb_e_irrad(), stat_wb_q_irrad(), stat_wb_e_sirrad(),
+and stat_wb_q_irrad().
 Revise plot.raw_spct() to handle multiple "counts" columns.
 Revise plot.cps_spct() to handle multiple "cps" columns.
 Add text.size parameter to all plot() methods. Can be used to control the size

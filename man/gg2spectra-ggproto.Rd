@@ -3,7 +3,6 @@
 \docType{data}
 \name{GeomSpct}
 \alias{GeomSpct}
-\alias{StatAverage}
 \alias{StatColor}
 \alias{StatColorGuide}
 \alias{StatPeaks}
@@ -15,6 +14,7 @@
 \alias{StatWbRelative}
 \alias{StatWbSIrrad}
 \alias{StatWbTotal}
+\alias{StatWlSummary}
 \alias{Stats}
 \title{\code{Stat*} Objects}
 \format{An object of class \code{StatValleys} (inherits from \code{Stat}, \code{ggproto}) of length 4.}

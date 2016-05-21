@@ -44,7 +44,8 @@
 #'   stat_wl_strip(ymax = -0.02, ymin = -0.04) +
 #'   scale_fill_identity()
 #'
-#' ggplot(sun.spct) + wl_guide(alpha = 0.33) + geom_line()
+#' # on some graphic devices the output may show spurious vertical lines
+#' ggplot(sun.spct) + wl_guide(alpha = 0.33, color = NA) + geom_line()
 #'
 #' @export
 #' @family stats functions

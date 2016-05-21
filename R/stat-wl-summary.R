@@ -39,9 +39,10 @@
 #' library(photobiology)
 #' library(ggplot2)
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
-#' ggplot(sun.spct) + geom_line() + stat_wl_summary(geom = "hline")
 #' ggplot(sun.spct) + geom_line() +
-#'  stat_wl_summary(label.fmt = "%.3f", color = "red")
+#'   stat_wl_summary(geom = "hline")
+#' ggplot(sun.spct) + geom_line() +
+#'   stat_wl_summary(label.fmt = "%.3f", color = "red")
 #'
 #' @export
 #' @family stats functions
@@ -52,7 +53,7 @@ stat_wl_summary <- function(mapping = NULL, data = NULL, geom = "text",
                        position = "identity", na.rm = FALSE, show.legend = NA,
                        inherit.aes = TRUE, ...) {
   ggplot2::layer(
-    stat = StatAverage, data = data, mapping = mapping, geom = geom,
+    stat = StatWlSummary, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(range = range,
                   integral.fun = integral.fun,
@@ -66,8 +67,8 @@ stat_wl_summary <- function(mapping = NULL, data = NULL, geom = "text",
 #' @format NULL
 #' @usage NULL
 #' @export
-StatAverage <-
-  ggplot2::ggproto("StatAverage", ggplot2::Stat,
+StatWlSummary <-
+  ggplot2::ggproto("StatWlSummary", ggplot2::Stat,
                    compute_group = function(data,
                                             scales,
                                             range,
@@ -75,8 +76,8 @@ StatAverage <-
                                             label.fmt,
                                             summary.fmt) {
                      range <-
-                       photobiology::normalize_range_arg(range,
-                                                         default.range = range(data$x))
+                       photobiology::normalize_range_arg(arg.range = range,
+                                                         wl.range = range(data$x))
                      mydata <- photobiology::trim_tails(data$x, data$y,
                                                         low.limit = range[1],
                                                         high.limit = range[2])

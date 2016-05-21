@@ -57,11 +57,16 @@
 #'
 #' @examples
 #' library(photobiology)
+#' library(photobiologyWavebands)
 #' library(ggplot2)
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
-#' ggplot(sun.spct, unit.out = "photon") +
-#'   stat_wb_sirrad(unit.in = "photon", time.unit = "second") +
-#'    geom_line()
+#' ggplot(sun.spct) +
+#'   stat_wb_mean(w.band = VIS_bands()) +
+#'   stat_wb_e_sirrad(w.band = VIS_bands(),
+#'                   geom = "text", angle = 90, size = 4,
+#'                   label.fmt = "%1.2f", ypos.fixed = 0.1) +
+#'   geom_line() +
+#'   scale_fill_identity()
 #'
 #' @export
 #' @family stats functions
@@ -77,6 +82,64 @@ stat_wb_sirrad <- function(mapping = NULL, data = NULL, geom = "text",
                        ypos.fixed = NULL,
                        position = "identity", na.rm = FALSE, show.legend = NA,
                        inherit.aes = TRUE, ...) {
+  ggplot2::layer(
+    stat = StatWbSIrrad, data = data, mapping = mapping, geom = geom,
+    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    params = list(w.band = w.band,
+                  time.unit = time.unit,
+                  unit.in = unit.in,
+                  label.qty = label.qty,
+                  label.mult = label.mult,
+                  label.fmt = label.fmt,
+                  ypos.mult = ypos.mult,
+                  ypos.fixed = ypos.fixed,
+                  na.rm = na.rm,
+                  ...)
+  )
+}
+
+#' @rdname stat_wb_sirrad
+#' @export
+stat_wb_e_sirrad <- function(mapping = NULL, data = NULL, geom = "text",
+                           w.band = NULL,
+                           time.unit = "second",
+                           unit.in = "energy",
+                           label.qty = "mean",
+                           label.mult = 1,
+                           label.fmt = "%.3g",
+                           ypos.mult = 0.55,
+                           ypos.fixed = NULL,
+                           position = "identity", na.rm = FALSE, show.legend = NA,
+                           inherit.aes = TRUE, ...) {
+  ggplot2::layer(
+    stat = StatWbSIrrad, data = data, mapping = mapping, geom = geom,
+    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    params = list(w.band = w.band,
+                  time.unit = time.unit,
+                  unit.in = unit.in,
+                  label.qty = label.qty,
+                  label.mult = label.mult,
+                  label.fmt = label.fmt,
+                  ypos.mult = ypos.mult,
+                  ypos.fixed = ypos.fixed,
+                  na.rm = na.rm,
+                  ...)
+  )
+}
+
+#' @rdname stat_wb_sirrad
+#' @export
+stat_wb_q_sirrad <- function(mapping = NULL, data = NULL, geom = "text",
+                           w.band = NULL,
+                           time.unit = "second",
+                           unit.in = "photon",
+                           label.qty = "mean",
+                           label.mult = 1,
+                           label.fmt = "%.3g",
+                           ypos.mult = 0.55,
+                           ypos.fixed = NULL,
+                           position = "identity", na.rm = FALSE, show.legend = NA,
+                           inherit.aes = TRUE, ...) {
   ggplot2::layer(
     stat = StatWbSIrrad, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,

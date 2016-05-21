@@ -56,7 +56,11 @@
 #' library(photobiologyWavebands)
 #' library(ggplot2)
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
-#' ggplot(sun.spct) + geom_line() + stat_wb_total(w.band = VIS())
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_wb_total(w.band = VIS()) +
+#'   stat_wb_total(w.band = VIS(), geom = "text", color = "white") +
+#'   scale_fill_identity()
 #'
 #' @export
 #' @family stats functions

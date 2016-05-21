@@ -37,7 +37,7 @@
 #' library(photobiology)
 #' library(ggplot2)
 #' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
-#'   stat_color()
+#'   stat_color() + scale_color_identity()
 #'
 #' @export
 #' @family stats functions
