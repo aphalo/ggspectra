@@ -21,6 +21,155 @@
 #'
 #' @keywords internal
 #'
+Afr_plot <- function(spct,
+                     w.band,
+                     range,
+                     pc.out,
+                     label.qty,
+                     annotations,
+                     text.size,
+                     ...) {
+  if (!is.filter_spct(spct)) {
+    stop("Afr_plot() can only plot filter_spct objects.")
+  }
+  A2T(spct, byref = TRUE)
+  Tfr.type <- getTfrType(spct)
+  if (!is.null(range)) {
+    trim_spct(spct, range = range, byref = TRUE)
+  }
+  setGenericSpct(spct) # so that we can assign variable Afr
+  if (! "Afr" %in% names(spct)) {
+    if (Tfr.type == "internal" &&
+        "Rfr" %in% names(spct)) {
+      spct$Afr <- (1 - spct["Rfr"]) * (1 - spct["Tfr"])
+      Afr.type <- "total"
+    } else if (Tfr.type == "internal" &&
+      !("Rfr" %in% names(spct))) {
+      spct$Afr <- 1 - spct["Tfr"]
+      Afr.type <- "internal"
+    } else if (Tfr.type == "total" &&
+               "Rfr" %in% names(spct)) {
+      spct$Afr <- 1 - spct["Tfr"] - spct["Rfr"]
+      Afr.type <- "total"
+    } else {
+      warning("Absorptance data unavailable")
+      return(ggplot())
+    }
+  } else {
+    Afr.type <- Tfr.type
+  }
+  if (!length(Afr.type)) {
+    Afr.type <- "unknown"
+  }
+  if (!pc.out) {
+    scale.factor <- 1
+    if (Afr.type == "internal") {
+      s.Afr.label <- expression(Internal~~spectral~~absorptance~~italic(A)[int](lambda)~~(fraction))
+      Afr.label.total  <- "atop(italic(A)[int], (fraction))"
+      Afr.label.avg  <- "atop(bar(italic(A)[int](lambda)), (fraction))"
+    } else if (Afr.type == "total") {
+      s.Afr.label <- expression(Total~~spectral~~absorptance~~italic(A)[tot](lambda)~~(fraction))
+      Afr.label.total  <- "atop(italic(A)[tot], (total))"
+      Afr.label.avg  <- "atop(bar(italic(A)[tot](lambda)), (fraction))"
+    }  else {
+      s.Afr.label <- expression(Spectral~~absorptance~~italic(A)(lambda)~~(fraction))
+      Afr.label.total  <- "atop(italic(A), (total))"
+      Afr.label.avg  <- "atop(bar(italic(A)(lambda)), (fraction))"
+    }
+  } else if (pc.out) {
+    scale.factor <- 100
+    if (Afr.type == "internal") {
+      s.Afr.label <- expression(Internal~~spectral~~absorptance~~italic(A)[int](lambda)~~(percent))
+      Afr.label.total  <- "atop(italic(A)[int], (total %*% 100))"
+      Afr.label.avg  <- "atop(bar(italic(A)[int](lambda)), (percent))"
+    } else if (Afr.type == "total") {
+      s.Afr.label <- expression(Total~~spectral~~absorptance~~italic(A)[tot](lambda)~~(percent))
+      Afr.label.total  <- "atop(italic(A)[tot], (total %*% 100))"
+      Afr.label.avg  <- "atop(bar(italic(A)[tot](lambda)), (percent))"
+    }  else {
+      s.Afr.label <- expression(Spectral~~absorptance~~italic(A)(lambda)~~(percent))
+      Afr.label.total  <- "atop(italic(A), (total  %*% 100))"
+      Afr.label.avg  <- "atop(bar(italic(A)(lambda)), (percent))"
+    }
+  }
+  if (label.qty == "total") {
+    Afr.label <- Afr.label.total
+  } else if (label.qty %in% c("average", "mean")) {
+    Afr.label <- Afr.label.avg
+  } else if (label.qty == "contribution") {
+    Afr.label <- "atop(Contribution~~to~~total, italic(A)~~(fraction))"
+  } else if (label.qty == "contribution.pc") {
+    Afr.label <- "atop(Contribution~~to~~total, italic(A)~~(percent))"
+  } else if (label.qty == "relative") {
+    Afr.label <- "atop(Relative~~to~~sum, italic(A)~~(fraction))"
+  } else if (label.qty == "relative.pc") {
+    Afr.label <- "atop(Relative~~to~~sum, italic(A)~~(percent))"
+  } else {
+    Afr.label <- ""
+  }
+
+  y.max <- 1
+  y.min <- 0
+
+  plot <- ggplot(spct, aes_(~w.length, ~Afr)) +
+    scale_fill_identity() + scale_color_identity()
+  plot <- plot + geom_line()
+  plot <- plot + labs(x = "Wavelength (nm)", y = s.Afr.label)
+
+  plot <- plot + decoration(w.band = w.band,
+                            label.mult = scale.factor,
+                            y.max = y.max,
+                            y.min = y.min,
+                            x.max = max(spct),
+                            x.min = min(spct),
+                            annotations = annotations,
+                            label.qty = label.qty,
+                            summary.label = Afr.label,
+                            text.size = text.size)
+
+  if (!is.null(annotations) &&
+      length(intersect(c("labels", "summaries", "colour.guide"), annotations)) > 0L) {
+    y.limits <- c(0, y.max * 1.25)
+    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
+  } else {
+    y.limits <- c(0, 1)
+    x.limits <- range(spct)
+  }
+  if (pc.out) {
+    plot <- plot + scale_y_continuous(labels = scales::percent, breaks = c(0, 0.25, 0.5, 0.75, 1),
+                                      limits = y.limits)
+  } else {
+    plot <- plot + scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1),
+                                      limits = y.limits)
+  }
+
+  plot + scale_x_continuous(limits = x.limits)
+
+}
+
+#' Plot a filter spectrum.
+#'
+#' This function returns a ggplot object with an annotated plot of a source_spct
+#' object showing transmittance.
+#'
+#' @note Note that scales are expanded so as to make space for the annotations.
+#'   The object returned is a ggplot objects, and can be further manipulated.
+#'
+#' @param spct a filter_spct object
+#' @param w.band list of waveband objects
+#' @param range an R object on which range() returns a vector of length 2, with
+#'   min annd max wavelengths (nm)
+#' @param pc.out logical, if TRUE use percents instead of fraction of one
+#' @param label.qty character string giving the type of summary quantity to use
+#'   for labels
+#' @param annotations a character vector
+#' @param text.size numeric size of text in the plot decorations.
+#' @param ... other arguments passed to transmittance()
+#'
+#' @return a \code{ggplot} object.
+#'
+#' @keywords internal
+#'
 T_plot <- function(spct,
                    w.band,
                    range,
@@ -407,7 +556,7 @@ O_plot <- function(spct,
   molten.spct <-
     tidyr::gather_(dplyr::select_(spct, "w.length", "Tfr", "Afr", "Rfr"),
                    "variable", "value", c("Tfr", "Afr", "Rfr"))
-  setGenericSpct(molten.spct, multiple.wl = 3L)
+  setGenericSpct(molten.spct, multiple.wl = 3L * getMultipleWl(spct))
   plot <- ggplot(molten.spct, aes_(~w.length, ~value)) +
     scale_fill_identity()
   if (stacked) {
@@ -528,6 +677,12 @@ plot.filter_spct <-
                            label.qty = label.qty, annotations = annotations,
                            text.size = text.size,
                            ...)
+    } else if (plot.qty == "absorptance") {
+      out.ggplot <- Afr_plot(spct = x, w.band = w.band, range = range,
+                             pc.out = pc.out, label.qty = label.qty,
+                             annotations = annotations,
+                             text.size = text.size,
+                             ...)
     } else {
       stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
     }

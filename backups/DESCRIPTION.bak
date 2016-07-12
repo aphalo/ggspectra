@@ -1,15 +1,15 @@
 Package: ggspectra
 Type: Package
 Title: Extensions to 'ggplot2' for Radiation Spectra
-Version: 0.1.7.9001
-Date: 2016-07-12
+Version: 0.1.6
+Date: 2016-01-31
 Author: Pedro J. Aphalo [aut, cre]
 Maintainer: Pedro J. Aphalo <pedro.aphalo@helsinki.fi>
-Description: Additional annotations, stats and scales for plotting "light"
-    spectra with 'ggplot2', together with specializations of ggplot()
+Description: This package provides additional annotations, stats and scales for
+    plotting spectra with 'ggplot2', togetehr with specializations of ggplot()
     and plot() methods for spectral data stored in objects of the classes
-    defined in package 'photobiology' and a plot() method for objects of
-    class "waveband", also defined in package 'photobiology'.
+    defined in package 'photobiology' and of objects of class "waveband",
+    also defined in package 'photobiology'.
 License: GPL (>=3)
 LazyData: TRUE
 LazyLoad: TRUE
@@ -17,17 +17,16 @@ ByteCompile: TRUE
 Depends:
     R (>= 3.2.0)
 Imports:
-    photobiology (>= 0.9.8),
-    photobiologyWavebands (>= 0.4.0),
-    ggplot2 (>= 2.1.0),
-    scales (>= 0.4.0),
+    photobiology (>= 0.9.4),
+    photobiologyWavebands (>= 0.3.5),
+    ggplot2 (>= 2.0.0),
+    scales (>= 0.3.0),
     dplyr (>= 0.4.3),
-    lubridate (>= 1.5.6),
-    tidyr (>= 0.4.1),
-    reshape2 (>= 1.4.1)
+    lubridate (>= 1.5.0),
+    tidyr (>= 0.4.0)
 Suggests:
-    knitr (>= 1.13),
-    rmarkdown (>= 0.9.6)
+    knitr,
+    rmarkdown
 URL: http://www.r4photobiology.info,
     https://bitbucket.org/aphalo/ggspectra
 BugReports: https://bitbucket.org/aphalo/ggspectra

@@ -801,10 +801,6 @@ plot(two_suns.spct, label.qty = "mean") + facet_wrap(~spct.idx)
 plot(two_suns.spct) + aes(linetype = spct.idx)
 ```
 
-```{r}
-plot(yellow_gel.spct, pc.out = TRUE)
-```
-
 Here we demonstrate something that may look like a bug, but is not. The annotations are based only on the data supplied as argument to `plot()` (or in other cases `ggplot()`) because these are the only data visible in all _layers_. The `data` argument in `geom_spct()` only affects the data seen by this _geom_. This way of building a plot is very different than when using _grouping_ within a single data set, and it is best to avoid it in most situations.
 
 ```{r}
@@ -813,7 +809,32 @@ plot(sun.spct) + geom_spct(fill = color(sun.spct)) +
             fill = color(yellow_gel.spct * sun.spct))
 ```
 
-However, if one really needs to, one can add a suitable _stat_ using 'local' data. As this is just a demonstration, I will avoid adding all the additional arguments needed to make the annotations of peaks match those produced by `plot()`.
+In the examples above the `source_spct` object `sun.spct` was used. The `plot()` methods for other spectral classes have slight differentces. We show some examples for `filter_spct` obejcts.
+
+```{r}
+plot(yellow_gel.spct)
+```
+
+By default transmittance, reflectance and absorptance are expressed as fractions of one, as in the plot above, but optionally per cents can be plotted.
+
+```{r}
+plot(yellow_gel.spct, pc.out = TRUE)
+```
+
+In many cases it is possible to convert on-the-fly the quantity plotted.
+
+```{r}
+plot(yellow_gel.spct, plot.qty = "absorbance")
+```
+
+We add a _guessed_ spectral reflectance to the data object to allow the estimation of absorptance.
+
+```{r}
+yellow_gel.spct$Rfr <- 1 - max(yellow_gel.spct$Tfr)
+plot(yellow_gel.spct, plot.qty = "absorptance")
+```
+
+If one really needs to, one can add a suitable _stat_ using 'local' data. As this is just a demonstration, I will avoid adding all the additional arguments needed to make the annotations of peaks match those produced by `plot()`.
 
 ```{r}
 plot(sun.spct) + geom_spct(fill = color(sun.spct)) + 

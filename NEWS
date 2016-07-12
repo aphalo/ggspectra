@@ -1,3 +1,8 @@
+ggspectra 0.1.8
+===============
+
+Add support for plot.qty = "absorptance" to plot.filter_spct()
+
 ggspectra 0.1.7
 ===============
 

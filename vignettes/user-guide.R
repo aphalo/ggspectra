@@ -522,12 +522,22 @@ plot(two_suns.spct, label.qty = "mean") + facet_wrap(~spct.idx)
 plot(two_suns.spct) + aes(linetype = spct.idx)
 
 ## ------------------------------------------------------------------------
-plot(yellow_gel.spct, pc.out = TRUE)
-
-## ------------------------------------------------------------------------
 plot(sun.spct) + geom_spct(fill = color(sun.spct)) + 
   geom_spct(data = yellow_gel.spct * sun.spct, color = "black", 
             fill = color(yellow_gel.spct * sun.spct))
+
+## ------------------------------------------------------------------------
+plot(yellow_gel.spct)
+
+## ------------------------------------------------------------------------
+plot(yellow_gel.spct, pc.out = TRUE)
+
+## ------------------------------------------------------------------------
+plot(yellow_gel.spct, plot.qty = "absorbance")
+
+## ------------------------------------------------------------------------
+yellow_gel.spct$Rfr <- 1 - max(yellow_gel.spct$Tfr)
+plot(yellow_gel.spct, plot.qty = "absorptance")
 
 ## ------------------------------------------------------------------------
 plot(sun.spct) + geom_spct(fill = color(sun.spct)) + 
