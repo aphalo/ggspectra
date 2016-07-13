@@ -41,15 +41,15 @@ Afr_plot <- function(spct,
   if (! "Afr" %in% names(spct)) {
     if (Tfr.type == "internal" &&
         "Rfr" %in% names(spct)) {
-      spct$Afr <- (1 - spct["Rfr"]) * (1 - spct["Tfr"])
+      spct$Afr <- (1 - spct[["Rfr"]]) * (1 - spct[["Tfr"]])
       Afr.type <- "total"
     } else if (Tfr.type == "internal" &&
       !("Rfr" %in% names(spct))) {
-      spct$Afr <- 1 - spct["Tfr"]
+      spct$Afr <- 1 - spct[["Tfr"]]
       Afr.type <- "internal"
     } else if (Tfr.type == "total" &&
                "Rfr" %in% names(spct)) {
-      spct$Afr <- 1 - spct["Tfr"] - spct["Rfr"]
+      spct$Afr <- 1 - spct[["Tfr"]] - spct[["Rfr"]]
       Afr.type <- "total"
     } else {
       warning("Absorptance data unavailable")
