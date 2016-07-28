@@ -2,6 +2,10 @@ ggspectra 0.1.8
 ===============
 
 Add support for plot.qty = "absorptance" to plot.filter_spct()
+Add support for plot.qty to plot.object_spct() with possible values: "all" or
+NULL (previous behaviour, and current default), "transmittance", "absorbance",
+"absorptance", and "reflectance". The new options plot only one quantity at
+a time as a line instead of the default area plot.
 
 ggspectra 0.1.7
 ===============

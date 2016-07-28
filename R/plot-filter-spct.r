@@ -304,7 +304,7 @@ A_plot <- function(spct,
                    text.size,
                    ...) {
   if (!is.filter_spct(spct)) {
-    stop("T_plot() can only plot filter_spct objects.")
+    stop("A_plot() can only plot filter_spct objects.")
   }
   T2A(spct, action = "replace", byref = TRUE)
   if (!is.null(range)) {
@@ -749,12 +749,15 @@ plot.reflector_spct <-
         w.band <-  photobiology::waveband(range, wb.name = "Total")
       }
     }
-
-    out.ggplot <- R_plot(spct = x, w.band = w.band,  range = range,
-                         pc.out = pc.out, label.qty = label.qty,
-                         annotations = annotations,
-                         text.size = text.size,
-                         ...)
+    if (plot.qty == "reflectance") {
+      out.ggplot <- R_plot(spct = x, w.band = w.band,  range = range,
+                           pc.out = pc.out, label.qty = label.qty,
+                           annotations = annotations,
+                           text.size = text.size,
+                           ...)
+    } else {
+      stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
+    }
     if ("title" %in% annotations) {
       out.ggplot <- out.ggplot + labs(title = deparse(substitute(x)))
     }
@@ -775,7 +778,8 @@ plot.reflector_spct <-
 #' @param w.band a single waveband object or a list of waveband objects
 #' @param range an R object on which range() returns a vector of length 2, with
 #'   min annd max wavelengths (nm)
-#' @param plot.qty character string (currently ignored)
+#' @param plot.qty character string, one of "all", "transmittance",
+#'   "absorbance", "absorptance", or "reflectance".
 #' @param pc.out logical, if TRUE use percents instead of fraction of one
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels
@@ -803,7 +807,7 @@ plot.object_spct <-
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PAR())),
            range = NULL,
-           plot.qty = NULL,
+           plot.qty = "all",
            pc.out = FALSE,
            label.qty = "average",
            annotations=getOption("photobiology.plot.annotations",
@@ -823,11 +827,41 @@ plot.object_spct <-
         w.band <-  photobiology::waveband(range, wb.name = "Total")
       }
     }
-
+    if (is.null(plot.qty) || plot.qty == "all") {
     out.ggplot <- O_plot(spct = x, w.band = w.band,  range = range,
                          pc.out = pc.out, label.qty = label.qty,
                          annotations = annotations, stacked = stacked,
                          text.size = text.size, ...)
+    } else if (plot.qty == "transmittance") {
+      x <- as.filter_spct(x)
+      out.ggplot <- T_plot(spct = x, w.band = w.band, range = range,
+                           pc.out = pc.out, label.qty = label.qty,
+                           annotations = annotations,
+                           text.size = text.size,
+                           ...)
+    } else if (plot.qty == "absorbance") {
+      x <- as.filter_spct(x)
+      out.ggplot <- A_plot(spct = x, w.band = w.band, range = range,
+                           label.qty = label.qty, annotations = annotations,
+                           text.size = text.size,
+                           ...)
+    } else if (plot.qty == "absorptance") {
+      x <- as.filter_spct(x)
+      out.ggplot <- Afr_plot(spct = x, w.band = w.band, range = range,
+                             pc.out = pc.out, label.qty = label.qty,
+                             annotations = annotations,
+                             text.size = text.size,
+                             ...)
+    } else if (plot.qty == "reflectance") {
+      x <- as.reflector_spct(x)
+      out.ggplot <- R_plot(spct = x, w.band = w.band,  range = range,
+                           pc.out = pc.out, label.qty = label.qty,
+                           annotations = annotations,
+                           text.size = text.size,
+                           ...)
+    } else {
+      stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
+    }
     if ("title" %in% annotations) {
       out.ggplot <- out.ggplot + labs(title = deparse(substitute(x)))
     }
