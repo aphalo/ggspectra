@@ -10,19 +10,19 @@ The following statistics, geoms and methods are exported:
 * `stat_peaks()` find and label local or global maxima in _y_.
 * `stat_valleys()` find and label local or global minima in _y_.
 * `stat_wb_contribution()` summarize _y_ for ranges, defined by `waveband` objects.
-* `stat_wb_e_irrad` integrate energy irradiance, mapped to _y_, for wavebands.
-* `stat_wb_e_sirrad` integrate spectral energy irradiance, mapped to _y_, for wavebands.
-* `stat_wb_irrad` integrate irradiance, mapped to _y_, for wavebands.
-* `stat_wb_label` label ranges of _x_ under spectral curve according to wavebands.
-* `stat_wb_mean` integrate _y_ over ranges defined by `waveband` objects.
-* `stat_wb_q_irrad` integrate photon (= quantum) irradiance, mapped to _y_, for wavebands.
-* `stat_wb_q_sirrad` integrate spectral photon (= quantum) irradiance, mapped to _y_, for wavebands.
+* `stat_wb_e_irrad()` integrate energy irradiance, mapped to _y_, for wavebands.
+* `stat_wb_e_sirrad()` integrate spectral energy irradiance, mapped to _y_, for wavebands.
+* `stat_wb_irrad()` integrate irradiance, mapped to _y_, for wavebands.
+* `stat_wb_label()` label ranges of _x_ under spectral curve according to wavebands.
+* `stat_wb_mean()` integrate _y_ over ranges defined by `waveband` objects.
+* `stat_wb_q_irrad()` integrate photon (= quantum) irradiance, mapped to _y_, for wavebands.
+* `stat_wb_q_sirrad()` integrate spectral photon (= quantum) irradiance, mapped to _y_, for wavebands.
 * `stat_wb_relative` integrate _y_, over ranges of _x_ defined by `waveband` objects.
-* `stat_wb_sirrad` integrate spectral irradiance, mapped to _y_, for wavebands.
+* `stat_wb_sirrad()` integrate spectral irradiance, mapped to _y_, for wavebands.
 * `stat_wb_total` integrate _y_ over ranges of _x_ for spectral curves.
-* `stat_wl_strip` calculate RGB colours from wavelength mapped to _x_ aesthetic.
-* `stat_wl_summary` summarize _y_ for regions defined as ranges of wavelengths.
-* `wl_guide` calculate colours from wavelengths mapped to _x_ and possibly add a visual depiction of the wavelengths as a color strip, or a color background to a plot.
+* `stat_wl_strip()` calculate RGB colours from wavelength mapped to _x_ aesthetic.
+* `stat_wl_summary()` summarize _y_ for regions defined as ranges of wavelengths.
+* `wl_guide()` calculate colours from wavelengths mapped to _x_ and possibly add a visual depiction of the wavelengths as a color strip, or a color background to a ggplot.
 
 The package [manual](https://cran.r-project.org/web/packages/ggspectra/ggspectra.pdf) describes in more detail the items listed above, and the [vignette](https://cran.r-project.org/web/packages/ggspectra/vignettes/user-guide.html) gives many examples of plots produced with the package.
 
