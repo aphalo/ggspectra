@@ -24,6 +24,8 @@ The following statistics, geoms and methods are exported:
 * `stat_wl_summary` summarize _y_ for regions defined as ranges of wavelengths.
 * `wl_guide` calculate colours from wavelengths mapped to _x_ and possibly add a visual depiction of the wavelengths as a color strip, or a color background to a plot.
 
-This package uses the new functionality added to `ggplot2` at version 2.1.0 and is not compatible with earlier versions.
+The package [manual](https://cran.r-project.org/web/packages/ggspectra/ggspectra.pdf) describes in more detail the items listed above, and the [vignette](https://cran.r-project.org/web/packages/ggspectra/vignettes/user-guide.html) gives many examples of plots produced with the package.
 
-Please, see the web site [r4photobiology](http://www.r4photobiology.info) for details on other packages available as part of the suite, and on how to install them.
+This package uses the new functionality added to '**ggplot2**' at version 2.1.0 and is not compatible with earlier versions.
+
+Please, see the web site [r4photobiology](http://www.r4photobiology.info) for details and update notices. Additional packages, aimed at easing photobiology-related calculations including the quantification of biologically effective radiation in meteorology are available as part of a suite described at the same website.
