@@ -310,7 +310,7 @@ q_plot <- function(spct,
 
 }
 
-#' Plot a source spectrum, especialization of generic plot function.
+#' Plot method for light-source spectra.
 #'
 #' This function returns a ggplot object with an annotated plot of a source_spct
 #' object.

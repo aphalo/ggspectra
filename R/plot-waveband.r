@@ -1,4 +1,4 @@
-#' Plot a waveband as a spectrum.
+#' Plot method for waveband objects.
 #'
 #' This function returns a ggplot object with an annotated plot of a
 #' waveband object.

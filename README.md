@@ -1,6 +1,6 @@
 # README for ggspectra #
 
-Package `ggspectra` is a set of stats, geoms and functions to be used together with packages `ggplot2` and `photobiology` for plotting radiation-related spectra and annotating the plots with quantities derived from spectral data. Unweighted derived quantities represent summaries of a given range of wavelengths, which can be expressed either in energy or photon based units. Derived _biologically effective_ quantities are used to quantify the effect of radiation on different organisms or processes within organisms. These effects can range from damage to perception of informational light signals. Peaks and valleys can also be annotated.
+Package `ggspectra` is a set of stats, geoms and functions to be used together with packages `ggplot2` and `photobiology` for plotting radiation-related spectra and annotating the plots with quantities derived from spectral data. Unweighted derived quantities represent summaries of a given range of wavelengths, which can be expressed either in energy or photon based units. Derived _biologically effective_ quantities are used to quantify the effect of radiation on different organisms or processes within organisms. These effects can range from damage to perception of informational light signals. Peaks and valleys present in spectral data can also be annotated.
 
 This package uses the new functionality added to `ggplot2` at version 2.0.0 and is not compatible with earlier versions.
 

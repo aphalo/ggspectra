@@ -1,18 +1,43 @@
-#' @details
-#' Pakage \code{ggspectra} is a package with extensions to ggplot2 for plotting
-#' radiation spectra. It is of little use for other types of data as most
-#' functions depend on x aesthetic being mapped to a variable containing
+#' @details Package `ggspectra` provides a set of stats, geoms and methods
+#' extending packages `ggplot2` and `photobiology`. They easy the task of
+#' plotting radiation-related spectra and of annotating the resulting plots with
+#' labels and summary quantities derived from the spectral data.
+#'
+#' Plot methods automate in many respects the plotting of spectral data.
+#' 'ggplot2' compatible statistics make the addition of labels or plotting of
+#' subject-area specific summaries possible as well as the addition of labels
+#' and wvaelength-based colour to plots easy. Available summaries are most of
+#' those relevant to photobiology. However, many of the functions in the package
+#' are more generaly useful for plotting UV, VIS and NIR spectra of light
+#' emission, transmittance, reflectance, absorptance, and responses.
+#'
+#' The available summary qantities are both simple statistical summaries and
+#' response-weighted summaries. Simple derived quantities represent summaries of a
+#' given range of wavelengths, and can be expressed either in energy or photon
+#' based units. Derived _biologically effective_ quantities are used to quantify
+#' the effect of radiation on different organisms or processes within organisms.
+#' These effects can range from damage to perception of informational light
+#' signals. Additional features of spectra may be important and worthwhile
+#' annotating in plots. Of these, local maxima (peaks) and minima (valleys)
+#' present in spectral data can also be annotated with statistics made available
+#' by the 'ggspectra' package.
+#'
+#' Package 'ggspectra' is useful solely for plotting spectral data as most
+#' functions depend on the x aesthetic being mapped to a variable containing
 #' wavelength values expressed in nanometres. It works well together with
 #' some other extensions to package 'ggplot2' such as pacakegs 'ggrepel' and
-#' 'cowplot'. This package is very tightly dependent on package
-#' \code{\link[photobiology]{photobiology}}.
+#' 'cowplot'.
+#'
+#' This package is part of a suite of R packages for photobiological
+#' calculations described at the
+#' [r4photobiology](http://www.r4photobiology.info) web site.
+#'
 #'
 #' @references
 #' \code{ggplot2} web site at \url{http://ggplot2.org/}\cr
 #' \code{ggplot2} source code at \url{https://github.com/hadley/ggplot2}\cr
 #' Function \code{multiplot} from \url{http://www.cookbook-r.com/}
 #'
-#' @author Pedro J. Aphalo
 #'
 #' @import photobiology photobiologyWavebands ggplot2
 #' @importFrom graphics plot

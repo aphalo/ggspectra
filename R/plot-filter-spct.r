@@ -605,7 +605,7 @@ O_plot <- function(spct,
 
 }
 
-#' Plot a filter spectrum, especialization of generic plot function
+#' Plot method for filter spectra.
 #'
 #' This function returns a ggplot object with an annotated plot of a filter_spct
 #' object.
@@ -692,7 +692,7 @@ plot.filter_spct <-
     out.ggplot
   }
 
-#' Plot a reflector spectrum, especialization of generic plot function
+#' Plot method for reflector spectra.
 #'
 #' This function returns a ggplot object with an annotated plot of a
 #' reflector_spct object.
@@ -765,7 +765,7 @@ plot.reflector_spct <-
   }
 
 
-#' Plot an object spectrum, especialization of generic plot function
+#' Plot method for object spectra.
 #'
 #' This function returns a ggplot object with an annotated plot of an
 #' object_spct object.

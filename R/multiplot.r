@@ -22,7 +22,7 @@
 #'
 #' @examples
 #' library(photobiology)
-#' multiplot(plot(sun.spct), plot(yellow_gel.spct), cols = 2)
+#' multiplot(plot(sun.spct), plot(yellow_gel.spct), cols = 1)
 #'
 #' @export
 #'

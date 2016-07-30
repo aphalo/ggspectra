@@ -71,8 +71,6 @@
 #' @examples
 #' library(photobiology)
 #' library(ggplot2)
-#' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
-#'   stat_peaks()
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
 #' ggplot(sun.spct) + geom_line() + stat_peaks()
 #' ggplot(sun.spct) + geom_line() + stat_valleys()

@@ -38,7 +38,8 @@
 #' @examples
 #' library(ggplot2)
 #' library(photobiology)
-#' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_spct()
+#' # ggplot() methods for spectral objects set a default mapping for x and y.
+#' ggplot(sun.spct) + geom_spct()
 #'
 #' @export
 geom_spct <- function(mapping = NULL, data = NULL, stat = "identity",

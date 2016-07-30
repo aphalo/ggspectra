@@ -125,8 +125,7 @@ cps_plot <- function(spct,
 
 }
 
-
-#' Plot an instrument counts spectrum, especialization of generic plot function.
+#' Plot method for spectra expressed as detector counts per second.
 #'
 #' This function returns a ggplot object with an annotated plot of a
 #' response_spct object.

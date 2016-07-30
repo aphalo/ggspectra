@@ -5,3 +5,4 @@ vignettes/figure
 vignettes/*.R
 vignettes/*.html
 man
+inst/web

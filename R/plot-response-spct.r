@@ -1,4 +1,4 @@
-#' Plot a response spectrum.
+#' Plot method for response spectra.
 #'
 #' This function returns a ggplot object with an annotated plot of a
 #' response_spct object.
@@ -383,7 +383,7 @@ q_rsp_plot <- function(spct,
 
 }
 
-#' Plot a response spectrum, especialization of generic plot function.
+#' Plot method for response spectra.
 #'
 #' This function returns a ggplot object with an annotated plot of a
 #' response_spct object.

@@ -1,4 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+inst/web
 not-used
 vignettes/figure
