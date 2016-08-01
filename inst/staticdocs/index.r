@@ -1,7 +1,14 @@
+sd_section("Package overview", "",
+           c(
+             "ggspectra-package"
+             )
+)
+
 sd_section("Geoms",
   "Geoms, short for geometric objects, describe the type of plot you will produce.",
   c(
-    "geom_spct")
+    "geom_spct"
+    )
 )
 
 sd_section("Statistics",
