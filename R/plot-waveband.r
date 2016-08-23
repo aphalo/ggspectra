@@ -20,6 +20,7 @@
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
 #' @param text.size numeric size of text in the plot decorations.
+#' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -57,7 +58,8 @@ plot.waveband <-
                                    default = c("colour.guide", "boxes", "labels")),
            wb.trim = TRUE,
            norm = NULL,
-           text.size = 2.5) {
+           text.size = 2.5,
+           na.rm = TRUE) {
   w.band <- x
   if (!is.waveband(w.band)) {
     return(ggplot())
@@ -110,7 +112,9 @@ plot.waveband <-
   }
   out.ggplot <- plot(spct, w.band=w.band.range, annotations = annotations,
                      wb.trim = wb.trim, norm = norm,
-                     text.size = text.size, ...)
+                     text.size = text.size,
+                     na.rm = na.rm,
+                     ...)
   if ("title" %in% annotations) {
     out.ggplot <- out.ggplot + labs(title = deparse(substitute(x)))
   }

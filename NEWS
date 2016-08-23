@@ -1,3 +1,9 @@
+ggspectra 0.1.9
+===============
+
+Add support for na.rm to all plot() methods setting default to TRUE, and avoid
+triggering spurious warnings from internal code.
+
 ggspectra 0.1.8
 ===============
 

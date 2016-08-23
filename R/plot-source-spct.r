@@ -14,6 +14,7 @@
 #'   for labels
 #' @param annotations a character vector
 #' @param text.size numeric size of text in the plot decorations.
+#' @param na.rm logical.
 #' @param ... other arguments passed to annotate_plot()
 #'
 #' @return a \code{ggplot} object.
@@ -26,6 +27,7 @@ e_plot <- function(spct,
                    label.qty,
                    annotations,
                    text.size,
+                   na.rm,
                    ...) {
   if (!is.source_spct(spct)) {
     stop("e_plot() can only plot source_spct objects.")
@@ -102,7 +104,7 @@ e_plot <- function(spct,
   y.min <- 0
   plot <- ggplot(spct, aes_(~w.length, ~s.e.irrad)) +
     scale_fill_identity() + scale_color_identity()
-  plot <- plot + geom_line()
+  plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.irrad.label)
 
   if (label.qty == "total") {
@@ -120,14 +122,16 @@ e_plot <- function(spct,
                             annotations = annotations,
                             label.qty = label.qty,
                             summary.label = irrad.label,
-                            text.size = text.size)
+                            text.size = text.size,
+                            na.rm = TRUE)
 
   if (is_effective(spct)) {
     plot <- plot +  annotate("text",
                              x = midpoint(spct),
                              y = y.max,
                              label = paste("BSWF:", getBSWFUsed(spct)),
-                             vjust = -0.5, size = rel(3) )
+                             vjust = -0.5, size = rel(3),
+                             na.rm = TRUE)
   }
 
   if (!is.na(exposure.label)) {
@@ -137,7 +141,8 @@ e_plot <- function(spct,
                              label = exposure.label,
                              vjust = -0.5,
                              hjust = 0,
-                             size = rel(3) )
+                             size = rel(3),
+                             na.rm = TRUE)
   }
 
   if (!is.null(annotations) &&
@@ -169,6 +174,7 @@ e_plot <- function(spct,
 #'   for labels
 #' @param annotations a character vector
 #' @param text.size numeric size of text in the plot decorations.
+#' @param na.rm logical.
 #' @param ... other arguments passed to annotate_plot()
 #'
 #' @return a \code{ggplot} object.
@@ -181,6 +187,7 @@ q_plot <- function(spct,
                    label.qty,
                    annotations,
                    text.size,
+                   na.rm,
                    ...) {
   if (!is.source_spct(spct)) {
     stop("q_plot() can only plot source_spct objects.")
@@ -258,7 +265,7 @@ q_plot <- function(spct,
   y.min <- 0
   plot <- ggplot(spct, aes_(~w.length, ~s.q.irrad)) +
     scale_fill_identity() + scale_color_identity()
-  plot <- plot + geom_line()
+  plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.irrad.label)
 
   if (label.qty == "total") {
@@ -276,14 +283,16 @@ q_plot <- function(spct,
                             annotations = annotations,
                             label.qty = label.qty,
                             summary.label = irrad.label,
-                            text.size = text.size)
+                            text.size = text.size,
+                            na.rm = TRUE)
 
   if (is_effective(spct)) {
     plot <- plot +  annotate("text",
                              x = midpoint(spct),
                              y = y.max,
                              label = paste("BSWF:", getBSWFUsed(spct)),
-                             vjust = -0.5, size = rel(3) )
+                             vjust = -0.5, size = rel(3),
+                             na.rm = TRUE)
   }
 
   if (!is.na(exposure.label)) {
@@ -293,7 +302,8 @@ q_plot <- function(spct,
                              label = exposure.label,
                              vjust = -0.5,
                              hjust = 0,
-                             size = rel(3) )
+                             size = rel(3),
+                             na.rm = TRUE)
   }
 
   if (!is.null(annotations) &&
@@ -329,6 +339,7 @@ q_plot <- function(spct,
 #'   for labels
 #' @param annotations a character vector
 #' @param text.size numeric size of text in the plot decorations.
+#' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -356,7 +367,8 @@ plot.source_spct <-
            annotations=getOption("photobiology.plot.annotations",
                                  default = c("boxes", "labels", "summaries",
                                              "colour.guide", "peaks")),
-           text.size = 2.5) {
+           text.size = 2.5,
+           na.rm = TRUE) {
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }
@@ -374,11 +386,13 @@ plot.source_spct <-
       out.ggplot <- q_plot(spct = x, w.band = w.band, range = range,
                            label.qty = label.qty, annotations = annotations,
                            text.size = text.size,
+                           na.rm = na.rm,
                            ...)
     } else if (unit.out == "energy") {
       out.ggplot <- e_plot(spct = x, w.band = w.band, range = range,
                            label.qty = label.qty, annotations = annotations,
                            text.size = text.size,
+                           na.rm = na.rm,
                            ...)
     } else {
       stop("Invalid 'radiation.unit' argument value: '", unit.out, "'")

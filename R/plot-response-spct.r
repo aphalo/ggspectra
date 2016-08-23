@@ -17,6 +17,7 @@
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
 #' @param text.size numeric size of text in the plot decorations.
+#' @param na.rm logical.
 #' @param ... other arguments passed to e_response()
 #'
 #' @return a \code{ggplot} object.
@@ -31,6 +32,7 @@ e_rsp_plot <- function(spct,
                        annotations,
                        norm,
                        text.size,
+                       na.rm,
                        ...) {
   if (!is.response_spct(spct)) {
     stop("e_Rsp_plot() can only plot response_spct objects.")
@@ -154,7 +156,7 @@ e_rsp_plot <- function(spct,
 
   plot <- ggplot(spct, aes_(~w.length, ~s.e.response)) +
     scale_fill_identity() + scale_color_identity()
-  plot <- plot + geom_line()
+  plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.rsp.label)
 
   plot <- plot + decoration(w.band = w.band,
@@ -165,7 +167,8 @@ e_rsp_plot <- function(spct,
                             annotations = annotations,
                             label.qty = label.qty,
                             summary.label = rsp.label,
-                            text.size = text.size)
+                            text.size = text.size,
+                            na.rm = TRUE)
 
   if (!is.na(exposure.label)) {
     plot <- plot +  annotate("text",
@@ -174,7 +177,8 @@ e_rsp_plot <- function(spct,
                              label = exposure.label,
                              vjust = -0.5,
                              hjust = 0,
-                             size = rel(3) )
+                             size = rel(3),
+                             na.rm = TRUE )
   }
 
   if (!is.null(annotations) &&
@@ -210,6 +214,7 @@ e_rsp_plot <- function(spct,
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
 #' @param text.size numeric size of text in the plot decorations.
+#' @param na.rm logical.
 #' @param ... other arguments passed to q_response()
 #'
 #' @return a \code{ggplot} object.
@@ -224,6 +229,7 @@ q_rsp_plot <- function(spct,
                        annotations,
                        norm,
                        text.size,
+                       na.rm,
                        ...) {
   if (!is.response_spct(spct)) {
     stop("q_Rsp_plot() can only plot response_spct objects.")
@@ -347,7 +353,7 @@ q_rsp_plot <- function(spct,
 
   plot <- ggplot(spct, aes_(~w.length, ~s.q.response)) +
     scale_fill_identity() + scale_color_identity()
-  plot <- plot + geom_line()
+  plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.rsp.label)
   plot <- plot + decoration(w.band = w.band,
                             y.max = y.max,
@@ -357,7 +363,8 @@ q_rsp_plot <- function(spct,
                             annotations = annotations,
                             label.qty = label.qty,
                             summary.label = rsp.label,
-                            text.size = text.size)
+                            text.size = text.size,
+                            na.rm = TRUE)
 
   if (!is.na(exposure.label)) {
     plot <- plot +  annotate("text",
@@ -366,7 +373,8 @@ q_rsp_plot <- function(spct,
                              label = exposure.label,
                              vjust = -0.5,
                              hjust = 0,
-                             size = rel(3) )
+                             size = rel(3),
+                             na.rm = TRUE )
   }
 
   if (!is.null(annotations) &&
@@ -405,6 +413,7 @@ q_rsp_plot <- function(spct,
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
 #' @param text.size numeric size of text in the plot decorations.
+#' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -432,7 +441,8 @@ plot.response_spct <-
                                  default = c("boxes", "labels", "summaries",
                                              "colour.guide", "peaks")),
            norm = "max",
-           text.size = 2.5) {
+           text.size = 2.5,
+           na.rm = TRUE) {
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }
@@ -451,12 +461,14 @@ plot.response_spct <-
                                pc.out=pc.out, label.qty=label.qty,
                                annotations=annotations, norm = norm,
                                text.size = text.size,
+                               na.rm = na.rm,
                                ...)
     } else if (unit.out=="energy") {
       out.ggplot <- e_rsp_plot(spct=x, w.band=w.band, range=range,
                                pc.out=pc.out, label.qty=label.qty,
                                annotations=annotations, norm = norm,
                                text.size = text.size,
+                               na.rm = na.rm,
                                ...)
     } else {
       stop("Invalid 'unit.out' argument value: '", unit.out, "'")

@@ -10,6 +10,7 @@
 #' @param label.qty character
 #' @param summary.label character
 #' @param text.size numeric
+#' @param na.rm logical
 #'
 #' @keywords internal
 #'
@@ -28,7 +29,8 @@ decoration <- function(w.band,
                        summary.label,
                        unit.out = NULL,
                        time.unit = NULL,
-                       text.size = 2.5) {
+                       text.size = 2.5,
+                       na.rm = TRUE) {
   if (grepl(".pc", label.qty, fixed = TRUE)) {
     label.mult = 100
     label.qty <- sub(".pc", "", label.qty, fixed = TRUE)
@@ -45,27 +47,32 @@ decoration <- function(w.band,
                             contribution = stat_wb_contribution,
                             relative = stat_wb_relative,
                             none = function(...) {NA_real_},
-                            function(...) {NA_real_})
+                            function(...) {NA_real_},
+                            na.rm = na.rm)
   z <- list()
   if ("peaks" %in% annotations) {
     z <- c(z, stat_peaks(span = 31, label.fmt = "%.4g",
                          ignore_threshold = 0.02, color = "red",
-                         geom = "text", vjust = -0.5, size = text.size))
+                         geom = "text", vjust = -0.5, size = text.size,
+                         na.rm = na.rm))
   }
   if ("valleys" %in% annotations) {
     z <- c(z, stat_valleys(span = 31, label.fmt = "%.4g",
                            ignore_threshold = 0.02, color = "blue",
-                           geom = "text", vjust = +1.2, size = text.size))
+                           geom = "text", vjust = +1.2, size = text.size,
+                           na.rm = na.rm))
   }
   if ("colour.guide" %in% annotations) {
-    z <- c(z, stat_wl_strip(ymax = y.max * 1.26, ymin = y.max * 1.22))
+    z <- c(z, stat_wl_strip(ymax = y.max * 1.26, ymin = y.max * 1.22,
+                            na.rm = na.rm))
   }
   if ("boxes" %in% annotations) {
     z <- c(z, stat_wl_strip(w.band = w.band,
                             ymax = y.max * 1.20,
                             ymin = y.max * 1.08,
                             color = "white",
-                            linetype = "solid"
+                            linetype = "solid",
+                            na.rm = na.rm
     ))
     label.color <- "white"
     pos.shift <- 0.00
@@ -75,7 +82,8 @@ decoration <- function(w.band,
                             ymax = y.max * 1.10,
                             ymin = y.max * 1.07,
                             color = "white",
-                            linetype = "solid"
+                            linetype = "solid",
+                            na.rm = na.rm
     ))
     label.color <- "black"
     pos.shift <- 0.01
@@ -98,7 +106,8 @@ decoration <- function(w.band,
                                   ypos.fixed = y.max * 1.143 + pos.shift,
                                   color = label.color,
                                   mapping = mapping,
-                                  size = text.size))
+                                  size = text.size,
+                                  na.rm = na.rm))
       } else {
         z <- c(z, stat_wb_summary(geom = "text",
                                   w.band = w.band,
@@ -106,18 +115,21 @@ decoration <- function(w.band,
                                   ypos.fixed = y.max * 1.143 + pos.shift,
                                   color = label.color,
                                   mapping = mapping,
-                                  size = text.size))
+                                  size = text.size,
+                                  na.rm = na.rm))
       }
       z <- c(z,
              annotate("text",
                       x = x.min, y = y.max * 1.09 + 0.5 * y.max * 0.085,
                       size = rel(2), vjust = -0.3, hjust = 0.5, angle = 90,
-                      label = summary.label, parse = TRUE))
+                      label = summary.label, parse = TRUE,
+                      na.rm = na.rm))
     } else {
       z <- c(z, stat_wb_label(w.band = w.band,
                               ypos.fixed = y.max * 1.143 + pos.shift,
                               color = label.color,
-                              size = text.size))
+                              size = text.size,
+                              na.rm = na.rm))
     }
   }
   z

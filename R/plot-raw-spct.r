@@ -19,6 +19,7 @@
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
 #' @param text.size numeric size of text in the plot decorations.
+#' @param na.rm logical.
 #' @param ... other arguments
 #'
 #' @return a \code{ggplot} object.
@@ -33,6 +34,7 @@ raw_plot <- function(spct,
                      annotations,
                      norm,
                      text.size,
+                     na.rm,
                      ...) {
   if (!is.raw_spct(spct)) {
     stop("raw_plot() can only plot response_spct objects.")
@@ -99,7 +101,7 @@ raw_plot <- function(spct,
   y.min <- 0
   plot <- ggplot(spct) + aes_(linetype = ~scan) +
     scale_fill_identity() + scale_color_identity()
-  plot <- plot + geom_line()
+  plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.counts.label)
 
   plot <- plot + decoration(w.band = w.band,
@@ -110,7 +112,8 @@ raw_plot <- function(spct,
                             annotations = annotations,
                             label.qty = label.qty,
                             summary.label = counts.label,
-                            text.size = text.size)
+                            text.size = text.size,
+                            na.rm = TRUE)
 
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels",
@@ -148,6 +151,7 @@ raw_plot <- function(spct,
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #' for normalization at the wavelength of highest peak.
 #' @param text.size numeric size of text in the plot decorations.
+#' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -169,7 +173,8 @@ plot.raw_spct <-
                                  default = c("boxes", "labels",
                                              "colour.guide", "peaks")),
            norm = NULL,
-           text.size = 2.5) {
+           text.size = 2.5,
+           na.rm = TRUE) {
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }
@@ -188,6 +193,7 @@ plot.raw_spct <-
                            pc.out = pc.out,
                            annotations = annotations, norm = norm,
                            text.size = text.size,
+                           na.rm = na.rm,
                            ...)
     if ("title" %in% annotations) {
       out.ggplot <- out.ggplot + labs(title = deparse(substitute(x)))

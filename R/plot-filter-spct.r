@@ -15,6 +15,7 @@
 #'   for labels
 #' @param annotations a character vector
 #' @param text.size numeric size of text in the plot decorations.
+#' @param na.rm logical.
 #' @param ... other arguments passed to transmittance()
 #'
 #' @return a \code{ggplot} object.
@@ -28,6 +29,7 @@ Afr_plot <- function(spct,
                      label.qty,
                      annotations,
                      text.size,
+                     na.rm,
                      ...) {
   if (!is.filter_spct(spct)) {
     stop("Afr_plot() can only plot filter_spct objects.")
@@ -113,7 +115,7 @@ Afr_plot <- function(spct,
 
   plot <- ggplot(spct, aes_(~w.length, ~Afr)) +
     scale_fill_identity() + scale_color_identity()
-  plot <- plot + geom_line()
+  plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.Afr.label)
 
   plot <- plot + decoration(w.band = w.band,
@@ -125,7 +127,8 @@ Afr_plot <- function(spct,
                             annotations = annotations,
                             label.qty = label.qty,
                             summary.label = Afr.label,
-                            text.size = text.size)
+                            text.size = text.size,
+                            na.rm = TRUE)
 
   if (!is.null(annotations) &&
       length(intersect(c("labels", "summaries", "colour.guide"), annotations)) > 0L) {
@@ -164,6 +167,7 @@ Afr_plot <- function(spct,
 #'   for labels
 #' @param annotations a character vector
 #' @param text.size numeric size of text in the plot decorations.
+#' @param na.rm logical.
 #' @param ... other arguments passed to transmittance()
 #'
 #' @return a \code{ggplot} object.
@@ -177,6 +181,7 @@ T_plot <- function(spct,
                    label.qty,
                    annotations,
                    text.size,
+                   na.rm,
                    ...) {
   if (!is.filter_spct(spct)) {
     stop("T_plot() can only plot filter_spct objects.")
@@ -240,7 +245,7 @@ T_plot <- function(spct,
 
   plot <- ggplot(spct, aes_(~w.length, ~Tfr)) +
     scale_fill_identity() + scale_color_identity()
-  plot <- plot + geom_line()
+  plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.Tfr.label)
 
   plot <- plot + decoration(w.band = w.band,
@@ -252,7 +257,8 @@ T_plot <- function(spct,
                             annotations = annotations,
                             label.qty = label.qty,
                             summary.label = Tfr.label,
-                            text.size = text.size)
+                            text.size = text.size,
+                            na.rm = TRUE)
 
   if (!is.null(annotations) &&
       length(intersect(c("labels", "summaries", "colour.guide"), annotations)) > 0L) {
@@ -290,6 +296,7 @@ T_plot <- function(spct,
 #'   for labels
 #' @param annotations a character vector
 #' @param text.size numeric size of text in the plot decorations.
+#' @param na.rm logical.
 #' @param ... other arguments passed to absorbance()
 #'
 #' @return a \code{ggplot} object.
@@ -302,6 +309,7 @@ A_plot <- function(spct,
                    label.qty,
                    annotations,
                    text.size,
+                   na.rm,
                    ...) {
   if (!is.filter_spct(spct)) {
     stop("A_plot() can only plot filter_spct objects.")
@@ -347,7 +355,7 @@ A_plot <- function(spct,
   y.min <- 0
   plot <- ggplot(spct, aes_(~w.length, ~A)) +
     scale_fill_identity() + scale_color_identity()
-  plot <- plot + geom_line()
+  plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.A.label)
 
   plot <- plot + decoration(w.band = w.band,
@@ -358,7 +366,8 @@ A_plot <- function(spct,
                             annotations = annotations,
                             label.qty = label.qty,
                             summary.label = A.label,
-                            text.size = text.size)
+                            text.size = text.size,
+                            na.rm = TRUE)
 
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide"), annotations)) > 0L) {
@@ -390,6 +399,7 @@ A_plot <- function(spct,
 #'   for labels
 #' @param annotations a character vector
 #' @param text.size numeric size of text in the plot decorations.
+#' @param na.rm logical.
 #' @param ... other arguments passed to reflectance()
 #'
 #' @return a \code{ggplot} object.
@@ -403,6 +413,7 @@ R_plot <- function(spct,
                    label.qty,
                    annotations,
                    text.size,
+                   na.rm,
                    ...) {
   if (!is.reflector_spct(spct)) {
     stop("R_plot() can only plot reflector_spct objects.")
@@ -464,7 +475,7 @@ R_plot <- function(spct,
   y.min <- 0
   plot <- ggplot(spct, aes_(~w.length, ~Rfr)) +
     scale_fill_identity() + scale_color_identity()
-  plot <- plot + geom_line()
+  plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.Rfr.label)
 
   plot <- plot + decoration(w.band = w.band,
@@ -475,7 +486,8 @@ R_plot <- function(spct,
                             annotations = annotations,
                             label.qty = label.qty,
                             summary.label = Rfr.label,
-                            text.size = text.size)
+                            text.size = text.size,
+                            na.rm = TRUE)
 
   if (!is.null(annotations) &&
       length(intersect(c("labels", "summaries", "colour.guide"), annotations)) > 0L) {
@@ -514,6 +526,7 @@ R_plot <- function(spct,
 #' @param annotations a character vector
 #' @param stacked logical
 #' @param text.size numeric size of text in the plot decorations.
+#' @param na.rm logical.
 #' @param ... other arguments passed to reflectance()
 #'
 #' @return a \code{ggplot} object.
@@ -528,6 +541,7 @@ O_plot <- function(spct,
                    annotations,
                    stacked,
                    text.size,
+                   na.rm,
                    ...) {
   if (!is.object_spct(spct)) {
     stop("O_plot() can only plot object_spct objects.")
@@ -557,7 +571,7 @@ O_plot <- function(spct,
     tidyr::gather_(dplyr::select_(spct, "w.length", "Tfr", "Afr", "Rfr"),
                    "variable", "value", c("Tfr", "Afr", "Rfr"))
   setGenericSpct(molten.spct, multiple.wl = 3L * getMultipleWl(spct))
-  plot <- ggplot(molten.spct, aes_(~w.length, ~value)) +
+  plot <- ggplot(molten.spct, aes_(~w.length, ~value), na.rm = na.rm) +
     scale_fill_identity()
   if (stacked) {
     plot <- plot + geom_area(aes_(alpha = ~variable), fill = "black", colour = NA)
@@ -586,7 +600,8 @@ O_plot <- function(spct,
                             annotations = annotations,
                             label.qty = label.qty,
                             summary.label = "",
-                            text.size = text.size)
+                            text.size = text.size,
+                            na.rm = TRUE)
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "colour.guide"), annotations)) > 0L) {
     y.limits <- c(0, y.max * 1.25)
@@ -624,6 +639,7 @@ O_plot <- function(spct,
 #'   for labels
 #' @param annotations a character vector
 #' @param text.size numeric size of text in the plot decorations.
+#' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -652,7 +668,8 @@ plot.filter_spct <-
            annotations = getOption("photobiology.plot.annotations",
                                  default = c("boxes", "labels", "summaries",
                                              "colour.guide", "peaks")),
-           text.size = 2.5) {
+           text.size = 2.5,
+           na.rm = TRUE) {
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }
@@ -671,17 +688,20 @@ plot.filter_spct <-
                            pc.out = pc.out, label.qty = label.qty,
                            annotations = annotations,
                            text.size = text.size,
+                           na.rm = na.rm,
                            ...)
     } else if (plot.qty == "absorbance") {
       out.ggplot <- A_plot(spct = x, w.band = w.band, range = range,
                            label.qty = label.qty, annotations = annotations,
                            text.size = text.size,
+                           na.rm = na.rm,
                            ...)
     } else if (plot.qty == "absorptance") {
       out.ggplot <- Afr_plot(spct = x, w.band = w.band, range = range,
                              pc.out = pc.out, label.qty = label.qty,
                              annotations = annotations,
                              text.size = text.size,
+                             na.rm = na.rm,
                              ...)
     } else {
       stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
@@ -711,6 +731,7 @@ plot.filter_spct <-
 #'   for labels
 #' @param annotations a character vector
 #' @param text.size numeric size of text in the plot decorations.
+#' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -736,7 +757,8 @@ plot.reflector_spct <-
            annotations = getOption("photobiology.plot.annotations",
                                  default = c("boxes", "labels", "summaries",
                                              "colour.guide", "peaks")),
-           text.size = 2.5) {
+           text.size = 2.5,
+           na.rm = TRUE) {
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }
@@ -754,6 +776,7 @@ plot.reflector_spct <-
                            pc.out = pc.out, label.qty = label.qty,
                            annotations = annotations,
                            text.size = text.size,
+                           na.rm = na.rm,
                            ...)
     } else {
       stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
@@ -786,6 +809,7 @@ plot.reflector_spct <-
 #' @param annotations a character vector
 #' @param stacked logical
 #' @param text.size numeric size of text in the plot decorations.
+#' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -814,7 +838,8 @@ plot.object_spct <-
                                  default = c("boxes", "labels",
                                              "colour.guide", "peaks")),
            stacked = TRUE,
-           text.size = 2.5) {
+           text.size = 2.5,
+           na.rm = TRUE) {
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }
@@ -831,19 +856,23 @@ plot.object_spct <-
     out.ggplot <- O_plot(spct = x, w.band = w.band,  range = range,
                          pc.out = pc.out, label.qty = label.qty,
                          annotations = annotations, stacked = stacked,
-                         text.size = text.size, ...)
+                         text.size = text.size,
+                         na.rm = na.rm,
+                         ...)
     } else if (plot.qty == "transmittance") {
       x <- as.filter_spct(x)
       out.ggplot <- T_plot(spct = x, w.band = w.band, range = range,
                            pc.out = pc.out, label.qty = label.qty,
                            annotations = annotations,
                            text.size = text.size,
+                           na.rm = na.rm,
                            ...)
     } else if (plot.qty == "absorbance") {
       x <- as.filter_spct(x)
       out.ggplot <- A_plot(spct = x, w.band = w.band, range = range,
                            label.qty = label.qty, annotations = annotations,
                            text.size = text.size,
+                           na.rm = na.rm,
                            ...)
     } else if (plot.qty == "absorptance") {
       x <- as.filter_spct(x)
@@ -851,6 +880,7 @@ plot.object_spct <-
                              pc.out = pc.out, label.qty = label.qty,
                              annotations = annotations,
                              text.size = text.size,
+                             na.rm = na.rm,
                              ...)
     } else if (plot.qty == "reflectance") {
       x <- as.reflector_spct(x)
@@ -858,6 +888,7 @@ plot.object_spct <-
                            pc.out = pc.out, label.qty = label.qty,
                            annotations = annotations,
                            text.size = text.size,
+                           na.rm = na.rm,
                            ...)
     } else {
       stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
