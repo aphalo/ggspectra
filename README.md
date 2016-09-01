@@ -1,4 +1,4 @@
-# README for ggspectra #
+# R package ggspectra #
 
 [![](http://www.r-pkg.org/badges/version/ggspectra)](https://cran.r-project.org/package=ggspectra) [![](http://cranlogs.r-pkg.org/badges/ggspectra)](http://cran.rstudio.com/web/packages/ggspectra/index.html) [![](http://cranlogs.r-pkg.org/badges/grand-total/ggspectra)](http://cran.rstudio.com/web/packages/ggspectra/index.html)
 
