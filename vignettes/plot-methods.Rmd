@@ -169,7 +169,7 @@ plot(sun.spct) + geom_spct(fill = color(sun.spct)) +
             fill = color(yellow_gel.spct * sun.spct))
 ```
 
-In the examples above the `source_spct` object `sun.spct` was used. The `plot()` methods for other spectral classes have slight differentces. We show some examples for `filter_spct` objects.
+In the examples above the `source_spct` object `sun.spct` was used. The `plot()` methods for other spectral classes have slight differences. We show some examples for `filter_spct` objects.
 
 ```{r}
 plot(yellow_gel.spct)
