@@ -664,7 +664,7 @@ plot.filter_spct <-
            range = NULL,
            plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
            pc.out = FALSE,
-           label.qty = "average",
+           label.qty = NULL,
            annotations = getOption("photobiology.plot.annotations",
                                  default = c("boxes", "labels", "summaries",
                                              "colour.guide", "peaks")),
@@ -672,6 +672,13 @@ plot.filter_spct <-
            na.rm = TRUE) {
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
+    }
+    if (is.null(label.qty)) {
+      if (is_normalized(x) || is_scaled(x)) {
+        label.qty = "contribution"
+      } else {
+        label.qty = "average"
+      }
     }
     if (is.null(w.band)) {
       if (is.null(range)) {
@@ -753,7 +760,7 @@ plot.reflector_spct <-
            range = NULL,
            plot.qty = getOption("photobiology.reflector.qty", default = "reflectance"),
            pc.out = FALSE,
-           label.qty = "average",
+           label.qty = NULL,
            annotations = getOption("photobiology.plot.annotations",
                                  default = c("boxes", "labels", "summaries",
                                              "colour.guide", "peaks")),
@@ -761,6 +768,13 @@ plot.reflector_spct <-
            na.rm = TRUE) {
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
+    }
+    if (is.null(label.qty)) {
+      if (is_normalized(x) || is_scaled(x)) {
+        label.qty = "contribution"
+      } else {
+        label.qty = "average"
+      }
     }
     if (is.null(w.band)) {
       if (is.null(range)) {
@@ -833,7 +847,7 @@ plot.object_spct <-
            range = NULL,
            plot.qty = "all",
            pc.out = FALSE,
-           label.qty = "average",
+           label.qty = NULL,
            annotations=getOption("photobiology.plot.annotations",
                                  default = c("boxes", "labels",
                                              "colour.guide", "peaks")),
@@ -842,6 +856,13 @@ plot.object_spct <-
            na.rm = TRUE) {
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
+    }
+    if (is.null(label.qty)) {
+      if (is_normalized(x) || is_scaled(x)) {
+        label.qty = "contribution"
+      } else {
+        label.qty = "average"
+      }
     }
     if (is.null(w.band)) {
       if (is.null(range)) {

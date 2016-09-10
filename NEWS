@@ -3,6 +3,10 @@ ggspectra 0.1.9
 
 Add support for na.rm to all plot() methods setting default to TRUE, and avoid
 triggering spurious warnings from internal code.
+Make default for parameter 'label.qty' in plot methods dependent on whether
+data are expressed in absolute units or have been rescaled or normalized.
+Move from the 'User Guide' the sections on plot() methods creating a new
+vignette titled 'Plot Methods'.
 
 ggspectra 0.1.8
 ===============

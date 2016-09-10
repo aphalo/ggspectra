@@ -363,7 +363,7 @@ plot.source_spct <-
                             default = list(UVC(), UVB(), UVA(), PAR())),
            range=NULL,
            unit.out=getOption("photobiology.radiation.unit", default = "energy"),
-           label.qty = "total",
+           label.qty = NULL,
            annotations=getOption("photobiology.plot.annotations",
                                  default = c("boxes", "labels", "summaries",
                                              "colour.guide", "peaks")),
@@ -371,6 +371,13 @@ plot.source_spct <-
            na.rm = TRUE) {
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
+    }
+    if (is.null(label.qty)) {
+      if (is_normalized(x) || is_scaled(x)) {
+        label.qty = "contribution"
+      } else {
+        label.qty = "total"
+      }
     }
     if (is.null(w.band)) {
       if (is.null(range)) {

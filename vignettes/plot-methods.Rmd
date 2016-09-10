@@ -1,0 +1,266 @@
+---
+title: "`ggspectra` `r packageVersion('ggspectra')`<br>Plot Methods"
+author: "Pedro J. Aphalo"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Plot Methods}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction
+
+Package `ggspectra` extends `ggplot2` with stats, geoms and annotations suitable for light spectra. It also defines `ggplot()` and  `plot()` methods specialized for the classes defined in package `photobiology` for storing different types of spectral data. This vignette describes the use of these plot methods.
+
+Although the package uses internally `ggplot2`, `photobiology` and `photobiologyWavebands` it does not re-export these packages, which need to loaded if used.
+
+```{r}
+library(ggplot2)
+library(photobiology)
+library(photobiologyWavebands)
+library(ggspectra)
+```
+
+```{r setup, include = FALSE, eval = FALSE}
+library(svglite)
+knitr::opts_chunk$set(
+  dev = "svglite",
+  fig.ext = ".svg"
+)
+```
+
+```{r, include=FALSE, echo=FALSE}
+library(knitr)
+opts_chunk$set(fig.path = 'figure/pos-', fig.align = 'center', fig.show = 'hold',
+               fig.width = 7, fig.height = 4)
+options(warnPartialMatchArgs = FALSE)
+```
+
+We bind two spectra into an object to be used later to demonstrate grouping.
+
+```{r}
+two_suns.spct <- rbindspct(list(sun1 = sun.spct, sun2 = sun.spct * 2))
+```
+
+We change the default theme.
+
+```{r}
+theme_set(theme_bw())
+```
+
+## Plotting spectra
+
+The most automatic way of plotting spectral data stored in one of the classes defined in package `photobiology` is to use the `plot()`methods. These go much further than the `plot()` method defined in base-R for numeric data, as these classes store metadata that allows the automatic construction of axis labels as quantities and units are well defined.
+
+Here we use the same example `source_spct` object from package `photobiology` used in the User Guide. In contrast to the examples in the User Guide, here we obtain with a very simple statement a complete annotated plot of the solar spectrum at ground level.
+
+```{r}
+plot(sun.spct)
+```
+
+Although the defaults provide a useful plot, the `plot()` methods accepts arguments for several parameters that allow to tweak the looks and contents of the plots without explicit manipulation of the spectral data.
+
+This first example, shows means instead of integrals in the labels. Note that the units and quantity labels for the waveband summaries have also changed.
+
+```{r}
+plot(sun.spct, label.qty = "mean")
+```
+
+Two `label.qty` values need explanation. The first one, `"relative"` displays in labels the relative contribution of the integral of each waveband, to the sum of the integrals of all wavebands. The second one, `"contribution"` displays in labels the integral of each waveband divided by the integral of the whole spectrum. Consequently, this second option should be interpreted with caution, as the spectral data is unlikely in many cases to include the whole emission or absorption spectrum of a source.
+
+```{r}
+plot(sun.spct, label.qty = "contribution")
+```
+
+```{r}
+plot(sun.spct, label.qty = "relative")
+```
+
+```{r}
+plot(sun.spct, label.qty = "mean", unit.out = "photon")
+```
+
+```{r}
+plot(sun.spct, label.qty = "relative.pc")
+```
+
+We can change the basis of expression of spectral irradiance and irradiance from `"energy"` to `"photon"`. Be aware that by design, all values, summaries and spectral data will always use the same base of expression.
+
+```{r}
+plot(sun.spct, unit.out = "photon")
+```
+
+Which _annotations_ are included can be also controlled through parameter `annotations`.
+
+```{r}
+plot(sun.spct, 
+     annotations = c("segments", "labels", "summaries", "color.guide"))
+```
+
+```{r}
+plot(sun.spct, 
+     annotations = NULL)
+```
+
+```{r}
+plot(sun.spct, annotations = c("segments", "labels", "color.guide"))
+```
+
+The size of the font used for the annotations is controlled by argument `text.size`.
+
+```{r}
+plot(sun.spct, 
+     annotations = c("segments", "labels", "color.guide"), 
+     text.size = 3.5)
+```
+
+Arguments `range` and `w.band` play very different roles. The first one determines the `range` of wavelengths to include in the data plotted, which is slightly different to the effect of `ggplot2::xlim()` as `range` is used to _trim_ the spectral data __before__ passing it to `ggplot`, using interpolation when needed (see `photobiology::trim_wl()`). The second one, `w.band` is only used for the _annotations_ and decorations. It should be however noted, that a `waveband` object is a valid argument for both `range` and `w.band`.
+
+```{r}
+plot(sun.spct, range = VIS())
+```
+
+```{r}
+plot(sun.spct, w.band = PAR())
+```
+
+```{r}
+plot(sun.spct, w.band = CIE())
+```
+
+```{r}
+plot(sun.spct, w.band = NULL)
+```
+
+```{r}
+plot(sun.spct, w.band = NULL, range = c(400,700))
+```
+
+```{r}
+plot(sun.spct, w.band = NULL, range = PAR())
+```
+
+```{r}
+plot(sun.spct, w.band = UVB(), range = c(400,700))
+```
+
+The time unit is also stored in the metadata, as demonstrated here. The units in axis labels have changed to the units used in the spectral data.
+
+```{r}
+plot(sun.daily.spct)
+```
+
+Even though the `plot()` methods can return a finished plot, the returned object is a `ggplot` object and can be built upon by adding additional elements like _facets_, _aesthetics_ and even additional _layers_.
+
+```{r}
+plot(two_suns.spct, label.qty = "mean") + facet_wrap(~spct.idx)
+```
+
+```{r}
+plot(two_suns.spct) + aes(linetype = spct.idx)
+```
+
+Here we demonstrate something that may look like a bug, but is not. The annotations are based only on the data supplied as argument to `plot()` (or in other cases `ggplot()`) because these are the only data visible in all _layers_. The `data` argument in `geom_spct()` only affects the data seen by this _geom_. This way of building a plot is very different than when using _grouping_ within a single data set, and is best avoided in normal situations.
+
+```{r}
+plot(sun.spct) + geom_spct(fill = color(sun.spct)) + 
+  geom_spct(data = yellow_gel.spct * sun.spct, color = "black", 
+            fill = color(yellow_gel.spct * sun.spct))
+```
+
+In the examples above the `source_spct` object `sun.spct` was used. The `plot()` methods for other spectral classes have slight differentces. We show some examples for `filter_spct` objects.
+
+```{r}
+plot(yellow_gel.spct)
+```
+
+By default transmittance, reflectance and absorptance are expressed as fractions of one, as in the plot above, but optionally percents can be plotted.
+
+```{r}
+plot(yellow_gel.spct, pc.out = TRUE)
+```
+
+In many cases it is possible to convert on-the-fly the quantity plotted.
+
+```{r}
+plot(yellow_gel.spct, plot.qty = "absorbance")
+```
+
+We add a _guessed_ spectral reflectance to the data object to allow the estimation of absorptance.
+
+```{r}
+yellow_gel.spct$Rfr <- 1 - max(yellow_gel.spct$Tfr)
+plot(yellow_gel.spct, plot.qty = "absorptance")
+```
+
+If one really needs to, one can add a suitable _stat_ using 'local' data. As this is just a demonstration, I will avoid adding all the additional arguments needed to make the annotations of peaks match those produced by `plot()`.
+
+```{r}
+plot(sun.spct) + geom_spct(fill = color(sun.spct)) + 
+  geom_spct(data = yellow_gel.spct * sun.spct, color = "black", 
+            fill = color(yellow_gel.spct * sun.spct)) +
+  stat_peaks(data = yellow_gel.spct * sun.spct, color = "yellow", 
+             ignore_threshold = 0.1, span = 21)
+```
+
+As with any `ggplot` object, the 'looks' of the returned object depends on both the local and global `ggplot` _theme_.
+
+```{r}
+theme_set(theme_bw(8))
+plot(yellow_gel.spct, annotations = "colour.guide")
+theme_set(theme_minimal())
+```
+
+## Ploting collections of spectra
+
+```{r}
+two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct * 2))
+```
+
+Plot as separate plots. This approach is specially useful with heterogeneous generic_mspct objects, although it works with any collection of spectra.
+
+```{r, fig.width = 7, fig.height = 8}
+multiplot(plotlist = mslply(two_suns.mspct, plot))
+```
+
+Plot with one panel per spectrum by first converting the collection-of-spectra
+into a spectrum object.
+
+```{r, fig.width = 7, fig.height = 8}
+plot(rbindspct(two_suns.mspct)) + facet_wrap(~spct.idx, ncol = 1)
+```
+
+Plot using grouping with tweaking of annotations by first converting the collection-of-spectra into a spectrum object.
+
+```{r}
+plot(rbindspct(two_suns.mspct), 
+     annotations = c("color.guide", "labels", "boxes", "peaks")) + 
+  aes(linetype = spct.idx)
+```
+
+Plot using "lower-level" functions. See the 'User Guide' for additional details.
+
+```{r}
+ggplot(rbindspct(two_suns.mspct)) + 
+  aes(linetype = spct.idx) +
+  wl_guide(ymax = -0.05) +
+  geom_line()
+```
+
+## Ploting wavebands
+
+A `plot()` method for `waveband` objects is also provided.
+
+```{r}
+plot(VIS())
+```
+
+```{r}
+plot(CIE(), range = CIE())
+```
+
+```{r}
+plot(DNA_N(), range = c(270, 420))
+```
+

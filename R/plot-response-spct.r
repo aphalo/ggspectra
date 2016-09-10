@@ -431,20 +431,27 @@ q_rsp_plot <- function(spct,
 #'
 plot.response_spct <-
   function(x, ...,
-           w.band=getOption("photobiology.plot.bands",
-                            default=list(UVC(), UVB(), UVA(), PAR())),
-           range=NULL,
-           unit.out=getOption("photobiology.radiation.unit", default="energy"),
-           pc.out=FALSE,
-           label.qty="total",
-           annotations=getOption("photobiology.plot.annotations",
-                                 default = c("boxes", "labels", "summaries",
-                                             "colour.guide", "peaks")),
+           w.band = getOption("photobiology.plot.bands",
+                              default = list(UVC(), UVB(), UVA(), PAR())),
+           range = NULL,
+           unit.out = getOption("photobiology.radiation.unit", default="energy"),
+           pc.out = FALSE,
+           label.qty = NULL,
+           annotations = getOption("photobiology.plot.annotations",
+                                   default = c("boxes", "labels", "summaries",
+                                               "colour.guide", "peaks")),
            norm = "max",
            text.size = 2.5,
            na.rm = TRUE) {
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
+    }
+    if (is.null(label.qty)) {
+      if (is_normalized(x) || is_scaled(x)) {
+        label.qty = "contribution"
+      } else {
+        label.qty = "total"
+      }
     }
     if (is.null(w.band)) {
       if (is.null(range)) {
