@@ -570,17 +570,20 @@ O_plot <- function(spct,
   molten.spct <-
     tidyr::gather_(dplyr::select_(spct, "w.length", "Tfr", "Afr", "Rfr"),
                    "variable", "value", c("Tfr", "Afr", "Rfr"))
+  molten.spct[["variable"]] <-
+    factor(molten.spct[["variable"]], levels = c("Tfr", "Afr", "Rfr"))
   setGenericSpct(molten.spct, multiple.wl = 3L * getMultipleWl(spct))
   plot <- ggplot(molten.spct, aes_(~w.length, ~value), na.rm = na.rm) +
     scale_fill_identity()
   if (stacked) {
     plot <- plot + geom_area(aes_(alpha = ~variable), fill = "black", colour = NA)
-    plot <- plot + scale_alpha_discrete(range = c(0.55, 0.25),
-                                        breaks = c("Rfr", "Afr", "Tfr"),
-                                        labels = c(Tfr = expression(T(lambda)),
-                                                   Afr = expression(A(lambda)),
-                                                   Rfr = expression(R(lambda))),
-                                        guide = guide_legend(title = NULL))
+    plot <- plot + scale_alpha_manual(values = c(Tfr = 0.4,
+                                                 Rfr = 0.25,
+                                                 Afr = 0.55),
+                                      labels = c(Tfr = expression(T(lambda)),
+                                                 Afr = expression(A(lambda)),
+                                                 Rfr = expression(R(lambda))),
+                                      guide = guide_legend(title = NULL))
   } else {
     plot <- plot + geom_line(aes_(colour = ~variable))
     plot <- plot + scale_colour_hue(labels = c(Tfr = expression(T(lambda)),
