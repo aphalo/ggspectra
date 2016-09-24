@@ -570,8 +570,14 @@ O_plot <- function(spct,
   molten.spct <-
     tidyr::gather_(dplyr::select_(spct, "w.length", "Tfr", "Afr", "Rfr"),
                    "variable", "value", c("Tfr", "Afr", "Rfr"))
+  stack.levels <- c("Tfr", "Afr", "Rfr")
+  if (utils::compareVersion(
+    asNamespace("ggplot2")$`.__NAMESPACE__.`$spec[["version"]],
+    "2.1.0") > 0) {
+    rev(stack.levels)
+  }
   molten.spct[["variable"]] <-
-    factor(molten.spct[["variable"]], levels = c("Tfr", "Afr", "Rfr"))
+    factor(molten.spct[["variable"]], levels = stack.levels)
   setGenericSpct(molten.spct, multiple.wl = 3L * getMultipleWl(spct))
   plot <- ggplot(molten.spct, aes_(~w.length, ~value), na.rm = na.rm) +
     scale_fill_identity()
