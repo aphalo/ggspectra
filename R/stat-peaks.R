@@ -131,7 +131,7 @@ StatPeaks <-
                                             label.fmt,
                                             x.label.fmt,
                                             y.label.fmt) {
-                     force(data)
+#                     force(data)
                      if (is.null(span)) {
                        peaks.df <- data[which.max(data$y), , drop = FALSE]
                      } else {
@@ -190,7 +190,7 @@ StatValleys <-
                                             label.fmt,
                                             x.label.fmt,
                                             y.label.fmt) {
-                     force(data)
+#                     force(data)
                      if (is.null(span)) {
                        valleys.df <- data[which.min(data$y), , drop = FALSE]
                      } else {

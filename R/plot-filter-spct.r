@@ -574,7 +574,7 @@ O_plot <- function(spct,
   if (utils::compareVersion(
     asNamespace("ggplot2")$`.__NAMESPACE__.`$spec[["version"]],
     "2.1.0") > 0) {
-    rev(stack.levels)
+    stack.levels <- rev(stack.levels)
   }
   molten.spct[["variable"]] <-
     factor(molten.spct[["variable"]], levels = stack.levels)
