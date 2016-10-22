@@ -2,7 +2,8 @@ ggspectra 0.1.11
 ================
 
 Fix for compatibility with ggplot2 2.1.9001, the release candidate for ggplot2
-2.2.0. We now import ggplot2 in whole.
+2.2.0. We now import ggplot2 in whole. This does not seem to help with
+compatibility, but is anyway a good idea.
 
 ggspectra 0.1.10
 ================
