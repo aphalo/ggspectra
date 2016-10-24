@@ -2,7 +2,7 @@ Package: ggspectra
 Type: Package
 Title: Extensions to 'ggplot2' for Radiation Spectra
 Version: 0.1.11
-Date: 2016-10-08
+Date: 2016-10-24
 Authors@R:
    c(
     person("Pedro J.", "Aphalo", email = "pedro.aphalo@helsinki.fi", role = c("aut", "cre")),
@@ -30,6 +30,7 @@ Imports:
     tidyr (>= 0.4.1),
     reshape2 (>= 1.4.1)
 Suggests:
+    ggrepel (>= 0.6.3),
     knitr (>= 1.14),
     rmarkdown (>= 1.0)
 URL: http://www.r4photobiology.info,

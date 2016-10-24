@@ -1,9 +1,11 @@
 ggspectra 0.1.11
 ================
 
-Fix for compatibility with ggplot2 2.1.9001, the release candidate for ggplot2
-2.2.0. We now import ggplot2 in whole. This does not seem to help with
-compatibility, but is anyway a good idea.
+Import ggplot2 in whole as only the most basic use of plot methods would not
+require user access to 'ggplot2'.
+Add stat_label_peaks() and stat_label_valleys() which are designed to fully
+take advantage of 'geom_text_repel()' and 'geom_label_repel()' as revised
+in package 'ggrepel (>= 0.6.3).
 
 ggspectra 0.1.10
 ================
