@@ -40,7 +40,10 @@ cps_plot <- function(spct,
     stop("cps_plot() can only plot response_spct objects.")
   }
   if (!is.null(range)) {
-    trim_spct(spct, range = range, byref = TRUE)
+    trim_wl(spct, range = range, byref = TRUE)
+  }
+  if (!is.null(w.band)) {
+    trim_wl(w.band, range = range(spct))
   }
   cps.cols <- names(spct)[grep("^cps", names(spct))]
   #  other.cols <- setdiff(names(x), cps.cols)
@@ -97,8 +100,8 @@ cps_plot <- function(spct,
                          variable.name = "scan",
                          value.name = "cps")
   setCpsSpct(spct, multiple.wl = length(cps.cols))
-  y.max <- max(spct[["cps"]], na.rm = TRUE)
-  y.min <- 0
+  y.max <- max(c(spct[["cps"]], 0), na.rm = TRUE)
+  y.min <- min(c(spct[["cps"]], 0), na.rm = TRUE)
   plot <- ggplot(spct) + aes_(linetype = ~scan) +
     scale_fill_identity() + scale_color_identity()
   plot <- plot + geom_line(na.rm = na.rm)
@@ -118,9 +121,9 @@ cps_plot <- function(spct,
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide"), annotations)) > 0L) {
     y.limits <- c(0, y.max * 1.25)
-    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
+    x.limits <- c(min(spct) - spread(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
-    y.limits <- c(0, 1)
+    y.limits <- c(0, y.max)
     x.limits <- range(spct)
   }
   plot <- plot + scale_y_continuous(limits = y.limits)
@@ -175,13 +178,13 @@ plot.cps_spct <-
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }
-    if (is.null(w.band)) {
+    if (length(w.band) == 0) {
       if (is.null(range)) {
-        w.band <- photobiology::waveband(x)
+        w.band <- waveband(x)
       } else if (is.waveband(range)) {
         w.band <- range
       } else {
-        w.band <-  photobiology::waveband(range, wb.name = "Total")
+        w.band <-  waveband(range, wb.name = "Total")
       }
     }
 

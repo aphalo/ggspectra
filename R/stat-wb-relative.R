@@ -69,7 +69,7 @@
 #'
 stat_wb_relative <- function(mapping = NULL, data = NULL, geom = "rect",
                        w.band = NULL,
-                       integral.fun = photobiology::integrate_xy,
+                       integral.fun = integrate_xy,
                        label.mult = 1,
                        label.fmt = "%.3g",
                        ypos.mult = 1.07,
@@ -104,7 +104,7 @@ StatWbRelative <-
                                             label.fmt,
                                             ypos.mult,
                                             ypos.fixed) {
-                     if (is.null(w.band)) {
+                     if (length(w.band) == 0) {
                        w.band <- waveband(data$x)
                      }
                      if (is.any_spct(w.band) ||

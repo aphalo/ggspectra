@@ -49,7 +49,7 @@
 #'
 stat_wl_summary <- function(mapping = NULL, data = NULL, geom = "text",
                        range = NULL,
-                       integral.fun = photobiology::integrate_xy, label.fmt = "%.3g",
+                       integral.fun = integrate_xy, label.fmt = "%.3g",
                        position = "identity", na.rm = FALSE, show.legend = NA,
                        inherit.aes = TRUE, ...) {
   ggplot2::layer(
@@ -76,9 +76,9 @@ StatWlSummary <-
                                             label.fmt,
                                             summary.fmt) {
                      range <-
-                       photobiology::normalize_range_arg(arg.range = range,
+                       normalize_range_arg(arg.range = range,
                                                          wl.range = range(data$x))
-                     mydata <- photobiology::trim_tails(data$x, data$y,
+                     mydata <- trim_tails(data$x, data$y,
                                                         low.limit = range[1],
                                                         high.limit = range[2])
                      integ.df <- data.frame(x = midpoint(mydata$x),

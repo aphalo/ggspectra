@@ -46,7 +46,7 @@ two_suns.spct <- rbindspct(list(sun1 = sun.spct, sun2 = sun.spct * 2))
 We change the default theme.
 
 ```{r}
-theme_set(theme_bw())
+theme_set(theme_bw(10))
 ```
 
 ## Plotting spectra
@@ -142,7 +142,12 @@ plot(sun.spct, w.band = NULL, range = PAR())
 ```
 
 ```{r}
-plot(sun.spct, w.band = UVB(), range = c(400,700))
+plot(sun.spct, w.band = PAR(), range = PAR())
+```
+
+
+```{r}
+plot(sun.spct, w.band = VIS_bands(), range = VIS())
 ```
 
 The time unit is also stored in the metadata, as demonstrated here. The units in axis labels have changed to the units used in the spectral data.
@@ -204,14 +209,6 @@ plot(sun.spct) + geom_spct(fill = color(sun.spct)) +
              ignore_threshold = 0.1, span = 21)
 ```
 
-As with any `ggplot` object, the 'looks' of the returned object depends on both the local and global `ggplot` _theme_.
-
-```{r}
-theme_set(theme_bw(8))
-plot(yellow_gel.spct, annotations = "colour.guide")
-theme_set(theme_minimal())
-```
-
 ## Ploting collections of spectra
 
 ```{r}
@@ -263,4 +260,3 @@ plot(CIE(), range = CIE())
 ```{r}
 plot(DNA_N(), range = c(270, 420))
 ```
-

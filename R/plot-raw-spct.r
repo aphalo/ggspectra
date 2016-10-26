@@ -40,7 +40,10 @@ raw_plot <- function(spct,
     stop("raw_plot() can only plot response_spct objects.")
   }
   if (!is.null(range)) {
-    trim_spct(spct, range = range, byref = TRUE)
+    trim_wl(spct, range = range, byref = TRUE)
+  }
+  if (!is.null(w.band)) {
+    trim_wl(w.band, range = range(spct))
   }
   counts.cols <- names(spct)[grep("^counts", names(spct))]
 #  other.cols <- setdiff(names(x), counts.cols)
@@ -119,10 +122,10 @@ raw_plot <- function(spct,
       length(intersect(c("boxes", "segments", "labels",
                          "summaries", "colour.guide"),
                        annotations)) > 0L) {
-    y.limits <- c(0, y.max * 1.25)
-    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
+    y.limits <- c(y.min, y.max * 1.25)
+    x.limits <- c(min(spct) - spread(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
-    y.limits <- c(0, 1)
+    y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
   }
   plot <- plot + scale_y_continuous(limits = y.limits)
@@ -178,13 +181,13 @@ plot.raw_spct <-
     if ("color.guide" %in% annotations) {
       annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }
-    if (is.null(w.band)) {
+    if (length(w.band) == 0) {
       if (is.null(range)) {
-        w.band <- photobiology::waveband(x)
+        w.band <- waveband(x)
       } else if (is.waveband(range)) {
         w.band <- range
       } else {
-        w.band <-  photobiology::waveband(range, wb.name = "Total")
+        w.band <-  waveband(range, wb.name = "Total")
       }
     }
 

@@ -86,7 +86,7 @@ StatWbLabel <-
                                             w.band,
                                             label.fmt,
                                             ypos.fixed) {
-                     if (is.null(w.band)) {
+                     if (length(w.band) == 0) {
                        w.band <- waveband(data$x)
                      }
                      if (is.any_spct(w.band) ||

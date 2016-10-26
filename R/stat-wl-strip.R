@@ -24,7 +24,7 @@
 #'   stripped before the computation proceeds.
 #' @param type character one of "CMF" (color matching function) or "CC"
 #'   (color coordinates).
-#' @param w.band photobiology::waveband object or a list of such objects or NULL.
+#' @param w.band waveband object or a list of such objects or NULL.
 #' @param length.out The number of steps to use to simulate a continuous
 #'   range of colours when w.band == NULL.
 #'
@@ -77,7 +77,7 @@ StatColorGuide <-
                                             type,
                                             w.band,
                                             length.out) {
-                     if (is.null(w.band)) {
+                     if (length(w.band) == 0) {
                        w.band <- split_bands(range(data$x), length.out = length.out)
                      } else {
                        w.band <- trim_waveband(w.band = w.band, range = data$x, trim = TRUE)

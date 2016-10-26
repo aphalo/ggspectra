@@ -37,7 +37,10 @@ Afr_plot <- function(spct,
   A2T(spct, byref = TRUE)
   Tfr.type <- getTfrType(spct)
   if (!is.null(range)) {
-    trim_spct(spct, range = range, byref = TRUE)
+    trim_wl(spct, range = range, byref = TRUE)
+  }
+  if (!is.null(w.band)) {
+    trim_wl(w.band, range = range(spct))
   }
   setGenericSpct(spct) # so that we can assign variable Afr
   if (! "Afr" %in% names(spct)) {
@@ -132,10 +135,10 @@ Afr_plot <- function(spct,
 
   if (!is.null(annotations) &&
       length(intersect(c("labels", "summaries", "colour.guide"), annotations)) > 0L) {
-    y.limits <- c(0, y.max * 1.25)
-    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
+    y.limits <- c(y.min, y.max * 1.25)
+    x.limits <- c(min(spct) - spread(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
-    y.limits <- c(0, 1)
+    y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
   }
   if (pc.out) {
@@ -189,7 +192,10 @@ T_plot <- function(spct,
   A2T(spct, byref = TRUE)
   Tfr.type <- getTfrType(spct)
   if (!is.null(range)) {
-    trim_spct(spct, range = range, byref = TRUE)
+    trim_wl(spct, range = range, byref = TRUE)
+  }
+  if (!is.null(w.band)) {
+    trim_wl(w.band, range = range(spct))
   }
   if (!length(Tfr.type)) {
     Tfr.type <- "unknown"
@@ -262,10 +268,10 @@ T_plot <- function(spct,
 
   if (!is.null(annotations) &&
       length(intersect(c("labels", "summaries", "colour.guide"), annotations)) > 0L) {
-    y.limits <- c(0, y.max * 1.25)
-    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
+    y.limits <- c(y.min, y.max * 1.25)
+    x.limits <- c(min(spct) - spread(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
-    y.limits <- c(0, 1)
+    y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
   }
   if (pc.out) {
@@ -316,7 +322,10 @@ A_plot <- function(spct,
   }
   T2A(spct, action = "replace", byref = TRUE)
   if (!is.null(range)) {
-    trim_spct(spct, range = range, byref = TRUE)
+    trim_wl(spct, range = range, byref = TRUE)
+  }
+  if (!is.null(w.band)) {
+    trim_wl(w.band, range = range(spct))
   }
   Tfr.type <- getTfrType(spct)
   if (!length(Tfr.type)) {
@@ -371,10 +380,10 @@ A_plot <- function(spct,
 
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide"), annotations)) > 0L) {
-    y.limits <- c(0, y.max * 1.25)
-    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
+    y.limits <- c(y.min, y.max * 1.25)
+    x.limits <- c(min(spct) - spread(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
-    y.limits <- c(0, 1)
+    y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
   }
   plot <- plot + scale_y_continuous(limits = y.limits)
@@ -419,7 +428,10 @@ R_plot <- function(spct,
     stop("R_plot() can only plot reflector_spct objects.")
   }
   if (!is.null(range)) {
-    trim_spct(spct, range = range, byref = TRUE)
+    trim_wl(spct, range = range, byref = TRUE)
+  }
+  if (!is.null(w.band)) {
+    trim_wl(w.band, range = range(spct))
   }
   Rfr.type <- getRfrType(spct)
   if (length(Rfr.type) == 0) {
@@ -491,10 +503,10 @@ R_plot <- function(spct,
 
   if (!is.null(annotations) &&
       length(intersect(c("labels", "summaries", "colour.guide"), annotations)) > 0L) {
-    y.limits <- c(0, y.max * 1.25)
-    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
+    y.limits <- c(y.min, y.max * 1.25)
+    x.limits <- c(min(spct) - spread(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
-    y.limits <- c(0, 1)
+    y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
   }
   if (pc.out) {
@@ -547,7 +559,10 @@ O_plot <- function(spct,
     stop("O_plot() can only plot object_spct objects.")
   }
   if (!is.null(range)) {
-    trim_spct(spct, range = range, byref = TRUE)
+    trim_wl(spct, range = range, byref = TRUE)
+  }
+  if (!is.null(w.band)) {
+    trim_wl(w.band, range = range(spct))
   }
   Rfr.type <- getRfrType(spct)
   if (length(Rfr.type) == 0) {
@@ -614,10 +629,10 @@ O_plot <- function(spct,
                             na.rm = TRUE)
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "colour.guide"), annotations)) > 0L) {
-    y.limits <- c(0, y.max * 1.25)
-    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
+    y.limits <- c(y.min, y.max * 1.25)
+    x.limits <- c(min(spct) - spread(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
-    y.limits <- c(0, 1)
+    y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
   }
   if (pc.out) {
@@ -690,13 +705,13 @@ plot.filter_spct <-
         label.qty = "average"
       }
     }
-    if (is.null(w.band)) {
+    if (length(w.band) == 0) {
       if (is.null(range)) {
-        w.band <- photobiology::waveband(x)
+        w.band <- waveband(x)
       } else if (is.waveband(range)) {
         w.band <- range
       } else {
-        w.band <-  photobiology::waveband(range, wb.name = "Total")
+        w.band <-  waveband(range, wb.name = "Total")
       }
     }
 
@@ -786,13 +801,13 @@ plot.reflector_spct <-
         label.qty = "average"
       }
     }
-    if (is.null(w.band)) {
+    if (length(w.band) == 0) {
       if (is.null(range)) {
-        w.band <- photobiology::waveband(x)
+        w.band <- waveband(x)
       } else if (is.waveband(range)) {
         w.band <- range
       } else {
-        w.band <-  photobiology::waveband(range, wb.name = "Total")
+        w.band <-  waveband(range, wb.name = "Total")
       }
     }
     if (plot.qty == "reflectance") {
@@ -874,13 +889,13 @@ plot.object_spct <-
         label.qty = "average"
       }
     }
-    if (is.null(w.band)) {
+    if (length(w.band) == 0) {
       if (is.null(range)) {
-        w.band <- photobiology::waveband(x)
+        w.band <- waveband(x)
       } else if (is.waveband(range)) {
         w.band <- range
       } else {
-        w.band <-  photobiology::waveband(range, wb.name = "Total")
+        w.band <-  waveband(range, wb.name = "Total")
       }
     }
     if (is.null(plot.qty) || plot.qty == "all") {

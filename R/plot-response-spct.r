@@ -39,7 +39,10 @@ e_rsp_plot <- function(spct,
   }
   q2e(spct, action="replace", byref=TRUE)
   if (!is.null(range)) {
-    trim_spct(spct, range = range, byref = TRUE)
+    trim_wl(spct, range = range, byref = TRUE)
+  }
+  if (!is.null(w.band)) {
+    trim_wl(w.band, range = range(spct))
   }
 
   exposure.label <- NA
@@ -184,15 +187,19 @@ e_rsp_plot <- function(spct,
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "summaries",
                          "colour.guide"), annotations)) > 0L) {
-    y.limits <- c(min(0, y.min), y.max * 1.25)
-    x.limits <- c(min(spct) - spread(spct) * 0.025, max(spct))
+    y.limits <- c(y.min, y.max * 1.25)
+    x.limits <- c(min(spct) - spread(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
     y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
   }
-  plot <- plot + scale_y_continuous(limits = y.limits)
+  if (abs(y.min) < 5e-2 && (abs(y.max - 1) < 5.e-2)) {
+    plot <- plot +
+      scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
+  } else {
+    plot <- plot + scale_y_continuous(limits = y.limits)
+  }
   plot + scale_x_continuous(limits = x.limits)
-
 }
 
 #' Plot a response spectrum.
@@ -236,7 +243,10 @@ q_rsp_plot <- function(spct,
   }
   e2q(spct, action="replace", byref=TRUE)
   if (!is.null(range)) {
-    trim_spct(spct, range = range, byref = TRUE)
+    trim_wl(spct, range = range, byref = TRUE)
+  }
+  if (!is.null(w.band)) {
+    trim_wl(w.band, range = range(spct))
   }
 
   exposure.label <- NA
@@ -332,7 +342,7 @@ q_rsp_plot <- function(spct,
     rsp.label.avg  <- bquote(atop(bar(R[Q](lambda)/R[Q](lambda = norm)), (.(multiplier.label))))
   }
   spct[["s.q.response"]] <- spct[["s.q.response"]] * scale.factor
-  y.max <- max(spct[["s.q.response"]], na.rm = TRUE)
+  y.max <- max(c(spct[["s.q.response"]], 0), na.rm = TRUE)
   y.min <- min(c(spct[["s.q.response"]], 0), na.rm = TRUE)
 
   if (label.qty == "total") {
@@ -380,15 +390,19 @@ q_rsp_plot <- function(spct,
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "summaries",
                          "colour.guide"), annotations)) > 0L) {
-    y.limits <- c(0, y.max * 1.25)
-    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
+    y.limits <- c(y.min, y.max * 1.25)
+    x.limits <- c(min(spct) - spread(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
-    y.limits <- c(0, 1)
+    y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
   }
-  plot <- plot + scale_y_continuous(limits = y.limits)
+  if (abs(y.min) < 5e-2 && (abs(y.max - 1) < 5.e-2)) {
+    plot <- plot +
+      scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
+  } else {
+    plot <- plot + scale_y_continuous(limits = y.limits)
+  }
   plot + scale_x_continuous(limits = x.limits)
-
 }
 
 #' Plot method for response spectra.
@@ -453,13 +467,13 @@ plot.response_spct <-
         label.qty = "total"
       }
     }
-    if (is.null(w.band)) {
+    if (length(w.band) == 0) {
       if (is.null(range)) {
-        w.band <- photobiology::waveband(x)
+        w.band <- waveband(x)
       } else if (is.waveband(range)) {
         w.band <- range
       } else {
-        w.band <-  photobiology::waveband(range, wb.name = "Total")
+        w.band <-  waveband(range, wb.name = "Total")
       }
     }
 
