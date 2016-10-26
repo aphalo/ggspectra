@@ -135,8 +135,8 @@ e_rsp_plot <- function(spct,
     rsp.label.avg  <- bquote(atop(bar(R[E](lambda)/R[E](lambda = norm)), (.(multiplier.label))))
   }
   spct[["s.e.response"]] <- spct[["s.e.response"]] * scale.factor
-  y.max <- max(spct[["s.e.response"]], na.rm = TRUE)
-  y.min <- 0
+  y.max <- max(c(spct[["s.e.response"]], 0), na.rm = TRUE)
+  y.min <- min(c(spct[["s.e.response"]], 0), na.rm = TRUE)
 
   if (label.qty == "total") {
     rsp.label <- "integral(R[E](lambda))"
@@ -184,10 +184,10 @@ e_rsp_plot <- function(spct,
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "summaries",
                          "colour.guide"), annotations)) > 0L) {
-    y.limits <- c(0, y.max * 1.25)
-    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
+    y.limits <- c(min(0, y.min), y.max * 1.25)
+    x.limits <- c(min(spct) - spread(spct) * 0.025, max(spct))
   } else {
-    y.limits <- c(0, 1)
+    y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
   }
   plot <- plot + scale_y_continuous(limits = y.limits)
@@ -333,7 +333,7 @@ q_rsp_plot <- function(spct,
   }
   spct[["s.q.response"]] <- spct[["s.q.response"]] * scale.factor
   y.max <- max(spct[["s.q.response"]], na.rm = TRUE)
-  y.min <- 0
+  y.min <- min(c(spct[["s.q.response"]], 0), na.rm = TRUE)
 
   if (label.qty == "total") {
     rsp.label <- "integral(R[Q](lambda))"

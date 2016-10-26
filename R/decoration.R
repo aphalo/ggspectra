@@ -10,6 +10,8 @@
 #' @param label.qty character
 #' @param summary.label character
 #' @param text.size numeric
+#' @param label.color color definition or name
+#' @param pos.shift numeric
 #' @param na.rm logical
 #'
 #' @keywords internal
@@ -30,6 +32,8 @@ decoration <- function(w.band,
                        unit.out = NULL,
                        time.unit = NULL,
                        text.size = 2.5,
+                       label.color = NULL,
+                       pos.shift = 0,
                        na.rm = TRUE) {
   if (grepl(".pc", label.qty, fixed = TRUE)) {
     label.mult = 100
@@ -46,7 +50,7 @@ decoration <- function(w.band,
                             sirrad = stat_wb_sirrad,
                             contribution = stat_wb_contribution,
                             relative = stat_wb_relative,
-                            none = function(...) {NA_real_},
+                            none = stat_wb_label,
                             function(...) {NA_real_},
                             na.rm = na.rm)
   z <- list()
@@ -74,8 +78,13 @@ decoration <- function(w.band,
                             linetype = "solid",
                             na.rm = na.rm
     ))
-    label.color <- "white"
-    pos.shift <- 0.00
+    label.color <- if (is.null(label.color)) {
+      label.color <- "white"
+    }
+  } else {
+    label.color <- if (is.null(label.color)) {
+      label.color <- "black"
+    }
   }
   if ("segments" %in% annotations) {
     z <- c(z, stat_wl_strip(w.band = w.band,
@@ -126,7 +135,7 @@ decoration <- function(w.band,
                       na.rm = na.rm))
     } else {
       z <- c(z, stat_wb_label(w.band = w.band,
-                              ypos.fixed = y.max * 1.143 + pos.shift,
+                              ypos.fixed = y.max * (1.143 + pos.shift),
                               color = label.color,
                               size = text.size,
                               na.rm = na.rm))

@@ -100,8 +100,8 @@ e_plot <- function(spct,
   }
   s.irrad.label <- parse(text = s.irrad.label)
   spct[["s.e.irrad"]] <- spct[["s.e.irrad"]] * scale.factor
-  y.max <- max(spct[["s.e.irrad"]], na.rm = TRUE)
-  y.min <- 0
+  y.max <- max(c(spct[["s.e.irrad"]], 0), na.rm = TRUE)
+  y.min <- min(c(spct[["s.e.irrad"]], 0), na.rm = TRUE)
   plot <- ggplot(spct, aes_(~w.length, ~s.e.irrad)) +
     scale_fill_identity() + scale_color_identity()
   plot <- plot + geom_line(na.rm = na.rm)
@@ -147,10 +147,10 @@ e_plot <- function(spct,
 
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide"), annotations)) > 0L) {
-    y.limits <- c(0, y.max * 1.25)
-    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
+    y.limits <- c(y.min, y.max * 1.25)
+    x.limits <- c(min(spct) - spread(spct) * 0.025, max(spct))
   } else {
-    y.limits <- c(0, 1)
+    y.limits <- c(y.min, y.max * 1.05)
     x.limits <- range(spct)
   }
   plot <- plot + scale_y_continuous(limits = y.limits)
@@ -261,8 +261,8 @@ q_plot <- function(spct,
   }
   s.irrad.label <- parse(text = s.irrad.label)
   spct[["s.q.irrad"]] <- spct[["s.q.irrad"]] * scale.factor
-  y.max <- max(spct[["s.q.irrad"]], na.rm = TRUE)
-  y.min <- 0
+  y.max <- max(c(spct[["s.q.irrad"]], 0), na.rm = TRUE)
+  y.min <- min(c(spct[["s.q.irrad"]], 0), na.rm = TRUE)
   plot <- ggplot(spct, aes_(~w.length, ~s.q.irrad)) +
     scale_fill_identity() + scale_color_identity()
   plot <- plot + geom_line(na.rm = na.rm)
@@ -309,10 +309,10 @@ q_plot <- function(spct,
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "summaries",
                          "colour.guide"), annotations)) > 0L) {
-    y.limits <- c(0, y.max * 1.25)
-    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
+    y.limits <- c(y.min, y.max * 1.25)
+    x.limits <- c(min(spct) - spread(spct) * 0.025, max(spct))
   } else {
-    y.limits <- c(0, 1)
+    y.limits <- c(y.min, y.max * 1.05)
     x.limits <- range(spct)
   }
   plot <- plot + scale_y_continuous(limits = y.limits)
