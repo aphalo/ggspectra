@@ -21,7 +21,7 @@ options(warnPartialMatchArgs = FALSE)
 two_suns.spct <- rbindspct(list(sun1 = sun.spct, sun2 = sun.spct * 2))
 
 ## ------------------------------------------------------------------------
-theme_set(theme_bw())
+theme_set(theme_bw(10))
 
 ## ------------------------------------------------------------------------
 plot(sun.spct)
@@ -79,7 +79,10 @@ plot(sun.spct, w.band = NULL, range = c(400,700))
 plot(sun.spct, w.band = NULL, range = PAR())
 
 ## ------------------------------------------------------------------------
-plot(sun.spct, w.band = UVB(), range = c(400,700))
+plot(sun.spct, w.band = PAR(), range = PAR())
+
+## ------------------------------------------------------------------------
+plot(sun.spct, w.band = VIS_bands(), range = VIS())
 
 ## ------------------------------------------------------------------------
 plot(sun.daily.spct)
@@ -114,11 +117,6 @@ plot(sun.spct) + geom_spct(fill = color(sun.spct)) +
             fill = color(yellow_gel.spct * sun.spct)) +
   stat_peaks(data = yellow_gel.spct * sun.spct, color = "yellow", 
              ignore_threshold = 0.1, span = 21)
-
-## ------------------------------------------------------------------------
-theme_set(theme_bw(8))
-plot(yellow_gel.spct, annotations = "colour.guide")
-theme_set(theme_minimal())
 
 ## ------------------------------------------------------------------------
 two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct * 2))

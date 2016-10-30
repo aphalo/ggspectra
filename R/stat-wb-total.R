@@ -40,16 +40,42 @@
 #'   in \code{y}.
 #'
 #' @section Computed variables:
+#' What it is named integral below is the result of appying \code{integral.fun},
+#' with default \code{integrate_xy}.
 #' \describe{
-#'   \item{label}{intergral value as formatted text}
+#'   \item{y.label}{ymean multiplied by \code{label.mult} and formatted
+#'   according to \code{label.fmt}}
 #'   \item{x}{w.band-midpoint}
 #'   \item{xmin}{w.band minimum}
 #'   \item{xmax}{w.band maximum}
-#'   \item{ymean}{Mean value as numeric}
-#'   \item{yint}{Integral value as numeric}
+#'   \item{ymin}{data$y minimum}
+#'   \item{ymax}{data$y maximum}
+#'   \item{yint}{data$y integral for the range of \code{w.band}}
+#'   \item{xmean}{yint divided by spread(w.band)}
+#'   \item{y}{ypos.fixed or top of data, adjusted by \code{ypos.mult}}
+#'   \item{wb.color}{color of the w.band}
+#'   \item{wb.name}{label of w.band}
 #' }
 #'
-#' @import photobiology
+#' @section Default aesthetics:
+#' Set by the statistic and available to geoms.
+#' \describe{
+#'   \item{label}{..y.label..}
+#'   \item{x}{..x..}
+#'   \item{xmin}{..xmin..}
+#'   \item{xmax}{..xmax..}
+#'   \item{ymin}{..y.. - (..ymax.. - ..ymin..) * 0.03}
+#'   \item{ymax}{..y.. + (..ymax.. - ..ymin..) * 0.03}
+#'   \item{yintercept}{..ymean..}
+#'   \item{fill}{..wb.color..}
+#' }
+#'
+#' @section Required aesthetics:
+#' Required by the statistic and need to be set with \code{aes()}.
+#' \describe{
+#'   \item{x}{numeric, wavelength in nanometres}
+#'   \item{y}{numeric, a spectral quantity}
+#' }
 #'
 #' @examples
 #' library(photobiology)

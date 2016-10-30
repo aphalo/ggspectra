@@ -15,8 +15,6 @@ Package `ggspectra` extends `ggplot2` with stats, geoms and annotations suitable
 
 The new elements can be freely combined with methods and functions defined in packages `ggplot2`, `scales`, `ggrepel` and `cowplot`.
 
-Although the package uses internally `photobiology` and `photobiologyWavebands` it does not re-export these packages, which need to loaded if used.
-
 ```{r}
 library(ggplot2)
 library(photobiology)
@@ -588,9 +586,9 @@ ggplot(data.frame(w.length = 300:800), aes(w.length)) +
 
 ```
 
-## Wavelength colours at new $x$-values 
+## Wavelength colours at new _x_-values 
 
-The `stat_wl_summary()` and `stat_wb_mean()` return a _reduced_ data set with fewer rows than the original data. `stat_wl_strip()` depending on the input, can also return a data set with more rows than the input data. This is the default behaviour, with `w.band` with argument `NULL`. This _stat_ operates only on the variable mapped to the $x$ _aesthetic_, a $y$-mapping is not required as input.
+The `stat_wl_summary()` and `stat_wb_mean()` return a _reduced_ data set with fewer rows than the original data. `stat_wl_strip()` depending on the input, can also return a data set with more rows than the input data. This is the default behaviour, with `w.band` with argument `NULL`. This _stat_ operates only on the variable mapped to the _x_ _aesthetic_, a _y_-mapping is not required as input.
 
 ```{r}
 my.data <- data.frame(x = 300:800)
@@ -598,7 +596,7 @@ ggplot(my.data, aes(x)) + stat_wl_strip(ymin = -1, ymax = 1) +
     scale_fill_identity()
 ```
 
-The default _geom_ is `"rect"` which with suitable mappings of `ymin` and `ymax` _aesthetics_ can be used to add a colour guide to the $x$-axis (if its scale maps wavelengths in nanometres). When `w.band` is `NULL` a long series of contiguous wavebands is generated to create the illusion of a continuous colour gradient.
+The default _geom_ is `"rect"` which with suitable mappings of `ymin` and `ymax` _aesthetics_ can be used to add a colour guide to the _x_-axis (if its scale maps wavelengths in nanometres). When `w.band` is `NULL` a long series of contiguous wavebands is generated to create the illusion of a continuous colour gradient.
 
 ```{r}
 ggplot(sun.spct) +
