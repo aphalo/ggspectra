@@ -39,12 +39,33 @@
 #' @param y.label.fmt character  string giving a format definition for converting
 #'   $y$-values into character strings by means of function \code{\link{sprintf}}.
 #'
+#' @return The original data with additional computed variables added.
+#'
 #' @section Computed variables:
 #' \describe{
-#'   \item{x.label}{x-value at the peak (or valley) as character}
-#'   \item{y.label}{y-value at the peak (or valley) as character}
-#'   \item{color}{color definition calculated by assuming that x-values are
-#'   wavelengths expressed in nanometres.}
+#'   \item{x.label}{x-value at a peak (or valley) formatted as character or an
+#'   empty string (\code{""}) otherwise}
+#'   \item{y.label}{y-value at the peak (or valley) formatted as character or an
+#'   empty string (\code{""}) otherwise}
+#'   \item{color}{At peaks and valleys, color definition calculated by assuming that x-values are
+#'   wavelengths expressed in nanometres, otherwise, "white".}
+#' }
+#'
+#' @section Default aesthetics:
+#' Set by the statistic and available to geoms.
+#' \describe{
+#'   \item{label}{..x.label..}
+#'   \item{xintercept}{..x..}
+#'   \item{yintercept}{..y..}
+#'   \item{color}{ifelse(..color.. == "white", "black", ..color..)}
+#'   \item{fill}{..color..}
+#' }
+#'
+#' @section Required aesthetics:
+#' Required by the statistic and need to be set with \code{aes()}.
+#' \describe{
+#'   \item{x}{numeric, wavelength in nanometres}
+#'   \item{y}{numeric, a spectral quantity}
 #' }
 #'
 #' @seealso \code{\link{stat_peaks}}, \code{\link{stat_valleys}} and

@@ -64,6 +64,10 @@ the default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 include aesthetics whose values you want to set, not map. See
 \code{\link[ggplot2]{layer}} for more details.}
 }
+\value{
+A data frame with one row for each peak (or valley) found in the
+  data.
+}
 \description{
 \code{stat_peaks} finds at which x positions local maxima are located. If
 you want find local minima, you can use \code{stat_valleys} instead.
@@ -93,10 +97,30 @@ These stats work nicely together with geoms
 \describe{
   \item{x}{x-value at the peak (or valley) as numeric}
   \item{y}{y-value at the peak (or valley) as numeric}
-  \item{x.label}{x-value at the peak (or valley) as character}
-  \item{y.label}{y-value at the peak (or valley) as character}
+  \item{x.label}{x-value at the peak (or valley) formatted as character}
+  \item{y.label}{y-value at the peak (or valley) formatted as character}
   \item{color}{color definition calculated by assuming that x-values are
   wavelengths expressed in nanometres.}
+}
+}
+
+\section{Default aesthetics}{
+
+Set by the statistic and available to geoms.
+\describe{
+  \item{label}{..x.label..}
+  \item{xintercept}{..x..}
+  \item{yintercept}{..y..}
+  \item{fill}{..color..}
+}
+}
+
+\section{Required aesthetics}{
+
+Required by the statistic and need to be set with \code{aes()}.
+\describe{
+  \item{x}{numeric, wavelength in nanometres}
+  \item{y}{numeric, a spectral quantity}
 }
 }
 \examples{

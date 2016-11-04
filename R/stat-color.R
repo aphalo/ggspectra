@@ -25,10 +25,26 @@
 #' @param type character one of "CMF" (color matching function) or "CC"
 #'   (color coordinates).
 #'
-#' @section Computed variables:
+#' @return The original data frame with a variable with color definitions added.
+#'
+#' @section Computed variable:
 #' \describe{
 #'   \item{color}{color corresponding to x-value giving wavelength in
 #'   nanometres.}
+#' }
+#'
+#' @section Default aesthetics:
+#' Set by the statistic and available to geoms.
+#' \describe{
+#'   \item{color}{..color..}
+#'   \item{fill}{..color..}
+#' }
+#'
+#' @section Required aesthetics:
+#' Required by the statistic and need to be set with \code{aes()}.
+#' \describe{
+#'   \item{x}{numeric, wavelength in nanometres}
+#'   \item{y}{numeric, a spectral quantity}
 #' }
 #'
 #' @seealso \code{\link[photobiology]{color}}, which is used internally.

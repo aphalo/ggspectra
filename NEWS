@@ -10,8 +10,7 @@ Change behaviour of plot() methods so that "ilegal" values such as negative
 spectral irradiances or transmittances are included in plots.
 Fix several minor bugs affecting plot() methods with certain non-default sets
 of annotations.
-Add formal parameters label.color and pos.shift to decoration() with defaults
-that preserve earlier bahavior.
+Improve documentation and vignettes.
 
 ggspectra 0.1.10
 ================

@@ -2,7 +2,7 @@
 #'
 #' \code{stat_wb_total} computes means under a curve. It first integrates the
 #'   area under a spectral curve and also the mean expressed per nanaometre of
-#'   wavelength for each waveband in the input. Sets suitable default aestheics
+#'   wavelength for each waveband in the input. Sets suitable default aesthetics
 #'   for "rect", "hline", "vline", "text" and "label" geoms displaying "totals"
 #'   per waveband.
 #'
@@ -38,6 +38,10 @@
 #'   \code{y} values.
 #' @param ypos.fixed numeric If not \code{NULL} used a constant value returned
 #'   in \code{y}.
+#'
+#' @return A data frame with one row for each waveband object in the argument
+#' to \code{w.band}. Wavebeand outside the range of the spectral data are
+#' trimmed or discarded.
 #'
 #' @section Computed variables:
 #' What it is named integral below is the result of appying \code{integral.fun},

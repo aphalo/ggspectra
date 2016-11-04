@@ -38,14 +38,33 @@
 #' @param y.label.fmt character  string giving a format definition for converting
 #'   $y$-values into character strings by means of function \code{\link{sprintf}}.
 #'
+#' @return A data frame with one row for each peak (or valley) found in the
+#'   data.
+#'
 #' @section Computed variables:
 #' \describe{
 #'   \item{x}{x-value at the peak (or valley) as numeric}
 #'   \item{y}{y-value at the peak (or valley) as numeric}
-#'   \item{x.label}{x-value at the peak (or valley) as character}
-#'   \item{y.label}{y-value at the peak (or valley) as character}
+#'   \item{x.label}{x-value at the peak (or valley) formatted as character}
+#'   \item{y.label}{y-value at the peak (or valley) formatted as character}
 #'   \item{color}{color definition calculated by assuming that x-values are
 #'   wavelengths expressed in nanometres.}
+#' }
+#'
+#' @section Default aesthetics:
+#' Set by the statistic and available to geoms.
+#' \describe{
+#'   \item{label}{..x.label..}
+#'   \item{xintercept}{..x..}
+#'   \item{yintercept}{..y..}
+#'   \item{fill}{..color..}
+#' }
+#'
+#' @section Required aesthetics:
+#' Required by the statistic and need to be set with \code{aes()}.
+#' \describe{
+#'   \item{x}{numeric, wavelength in nanometres}
+#'   \item{y}{numeric, a spectral quantity}
 #' }
 #'
 #' @seealso \code{\link[photobiology]{find_peaks}}, which is used internally.

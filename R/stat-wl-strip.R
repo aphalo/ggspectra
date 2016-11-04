@@ -28,10 +28,33 @@
 #' @param length.out The number of steps to use to simulate a continuous
 #'   range of colours when w.band == NULL.
 #'
+#' @return generic_spect object with new \code{x} values plus other computed
+#'   variables described below.
+#'
 #' @section Computed variables:
 #' \describe{
-#'   \item{color}{color corresponding to x-value giving wavelength in
-#'   nanometres.}
+#'    \item{x}{(w.low + wl.high) / 2}
+#'    \item{wl.low}{boundary of waveband}
+#'    \item{wl.high}{boundary of waveband}
+#'    \item{wl.color}{color corresponding to wavelength}
+#'    \item{wb.color}{color corresponding to waveband}
+#'    \item{wb.name}{label of w.band}
+#' }
+#'
+#' @section Default aesthetics:
+#' Set by the statistic and available to geoms.
+#' \describe{
+#'   \item{x}{..x..}
+#'   \item{label}{as.character(..wb.f..)}
+#'   \item{xmin}{..wl.low..}
+#'   \item{xmax}{..wl.high..}
+#'   \item{fill}{..wb.color..}
+#' }
+#'
+#' @section Required aesthetics:
+#' Required by the statistic and need to be set with \code{aes()}.
+#' \describe{
+#'   \item{x}{numeric, wavelength in nanometres}
 #' }
 #'
 #' @seealso \code{\link[photobiology]{color}}, which is used internally.

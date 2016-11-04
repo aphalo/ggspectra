@@ -15,6 +15,39 @@ Package `ggspectra` extends `ggplot2` with stats, geoms and annotations suitable
 
 The new elements can be freely combined with methods and functions defined in packages `ggplot2`, `scales`, `ggrepel` and `cowplot`.
 
+### What are `plot` especializations for?
+
+The `plot` specializations produce fully annotated plots as `ggplot` objects, which can be further manipulated if so desired. They use the metadata stored in spectral objects of classes defined in package 'photobiology' to automatically generate suitable axis labels, scales and annotations. (Please, see vignette "Plot methods" for details.)
+
+### What are `ggplot` especializations for?
+
+The `ggplot` specializations set default `aes` according to the type of spectral object. They also add support for `unit.out` arguments allowing on-the-fly conversion of units of expression or spectral quantities. These are only defaults and can be overridden by explicit use of `aes()` to set the mapping of _aesthetics_.
+
+### What are the different _stats_ useful for?
+
+The _stats_ defined in this package help with with the generation of annotations and decorations of plots of spectral data. They are meant to be used only when the _x_ aesthetic is mapped to a variable containing wavelength values expressed in nanometres. They are designed to work with spectral objects of the classes defined in package 'photobiology'. Many of them also work well with any data frame as long as the _x_ aesthetic mapping fulfils the expectations. Package 'ggpmisc' contains some equivalent _stats_ which do not assume that _x_ is mapped to wavelength, accepting `numeric` and _datetime_ values.  
+
+| `stat_`  | default               | other uses                                   |
+|:----------|:---------------------|:----------------------------------------------|
+| `peaks`        | point (highlight maxima)  | wavelength label, spectral quantity label |
+| `valleys`        | point (highlight minima)  | wavelength label, spectral quantity label |
+| `label_peaks`   |  text (wavelength label)  | spectral quantity label (support 'ggrepel') |
+| `label_valleys`   | text (wavelength label)  | spectral quantity label (support 'ggrepel') |
+| `color`         | color, fill |                                              |
+| `wb_label` | text (waveband name) | rect (showing range of waveband and its color) |
+| `wb_total` | rect (above data) | label(s) with waveband integral |
+| `wb_mean` | rect (showing integral) | label(s) with waveband mean |
+| `wb_summary` | rect (showing integral) | label with _range_ mean |
+| `wb_contribution` | rect (above data) | label(s) with waveband integral / whole spectrum integral |
+| `wb_relative` | rect (above data) | label(s) with waveband integral / sum of integrals of all wavebands |
+| `wb_e_irrad` | text (energy irradiance) |  rect (showing range of waveband and its color) |
+| `wb_q_irrad` |  text (photon irradiance) | rect (showing range of waveband and its color) |
+| `wb_e_sirrad` | text (spectral energy irradiance) |  rect (showing range of waveband and its color) |
+| `wb_q_sirrad` |  text (spectral photon irradiance) | rect (showing range of waveband and its color) |
+| `wl_strip` |  rect (color of wavelength or waveband) | text (label with waveband name) |
+
+## Set up 
+
 ```{r}
 library(ggplot2)
 library(photobiology)

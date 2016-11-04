@@ -26,13 +26,38 @@
 #' @param integral.fun function on $x$ and $y$.
 #' @param label.fmt character string giving a format definition for converting
 #'   y-integral values into character strings by means of function \code{\link{sprintf}}.
+#'
+#' @return A data frame with one row.
+#'
 #' @section Computed variables:
+#' What it is named integral below is the result of appying \code{integral.fun},
+#' with default \code{integrate_xy}.
 #' \describe{
-#'   \item{label}{intergral value as formatted text}
-#'   \item{x}{range-midpoint}
+#'   \item{y.label}{y formatted according to \code{label.fmt}}
+#'   \item{x}{w.band-midpoint}
 #'   \item{xmin}{range minimum}
 #'   \item{xmax}{range maximum}
-#'   \item{y}{integral value as numeric}
+#'   \item{y}{data$y integral for the range by the spread of the range}
+#' }
+#'
+#' @section Default aesthetics:
+#' Set by the statistic and available to geoms.
+#' \describe{
+#'   \item{label}{..label..}
+#'   \item{x}{..x..}
+#'   \item{xmin}{..xmin..}
+#'   \item{xmax}{..xmax..}
+#'   \item{y}{..y..}
+#'   \item{ymin}{0}
+#'   \item{ymax}{..y..}
+#'   \item{yintercept}{..y..}
+#' }
+#'
+#' @section Required aesthetics:
+#' Required by the statistic and need to be set with \code{aes()}.
+#' \describe{
+#'   \item{x}{numeric, wavelength in nanometres}
+#'   \item{y}{numeric, a spectral quantity}
 #' }
 #'
 #' @examples
@@ -77,10 +102,10 @@ StatWlSummary <-
                                             summary.fmt) {
                      range <-
                        normalize_range_arg(arg.range = range,
-                                                         wl.range = range(data$x))
+                                           wl.range = range(data$x))
                      mydata <- trim_tails(data$x, data$y,
-                                                        low.limit = range[1],
-                                                        high.limit = range[2])
+                                          low.limit = range[1],
+                                          high.limit = range[2])
                      integ.df <- data.frame(x = midpoint(mydata$x),
                                             xmin = range[1],
                                             xmax = range[2],

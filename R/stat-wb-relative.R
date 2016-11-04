@@ -39,6 +39,10 @@
 #' @param ypos.fixed numeric If not \code{NULL} used a constant value returned
 #'   in \code{y}.
 #'
+#' @return A data frame with one row for each waveband object in the argument
+#' to \code{w.band}. Wavebeand outside the range of the spectral data are
+#' trimmed or discarded.
+#'
 #' @section Computed variables:
 #' What it is named integral below is the result of appying \code{integral.fun}
 #' to the data, with default \code{integrate_xy}.
