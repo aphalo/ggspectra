@@ -7,7 +7,7 @@ Add stat_label_peaks() and stat_label_valleys() which are designed to fully
 take advantage of 'geom_text_repel()' and 'geom_label_repel()' as revised
 in package 'ggrepel (>= 0.6.3).
 Change behaviour of plot() methods so that "ilegal" values such as negative
-spectral irradiances or transmittances are included in plots.
+spectral irradiances or transmittances are ploted by default.
 Fix several minor bugs affecting plot() methods with certain non-default sets
 of annotations.
 Improve documentation and vignettes.

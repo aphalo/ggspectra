@@ -120,10 +120,10 @@ cps_plot <- function(spct,
 
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide"), annotations)) > 0L) {
-    y.limits <- c(0, y.max * 1.25)
+    y.limits <- c(y.min, y.max * 1.25)
     x.limits <- c(min(spct) - spread(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
-    y.limits <- c(0, y.max)
+    y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
   }
   plot <- plot + scale_y_continuous(limits = y.limits)
