@@ -78,11 +78,11 @@
 #' @family stats functions
 #'
 stat_wb_label <- function(mapping = NULL, data = NULL, geom = "text",
-                       w.band = NULL,
-                       label.fmt = "%s",
-                       ypos.fixed = 0,
-                       position = "identity", na.rm = FALSE, show.legend = NA,
-                       inherit.aes = TRUE, ...) {
+                          w.band = NULL,
+                          label.fmt = "%s",
+                          ypos.fixed = 0,
+                          position = "identity", na.rm = FALSE, show.legend = NA,
+                          inherit.aes = TRUE, ...) {
   ggplot2::layer(
     stat = StatWbLabel, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -127,7 +127,8 @@ StatWbLabel <-
                                                     xmin = min(wb),
                                                     xmax = max(wb),
                                                     wb.color = color(wb),
-                                                    wb.name = labels(wb)$label)
+                                                    wb.name = labels(wb)$label,
+                                                    txt.color = black_or_white(color(wb)))
                                          )
                      }
                      if (is.null(ypos.fixed)) {
@@ -143,6 +144,7 @@ StatWbLabel <-
                                               x = ..x..,
                                               xmin = ..xmin..,
                                               xmax = ..xmax..,
-                                              fill = ..wb.color..),
+                                              fill = ..wb.color..,
+                                              color = ..txt.color..),
                    required_aes = c("x")
   )

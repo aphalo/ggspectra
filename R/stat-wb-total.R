@@ -170,7 +170,8 @@ StatWbTotal <-
                                                     yint = yint.tmp,
                                                     ymean = ymean.tmp,
                                                     wb.color = color(wb),
-                                                    wb.name = labels(wb)$label)
+                                                    wb.name = labels(wb)$label,
+                                                    txt.color = black_or_white(color(wb)))
                                          )
                      }
                      if (is.null(ypos.fixed)) {
@@ -188,6 +189,7 @@ StatWbTotal <-
                                               ymin = ..y.. - (..ymax.. - ..ymin..) * 0.03,
                                               ymax = ..y.. + (..ymax.. - ..ymin..) * 0.03,
                                               yintercept = ..ymean..,
-                                              fill = ..wb.color..),
+                                              fill = ..wb.color..,
+                                              color = ..txt.color..),
                    required_aes = c("x", "y")
   )

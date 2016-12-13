@@ -162,10 +162,12 @@ StatPeaks <-
                      dplyr::mutate(peaks.df,
                                    x.label = sprintf(x.label.fmt, x),
                                    y.label = sprintf(y.label.fmt, y),
-                                   color = photobiology::color(x, type = "CMF"))
+                                   color = photobiology::color(x, type = "CMF"),
+                                   txt.color = black_or_white(photobiology::color(x, type = "CMF")))
                    },
                    default_aes = ggplot2::aes(label = ..x.label..,
                                               fill = ..color..,
+                                              color = ..txt.color..,
                                               xintercept = ..x..,
                                               yintercept = ..y..),
                    required_aes = c("x", "y")
@@ -221,10 +223,12 @@ StatValleys <-
                      dplyr::mutate(valleys.df,
                                    x.label = sprintf(x.label.fmt, x),
                                    y.label = sprintf(y.label.fmt, y),
-                                   color = photobiology::color(x, type = "CMF"))
+                                   color = photobiology::color(x, type = "CMF"),
+                                   txt.color = black_or_white(photobiology::color(x, type = "CMF")))
                    },
                    default_aes = ggplot2::aes(label = ..x.label..,
                                               fill = ..color..,
+                                              color = ..txt.color..,
                                               xintercept = ..x..,
                                               yintercept = ..y..),
                    required_aes = c("x", "y")
