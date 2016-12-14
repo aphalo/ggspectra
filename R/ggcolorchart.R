@@ -6,7 +6,14 @@
 #' @param colors character A vector of color definitions.
 #' @param ncol integer Number of column in the checker grid.
 #' @param use.names logical Force use of names or indexes.
-#' @param text.size numeric Size of the text labels drawn on each color patch.
+#' @param text.size numeric Size of the text labels drawn on each color tile.
+#' @param text.color character Color definition, used for text on tiles.
+#' @param grid.color character Color definition, used for grid lines between
+#'   tiles.
+#'
+#' @note Default \code{text.color} uses \code{black_or_white()} to ensure enough
+#'   contrast. Default for \code{use.names} depends on number of columns in the
+#'   grid, indexes are used when columns are seven or more.
 #'
 #' @export
 #'
@@ -16,9 +23,11 @@
 #' color_chart(grep("dark", colors(), value = TRUE))
 #'
 color_chart <- function(colors = grDevices::colors(),
-                         ncol = NULL,
-                         use.names = NULL,
-                         text.size = 2) {
+                        ncol = NULL,
+                        use.names = NULL,
+                        text.size = 2,
+                        text.color = NULL,
+                        grid.color = "white") {
   # needed if the argument passed is subset with [ ]!
   force(colors)
 
@@ -46,11 +55,16 @@ color_chart <- function(colors = grDevices::colors(),
     colors[(len.colors + 1):(ncol*nrow)] <- NA
     color.names[(len.colors + 1):(ncol*nrow)] <- ""
   }
+  # we set default text color if needed
+  if (is.null(text.color)) {
+    text.color <- black_or_white(colors)
+  }
+
   # we build a data frame
   colors.df <-
     data.frame(color = colors,
                color.names = color.names,
-               text.color = black_or_white(colors),
+               text.color = text.color,
                x = rep(1:ncol, nrow),
                y = rep(nrow:1, rep(ncol, nrow)),
                idx = ifelse(is.na(colors),
@@ -67,7 +81,7 @@ color_chart <- function(colors = grDevices::colors(),
     p <- p + aes_(label = ~idx)
   }
   p <- p +
-    geom_tile(color = "white") +
+    geom_tile(color = grid.color) +
     scale_fill_identity() +
     geom_text(size = text.size, aes_(color = ~text.color)) +
     scale_color_identity()

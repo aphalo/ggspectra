@@ -43,13 +43,13 @@ ggplot(yellow_gel.spct) + geom_line()
 ggplot(yellow_gel.spct, plot.qty = "absorbance") + geom_line()
 
 ## ------------------------------------------------------------------------
-ggplot(sun.spct) + geom_line() + stat_peaks()
+ggplot(sun.spct) + geom_line() + stat_peaks(color = "red")
 
 ## ------------------------------------------------------------------------
-ggplot(sun.spct, unit.out = "photon") + geom_line() + stat_peaks()
+ggplot(sun.spct, unit.out = "photon") + geom_line() + stat_peaks(color = "red")
 
 ## ------------------------------------------------------------------------
-ggplot(sun.spct) + geom_line() + stat_valleys()
+ggplot(sun.spct) + geom_line() + stat_valleys(color = "blue")
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + geom_line() + 
@@ -62,44 +62,47 @@ ggplot(sun.spct) + geom_line() +
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + geom_line() + 
-  stat_peaks(span = 21, geom = "text")
+  stat_peaks(span = 21, geom = "text", color = "red") 
+
+## ------------------------------------------------------------------------
+ggplot(sun.spct) + geom_line() + 
+  stat_peaks(shape = 21, span = 25, size = 2) + 
+  scale_fill_identity() +
+  stat_peaks(geom = "label", span = 25, vjust = "bottom", size = 3) + 
+  scale_color_identity()
+
+## ------------------------------------------------------------------------
+ggplot(sun.spct) + geom_line() + 
+  stat_peaks(shape = 21, span = 25, size = 2) + 
+  stat_label_peaks(geom = "label_repel", span = 25, 
+                   size = 3.5, nudge_y = 0.075, segment.colour = "black") +
+  stat_valleys(shape = 21, span = 25, size = 2) + 
+  stat_label_valleys(geom = "label_repel", span = 25, 
+                     size = 3.5, nudge_y = -0.075, segment.colour = "black") +
+  scale_fill_identity() +scale_color_identity() +
+  expand_limits(y = c(-0.08, 0.9))
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + geom_line() + 
   stat_peaks(shape = 21, span = 25, size = 2) + scale_fill_identity() +
-  stat_peaks(geom = "label", span = 25, vjust = "bottom", size = 3, 
-             color = "white")
-
-## ------------------------------------------------------------------------
-ggplot(sun.spct) + geom_line() + 
-  stat_peaks(shape = 21, span = 25, size = 2) + scale_fill_identity() +
-  stat_label_peaks(geom = "label_repel", span = 25, size = 3.5, nudge_y = 0.075,
-             color = "white") +
-  stat_valleys(shape = 21, span = 25, size = 2) + scale_fill_identity() +
-  stat_label_valleys(geom = "label_repel", span = 25, size = 3.5, nudge_y = -0.075,
-             color = "white") +
- expand_limits(y = c(-0.08, 0.9))
-
-## ------------------------------------------------------------------------
-ggplot(sun.spct) + geom_line() + 
-  stat_peaks(shape = 21, span = 25, size = 2) + scale_fill_identity() +
-  stat_label_peaks(geom = "label", span = 25, vjust = "bottom", size = 3, color = "white",
+  stat_label_peaks(geom = "label", span = 25, vjust = "bottom", size = 3, 
                    aes(label = ifelse(..is_peak.., ..x.label.., NA)), na.rm = TRUE) +
+  scale_color_identity() +
   expand_limits(y = c(NA, 0.9))
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + geom_line() + 
-  stat_peaks(span = NULL, geom = "vline", linetype = "dotted") +
-  stat_peaks(span = NULL, geom = "hline", linetype = "dotted")
+  stat_peaks(span = NULL, geom = "vline", linetype = "dotted", color = "red") +
+  stat_peaks(span = NULL, geom = "hline", linetype = "dotted", color = "red")
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + geom_line() + 
-  stat_peaks(span = 21, geom = "text", aes(label = ..y.label..))
+  stat_peaks(span = 21, geom = "text", aes(label = ..y.label..), color = "red")
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + geom_line() + 
-  stat_peaks(span = NULL) +
-  stat_peaks(span = NULL, geom = "text", vjust = -0.5,
+  stat_peaks(span = NULL, color = "red") +
+  stat_peaks(span = NULL, geom = "text", vjust = -0.5, color = "red", 
              aes(label = paste(..y.label.., "at", ..x.label.. , "nm"))) +
   expand_limits(y = c(NA, 0.9))
 
@@ -199,16 +202,16 @@ ggplot(sun.spct) +
 
 ## ------------------------------------------------------------------------
 ggplot(yellow_gel.spct) +
-  stat_wb_mean(w.band = Plant_bands(), geom = "rect", alpha = 0.7) +
+  stat_wb_mean(w.band = Plant_bands(), geom = "rect") +
   stat_wb_mean(w.band = Plant_bands(), angle = 90, hjust = 0, geom = "text", ypos.fixed = 0.1, 
                  aes(label = paste(..wb.name.., " = ", ..y.label.., sep = ""))) +
   geom_line() + 
-  scale_fill_identity() +
+  scale_fill_identity() + scale_color_identity() +
   theme_bw()
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) +
-  stat_wb_total(w.band = PAR(), geom = "rect", alpha = 0.5) +
+  stat_wb_total(w.band = PAR(), geom = "rect") +
   stat_wb_total(w.band = PAR(), geom = "text") +
   geom_line() + 
   scale_color_identity() + 
@@ -217,7 +220,7 @@ ggplot(sun.spct) +
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) +
-  stat_wb_total(w.band = c(400,500), geom = "rect", alpha = 0.5) +
+  stat_wb_total(w.band = c(400,500), geom = "rect") +
   stat_wb_total(w.band = c(400,500), geom = "text") +
   geom_line() + 
   scale_color_identity() + 
@@ -226,17 +229,17 @@ ggplot(sun.spct) +
 
 ## ------------------------------------------------------------------------
 ggplot(yellow_gel.spct) +
-  stat_wb_total(w.band = Plant_bands(), geom = "rect", alpha = 0.4, color = "white",
+  stat_wb_total(w.band = Plant_bands(), geom = "rect", color = "white",
                 ypos.fixed = 1) +
   stat_wb_mean(w.band = Plant_bands(), geom = "text", label.fmt = "%1.2f",
-               ypos.fixed = 1) +
+               ypos.fixed = 1, size = 2) +
   geom_line() + 
-  scale_fill_identity() +
+  scale_fill_identity() + scale_color_identity() +
   theme_bw()
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) +
-  stat_wb_irrad(w.band = PAR(), geom = "rect", alpha = 0.5,
+  stat_wb_irrad(w.band = PAR(), geom = "rect",
                 unit.in = "energy", time.unit = "second") +
   stat_wb_irrad(w.band = PAR(), geom = "text",
                 unit.in = "energy", time.unit = "second") +
@@ -247,7 +250,7 @@ ggplot(sun.spct) +
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct, unit.out = "photon") +
-  stat_wb_irrad(w.band = PAR(), geom = "rect", alpha = 0.5,
+  stat_wb_irrad(w.band = PAR(), geom = "rect",
                 unit.in = "photon", time.unit = "second") +
   stat_wb_irrad(w.band = PAR(), geom = "text",
                 unit.in = "photon", time.unit = "second", 
@@ -259,7 +262,7 @@ ggplot(sun.spct, unit.out = "photon") +
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) +
-  stat_wb_e_irrad(w.band = PAR(), geom = "rect", alpha = 0.5) +
+  stat_wb_e_irrad(w.band = PAR(), geom = "rect") +
   stat_wb_e_irrad(w.band = PAR(), geom = "text") +
   geom_line() + 
   scale_color_identity() + 
@@ -268,7 +271,7 @@ ggplot(sun.spct) +
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) +
-  stat_wb_e_irrad(w.band = CIE(), geom = "rect", alpha = 0.5) +
+  stat_wb_e_irrad(w.band = CIE(), geom = "rect") +
   stat_wb_e_irrad(w.band = CIE(), geom = "text") +
   geom_line() + 
   scale_color_identity() + 
@@ -277,7 +280,7 @@ ggplot(sun.spct) +
 
 ## ------------------------------------------------------------------------
 ggplot(sun.daily.spct) +
-  stat_wb_e_irrad(w.band = CIE(), geom = "rect", alpha = 0.5,
+  stat_wb_e_irrad(w.band = CIE(), geom = "rect",
                   time.unit = "day") +
   stat_wb_e_irrad(w.band = CIE(), geom = "text",
                   time.unit = "day", label.mult = 1e-3) +
@@ -288,7 +291,7 @@ ggplot(sun.daily.spct) +
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct, unit.out = "photon") +
-  stat_wb_q_irrad(w.band = VIS_bands(), geom = "rect", alpha = 0.5) +
+  stat_wb_q_irrad(w.band = VIS_bands(), geom = "rect", color = "black") +
   stat_wb_q_irrad(w.band = VIS_bands(), geom = "text",
                 label.mult = 1e6, size = rel(2)) +
   geom_line() + 
@@ -298,7 +301,7 @@ ggplot(sun.spct, unit.out = "photon") +
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) +
-  stat_wb_e_sirrad(w.band = PAR(), geom = "rect", alpha = 0.5) +
+  stat_wb_e_sirrad(w.band = PAR(), geom = "rect", alpha = 0.8, color = NA) +
   stat_wb_e_sirrad(w.band = PAR(), geom = "text") +
   geom_line() + 
   scale_color_identity() + 
@@ -307,7 +310,7 @@ ggplot(sun.spct) +
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct, unit.out = "photon") +
-  stat_wb_q_sirrad(w.band = PAR(), geom = "rect", alpha = 0.5) +
+  stat_wb_q_sirrad(w.band = PAR(), geom = "rect", alpha = 0.8, color = NA) +
   stat_wb_q_sirrad(w.band = PAR(), geom = "text",
                  aes(label = sprintf("Total %s = %.3g", ..wb.name.., ..yint.. * 1e6))) +
   stat_wb_q_sirrad(w.band = PAR(), geom = "text",
@@ -320,7 +323,7 @@ ggplot(sun.spct, unit.out = "photon") +
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) +
-  stat_wb_e_sirrad(w.band = CIE(), geom = "rect", alpha = 0.5) +
+  stat_wb_e_sirrad(w.band = CIE(), geom = "rect", alpha = 0.5, color = NA) +
   stat_wb_e_sirrad(w.band = CIE(), geom = "text") +
   geom_line() + 
   scale_color_identity() + 
@@ -329,7 +332,7 @@ ggplot(sun.spct) +
 
 ## ------------------------------------------------------------------------
 ggplot(sun.daily.spct) +
-  stat_wb_e_sirrad(w.band = CIE(), geom = "rect", alpha = 0.5,
+  stat_wb_e_sirrad(w.band = CIE(), geom = "rect", alpha = 0.5, color = NA,
                    time.unit = "day") +
   stat_wb_e_sirrad(w.band = CIE(), geom = "text",
                    time.unit = "day", label.mult = 1e-3) +
@@ -340,7 +343,7 @@ ggplot(sun.daily.spct) +
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) +
-  stat_wb_e_sirrad(w.band = VIS_bands(), geom = "rect", alpha = 0.5) +
+  stat_wb_e_sirrad(w.band = VIS_bands(), geom = "rect", alpha = 0.5, color = NA) +
   stat_wb_e_sirrad(w.band = VIS_bands(), angle = 90, geom = "text",
                    ypos.fixed = 0.05, hjust = 0,
                    aes(label = paste(..wb.name.., ..y.label.., sep = " = "),
@@ -352,7 +355,7 @@ ggplot(sun.spct) +
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct, unit.out = "photon") +
-  stat_wb_q_sirrad(w.band = VIS_bands(), geom = "rect", alpha = 0.5) +
+  stat_wb_q_sirrad(w.band = VIS_bands(), geom = "rect", alpha = 0.5, color = NA) +
   stat_wb_q_irrad(w.band = VIS_bands(), angle = 90, geom = "text", 
                   label.mult = 1e6, ypos.fixed = 1e-7, hjust = 0,
                   aes(label = paste(..wb.name.., ..y.label.., sep = " = "),
@@ -365,7 +368,7 @@ ggplot(sun.spct, unit.out = "photon") +
 ## ------------------------------------------------------------------------
 my.bands <- split_bands(c(300,800), length.out = 10)
 ggplot(sun.spct) +
-  stat_wb_e_sirrad(w.band = my.bands, geom = "rect", alpha = 0.5) +
+  stat_wb_e_sirrad(w.band = my.bands, geom = "rect", alpha = 0.5, color = NA) +
   stat_wb_e_irrad(w.band = my.bands, angle = 90, geom = "text",
                   ypos.fixed = 0.05, hjust = 0, color = "black") +
   geom_line() + 
@@ -376,9 +379,9 @@ ggplot(sun.spct) +
 ## ------------------------------------------------------------------------
 my.bands <- split_bands(c(300,800), length.out = 10)
 ggplot(sun.spct, unit.out = "photon") +
-  stat_wb_q_sirrad(w.band = my.bands, geom = "rect", alpha = 0.5) +
+  stat_wb_q_sirrad(w.band = my.bands, geom = "rect", alpha = 0.7, color = NA) +
   stat_wb_q_sirrad(w.band = my.bands, geom = "text", angle = 90, 
-                   label.mult = 1e6, color = "black") +
+                   label.mult = 1e6) +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -386,9 +389,10 @@ ggplot(sun.spct, unit.out = "photon") +
 
 ## ------------------------------------------------------------------------
 ggplot(data.frame(w.length = 300:800), aes(w.length)) +
-  stat_wb_label(w.band = VIS_bands(), geom = "rect", ymax = Inf, ymin = -Inf) +
-  stat_wb_label(w.band = VIS_bands(), angle = 90, color = "white") +
+  stat_wb_label(w.band = VIS_bands(), geom = "rect", ymax = Inf, ymin = -Inf, color = NA) +
+  stat_wb_label(w.band = VIS_bands(), angle = 90) +
   scale_fill_identity() + 
+  scale_color_identity() + 
   scale_y_continuous(labels = NULL) +
   scale_x_continuous(breaks = seq(from = 300, to = 800, by = 25)) +
   labs(x = "Wavelength (nm)", title = "Colours according to ISO standard") +
@@ -431,12 +435,12 @@ ggplot(sun.spct) +
 ## ------------------------------------------------------------------------
 ggplot(sun.spct, unit.out = "photon") +
   stat_wl_strip(alpha = 0.4, ymin = -Inf, ymax = Inf) + 
-  stat_wb_total(w.band = PAR(), color = "black", geom = "rect") +
+  stat_wb_total(w.band = PAR(), geom = "rect", color = NA) +
   stat_wb_total(w.band = PAR(), label.mult = 1e6,
-                geom = "text", color = "black",
+                geom = "text",
                 aes(label = paste(..wb.name.., " = ", ..y.label.., sep = ""))) +  
   geom_line() + 
-  scale_fill_identity() +
+  scale_fill_identity() + scale_color_identity() +
   theme_bw()
 
 ## ------------------------------------------------------------------------
@@ -472,4 +476,15 @@ ggplot(sun.spct) +
   geom_line(size = 1, colour = "black") +
   geom_hline(yintercept = 0, colour = "grey92") +
   theme_bw()
+
+## ------------------------------------------------------------------------
+color_chart(colors())
+
+## ------------------------------------------------------------------------
+color_chart(grep("blue", colors(), value = TRUE), ncol = 5, text.size = 4)
+
+## ------------------------------------------------------------------------
+color_chart(w_length2rgb(570:689, color.name = as.character(570:689)), 
+            use.names = TRUE, text.size = 4) +
+  ggtitle("Reddish colors by wavelength (nm)")
 

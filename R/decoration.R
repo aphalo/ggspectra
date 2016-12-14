@@ -68,7 +68,7 @@ decoration <- function(w.band,
   }
   if ("colour.guide" %in% annotations) {
     z <- c(z, stat_wl_strip(ymax = y.max * 1.26, ymin = y.max * 1.22,
-                            na.rm = na.rm))
+                            na.rm = na.rm, color = NA))
   }
   if ("boxes" %in% annotations) {
     z <- c(z, stat_wl_strip(w.band = w.band,
