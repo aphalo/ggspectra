@@ -67,7 +67,8 @@
 #' ggplot(sun.spct) + geom_line() +
 #'   stat_wl_summary(geom = "hline")
 #' ggplot(sun.spct) + geom_line() +
-#'   stat_wl_summary(label.fmt = "%.3f", color = "red")
+#'   stat_wl_summary(label.fmt = "mean = %.3f", color = "red", vjust = -0.3) +
+#'   stat_wl_summary(geom = "hline", color = "red")
 #'
 #' @export
 #' @family stats functions

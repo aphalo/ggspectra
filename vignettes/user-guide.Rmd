@@ -35,16 +35,18 @@ The _stats_ defined in this package help with with the generation of annotations
 | `stat_label_valleys`   | text (wavelength label)  | spectral quantity label (support 'ggrepel') |
 | `stat_color`         | color, fill |                                              |
 | `stat_wb_label` | text (waveband name) | rect (showing range of waveband and its color) |
-| `stat_wb_total` | rect (above data) | label(s) with waveband integral |
-| `stat_wb_mean` | rect (showing integral) | label(s) with waveband mean |
-| `stat_wb_summary` | rect (showing integral) | label with _range_ mean |
-| `stat_wb_contribution` | rect (above data) | label(s) with waveband integral / whole spectrum integral |
-| `stat_wb_relative` | rect (above data) | label(s) with waveband integral / sum of integrals of all wavebands |
+| `stat_wb_total` | text (y integral) | label(s) with waveband integral |
+| `stat_wb_mean` | text (y mean) | label(s) with waveband mean |
+| `stat_wl_summary` | text (y mean) | label with wavelength _range_ mean |
+| `stat_wb_contribution` | text (contribution) | label(s) with waveband integral / whole spectrum integral |
+| `stat_wb_relative` | text (relative) | label(s) with waveband integral / sum of integrals of all wavebands |
 | `stat_wb_e_irrad` | text (energy irradiance) |  rect (showing range of waveband and its color) |
 | `stat_wb_q_irrad` |  text (photon irradiance) | rect (showing range of waveband and its color) |
 | `stat_wb_e_sirrad` | text (spectral energy irradiance) |  rect (showing range of waveband and its color) |
 | `stat_wb_q_sirrad` |  text (spectral photon irradiance) | rect (showing range of waveband and its color) |
 | `stat_wl_strip` |  rect (color of wavelength or waveband) | text (label with waveband name) |
+| `stat_wb_box` |  rect (color of waveband) | text (label with waveband name) |
+| `stat_wb_column` |  rect (color of waveband) | text (label with waveband name) |
 
 ### What is `geom_spct` useful for?
 
@@ -157,7 +159,7 @@ One of the values calculated and mapped is colour as seen by humans correspondin
 
 ```{r}
 ggplot(sun.spct) + geom_line() + 
-  stat_peaks(shape = 21) + scale_fill_identity()
+  stat_peaks(shape = 21, color = "black") + scale_fill_identity()
 ```
 
 We can use any of the aesthetics affecting the default _geom_, `"point"`, and also with other _geom_s.
@@ -172,7 +174,7 @@ We can use several other _geoms_ as needed, demonstrated here with _geom_ `"text
 
 ```{r}
 ggplot(sun.spct) + geom_line() + 
-  stat_peaks(span = 21, geom = "text", color = "red") 
+  stat_peaks(span = 21, geom = "text", color = "red", vjust = "bottom") 
 ```
 
 The same stat can be included more than once in the same plot, using different _geoms_. We here in addition demonstrate the use of several different parameters. The `span` argument determines the number of consecutive observations tested when searching for a local extreme, and it should be an odd integer number. In addition we here demonstrate the use of a _geom_ new to `ggplot2` 2.0.0 called `"label"` which again results in colourful labels by default.
@@ -181,7 +183,8 @@ The same stat can be included more than once in the same plot, using different _
 ggplot(sun.spct) + geom_line() + 
   stat_peaks(shape = 21, span = 25, size = 2) + 
   scale_fill_identity() +
-  stat_peaks(geom = "label", span = 25, vjust = "bottom", size = 3) + 
+  stat_peaks(aes(color = ..txt.color..), 
+             geom = "label", span = 25, vjust = "bottom", size = 3) + 
   scale_color_identity()
 ```
 
@@ -222,7 +225,9 @@ By default the `label` aesthetic is mapped to a calculated label `..x.label..` g
 
 ```{r}
 ggplot(sun.spct) + geom_line() + 
-  stat_peaks(span = 21, geom = "text", aes(label = ..y.label..), color = "red")
+  stat_label_peaks(span = 31, geom = "label_repel", aes(label = ..y.label..), 
+             label.fmt = "y = %1.2f", segment.colour = "black") +
+  scale_fill_identity() + scale_color_identity()
 ```
 
 As _aesthetics_ can use values computed on-the-fly we can even use `paste()` to map a label that combines both values and adds additional text.
@@ -362,8 +367,8 @@ The first example uses a `waveband` object created on-the-fly and defining a ran
 
 ```{r}
 ggplot(sun.spct) +
-  stat_wb_mean(w.band = PAR(), geom = "rect", alpha = 0.5) +
-  stat_wb_mean(w.band = PAR(), geom = "text") +
+  stat_wb_column(w.band = PAR(), alpha = 0.5) +
+  stat_wb_mean(w.band = PAR()) +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -374,8 +379,8 @@ If a numeric vector or a spectrum is supplied as argument to `waveband`, its ran
 
 ```{r}
 ggplot(sun.spct) +
-  stat_wb_mean(w.band = c(400,500), geom = "rect", alpha = 0.5) +
-  stat_wb_mean(w.band = c(400,500), geom = "text") +
+  stat_wb_column(w.band = c(400,500), alpha = 0.5) +
+  stat_wb_mean(w.band = c(400,500)) +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +
@@ -386,10 +391,12 @@ Lists of wavebands, either user-defined or as in this case using constructor def
 
 ```{r}
 ggplot(yellow_gel.spct) +
-  stat_wb_mean(w.band = Plant_bands(), geom = "rect") +
-  stat_wb_mean(w.band = Plant_bands(), angle = 90, hjust = 0, geom = "text", ypos.fixed = 0.1, 
-                 aes(label = paste(..wb.name.., " = ", ..y.label.., sep = ""))) +
-  geom_line() + 
+  stat_wb_column(w.band = Plant_bands()) +
+  stat_wb_mean(w.band = Plant_bands()[1:3], angle = 90, hjust = 0, 
+               ypos.fixed = 0.1, color = "black",
+               aes(label = paste(..wb.name.., " = ", ..y.label.., sep = ""))) +
+  stat_wb_mean(w.band = Plant_bands()[4:6], angle = 90, hjust = 0, ypos.fixed = 0.1, 
+                 aes(label = paste(..wb.name.., " = ", ..y.label.., sep = ""))) +  geom_line() + 
   scale_fill_identity() + scale_color_identity() +
   theme_bw()
 ```
@@ -402,8 +409,8 @@ The first example uses a `waveband` object created on-the-fly and defining a ran
 
 ```{r}
 ggplot(sun.spct) +
-  stat_wb_total(w.band = PAR(), geom = "rect") +
-  stat_wb_total(w.band = PAR(), geom = "text") +
+  stat_wb_box(w.band = PAR()) +
+  stat_wb_total(w.band = PAR()) +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -414,8 +421,8 @@ If a numeric vector or a spectrum is supplied as argument to `waveband`, its ran
 
 ```{r}
 ggplot(sun.spct) +
-  stat_wb_total(w.band = c(400,500), geom = "rect") +
-  stat_wb_total(w.band = c(400,500), geom = "text") +
+  stat_wb_box(w.band = c(400,500)) +
+  stat_wb_total(w.band = c(400,500)) +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +
@@ -426,9 +433,8 @@ Lists of wavebands, either user-defined or as in this case using constructor def
 
 ```{r}
 ggplot(yellow_gel.spct) +
-  stat_wb_total(w.band = Plant_bands(), geom = "rect", color = "white",
-                ypos.fixed = 1) +
-  stat_wb_mean(w.band = Plant_bands(), geom = "text", label.fmt = "%1.2f",
+  stat_wb_box(w.band = Plant_bands(), color = "white", ypos.fixed = 1) +
+  stat_wb_mean(w.band = Plant_bands(), label.fmt = "%1.2f",
                ypos.fixed = 1, size = 2) +
   geom_line() + 
   scale_fill_identity() + scale_color_identity() +
@@ -442,10 +448,8 @@ data for $x$ and $y$ _aesthetics_. Function `stat_wb_sirrad()` is equivalent to 
 
 ```{r}
 ggplot(sun.spct) +
-  stat_wb_irrad(w.band = PAR(), geom = "rect",
-                unit.in = "energy", time.unit = "second") +
-  stat_wb_irrad(w.band = PAR(), geom = "text",
-                unit.in = "energy", time.unit = "second") +
+  stat_wb_box(w.band = PAR()) +
+  stat_wb_irrad(w.band = PAR(), unit.in = "energy", time.unit = "second") +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -454,9 +458,8 @@ ggplot(sun.spct) +
 
 ```{r}
 ggplot(sun.spct, unit.out = "photon") +
-  stat_wb_irrad(w.band = PAR(), geom = "rect",
-                unit.in = "photon", time.unit = "second") +
-  stat_wb_irrad(w.band = PAR(), geom = "text",
+  stat_wb_box(w.band = PAR()) +
+  stat_wb_irrad(w.band = PAR(),
                 unit.in = "photon", time.unit = "second", 
                 aes(label = sprintf("%s = %.3g", ..wb.name.., ..yint.. * 1e6))) +
   geom_line() + 
@@ -469,8 +472,8 @@ Also following the same naming convention as in package `photobiology`, `e` and 
 
 ```{r}
 ggplot(sun.spct) +
-  stat_wb_e_irrad(w.band = PAR(), geom = "rect") +
-  stat_wb_e_irrad(w.band = PAR(), geom = "text") +
+  stat_wb_box(w.band = PAR()) +
+  stat_wb_e_irrad(w.band = PAR()) +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -481,8 +484,8 @@ We can also use `waveband` objects describing _biological spectral weighting fun
 
 ```{r}
 ggplot(sun.spct) +
-  stat_wb_e_irrad(w.band = CIE(), geom = "rect") +
-  stat_wb_e_irrad(w.band = CIE(), geom = "text") +
+  stat_wb_box(w.band = CIE()) +
+  stat_wb_e_irrad(w.band = CIE()) +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -493,10 +496,8 @@ For daily data we need to override the default time unit.
 
 ```{r}
 ggplot(sun.daily.spct) +
-  stat_wb_e_irrad(w.band = CIE(), geom = "rect",
-                  time.unit = "day") +
-  stat_wb_e_irrad(w.band = CIE(), geom = "text",
-                  time.unit = "day", label.mult = 1e-3) +
+  stat_wb_box(w.band = CIE()) +
+  stat_wb_e_irrad(w.band = CIE(), time.unit = "day", label.mult = 1e-3) +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -506,9 +507,8 @@ ggplot(sun.daily.spct) +
 Here we pass a list of `waveband` objects.
 ```{r}
 ggplot(sun.spct, unit.out = "photon") +
-  stat_wb_q_irrad(w.band = VIS_bands(), geom = "rect", color = "black") +
-  stat_wb_q_irrad(w.band = VIS_bands(), geom = "text",
-                label.mult = 1e6, size = rel(2)) +
+  stat_wb_box(w.band = VIS_bands(), color = "black") +
+  stat_wb_q_irrad(w.band = VIS_bands(), label.mult = 1e6, size = 2) +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -519,8 +519,8 @@ ggplot(sun.spct, unit.out = "photon") +
 
 ```{r}
 ggplot(sun.spct) +
-  stat_wb_e_sirrad(w.band = PAR(), geom = "rect", alpha = 0.8, color = NA) +
-  stat_wb_e_sirrad(w.band = PAR(), geom = "text") +
+  stat_wb_column(w.band = PAR(), alpha = 0.8) +
+  stat_wb_e_sirrad(w.band = PAR()) +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -529,10 +529,10 @@ ggplot(sun.spct) +
 
 ```{r}
 ggplot(sun.spct, unit.out = "photon") +
-  stat_wb_q_sirrad(w.band = PAR(), geom = "rect", alpha = 0.8, color = NA) +
-  stat_wb_q_sirrad(w.band = PAR(), geom = "text",
+  stat_wb_column(w.band = PAR(), alpha = 0.8) +
+  stat_wb_q_sirrad(w.band = PAR(), 
                  aes(label = sprintf("Total %s = %.3g", ..wb.name.., ..yint.. * 1e6))) +
-  stat_wb_q_sirrad(w.band = PAR(), geom = "text",
+  stat_wb_q_sirrad(w.band = PAR(),
                 mapping = aes(label = sprintf("Mean %s = %.3g", ..wb.name.., ..ymean.. * 1e6)), 
                 ypos.mult = 0.45) +
   geom_line() + 
@@ -543,8 +543,8 @@ ggplot(sun.spct, unit.out = "photon") +
 
 ```{r}
 ggplot(sun.spct) +
-  stat_wb_e_sirrad(w.band = CIE(), geom = "rect", alpha = 0.5, color = NA) +
-  stat_wb_e_sirrad(w.band = CIE(), geom = "text") +
+  stat_wb_column(w.band = waveband(CIE()), alpha = 0.5) +
+  stat_wb_e_sirrad(w.band = CIE()) +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -553,9 +553,8 @@ ggplot(sun.spct) +
 
 ```{r}
 ggplot(sun.daily.spct) +
-  stat_wb_e_sirrad(w.band = CIE(), geom = "rect", alpha = 0.5, color = NA,
-                   time.unit = "day") +
-  stat_wb_e_sirrad(w.band = CIE(), geom = "text",
+  stat_wb_column(w.band = waveband(CIE()), alpha = 0.5) +
+  stat_wb_e_sirrad(w.band = CIE(),
                    time.unit = "day", label.mult = 1e-3) +
   geom_line() + 
   scale_color_identity() + 
@@ -565,11 +564,10 @@ ggplot(sun.daily.spct) +
 
 ```{r}
 ggplot(sun.spct) +
-  stat_wb_e_sirrad(w.band = VIS_bands(), geom = "rect", alpha = 0.5, color = NA) +
-  stat_wb_e_sirrad(w.band = VIS_bands(), angle = 90, geom = "text",
+  stat_wb_column(w.band = VIS_bands(), alpha = 0.5) +
+  stat_wb_e_sirrad(w.band = VIS_bands(), angle = 90,
                    ypos.fixed = 0.05, hjust = 0,
-                   aes(label = paste(..wb.name.., ..y.label.., sep = " = "),
-                       color = "black")) +
+                   aes(label = paste(..wb.name.., ..y.label.., sep = " = "))) +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -578,11 +576,10 @@ ggplot(sun.spct) +
 
 ```{r}
 ggplot(sun.spct, unit.out = "photon") +
-  stat_wb_q_sirrad(w.band = VIS_bands(), geom = "rect", alpha = 0.5, color = NA) +
-  stat_wb_q_irrad(w.band = VIS_bands(), angle = 90, geom = "text", 
+  stat_wb_column(w.band = VIS_bands(), alpha = 0.5) +
+  stat_wb_q_irrad(w.band = VIS_bands(), angle = 90, 
                   label.mult = 1e6, ypos.fixed = 1e-7, hjust = 0,
-                  aes(label = paste(..wb.name.., ..y.label.., sep = " = "),
-                      color = "black")) +
+                  aes(label = paste(..wb.name.., ..y.label.., sep = " = "))) +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -593,9 +590,9 @@ ggplot(sun.spct, unit.out = "photon") +
 ```{r}
 my.bands <- split_bands(c(300,800), length.out = 10)
 ggplot(sun.spct) +
-  stat_wb_e_sirrad(w.band = my.bands, geom = "rect", alpha = 0.5, color = NA) +
-  stat_wb_e_irrad(w.band = my.bands, angle = 90, geom = "text",
-                  ypos.fixed = 0.05, hjust = 0, color = "black") +
+  stat_wb_column(w.band = my.bands, alpha = 0.5) +
+  stat_wb_e_irrad(w.band = my.bands, angle = 90,
+                  ypos.fixed = 0.05, hjust = 0) +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -605,9 +602,8 @@ ggplot(sun.spct) +
 ```{r}
 my.bands <- split_bands(c(300,800), length.out = 10)
 ggplot(sun.spct, unit.out = "photon") +
-  stat_wb_q_sirrad(w.band = my.bands, geom = "rect", alpha = 0.7, color = NA) +
-  stat_wb_q_sirrad(w.band = my.bands, geom = "text", angle = 90, 
-                   label.mult = 1e6) +
+  stat_wb_column(w.band = my.bands, alpha = 0.7) +
+  stat_wb_q_sirrad(w.band = my.bands, angle = 90, size = 2.5) +
   geom_line() + 
   scale_color_identity() + 
   scale_fill_identity() +  
@@ -616,11 +612,11 @@ ggplot(sun.spct, unit.out = "photon") +
 
 ## Labels from wavebands
 
-Sometimes we may want to only annotate a plot with waveband names and regions without calculating any summary quantity. `stat_wb_label()` fills this role. Although the same result can be achieved with some of the summary statistics, if no summary is needed this statistic can avoid unnecessary computations, and more importantly used in plots where the $y$ is not mapped, is only the $x$ easthetic is required.
+Sometimes we may want to only annotate a plot with waveband names and regions without calculating any summary quantity. `stat_wb_label()` fills this role. Although the same result can be achieved with some of the summary statistics, if no summary is needed this statistic can avoid unnecessary computations, and more importantly used in plots where the $y$ is not mapped, as only the $x$ easthetic is required.
 
 ```{r}
 ggplot(data.frame(w.length = 300:800), aes(w.length)) +
-  stat_wb_label(w.band = VIS_bands(), geom = "rect", ymax = Inf, ymin = -Inf, color = NA) +
+  stat_wl_strip(w.band = VIS_bands(), ymax = Inf, ymin = -Inf) +
   stat_wb_label(w.band = VIS_bands(), angle = 90) +
   scale_fill_identity() + 
   scale_color_identity() + 
@@ -637,7 +633,7 @@ The `stat_wl_summary()` and `stat_wb_mean()` return a _reduced_ data set with fe
 
 ```{r}
 my.data <- data.frame(x = 300:800)
-ggplot(my.data, aes(x)) + stat_wl_strip(ymin = -1, ymax = 1) +
+ggplot(my.data, aes(x)) + stat_wl_strip(ymin = -1, ymax = 1, color = NA) +
     scale_fill_identity()
 ```
 
@@ -688,9 +684,8 @@ The _stats_ described above can be used together to produce more complex plots. 
 ```{r}
 ggplot(sun.spct, unit.out = "photon") +
   stat_wl_strip(alpha = 0.4, ymin = -Inf, ymax = Inf) + 
-  stat_wb_total(w.band = PAR(), geom = "rect", color = NA) +
+  stat_wb_box(w.band = PAR()) +
   stat_wb_total(w.band = PAR(), label.mult = 1e6,
-                geom = "text",
                 aes(label = paste(..wb.name.., " = ", ..y.label.., sep = ""))) +  
   geom_line() + 
   scale_fill_identity() + scale_color_identity() +

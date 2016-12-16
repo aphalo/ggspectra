@@ -113,8 +113,7 @@ StatColorGuide <-
                    default_aes = ggplot2::aes(xmin = ..wl.low..,
                                               xmax = ..wl.high..,
                                               label = as.character(..wb.f..),
-                                              fill = ..wb.color..,
-                                              color = NA),
+                                              fill = ..wb.color..),
                    required_aes = c("x")
   )
 

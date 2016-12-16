@@ -88,21 +88,32 @@
 #' library(ggplot2)
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
 #' ggplot(sun.spct) +
-#'   stat_wb_contribution(w.band = VIS_bands()) +
-#'   stat_wb_contribution(w.band = VIS_bands(),
-#'                        geom = "text", angle = 90, size = 2.5,
-#'                        label.fmt = "%1.2f") +
 #'   geom_line() +
-#'   scale_fill_identity()
+#'   stat_wb_box(w.band = VIS()) +
+#'   stat_wb_contribution(w.band = VIS()) +
+#'   scale_fill_identity() + scale_color_identity()
+#'
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_wb_box(w.band = VIS_bands()) +
+#'   stat_wb_contribution(w.band = VIS_bands(), angle = 90, size = 2.5) +
+#'   scale_fill_identity() + scale_color_identity()
+#'
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_wb_box(w.band = VIS_bands()) +
+#'   stat_wb_contribution(w.band = VIS_bands(), angle = 90, size = 2.5,
+#'                        label.mult = 100, label.fmt = "%3.0f%%") +
+#'   scale_fill_identity() + scale_color_identity()
 #'
 #' @export
 #' @family stats functions
 #'
-stat_wb_contribution <- function(mapping = NULL, data = NULL, geom = "rect",
+stat_wb_contribution <- function(mapping = NULL, data = NULL, geom = "text",
                        w.band = NULL,
                        integral.fun = integrate_xy,
                        label.mult = 1,
-                       label.fmt = "%.3g",
+                       label.fmt = "%1.2f",
                        ypos.mult = 1.07,
                        ypos.fixed = NULL,
                        position = "identity", na.rm = FALSE, show.legend = NA,
@@ -173,7 +184,8 @@ StatWbContrib <-
                                                     yint = yint.tmp,
                                                     ymean = ymean.tmp,
                                                     wb.color = color(wb),
-                                                    wb.name = labels(wb)$label)
+                                                    wb.name = labels(wb)$label,
+                                                    txt.color = black_or_white(color(wb)))
                                          )
                      }
                      if (is.null(ypos.fixed)) {
@@ -183,7 +195,6 @@ StatWbContrib <-
                      }
                      integ.df$yint <- integ.df$yint / integral.fun(data$x, data$y)
                      integ.df$y.label <- sprintf(label.fmt, integ.df$yint * label.mult)
-#                     print(integ.df)
                      integ.df
                    },
                    default_aes = ggplot2::aes(label = ..y.label..,
@@ -192,6 +203,7 @@ StatWbContrib <-
                                               ymin = ..y.. - (..ymax.. - ..ymin..) * 0.03,
                                               ymax = ..y.. + (..ymax.. - ..ymin..) * 0.03,
                                               yintercept = ..ymean..,
-                                              fill = ..wb.color..),
+                                              fill = ..wb.color..,
+                                              color = ..txt.color..),
                    required_aes = c("x", "y")
   )

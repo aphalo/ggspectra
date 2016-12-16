@@ -98,14 +98,12 @@
 #' library(ggrepel)
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
 #' ggplot(sun.spct) + geom_line() +
-#'   stat_label_peaks(hjust = "left", span = 21, angle = 90) +
-#'   scale_color_identity()
+#'   stat_label_peaks(hjust = "left", span = 21, angle = 90)
 #' ggplot(sun.spct) + geom_line() +
-#'   stat_label_valleys(hjust = "right", span = 21, angle = 90) +
-#'   scale_color_identity()
+#'   stat_label_valleys(hjust = "right", span = 21, angle = 90)
 #' ggplot(sun.spct) + geom_line() +
-#'   stat_peaks(span = 21, geom = "point", shape = 21, size = 3) +
-#'   stat_label_peaks(span = 21, geom = "text_repel", colour = "black",
+#'   stat_peaks(span = 21, shape = 21, size = 3) +
+#'   stat_label_peaks(span = 21, geom = "text_repel",
 #'                    angle = 90, nudge_y = 0.12, label.fmt = "%3.0f nm") +
 #'   scale_fill_identity() +
 #'   expand_limits(y = c(NA, 1))

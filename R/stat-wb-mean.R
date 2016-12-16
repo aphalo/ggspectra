@@ -86,17 +86,15 @@
 #' library(ggplot2)
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
 #' ggplot(sun.spct) +
-#'   stat_wb_mean(w.band = VIS_bands()) +
-#'   stat_wb_mean(w.band = VIS_bands(),
-#'                geom = "text", angle = 90, size = 2.5,
-#'                label.fmt = "%1.2f") +
+#'   stat_wb_column(w.band = VIS_bands()) +
+#'   stat_wb_mean(w.band = VIS_bands(), angle = 90) +
 #'   geom_line() +
-#'   scale_fill_identity()
+#'   scale_fill_identity() + scale_color_identity()
 #'
 #' @export
 #' @family stats functions
 #'
-stat_wb_mean <- function(mapping = NULL, data = NULL, geom = "rect",
+stat_wb_mean <- function(mapping = NULL, data = NULL, geom = "text",
                        w.band = NULL,
                        integral.fun = integrate_xy,
                        label.mult = 1,

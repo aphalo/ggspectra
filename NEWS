@@ -2,6 +2,12 @@ ggspectra 0.1.13
 ================
 
 Add functions ggcolorchart() and black_or_white().
+Add statistics stat_wb_box() and stat_wb_column() with "rect" as default geom
+and change default geom from "rect" to "text" in all the summary stats.
+Update stats with "text" as default geom to use an additional variable txt.color computed by black_or_white() as default mapping for color.
+As default geoms and color mapping have changed this update can break existing code.
+Fix minor bugs in handling of color mapping.
+Update documentation.
 
 ggspectra 0.1.12 (ver 0.1.11 was not submitted to CRAN)
 ================

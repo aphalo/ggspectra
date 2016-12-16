@@ -141,6 +141,7 @@ ggplot(sun.spct, unit.out = "photon") + geom_point() +
 
 Other stats functions: \code{\link{stat_color}},
   \code{\link{stat_label_peaks}},
+  \code{\link{stat_wb_box}}, \code{\link{stat_wb_column}},
   \code{\link{stat_wb_contribution}},
   \code{\link{stat_wb_irrad}}, \code{\link{stat_wb_label}},
   \code{\link{stat_wb_mean}},

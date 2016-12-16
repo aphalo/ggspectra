@@ -1,10 +1,8 @@
-#' Integrate ranges under spectral curve.
+#' Draw colour boxes for wavebands
 #'
-#' \code{stat_wb_total} computes integral under a curve. It first integrates the
-#'   area under a spectral curve and also the mean expressed per nanaometre of
-#'   wavelength for each waveband in the input. Sets suitable default aesthetics
-#'   for "rect", "hline", "vline", "text" and "label" geoms displaying "totals"
-#'   per waveband.
+#' \code{stat_wb_box} plots boxes corresponding to wavebands, by default located
+#' slightly above the peak of the spectrum. Sets suitable default aestheics for
+#' "rect", "vline", "text" and "label" geoms.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_string}}. Only needs
@@ -28,9 +26,6 @@
 #'   before the computation proceeds.
 #' @param w.band a waveband object or a list of waveband objects or numeric
 #'   vector of at least length two.
-#' @param integral.fun function on $x$ and $y$.
-#' @param label.mult numeric Scaling factor applied to y-integral values before
-#'   conversion into character strings.
 #' @param label.fmt character string giving a format definition for converting
 #'   y-integral values into character strings by means of function
 #'   \code{\link{sprintf}}.
@@ -44,17 +39,18 @@
 #' trimmed or discarded.
 #'
 #' @section Computed variables:
-#' What it is named integral below is the result of appying \code{integral.fun},
-#' with default \code{integrate_xy}.
+#' What it is named integral below is the result of appying \code{integral.fun}
+#' to the data, with default \code{integrate_xy}.
 #' \describe{
-#'   \item{y.label}{ymean multiplied by \code{label.mult} and formatted
+#'   \item{y.label}{yint multiplied by \code{label.mult} and formatted
 #'   according to \code{label.fmt}}
 #'   \item{x}{w.band-midpoint}
 #'   \item{xmin}{w.band minimum}
 #'   \item{xmax}{w.band maximum}
 #'   \item{ymin}{data$y minimum}
 #'   \item{ymax}{data$y maximum}
-#'   \item{yint}{data$y integral for the range of \code{w.band}}
+#'   \item{yint}{data$y integral for w.band / data$y integral for whole range
+#'   of data$x}
 #'   \item{xmean}{yint divided by spread(w.band)}
 #'   \item{y}{ypos.fixed or top of data, adjusted by \code{ypos.mult}}
 #'   \item{wb.color}{color of the w.band}
@@ -87,35 +83,28 @@
 #' library(ggplot2)
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
 #' ggplot(sun.spct) +
+#'   stat_wb_box(w.band = VIS_bands()) +
 #'   geom_line() +
-#'   stat_wb_box(w.band = VIS()) +
-#'   stat_wb_total(w.band = VIS()) +
-#'   scale_fill_identity() + scale_color_identity()
-#'
+#'   scale_fill_identity()
 #' ggplot(sun.spct) +
+#'   stat_wb_box(w.band = VIS_bands(), color = "white") +
 #'   geom_line() +
-#'   stat_wb_box(w.band = UV_bands(), color = "white") +
-#'   stat_wb_total(w.band = UV_bands()) +
-#'   scale_fill_identity() + scale_color_identity()
+#'   scale_fill_identity()
 #'
 #' @export
 #' @family stats functions
 #'
-stat_wb_total <- function(mapping = NULL, data = NULL, geom = "text",
+stat_wb_box <- function(mapping = NULL, data = NULL, geom = "rect",
                        w.band = NULL,
-                       integral.fun = integrate_xy,
-                       label.mult = 1,
-                       label.fmt = "%.3g",
+                       label.fmt = "%s",
                        ypos.mult = 1.07,
                        ypos.fixed = NULL,
                        position = "identity", na.rm = FALSE, show.legend = NA,
                        inherit.aes = TRUE, ...) {
   ggplot2::layer(
-    stat = StatWbTotal, data = data, mapping = mapping, geom = geom,
+    stat = StatWbBox, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(w.band = w.band,
-                  integral.fun = integral.fun,
-                  label.mult = label.mult,
                   label.fmt = label.fmt,
                   ypos.mult = ypos.mult,
                   ypos.fixed = ypos.fixed,
@@ -128,13 +117,11 @@ stat_wb_total <- function(mapping = NULL, data = NULL, geom = "text",
 #' @format NULL
 #' @usage NULL
 #' @export
-StatWbTotal <-
-  ggplot2::ggproto("StatWbTotal", ggplot2::Stat,
+StatWbBox <-
+  ggplot2::ggproto("StatWbBox", ggplot2::Stat,
                    compute_group = function(data,
                                             scales,
                                             w.band,
-                                            integral.fun,
-                                            label.mult,
                                             label.fmt,
                                             ypos.mult,
                                             ypos.fixed) {
@@ -148,7 +135,6 @@ StatWbTotal <-
                      if (!is.list(w.band) || is.waveband(w.band)) {
                        w.band <- list(w.band)
                      }
-                     stopifnot(is.function(integral.fun))
                      w.band <- trim_wl(w.band, data$x)
                      integ.df <- data.frame()
                      for (wb in w.band) {
@@ -160,21 +146,12 @@ StatWbTotal <-
                        mydata <- trim_tails(data$x, data$y, use.hinges = TRUE,
                                             low.limit = range[1],
                                             high.limit = range[2])
-                       if (is_effective(wb)) {
-                         warning("BSWFs not supported by summary: using wavelength range for ",
-                                 labels(wb)$label, "'.")
-                         wb <- waveband(wb)
-                       }
-                       yint.tmp <- integral.fun(mydata$x, mydata$y)
-                       ymean.tmp <- yint.tmp / spread(wb)
                        integ.df <- rbind(integ.df,
                                          data.frame(x = midpoint(mydata$x),
                                                     xmin = min(wb),
                                                     xmax = max(wb),
                                                     ymin = min(data$y),
                                                     ymax = max(data$y),
-                                                    yint = yint.tmp,
-                                                    ymean = ymean.tmp,
                                                     wb.color = color(wb),
                                                     wb.name = labels(wb)$label,
                                                     txt.color = black_or_white(color(wb)))
@@ -185,17 +162,14 @@ StatWbTotal <-
                      } else {
                        integ.df$y <- ypos.fixed
                      }
-                     integ.df$y.label <- sprintf(label.fmt, integ.df$yint * label.mult)
-#                     print(integ.df)
+                     integ.df$wb.label <- sprintf(label.fmt, integ.df$wb.name)
                      integ.df
                    },
-                   default_aes = ggplot2::aes(label = ..y.label..,
+                   default_aes = ggplot2::aes(label = ..wb.label..,
                                               xmin = ..xmin..,
                                               xmax = ..xmax..,
                                               ymin = ..y.. - (..ymax.. - ..ymin..) * 0.03,
                                               ymax = ..y.. + (..ymax.. - ..ymin..) * 0.03,
-                                              yintercept = ..ymean..,
-                                              fill = ..wb.color..,
-                                              color = ..txt.color..),
+                                              fill = ..wb.color..),
                    required_aes = c("x", "y")
   )

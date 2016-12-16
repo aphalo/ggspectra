@@ -1,7 +1,7 @@
 #' Label ranges under spectral curve.
 #'
 #' \code{stat_wb_label} computes computes the center of a waveband. Sets
-#' suitable default aestheics for "rect", "hline", "vline", "text" and "label"
+#' suitable default aesthetics for "text" and "label"
 #' geoms displaying "boundaries" and "names" of wavebands.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
@@ -70,9 +70,9 @@
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
 #' ggplot(sun.spct) +
 #'   geom_line() +
-#'   stat_wb_label(w.band = VIS(), geom = "rect", ymin = -0.04, ymax = 0,
+#'   stat_wb_box(w.band = VIS(), ymin = -0.04, ymax = 0,
 #'   color = "black", fill = "white") +
-#'   stat_wb_label(w.band = VIS(), y = -0.02)
+#'   stat_wb_label(w.band = VIS(), ypos.fixed = -0.02, color = "black")
 #'
 #' @export
 #' @family stats functions

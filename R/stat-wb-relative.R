@@ -2,7 +2,7 @@
 #'
 #' \code{stat_wb_relative} computes means under a curve. It first integrates the
 #'   area under a spectral curve and also the mean expressed per nanaometre of
-#'   wavelength for each waveband in the input. Sets suitable default aestheics
+#'   wavelength for each waveband in the input. Sets suitable default aesthetics
 #'   for "rect", "hline", "vline", "text" and "label" geoms displaying
 #'   values per waveband "relative" to the sum of the wavebands.
 #'
@@ -89,20 +89,31 @@
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
 #' ggplot(sun.spct) +
 #'   geom_line() +
-#'   stat_wb_relative(w.band = VIS_bands()) +
-#'   stat_wb_relative(w.band = VIS_bands(),
-#'                    geom = "text", angle = 90, size = 2.5,
-#'                    label.fmt = "%1.2f") +
-#'   scale_fill_identity()
+#'   stat_wb_box(w.band = VIS()) +
+#'   stat_wb_relative(w.band = VIS()) +
+#'   scale_fill_identity() + scale_color_identity()
+#'
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_wb_box(w.band = VIS_bands()) +
+#'   stat_wb_relative(w.band = VIS_bands(), angle = 90, size = 2.5) +
+#'   scale_fill_identity() + scale_color_identity()
+#'
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_wb_box(w.band = VIS_bands()) +
+#'   stat_wb_relative(w.band = VIS_bands(), angle = 90, size = 2.5,
+#'                    label.mult = 100, label.fmt = "%3.0f%%") +
+#'   scale_fill_identity() + scale_color_identity()
 #'
 #' @export
 #' @family stats functions
 #'
-stat_wb_relative <- function(mapping = NULL, data = NULL, geom = "rect",
+stat_wb_relative <- function(mapping = NULL, data = NULL, geom = "text",
                        w.band = NULL,
                        integral.fun = integrate_xy,
                        label.mult = 1,
-                       label.fmt = "%.3g",
+                       label.fmt = "%1.2f",
                        ypos.mult = 1.07,
                        ypos.fixed = NULL,
                        position = "identity", na.rm = FALSE, show.legend = NA,

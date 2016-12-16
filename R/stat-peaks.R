@@ -167,7 +167,7 @@ StatPeaks <-
                    },
                    default_aes = ggplot2::aes(label = ..x.label..,
                                               fill = ..color..,
-                                              color = ..txt.color..,
+#                                              color = ..txt.color..,
                                               xintercept = ..x..,
                                               yintercept = ..y..),
                    required_aes = c("x", "y")
@@ -228,7 +228,7 @@ StatValleys <-
                    },
                    default_aes = ggplot2::aes(label = ..x.label..,
                                               fill = ..color..,
-                                              color = ..txt.color..,
+#                                              color = ..txt.color..,
                                               xintercept = ..x..,
                                               yintercept = ..y..),
                    required_aes = c("x", "y")
