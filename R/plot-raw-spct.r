@@ -15,6 +15,9 @@
 #' @param pc.out logical, if TRUE use percents instead of fraction of one
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels
+#' @param span a peak is defined as an element in a sequence which is greater
+#'   than all other elements within a window of width span centered at that
+#'   element.
 #' @param annotations a character vector
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
@@ -31,6 +34,7 @@ raw_plot <- function(spct,
                      range,
                      pc.out,
                      label.qty,
+                     span,
                      annotations,
                      norm,
                      text.size,
@@ -102,10 +106,15 @@ raw_plot <- function(spct,
   setRawSpct(spct, multiple.wl = length(counts.cols))
   y.max <- max(spct[["counts"]], na.rm = TRUE)
   y.min <- 0
-  plot <- ggplot(spct) + aes_(linetype = ~scan) +
-    scale_fill_identity() + scale_color_identity()
+  plot <- ggplot(spct) + aes_(linetype = ~scan)
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.counts.label)
+
+  if (length(annotations) == 1 && annotations == "") {
+    return(plot)
+  }
+
+  plot <- plot + scale_fill_identity() + scale_color_identity()
 
   plot <- plot + decoration(w.band = w.band,
                             y.max = y.max,
@@ -114,13 +123,14 @@ raw_plot <- function(spct,
                             x.min = min(spct),
                             annotations = annotations,
                             label.qty = label.qty,
+                            span = span,
                             summary.label = counts.label,
                             text.size = text.size,
                             na.rm = TRUE)
 
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels",
-                         "summaries", "colour.guide"),
+                         "summaries", "colour.guide", "reserve.space"),
                        annotations)) > 0L) {
     y.limits <- c(y.min, y.max * 1.25)
     x.limits <- c(min(spct) - spread(spct) * 0.025, NA) # NA needed because of rounding errors
@@ -150,6 +160,9 @@ raw_plot <- function(spct,
 #' @param unit.out character IGNORED
 #' @param pc.out logical, if TRUE use percents instead of fraction of one
 #' @param label.qty character IGNORED
+#' @param span a peak is defined as an element in a sequence which is greater
+#'   than all other elements within a window of width span centered at that
+#'   element.
 #' @param annotations a character vector ("summaries" is ignored)
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #' for normalization at the wavelength of highest peak.
@@ -172,15 +185,16 @@ plot.raw_spct <-
            unit.out = "counts",
            pc.out = FALSE,
            label.qty = "average",
-           annotations = getOption("photobiology.plot.annotations",
-                                 default = c("boxes", "labels",
-                                             "colour.guide", "peaks")),
+           span = NULL,
+           annotations = NULL,
            norm = NULL,
            text.size = 2.5,
            na.rm = TRUE) {
-    if ("color.guide" %in% annotations) {
-      annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
-    }
+    annotations.default <-
+      getOption("photobiology.plot.annotations",
+                default = c("boxes", "labels", "colour.guide", "peaks"))
+    annotations <- decode_annotations(annotations,
+                                      annotations.default)
     if (length(w.band) == 0) {
       if (is.null(range)) {
         w.band <- waveband(x)
@@ -191,10 +205,14 @@ plot.raw_spct <-
       }
     }
 
-    out.ggplot <- raw_plot(spct = x, w.band = w.band, range = range,
+    out.ggplot <- raw_plot(spct = x,
+                           w.band = w.band,
+                           range = range,
                            label.qty = label.qty,
+                           span = span,
                            pc.out = pc.out,
-                           annotations = annotations, norm = norm,
+                           annotations = annotations,
+                           norm = norm,
                            text.size = text.size,
                            na.rm = na.rm,
                            ...)

@@ -13,6 +13,9 @@
 #' @param pc.out logical, if TRUE use percents instead of fraction of one
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels
+#' @param span a peak is defined as an element in a sequence which is greater
+#'   than all other elements within a window of width span centered at that
+#'   element.
 #' @param annotations a character vector
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
@@ -29,6 +32,7 @@ e_rsp_plot <- function(spct,
                        range,
                        pc.out,
                        label.qty,
+                       span,
                        annotations,
                        norm,
                        text.size,
@@ -157,10 +161,15 @@ e_rsp_plot <- function(spct,
     rsp.label <- ""
   }
 
-  plot <- ggplot(spct, aes_(~w.length, ~s.e.response)) +
-    scale_fill_identity() + scale_color_identity()
+  plot <- ggplot(spct, aes_(~w.length, ~s.e.response))
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.rsp.label)
+
+  if (length(annotations) == 1 && annotations == "") {
+    return(plot)
+  }
+
+  plot <- plot + scale_fill_identity() + scale_color_identity()
 
   plot <- plot + decoration(w.band = w.band,
                             y.max = y.max,
@@ -169,6 +178,7 @@ e_rsp_plot <- function(spct,
                             x.min = min(spct),
                             annotations = annotations,
                             label.qty = label.qty,
+                            span = span,
                             summary.label = rsp.label,
                             text.size = text.size,
                             na.rm = TRUE)
@@ -186,7 +196,7 @@ e_rsp_plot <- function(spct,
 
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "summaries",
-                         "colour.guide"), annotations)) > 0L) {
+                         "colour.guide", "reserve.space"), annotations)) > 0L) {
     y.limits <- c(y.min, y.max * 1.25)
     x.limits <- c(min(spct) - spread(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
@@ -217,6 +227,9 @@ e_rsp_plot <- function(spct,
 #' @param pc.out logical, if TRUE use percents instead of fraction of one
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels
+#' @param span a peak is defined as an element in a sequence which is greater
+#'   than all other elements within a window of width span centered at that
+#'   element.
 #' @param annotations a character vector
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
@@ -233,6 +246,7 @@ q_rsp_plot <- function(spct,
                        range,
                        pc.out,
                        label.qty,
+                       span,
                        annotations,
                        norm,
                        text.size,
@@ -361,10 +375,16 @@ q_rsp_plot <- function(spct,
     rsp.label <- ""
   }
 
-  plot <- ggplot(spct, aes_(~w.length, ~s.q.response)) +
-    scale_fill_identity() + scale_color_identity()
+  plot <- ggplot(spct, aes_(~w.length, ~s.q.response))
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.rsp.label)
+
+  if (length(annotations) == 1 && annotations == "") {
+    return(plot)
+  }
+
+  plot <- plot + scale_fill_identity() + scale_color_identity()
+
   plot <- plot + decoration(w.band = w.band,
                             y.max = y.max,
                             y.min = y.min,
@@ -372,6 +392,7 @@ q_rsp_plot <- function(spct,
                             x.min = min(spct),
                             annotations = annotations,
                             label.qty = label.qty,
+                            span = span,
                             summary.label = rsp.label,
                             text.size = text.size,
                             na.rm = TRUE)
@@ -389,7 +410,7 @@ q_rsp_plot <- function(spct,
 
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "summaries",
-                         "colour.guide"), annotations)) > 0L) {
+                         "colour.guide", "reserve.space"), annotations)) > 0L) {
     y.limits <- c(y.min, y.max * 1.25)
     x.limits <- c(min(spct) - spread(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
@@ -423,6 +444,9 @@ q_rsp_plot <- function(spct,
 #' @param pc.out logical, if TRUE use percents instead of fraction of one
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels
+#' @param span a peak is defined as an element in a sequence which is greater
+#'   than all other elements within a window of width span centered at that
+#'   element.
 #' @param annotations a character vector
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
@@ -451,15 +475,16 @@ plot.response_spct <-
            unit.out = getOption("photobiology.radiation.unit", default="energy"),
            pc.out = FALSE,
            label.qty = NULL,
-           annotations = getOption("photobiology.plot.annotations",
-                                   default = c("boxes", "labels", "summaries",
-                                               "colour.guide", "peaks")),
+           span = NULL,
+           annotations = NULL,
            norm = "max",
            text.size = 2.5,
            na.rm = TRUE) {
-    if ("color.guide" %in% annotations) {
-      annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
-    }
+    annotations.default <-
+      getOption("photobiology.plot.annotations",
+                default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
+    annotations <- decode_annotations(annotations,
+                                      annotations.default)
     if (is.null(label.qty)) {
       if (is_normalized(x) || is_scaled(x)) {
         label.qty = "contribution"
@@ -477,17 +502,26 @@ plot.response_spct <-
       }
     }
 
-    if (unit.out=="photon" || unit.out=="quantum") {
-      out.ggplot <- q_rsp_plot(spct=x, w.band=w.band, range=range,
-                               pc.out=pc.out, label.qty=label.qty,
-                               annotations=annotations, norm = norm,
+    if (unit.out=="photon" || unit.out == "quantum") {
+      out.ggplot <- q_rsp_plot(spct = x,
+                               w.band = w.band,
+                               range = range,
+                               pc.out = pc.out,
+                               label.qty = label.qty,
+                               span = span,
+                               annotations = annotations,
+                               norm = norm,
                                text.size = text.size,
                                na.rm = na.rm,
                                ...)
     } else if (unit.out=="energy") {
-      out.ggplot <- e_rsp_plot(spct=x, w.band=w.band, range=range,
-                               pc.out=pc.out, label.qty=label.qty,
-                               annotations=annotations, norm = norm,
+      out.ggplot <- e_rsp_plot(spct = x,
+                               w.band = w.band,
+                               range = range,
+                               pc.out = pc.out,
+                               label.qty = label.qty,
+                               span = span,
+                               annotations = annotations, norm = norm,
                                text.size = text.size,
                                na.rm = na.rm,
                                ...)

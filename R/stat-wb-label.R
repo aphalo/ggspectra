@@ -74,6 +74,13 @@
 #'   color = "black", fill = "white") +
 #'   stat_wb_label(w.band = VIS(), ypos.fixed = -0.02, color = "black")
 #'
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_wb_hbar(w.band = PAR(), ypos.fixed = 0, size = 1) +
+#'   stat_wb_label(aes(color = ..wb.color..),
+#'                 w.band = PAR(), ypos.fixed = +0.025) +
+#'   scale_color_identity()
+#'
 #' @export
 #' @family stats functions
 #'

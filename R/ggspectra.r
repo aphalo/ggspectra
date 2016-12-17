@@ -38,8 +38,7 @@
 #' \code{ggplot2} source code at \url{https://github.com/hadley/ggplot2}\cr
 #' Function \code{multiplot} from \url{http://www.cookbook-r.com/}
 #'
-#'
-#' @import photobiology photobiologyWavebands ggplot2
+#' @import photobiology photobiologyWavebands ggplot2 ggrepel
 #' @importFrom graphics plot
 #' @importFrom ggplot2 ggplot
 #'

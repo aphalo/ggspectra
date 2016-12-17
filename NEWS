@@ -1,11 +1,14 @@
-ggspectra 0.1.13
+ggspectra 0.2.00
 ================
 
+Improve handling of annotations parameter in plot() methods.
 Add functions ggcolorchart() and black_or_white().
 Add statistics stat_wb_box() and stat_wb_column() with "rect" as default geom
-and change default geom from "rect" to "text" in all the summary stats.
+and stat_wb_hbar() with "errorbarh" as default geom.
+Change default geom from "rect" to "text" in all the summary stats.
 Update stats with "text" as default geom to use an additional variable txt.color computed by black_or_white() as default mapping for color.
-As default geoms and color mapping have changed this update can break existing code.
+As default geoms and color mapping have changed this update can break existing code. Changes to plot() methods are backwards compatible but default color of
+some text labels is changed from "white" to "black" to improve readability.
 Fix minor bugs in handling of color mapping.
 Update documentation.
 

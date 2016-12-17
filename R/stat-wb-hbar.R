@@ -1,8 +1,9 @@
-#' Draw colour boxes for wavebands
+#' Integrate ranges under curve.
 #'
-#' \code{stat_wb_box} plots boxes corresponding to wavebands, by default located
-#' slightly above the peak of the spectrum. Sets suitable default aestheics for
-#' "rect", "vline", "text" and "label" geoms.
+#' \code{stat_wb_hbar} computes means under a curve. It first integrates the
+#'   area under a spectral curve and also the mean expressed per nanaometre of
+#'   wavelength for each waveband in the input. Sets suitable default aestheics
+#'   for "rect", "hline", "vline", "text" and "label" geoms.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_string}}. Only needs
@@ -26,8 +27,7 @@
 #'   before the computation proceeds.
 #' @param w.band a waveband object or a list of waveband objects or numeric
 #'   vector of at least length two.
-#' @param ypos.mult numeric Multiplier constant used to scale returned
-#'   \code{y} values.
+#' @param integral.fun function on $x$ and $y$.
 #' @param ypos.fixed numeric If not \code{NULL} used a constant value returned
 #'   in \code{y}.
 #'
@@ -36,15 +36,17 @@
 #' trimmed or discarded.
 #'
 #' @section Computed variables:
-#' What it is named integral below is the result of appying \code{integral.fun}
-#' to the data, with default \code{integrate_xy}.
+#' What it is named integral below is the result of appying \code{integral.fun},
+#' with default \code{integrate_xy}.
 #' \describe{
 #'   \item{x}{w.band-midpoint}
 #'   \item{xmin}{w.band minimum}
 #'   \item{xmax}{w.band maximum}
 #'   \item{ymin}{data$y minimum}
 #'   \item{ymax}{data$y maximum}
-#'   \item{y}{ypos.fixed or top of data, adjusted by \code{ypos.mult}}
+#'   \item{yint}{data$y integral for the range of \code{w.band}}
+#'   \item{ymean}{yint divided by spread(w.band)}
+#'   \item{y}{ypos.fixed or mean of data}
 #'   \item{wb.color}{color of the w.band}
 #'   \item{wb.name}{label of w.band}
 #' }
@@ -54,9 +56,9 @@
 #' \describe{
 #'   \item{xmin}{..xmin..}
 #'   \item{xmax}{..xmax..}
-#'   \item{ymin}{..y.. - (..ymax.. - ..ymin..) * 0.03}
-#'   \item{ymax}{..y.. + (..ymax.. - ..ymin..) * 0.03}
-#'   \item{fill}{..wb.color..}
+#'   \item{yintercept}{..ymean..}
+#'   \item{height}{(..ymax.. - ..ymin..) * 2e-2}
+#'   \item{color}{..wb.color..}
 #' }
 #'
 #' @section Required aesthetics:
@@ -72,32 +74,41 @@
 #' library(ggplot2)
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
 #' ggplot(sun.spct) +
-#'   stat_wb_box(w.band = VIS_bands()) +
 #'   geom_line() +
-#'   scale_fill_identity()
+#'   stat_wb_hbar(w.band = VIS_bands(), size = 1) +
+#'   scale_color_identity() +
+#'   theme_bw()
+#'
 #' ggplot(sun.spct) +
-#'   stat_wb_box(w.band = VIS_bands(), color = "white") +
 #'   geom_line() +
-#'   scale_fill_identity()
+#'   stat_wb_hbar(w.band = PAR(), size = 1) +
+#'   scale_color_identity() +
+#'   theme_bw()
+#'
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_wb_hbar(w.band = PAR(), size = 1, ypos.fixed = 0) +
+#'   scale_color_identity() +
+#'   theme_bw()
 #'
 #' @export
 #' @family stats functions
 #'
-stat_wb_box <- function(mapping = NULL,
-                        data = NULL,
-                        geom = "rect",
-                        w.band = NULL,
-                        ypos.mult = 1.07,
-                        ypos.fixed = NULL,
-                        position = "identity",
-                        na.rm = FALSE,
-                        show.legend = NA,
-                        inherit.aes = TRUE, ...) {
+stat_wb_hbar <- function(mapping = NULL,
+                         data = NULL,
+                         geom = "errorbarh",
+                         w.band = NULL,
+                         integral.fun = integrate_xy,
+                         ypos.fixed = NULL,
+                         position = "identity",
+                         na.rm = FALSE,
+                         show.legend = NA,
+                         inherit.aes = TRUE, ...) {
   ggplot2::layer(
-    stat = StatWbBox, data = data, mapping = mapping, geom = geom,
+    stat = StatWbHbar, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(w.band = w.band,
-                  ypos.mult = ypos.mult,
+                  integral.fun = integral.fun,
                   ypos.fixed = ypos.fixed,
                   na.rm = na.rm,
                   ...)
@@ -108,11 +119,12 @@ stat_wb_box <- function(mapping = NULL,
 #' @format NULL
 #' @usage NULL
 #' @export
-StatWbBox <-
-  ggplot2::ggproto("StatWbBox", ggplot2::Stat,
+StatWbHbar <-
+  ggplot2::ggproto("StatWbHbar", ggplot2::Stat,
                    compute_group = function(data,
                                             scales,
                                             w.band,
+                                            integral.fun,
                                             ypos.mult,
                                             ypos.fixed) {
                      if (length(w.band) == 0) {
@@ -125,6 +137,7 @@ StatWbBox <-
                      if (!is.list(w.band) || is.waveband(w.band)) {
                        w.band <- list(w.band)
                      }
+                     stopifnot(is.function(integral.fun))
                      w.band <- trim_wl(w.band, data$x)
                      integ.df <- data.frame()
                      for (wb in w.band) {
@@ -136,19 +149,27 @@ StatWbBox <-
                        mydata <- trim_tails(data$x, data$y, use.hinges = TRUE,
                                             low.limit = range[1],
                                             high.limit = range[2])
+                       if (is_effective(wb)) {
+                         warning("BSWFs not supported by summary: using wavelength range for ",
+                                 labels(wb)$label, "'.")
+                         wb <- waveband(wb)
+                       }
+                       yint.tmp <- integral.fun(mydata$x, mydata$y)
+                       ymean.tmp <- yint.tmp / spread(wb)
                        integ.df <- rbind(integ.df,
                                          data.frame(x = midpoint(mydata$x),
                                                     xmin = min(wb),
                                                     xmax = max(wb),
                                                     ymin = min(data$y),
                                                     ymax = max(data$y),
+                                                    yint = yint.tmp,
+                                                    ymean = ymean.tmp,
                                                     wb.color = color(wb),
-                                                    wb.name = labels(wb)$label,
-                                                    txt.color = black_or_white(color(wb)))
+                                                    wb.name = labels(wb)$label)
                                          )
                      }
                      if (is.null(ypos.fixed)) {
-                       integ.df$y <- with(integ.df, ymin + (ymax - ymin) * ypos.mult)
+                       integ.df$y <- with(integ.df, ymin + (ymean - ymin))
                      } else {
                        integ.df$y <- ypos.fixed
                      }
@@ -156,8 +177,9 @@ StatWbBox <-
                    },
                    default_aes = ggplot2::aes(xmin = ..xmin..,
                                               xmax = ..xmax..,
-                                              ymin = ..y.. - (..ymax.. - ..ymin..) * 0.03,
-                                              ymax = ..y.. + (..ymax.. - ..ymin..) * 0.03,
-                                              fill = ..wb.color..),
+                                              yintercept = ..ymean..,
+                                              height = (..ymax.. - ..ymin..) * 2e-2,
+                                              color = ..wb.color..),
                    required_aes = c("x", "y")
   )
+

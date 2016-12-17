@@ -61,7 +61,9 @@ plot(sun.spct)
 
 Although the defaults provide a useful plot, the `plot()` methods accepts arguments for several parameters that allow to tweak the looks and contents of the plots without explicit manipulation of the spectral data.
 
-This first example, shows means instead of integrals in the labels. Note that the units and quantity labels for the waveband summaries have also changed.
+### Summary quantities in labels
+
+In this first example we pass `"mean"` as argument to `label.qty`, to print means instead of integrals in the labels. Note that the units and quantity labels for the waveband summaries have also changed.
 
 ```{r}
 plot(sun.spct, label.qty = "mean")
@@ -91,27 +93,65 @@ We can change the basis of expression of spectral irradiance and irradiance from
 plot(sun.spct, unit.out = "photon")
 ```
 
-Which _annotations_ are included can be also controlled through parameter `annotations`.
+### Automatic annotations
+
+Which _annotations_ are included can be controlled through parameter `annotations`. These are passed as a vector of character strings, with three values with special meaning for the first element (with index = 1): `"="` means use only the annotations that follow in the vector, `"+"` means add to the default the annotations that follow, and `"-"` means remove the annotations that follow from the defaults. A `NULL` value means use defaults as is, `""` means no annotations, and `"reserve.space"` means no annotations, but expand axis limits and set identity scales ready for mannually adding annotations.
+
+| annotation | default for classes                       | overrides    |
+|:-----------|:------------------------------------------|:-------------|
+| "boxes"    | all                  |              |
+| "segments" | none                 | "boxes"      |
+| "color.guide" | all               |              |
+| "peaks"    | all                  |              |
+| "peak.labels" | none              | "peaks"      |
+| "valleys"  | none                 |              |
+| "valley.labels" | none            | "valleys"    |
+| "labels"   | all                  |              |
+| "summaries" | `source_spct`, `response_spct`, `filter_spct`, `reflector_spct` |              |
+
+We can list all the annotations to be included in the plot, in which case `"="` is optional so as to maintain compatibility with earlier versions.
 
 ```{r}
 plot(sun.spct, 
-     annotations = c("segments", "labels", "summaries", "color.guide"))
+     annotations = c("=", "segments", "labels", "summaries", "color.guide", "peaks"))
 ```
-
+The same plot can be obtained by simply adding `"segments"`, as these override the default `"boxes"`.
 ```{r}
 plot(sun.spct, 
-     annotations = NULL)
+     annotations = c("+", "segments"))
 ```
 
+We can also _remove_ some of the default annotations.
 ```{r}
-plot(sun.spct, annotations = c("segments", "labels", "color.guide"))
+plot(sun.spct, annotations = c("-", "summaries", "peaks"))
+```
+
+We add `"valleys"` as annotations, and control with `span` how near peaks and valleys are found.
+
+```{r}
+plot(sun.spct, annotations = c("+", "valleys"), span = 41)
+```
+The annotations `"peak.labels"` and `"valley.labels"` overridde `"peaks"` and `"valleys"`. They use the _repulsive_ geometry `geom_label_repel` from package 'ggrepel'.
+```{r}
+plot(sun.spct, annotations = c("+", "peak.labels", "valley.labels"), span = 41)
+```
+
+Passing `""` as argument to `annotations` results in a plot with no annotations, and no _scales_ set. 
+
+```{r}
+plot(sun.spct, annotations = "")
+```
+
+Passing `"reserve.space"` as argument to `annotations` results in a plot with no annotations, but _scales_ set and expanded so as to receive annotations.
+
+```{r}
+plot(sun.spct, annotations = "reserve.space")
 ```
 
 The size of the font used for the annotations is controlled by argument `text.size`.
 
 ```{r}
-plot(sun.spct, 
-     annotations = c("segments", "labels", "color.guide"), 
+plot(sun.spct, annotations = c("=", "segments", "labels", "color.guide"), 
      text.size = 3.5)
 ```
 
@@ -129,14 +169,16 @@ plot(sun.spct, w.band = PAR())
 plot(sun.spct, w.band = CIE())
 ```
 
+`NULL` as argument for `w.band` is replaced by a waveband covering the full range of the spectral datat.
+
 ```{r}
 plot(sun.spct, w.band = NULL)
 ```
-
+The _whole range_ is the range plotted, which is controlled by the argument passed to `range`. 
 ```{r}
 plot(sun.spct, w.band = NULL, range = c(400,700))
 ```
-
+The argument passed to `range` can be a `waveband` or and spectrum, in which case their wavelength range is used.
 ```{r}
 plot(sun.spct, w.band = NULL, range = PAR())
 ```
@@ -153,6 +195,7 @@ plot(sun.spct, w.band = VIS_bands(), range = VIS())
 The time unit is also stored in the metadata, as demonstrated here. The units in axis labels have changed to the units used in the spectral data.
 
 ```{r}
+getTimeUnit(sun.daily.spct)
 plot(sun.daily.spct)
 ```
 
@@ -162,51 +205,51 @@ Even though the `plot()` methods can return a finished plot, the returned object
 plot(two_suns.spct, label.qty = "mean") + facet_wrap(~spct.idx)
 ```
 
+When using grouping the `"summaries"` annotation would be overplotted, and needs to be suppressed.
 ```{r}
-plot(two_suns.spct) + aes(linetype = spct.idx)
+plot(two_suns.spct, annotations = c("-", "summaries")) + 
+  aes(linetype = spct.idx)
 ```
 
-Here we demonstrate something that may look like a bug, but is not. The annotations are based only on the data supplied as argument to `plot()` (or in other cases `ggplot()`) because these are the only data visible in all _layers_. The `data` argument in `geom_spct()` only affects the data seen by this _geom_. This way of building a plot is very different than when using _grouping_ within a single data set, and is best avoided in normal situations.
+It is possible to construct and bind the spectra on-the-fly.
 
 ```{r}
-plot(sun.spct) + geom_spct(fill = color(sun.spct)) + 
-  geom_spct(data = yellow_gel.spct * sun.spct, color = "black", 
-            fill = color(yellow_gel.spct * sun.spct))
+plot(rbindspct(list(sun = sun.spct, filtered = yellow_gel.spct * sun.spct)),
+     annotations = c("-", "summaries")) + 
+  aes(linetype = spct.idx)
 ```
 
 In the examples above the `source_spct` object `sun.spct` was used. The `plot()` methods for other spectral classes have slight differences. We show some examples for `filter_spct` objects.
 
 ```{r}
-plot(yellow_gel.spct)
+plot(yellow_gel.spct, annotations = c("-", "peaks"))
 ```
 
 By default transmittance, reflectance and absorptance are expressed as fractions of one, as in the plot above, but optionally percents can be plotted.
 
 ```{r}
-plot(yellow_gel.spct, pc.out = TRUE)
+plot(yellow_gel.spct, pc.out = TRUE, annotations = c("-", "peaks"))
 ```
 
 In many cases it is possible to convert on-the-fly the quantity plotted.
 
 ```{r}
-plot(yellow_gel.spct, plot.qty = "absorbance")
+plot(yellow_gel.spct, plot.qty = "absorbance", annotations = c("-", "peaks"))
 ```
 
-We add a _guessed_ spectral reflectance to the data object to allow the estimation of absorptance.
+We add a _guessed_ spectral reflectance to the data object to allow the estimation of internal absorptance.
 
 ```{r}
 yellow_gel.spct$Rfr <- 1 - max(yellow_gel.spct$Tfr)
-plot(yellow_gel.spct, plot.qty = "absorptance")
+plot(yellow_gel.spct, plot.qty = "absorptance", annotations = c("-", "peaks"))
 ```
 
-If one really needs to, one can add a suitable _stat_ using 'local' data. As this is just a demonstration, I will avoid adding all the additional arguments needed to make the annotations of peaks match those produced by `plot()`.
+If one really needs to, one can add a suitable _stat_ using 'local' data. A peak annotaion could be added manually.
 
 ```{r}
 plot(sun.spct) + geom_spct(fill = color(sun.spct)) + 
   geom_spct(data = yellow_gel.spct * sun.spct, color = "black", 
-            fill = color(yellow_gel.spct * sun.spct)) +
-  stat_peaks(data = yellow_gel.spct * sun.spct, color = "yellow", 
-             ignore_threshold = 0.1, span = 21)
+            fill = color(yellow_gel.spct * sun.spct))
 ```
 
 ## Ploting collections of spectra
@@ -228,12 +271,38 @@ into a spectrum object.
 plot(rbindspct(two_suns.mspct)) + facet_wrap(~spct.idx, ncol = 1)
 ```
 
-Plot using grouping with tweaking of annotations by first converting the collection-of-spectra into a spectrum object.
+Plot using grouping by first converting the collection-of-spectra into a spectrum object.
 
 ```{r}
 plot(rbindspct(two_suns.mspct), 
-     annotations = c("color.guide", "labels", "boxes", "peaks")) + 
+     annotations = c("-", "summaries")) + 
   aes(linetype = spct.idx)
+```
+
+Using colors is slightly more involved as the identity scale is in use. For this same reason no color key in generated automatically, and a single peak is found unless we change the default span. (In the case of more than two spectra it is easier to use `plyr::mapvalues` instead of several nested `ifelse` calls.)
+
+```{r}
+plot(rbindspct(two_suns.mspct), 
+     annotations = c("-", "summaries"), span = 301) + 
+  aes(color = ifelse(spct.idx == "sun1", "darkgreen", "darkred"))
+```
+
+Plots created with `plot()` method can be used as the starting point for customizations.
+
+```{r}
+plot(rbindspct(two_suns.mspct), annotations = "") + 
+  aes(linetype = spct.idx) +
+  wl_guide(ymax = -0.05)
+```
+
+Here we replace the default peaks annotations with a custom one, but still take advantage of other defaults like nice axis labels and other annotations.
+
+```{r}
+plot(sun.spct, annotations = c("-", "peaks")) +
+  stat_peaks(span = NULL, color = "red") +
+  stat_peaks(span = NULL, geom = "text", 
+             label.fmt = "max at %3.1f nm",
+             vjust = -0.4, color = "red")
 ```
 
 Plot using "lower-level" functions. See the 'User Guide' for additional details.
@@ -245,6 +314,7 @@ ggplot(rbindspct(two_suns.mspct)) +
   geom_line()
 ```
 
+
 ## Ploting wavebands
 
 A `plot()` method for `waveband` objects is also provided.
@@ -254,9 +324,9 @@ plot(VIS())
 ```
 
 ```{r}
-plot(CIE(), range = CIE())
+plot(CIE(), range = CIE(), annotations = c("-", "color.guide"))
 ```
 
 ```{r}
-plot(DNA_N(), range = c(270, 420))
+plot(DNA_N(), range = c(270, 420), annotations = c("-", "color.guide"))
 ```

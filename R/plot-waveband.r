@@ -13,6 +13,9 @@
 #'   min annd max wavelengths (nm)
 #' @param fill value to use as response for wavelngths outside the waveband
 #'   range
+#' @param span a peak is defined as an element in a sequence which is greater
+#'   than all other elements within a window of width span centered at that
+#'   element.
 #' @param unit.in the type of unit we assume as reference "energy" or "photon"
 #'   based
 #' @param annotations a character vector
@@ -53,70 +56,79 @@ plot.waveband <-
            w.length = NULL,
            range = c(280, 800),
            fill = 0,
+           span = NULL,
            unit.in = getOption("photobiology.radiation.unit", default = "energy"),
-           annotations = getOption("photobiology.plot.annotations",
-                                   default = c("colour.guide", "boxes", "labels")),
+           annotations = NULL,
            wb.trim = TRUE,
            norm = NULL,
            text.size = 2.5,
            na.rm = TRUE) {
-  w.band <- x
-  if (!is.waveband(w.band)) {
-    return(ggplot())
-  }
-  if (!is.null(w.length)) {
-    w.length <- unique(sort(w.length, na.last = NA))
-  }
-  if (is.null(range)) {
-    if (is.null(w.length) || length(w.length) < 2) {
-      range <- range(w.band)
+    annotations.default <-
+      getOption("photobiology.plot.annotations",
+                default = c("boxes", "labels", "colour.guide"))
+    annotations <- c("=", decode_annotations(annotations,
+                                             annotations.default))
+    w.band <- x
+    if (!is.waveband(w.band)) {
+      return(ggplot())
     }
-  } else {
-    range <- range(range)
-  }
-  w.length <- w.length[w.length > range[1] & w.length < range[2]]
-  if (is.null(w.length)) {
-    w.length <- seq(range[1], range[2], length.out = 200)
-  } else if (length(w.length) < 200) {
-    range <- range(w.length)
-    w.length <- seq(range[1], range[2], length.out = 200)
-  }
-  if (!is.null(w.band$hinges) & length(w.band$hinges)>0) {
-    hinges <- with(w.band, hinges[hinges > range[1] & hinges < range[2]])
-    w.length <- c(w.length, hinges)
-  }
-  w.length <- unique(sort(w.length))
-  s.response <-
-    calc_multipliers(w.length, w.band,
-                     unit.out=unit.in, unit.in=unit.in,
-                     use.cached.mult=getOption("photobiology.use.cached.mult",
-                                               default = FALSE), fill = fill)
-  if (is.null(norm)) {
-    if (!is.null(w.band$norm)) {
-      norm <- w.band$norm
+    if (!is.null(w.length)) {
+      w.length <- unique(sort(w.length, na.last = NA))
+    }
+    if (is.null(range)) {
+      if (is.null(w.length) || length(w.length) < 2) {
+        range <- range(w.band)
+      }
     } else {
-      norm <- "max"
+      range <- range(range)
     }
+    w.length <- w.length[w.length > range[1] & w.length < range[2]]
+    if (is.null(w.length)) {
+      w.length <- seq(range[1], range[2], length.out = 200)
+    } else if (length(w.length) < 200) {
+      range <- range(w.length)
+      w.length <- seq(range[1], range[2], length.out = 200)
+    }
+    if (!is.null(w.band$hinges) & length(w.band$hinges)>0) {
+      hinges <- with(w.band, hinges[hinges > range[1] & hinges < range[2]])
+      w.length <- c(w.length, hinges)
+    }
+    w.length <- unique(sort(w.length))
+    s.response <-
+      calc_multipliers(w.length, w.band,
+                       unit.out=unit.in, unit.in=unit.in,
+                       use.cached.mult=getOption("photobiology.use.cached.mult",
+                                                 default = FALSE), fill = fill)
+    if (is.null(norm)) {
+      if (!is.null(w.band$norm)) {
+        norm <- w.band$norm
+      } else {
+        norm <- "max"
+      }
+    }
+    if (unit.in == "energy") {
+      spct <- response_spct(w.length = w.length, s.e.response = s.response)
+    } else if (unit.in %in% c("photon", "quantum")) {
+      spct <- response_spct(w.length = w.length, s.q.response = s.response)
+    }
+    if (is_effective(w.band)) {
+      w.band.range <-
+        waveband(w.band,
+                 wb.name = paste("Range of", labels(w.band)[["label"]]))
+    } else {
+      w.band.range <- w.band
+    }
+    out.ggplot <- plot(spct,
+                       w.band=w.band.range,
+                       annotations = annotations,
+                       wb.trim = wb.trim,
+                       span = span,
+                       norm = norm,
+                       text.size = text.size,
+                       na.rm = na.rm,
+                       ...)
+    if ("title" %in% annotations) {
+      out.ggplot <- out.ggplot + labs(title = deparse(substitute(x)))
+    }
+    return(out.ggplot)
   }
-  if (unit.in == "energy") {
-    spct <- response_spct(w.length = w.length, s.e.response = s.response)
-  } else if (unit.in %in% c("photon", "quantum")) {
-    spct <- response_spct(w.length = w.length, s.q.response = s.response)
-  }
-  if (is_effective(w.band)) {
-    w.band.range <-
-      waveband(w.band,
-               wb.name = paste("Range of", labels(w.band)[["label"]]))
-  } else {
-    w.band.range <- w.band
-  }
-  out.ggplot <- plot(spct, w.band=w.band.range, annotations = annotations,
-                     wb.trim = wb.trim, norm = norm,
-                     text.size = text.size,
-                     na.rm = na.rm,
-                     ...)
-  if ("title" %in% annotations) {
-    out.ggplot <- out.ggplot + labs(title = deparse(substitute(x)))
-  }
-  return(out.ggplot)
-}

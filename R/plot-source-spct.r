@@ -12,6 +12,10 @@
 #'   min annd max wavelengths (nm)
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels
+#' @param span a peak is defined as an element in a sequence which is greater
+#'   than all other elements within a window of width span centered at that
+#'   element.
+#' @param annotations.default a character vector
 #' @param annotations a character vector
 #' @param text.size numeric size of text in the plot decorations.
 #' @param na.rm logical.
@@ -25,6 +29,7 @@ e_plot <- function(spct,
                    w.band,
                    range,
                    label.qty,
+                   span,
                    annotations,
                    text.size,
                    na.rm,
@@ -105,16 +110,22 @@ e_plot <- function(spct,
   spct[["s.e.irrad"]] <- spct[["s.e.irrad"]] * scale.factor
   y.max <- max(c(spct[["s.e.irrad"]], 0), na.rm = TRUE)
   y.min <- min(c(spct[["s.e.irrad"]], 0), na.rm = TRUE)
-  plot <- ggplot(spct, aes_(~w.length, ~s.e.irrad)) +
-    scale_fill_identity() + scale_color_identity()
+  plot <- ggplot(spct, aes_(~w.length, ~s.e.irrad))
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.irrad.label)
+
+  if (length(annotations) == 1 && annotations == "") {
+    return(plot)
+  }
+
+  plot <- plot + scale_fill_identity() + scale_color_identity()
 
   if (label.qty == "total") {
     label.qty <- "irrad"
   } else if (label.qty %in% c("mean", "average")) {
     label.qty <- "sirrad"
   }
+
   plot <- plot + decoration(w.band = w.band,
                             unit.out = "energy",
                             time.unit = getTimeUnit(spct),
@@ -124,6 +135,7 @@ e_plot <- function(spct,
                             x.min = min(spct),
                             annotations = annotations,
                             label.qty = label.qty,
+                            span = span,
                             summary.label = irrad.label,
                             text.size = text.size,
                             na.rm = TRUE)
@@ -149,7 +161,8 @@ e_plot <- function(spct,
   }
 
   if (!is.null(annotations) &&
-      length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide"), annotations)) > 0L) {
+      length(intersect(c("boxes", "segments", "labels", "summaries",
+                         "colour.guide", "reserve.space"), annotations)) > 0L) {
     y.limits <- c(y.min, y.max * 1.25)
     x.limits <- c(min(spct) - spread(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
@@ -179,6 +192,10 @@ e_plot <- function(spct,
 #'   min annd max wavelengths (nm)
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels
+#' @param span a peak is defined as an element in a sequence which is greater
+#'   than all other elements within a window of width span centered at that
+#'   element.
+#' @param annotations.default a character vector
 #' @param annotations a character vector
 #' @param text.size numeric size of text in the plot decorations.
 #' @param na.rm logical.
@@ -192,12 +209,22 @@ q_plot <- function(spct,
                    w.band,
                    range,
                    label.qty,
+                   span,
+                   annotations.default,
                    annotations,
                    text.size,
                    na.rm,
                    ...) {
   if (!is.source_spct(spct)) {
     stop("q_plot() can only plot source_spct objects.")
+  }
+  if ("color.guide" %in% annotations) {
+    annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
+  }
+  if (is.null(annotations)) {
+    annotations <- annotations.default
+  } else if (tolower(annotations[1]) %in% c("!", "not")) {
+    annotations <- setdiff(annotations.default, annotations[-1])
   }
   e2q(spct, byref = TRUE)
   if (!is.null(range)) {
@@ -273,10 +300,15 @@ q_plot <- function(spct,
   spct[["s.q.irrad"]] <- spct[["s.q.irrad"]] * scale.factor
   y.max <- max(c(spct[["s.q.irrad"]], 0), na.rm = TRUE)
   y.min <- min(c(spct[["s.q.irrad"]], 0), na.rm = TRUE)
-  plot <- ggplot(spct, aes_(~w.length, ~s.q.irrad)) +
-    scale_fill_identity() + scale_color_identity()
+  plot <- ggplot(spct, aes_(~w.length, ~s.q.irrad))
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.irrad.label)
+
+  if (length(annotations) == 1 && annotations == "") {
+    return(plot)
+  }
+
+  plot <- plot + scale_fill_identity() + scale_color_identity()
 
   if (label.qty == "total") {
     label.qty <- "irrad"
@@ -292,6 +324,7 @@ q_plot <- function(spct,
                             x.min = min(spct),
                             annotations = annotations,
                             label.qty = label.qty,
+                            span = span,
                             summary.label = irrad.label,
                             text.size = text.size,
                             na.rm = TRUE)
@@ -318,7 +351,7 @@ q_plot <- function(spct,
 
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "summaries",
-                         "colour.guide"), annotations)) > 0L) {
+                         "colour.guide", "reserve.space"), annotations)) > 0L) {
     y.limits <- c(y.min, y.max * 1.25)
     x.limits <- c(min(spct) - spread(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
@@ -351,6 +384,9 @@ q_plot <- function(spct,
 #'   for plotting: "photon" or its synomin "quantum", or "energy"
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels
+#' @param span a peak is defined as an element in a sequence which is greater
+#'   than all other elements within a window of width span centered at that
+#'   element.
 #' @param annotations a character vector
 #' @param text.size numeric size of text in the plot decorations.
 #' @param na.rm logical.
@@ -378,14 +414,15 @@ plot.source_spct <-
            range=NULL,
            unit.out=getOption("photobiology.radiation.unit", default = "energy"),
            label.qty = NULL,
-           annotations=getOption("photobiology.plot.annotations",
-                                 default = c("boxes", "labels", "summaries",
-                                             "colour.guide", "peaks")),
+           span = NULL,
+           annotations = NULL,
            text.size = 2.5,
            na.rm = TRUE) {
-    if ("color.guide" %in% annotations) {
-      annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
-    }
+    annotations.default <-
+      getOption("photobiology.plot.annotations",
+                default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
+    annotations <- decode_annotations(annotations,
+                                      annotations.default)
     if (is.null(label.qty)) {
       if (is_normalized(x) || is_scaled(x)) {
         label.qty = "contribution"
@@ -405,13 +442,17 @@ plot.source_spct <-
 
     if (unit.out %in% c("photon", "quantum")) {
       out.ggplot <- q_plot(spct = x, w.band = w.band, range = range,
-                           label.qty = label.qty, annotations = annotations,
+                           label.qty = label.qty,
+                           span = span,
+                           annotations = annotations,
                            text.size = text.size,
                            na.rm = na.rm,
                            ...)
     } else if (unit.out == "energy") {
       out.ggplot <- e_plot(spct = x, w.band = w.band, range = range,
-                           label.qty = label.qty, annotations = annotations,
+                           label.qty = label.qty,
+                           span = span,
+                           annotations = annotations,
                            text.size = text.size,
                            na.rm = na.rm,
                            ...)

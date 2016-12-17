@@ -25,12 +25,12 @@ Imports:
     photobiologyWavebands (>= 0.4.1),
     scales (>= 0.4.1),
     ggplot2 (>= 2.2.0),
+    ggrepel (>= 0.6.5),
     dplyr (>= 0.5.0),
     lubridate (>= 1.6.0),
     tidyr (>= 0.6.0),
     reshape2 (>= 1.4.2)
 Suggests:
-    ggrepel (>= 0.6.5),
     knitr (>= 1.15.1),
     rmarkdown (>= 1.2)
 URL: http://www.r4photobiology.info,

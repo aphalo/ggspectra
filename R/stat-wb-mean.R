@@ -35,8 +35,8 @@
 #'   \code{\link{sprintf}}.
 #' @param ypos.mult numeric Multiplier constant used to scale returned
 #'   \code{y} values.
-#' @param ypos.fixed numeric If not \code{NULL} used a constant value returned
-#'   in \code{y}.
+#' @param xpos.fixed,ypos.fixed numeric If not \code{NULL} used as constant value returned
+#'   in \code{x} or \code{y}.
 #'
 #' @return A data frame with one row for each waveband object in the argument
 #' to \code{w.band}. Wavebeand outside the range of the spectral data are
@@ -84,6 +84,7 @@
 #' library(photobiology)
 #' library(photobiologyWavebands)
 #' library(ggplot2)
+#' library(ggrepel)
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
 #' ggplot(sun.spct) +
 #'   stat_wb_column(w.band = VIS_bands()) +
@@ -91,18 +92,31 @@
 #'   geom_line() +
 #'   scale_fill_identity() + scale_color_identity()
 #'
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_wb_hbar(w.band = VIS_bands(), size = 1.5) +
+#'   stat_wb_mean(w.band = VIS_bands(), angle = 90, ypos.mult = 1.05,
+#'                geom = "label_repel", nudge_y = +0.03,
+#'                segment.colour = NA) +
+#'   scale_fill_identity() + scale_color_identity()
+#'
 #' @export
 #' @family stats functions
 #'
-stat_wb_mean <- function(mapping = NULL, data = NULL, geom = "text",
-                       w.band = NULL,
-                       integral.fun = integrate_xy,
-                       label.mult = 1,
-                       label.fmt = "%.3g",
-                       ypos.mult = 0.55,
-                       ypos.fixed = NULL,
-                       position = "identity", na.rm = FALSE, show.legend = NA,
-                       inherit.aes = TRUE, ...) {
+stat_wb_mean <- function(mapping = NULL,
+                         data = NULL,
+                         geom = "text",
+                         w.band = NULL,
+                         integral.fun = integrate_xy,
+                         label.mult = 1,
+                         label.fmt = "%.3g",
+                         ypos.mult = 1.07,
+                         xpos.fixed = NULL,
+                         ypos.fixed = NULL,
+                         position = "identity",
+                         na.rm = FALSE,
+                         show.legend = NA,
+                         inherit.aes = TRUE, ...) {
   ggplot2::layer(
     stat = StatWbMean, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -111,6 +125,7 @@ stat_wb_mean <- function(mapping = NULL, data = NULL, geom = "text",
                   label.mult = label.mult,
                   label.fmt = label.fmt,
                   ypos.mult = ypos.mult,
+                  xpos.fixed = xpos.fixed,
                   ypos.fixed = ypos.fixed,
                   na.rm = na.rm,
                   ...)
@@ -130,6 +145,7 @@ StatWbMean <-
                                             label.mult,
                                             label.fmt,
                                             ypos.mult,
+                                            xpos.fixed,
                                             ypos.fixed) {
                      if (length(w.band) == 0) {
                        w.band <- waveband(data$x)
@@ -161,7 +177,7 @@ StatWbMean <-
                        yint.tmp <- integral.fun(mydata$x, mydata$y)
                        ymean.tmp <- yint.tmp / spread(wb)
                        integ.df <- rbind(integ.df,
-                                         data.frame(x = midpoint(mydata$x),
+                                         data.frame(x = midpoint(wb),
                                                     xmin = min(wb),
                                                     xmax = max(wb),
                                                     ymin = min(data$y),
@@ -172,6 +188,9 @@ StatWbMean <-
                                                     wb.name = labels(wb)$label,
                                                     txt.color = black_or_white(color(wb)))
                                          )
+                     }
+                     if (!is.null(xpos.fixed)) {
+                       integ.df$x <- xpos.fixed
                      }
                      if (is.null(ypos.fixed)) {
                        integ.df$y <- with(integ.df, ymin + (ymean - ymin) * ypos.mult)
