@@ -2,7 +2,9 @@
 title: "`ggspectra` `r packageVersion('ggspectra')`<br>User Guide"
 author: "Pedro J. Aphalo"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    toc: yes
 vignette: >
   %\VignetteIndexEntry{User Guide}
   %\VignetteEngine{knitr::rmarkdown}
