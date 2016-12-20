@@ -638,8 +638,7 @@ O_plot <- function(spct,
   molten.spct[["variable"]] <-
     factor(molten.spct[["variable"]], levels = stack.levels)
   setGenericSpct(molten.spct, multiple.wl = 3L * getMultipleWl(spct))
-  plot <- ggplot(molten.spct, aes_(~w.length, ~value), na.rm = na.rm) +
-    scale_fill_identity()
+  plot <- ggplot(molten.spct, aes_(~w.length, ~value), na.rm = na.rm)
   if (stacked) {
     plot <- plot + geom_area(aes_(alpha = ~variable), fill = "black", colour = NA)
     plot <- plot + scale_alpha_manual(values = c(Tfr = 0.4,
@@ -651,8 +650,8 @@ O_plot <- function(spct,
                                                  Rfr = expression(R(lambda))),
                                       guide = guide_legend(title = NULL))
   } else {
-    plot <- plot + geom_line(aes_(colour = ~variable))
-    plot <- plot + scale_colour_hue(labels = c(Tfr = expression(T(lambda)),
+    plot <- plot + geom_line(aes_(linetype = ~variable))
+    plot <- plot + scale_linetype(labels = c(Tfr = expression(T(lambda)),
                                                Afr = expression(A(lambda)),
                                                Rfr = expression(R(lambda))),
                                     guide = guide_legend(title = NULL))
@@ -663,9 +662,13 @@ O_plot <- function(spct,
     return(plot)
   }
 
-#  plot <- plot + scale_fill_identity() + scale_color_identity()
+  plot <- plot + scale_fill_identity() + scale_color_identity()
 
-  annotations <- intersect(annotations, c("labels", "boxes", "segments", "colour.guide"))
+  valid.annotations <- c("labels", "boxes", "segments", "colour.guide", "reserve.space")
+  if (!stacked) {
+    valid.annotations <- c(valid.annotations, "peaks", "valleys", "peak.labels", "valley.labels")
+  }
+  annotations <- intersect(annotations, valid.annotations)
 
   plot <- plot + decoration(w.band = w.band,
                             y.max = y.max,
@@ -951,7 +954,7 @@ plot.object_spct <-
            plot.qty = "all",
            pc.out = FALSE,
            label.qty = NULL,
-           span = NULL,
+           span = 61,
            annotations = NULL,
            stacked = TRUE,
            text.size = 2.5,
