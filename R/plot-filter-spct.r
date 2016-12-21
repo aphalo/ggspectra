@@ -41,10 +41,10 @@ Afr_plot <- function(spct,
   A2T(spct, byref = TRUE)
   Tfr.type <- getTfrType(spct)
   if (!is.null(range)) {
-    trim_wl(spct, range = range, byref = TRUE)
+    spct <- trim_wl(spct, range = range)
   }
   if (!is.null(w.band)) {
-    trim_wl(w.band, range = range(spct))
+    w.band <- trim_wl(w.band, range = range(spct))
   }
   setGenericSpct(spct) # so that we can assign variable Afr
   if (! "Afr" %in% names(spct)) {
@@ -159,7 +159,7 @@ Afr_plot <- function(spct,
                                       limits = y.limits)
   }
 
-  plot + scale_x_continuous(limits = x.limits)
+  plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 
 }
 
@@ -206,10 +206,10 @@ T_plot <- function(spct,
   A2T(spct, byref = TRUE)
   Tfr.type <- getTfrType(spct)
   if (!is.null(range)) {
-    trim_wl(spct, range = range, byref = TRUE)
+    spct <- trim_wl(spct, range = range)
   }
   if (!is.null(w.band)) {
-    trim_wl(w.band, range = range(spct))
+    w.band <- trim_wl(w.band, range = range(spct))
   }
   if (!length(Tfr.type)) {
     Tfr.type <- "unknown"
@@ -302,7 +302,7 @@ T_plot <- function(spct,
                                       limits = y.limits)
   }
 
-  plot + scale_x_continuous(limits = x.limits)
+  plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 
 }
 
@@ -346,10 +346,10 @@ A_plot <- function(spct,
   }
   T2A(spct, action = "replace", byref = TRUE)
   if (!is.null(range)) {
-    trim_wl(spct, range = range, byref = TRUE)
+    spct <- trim_wl(spct, range = range)
   }
   if (!is.null(w.band)) {
-    trim_wl(w.band, range = range(spct))
+    w.band <- trim_wl(w.band, range = range(spct))
   }
   Tfr.type <- getTfrType(spct)
   if (!length(Tfr.type)) {
@@ -417,7 +417,7 @@ A_plot <- function(spct,
     x.limits <- range(spct)
   }
   plot <- plot + scale_y_continuous(limits = y.limits)
-  plot + scale_x_continuous(limits = x.limits)
+  plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 
 }
 
@@ -462,10 +462,10 @@ R_plot <- function(spct,
     stop("R_plot() can only plot reflector_spct objects.")
   }
   if (!is.null(range)) {
-    trim_wl(spct, range = range, byref = TRUE)
+    spct <- trim_wl(spct, range = range)
   }
   if (!is.null(w.band)) {
-    trim_wl(w.band, range = range(spct))
+    w.band <- trim_wl(w.band, range = range(spct))
   }
   Rfr.type <- getRfrType(spct)
   if (length(Rfr.type) == 0) {
@@ -556,7 +556,7 @@ R_plot <- function(spct,
     plot <- plot + scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1),
                                       limits = y.limits)
   }
-  plot + scale_x_continuous(limits = x.limits)
+  plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 
 }
 
@@ -603,10 +603,10 @@ O_plot <- function(spct,
     stop("O_plot() can only plot object_spct objects.")
   }
   if (!is.null(range)) {
-    trim_wl(spct, range = range, byref = TRUE)
+    spct <- trim_wl(spct, range = range)
   }
   if (!is.null(w.band)) {
-    trim_wl(w.band, range = range(spct))
+    w.band <- trim_wl(w.band, range = range(spct))
   }
   Rfr.type <- getRfrType(spct)
   if (length(Rfr.type) == 0) {
@@ -684,7 +684,7 @@ O_plot <- function(spct,
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "colour.guide", "reserve.space"), annotations)) > 0L) {
     y.limits <- c(y.min, y.max * 1.25)
-    x.limits <- c(min(spct) - spread(spct) * 0.025, NA) # NA needed because of rounding errors
+    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
   } else {
     y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
@@ -695,7 +695,7 @@ O_plot <- function(spct,
     plot <- plot + scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
   }
 
- plot + scale_x_continuous(limits = x.limits)
+ plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 
 }
 

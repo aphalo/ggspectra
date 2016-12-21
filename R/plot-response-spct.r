@@ -43,10 +43,10 @@ e_rsp_plot <- function(spct,
   }
   q2e(spct, action="replace", byref=TRUE)
   if (!is.null(range)) {
-    trim_wl(spct, range = range, byref = TRUE)
+    spct <- trim_wl(spct, range = range)
   }
   if (!is.null(w.band)) {
-    trim_wl(w.band, range = range(spct))
+    w.band <- trim_wl(w.band, range = range(spct))
   }
 
   exposure.label <- NA
@@ -209,7 +209,7 @@ e_rsp_plot <- function(spct,
   } else {
     plot <- plot + scale_y_continuous(limits = y.limits)
   }
-  plot + scale_x_continuous(limits = x.limits)
+  plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 }
 
 #' Plot a response spectrum.
@@ -257,10 +257,10 @@ q_rsp_plot <- function(spct,
   }
   e2q(spct, action="replace", byref=TRUE)
   if (!is.null(range)) {
-    trim_wl(spct, range = range, byref = TRUE)
+    spct <- trim_wl(spct, range = range)
   }
   if (!is.null(w.band)) {
-    trim_wl(w.band, range = range(spct))
+    w.band <- trim_wl(w.band, range = range(spct))
   }
 
   exposure.label <- NA
@@ -423,7 +423,7 @@ q_rsp_plot <- function(spct,
   } else {
     plot <- plot + scale_y_continuous(limits = y.limits)
   }
-  plot + scale_x_continuous(limits = x.limits)
+  plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 }
 
 #' Plot method for response spectra.

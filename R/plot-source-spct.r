@@ -175,7 +175,7 @@ e_plot <- function(spct,
   } else {
     plot <- plot + scale_y_continuous(limits = y.limits)
   }
-  plot + scale_x_continuous(limits = x.limits)
+  plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 }
 
 #' Plot a source spectrum.
@@ -364,7 +364,7 @@ q_plot <- function(spct,
   } else {
     plot <- plot + scale_y_continuous(limits = y.limits)
   }
-  plot + scale_x_continuous(limits = x.limits)
+  plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 }
 
 #' Plot method for light-source spectra.

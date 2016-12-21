@@ -2,7 +2,7 @@
 #'
 #' \code{stat_wb_contribution} computes means under a curve. It first integrates the
 #'   area under a spectral curve and also the mean expressed per nanaometre of
-#'   wavelength for each waveband in the input. Sets suitable default aestheics
+#'   wavelength for each waveband in the input. Sets suitable default aesthetics
 #'   for "rect", "hline", "vline", "text" and "label" geoms displaying "contributions"
 #'   per waveband to the total of the spectral integral.
 #'

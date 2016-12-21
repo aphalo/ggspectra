@@ -1,8 +1,8 @@
 #' Draw colour boxes for wavebands
 #'
 #' \code{stat_wb_box} plots boxes corresponding to wavebands, by default located
-#' slightly above the peak of the spectrum. Sets suitable default aestheics for
-#' "rect", "vline", "text" and "label" geoms.
+#' slightly above the peak of the spectrum. Sets suitable default aesthetics for
+#' "rect" geom.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_string}}. Only needs
@@ -80,6 +80,9 @@
 #'   geom_line() +
 #'   scale_fill_identity()
 #'
+#' @note The value returned as default value for \code{y} is based on the
+#'   y-range of spectral values for the whole data set.
+#'
 #' @export
 #' @family stats functions
 #'
@@ -115,8 +118,9 @@ StatWbBox <-
                                             w.band,
                                             ypos.mult,
                                             ypos.fixed) {
+                     wl.range <- range(data$x)
                      if (length(w.band) == 0) {
-                       w.band <- waveband(data$x)
+                       w.band <- waveband(wl.range)
                      }
                      if (is.any_spct(w.band) ||
                          (is.numeric(w.band) && length(na.omit(w.band)) >= 2)) {
@@ -125,12 +129,12 @@ StatWbBox <-
                      if (!is.list(w.band) || is.waveband(w.band)) {
                        w.band <- list(w.band)
                      }
-                     w.band <- trim_wl(w.band, data$x)
                      integ.df <- data.frame()
                      for (wb in w.band) {
                        if (is.numeric(wb)) { # user supplied a list of numeric vectors
                          wb <- waveband(wb)
                        }
+                       wb <- trim_wl(wb, wl.range)
 
                        range <- range(wb)
                        mydata <- trim_tails(data$x, data$y, use.hinges = TRUE,

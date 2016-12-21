@@ -2,8 +2,8 @@
 #'
 #' \code{stat_wb_column} computes means under a curve. It first integrates the
 #'   area under a spectral curve and also the mean expressed per nanaometre of
-#'   wavelength for each waveband in the input. Sets suitable default aestheics
-#'   for "rect", "hline", "vline", "text" and "label" geoms.
+#'   wavelength for each waveband in the input. Sets suitable default aesthetics
+#'   for "rect" geom.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_string}}. Only needs
@@ -79,7 +79,13 @@
 #'   geom_line() +
 #'   scale_fill_identity()
 #'
+#' @note If the argument passed to \code{w.band} is a BSWF it is silently
+#'   converted to a wavelength range and the average of spectral values without
+#'   weighting is returned as default value for \code{ymax} while the default
+#'   value for \code{ymin} is zero.
+#'
 #' @export
+#'
 #' @family stats functions
 #'
 stat_wb_column <- function(mapping = NULL,
@@ -131,11 +137,6 @@ StatWbColumn <-
                        mydata <- trim_tails(data$x, data$y, use.hinges = TRUE,
                                             low.limit = range[1],
                                             high.limit = range[2])
-                       if (is_effective(wb)) {
-                         warning("BSWFs not supported by summary: using wavelength range for ",
-                                 labels(wb)$label, "'.")
-                         wb <- waveband(wb)
-                       }
                        yint.tmp <- integral.fun(mydata$x, mydata$y)
                        ymean.tmp <- yint.tmp / spread(wb)
                        integ.df <- rbind(integ.df,

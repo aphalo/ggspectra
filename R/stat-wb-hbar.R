@@ -1,9 +1,10 @@
 #' Integrate ranges under curve.
 #'
 #' \code{stat_wb_hbar} computes means under a curve. It first integrates the
-#'   area under a spectral curve and also the mean expressed per nanaometre of
-#'   wavelength for each waveband in the input. Sets suitable default aestheics
-#'   for "rect", "hline", "vline", "text" and "label" geoms.
+#' area under a spectral curve and also the mean expressed per nanaometre of
+#' wavelength for each waveband in the input. Sets suitable default aesthetics
+#' for geoms "errorbarh" and "hline" from 'ggplot', and "linerangeh",
+#' and "errorbarh" from 'ggstance'.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_string}}. Only needs
@@ -31,42 +32,27 @@
 #' @param ypos.fixed numeric If not \code{NULL} used a constant value returned
 #'   in \code{y}.
 #'
-#' @return A data frame with one row for each waveband object in the argument
-#' to \code{w.band}. Wavebeand outside the range of the spectral data are
-#' trimmed or discarded.
+#' @return A data frame with one row for each waveband object in the argument to
+#'   \code{w.band}. Wavebeand outside the range of the spectral data are trimmed
+#'   or discarded.
 #'
-#' @section Computed variables:
-#' What it is named integral below is the result of appying \code{integral.fun},
-#' with default \code{integrate_xy}.
-#' \describe{
-#'   \item{x}{w.band-midpoint}
-#'   \item{xmin}{w.band minimum}
-#'   \item{xmax}{w.band maximum}
-#'   \item{ymin}{data$y minimum}
-#'   \item{ymax}{data$y maximum}
+#' @section Computed variables: What it is named integral below is the result of
+#'   appying \code{integral.fun}, with default \code{integrate_xy}. \describe{
+#'   \item{x}{w.band-midpoint} \item{xmin}{w.band minimum} \item{xmax}{w.band
+#'   maximum} \item{ymin}{data$y minimum} \item{ymax}{data$y maximum}
 #'   \item{yint}{data$y integral for the range of \code{w.band}}
-#'   \item{ymean}{yint divided by spread(w.band)}
-#'   \item{y}{ypos.fixed or mean of data}
-#'   \item{wb.color}{color of the w.band}
-#'   \item{wb.name}{label of w.band}
-#' }
+#'   \item{ymean}{yint divided by spread(w.band)} \item{y}{ypos.fixed or mean of
+#'   data} \item{wb.color}{color of the w.band} \item{wb.name}{label of w.band}
+#'   }
 #'
-#' @section Default aesthetics:
-#' Set by the statistic and available to geoms.
-#' \describe{
-#'   \item{xmin}{..xmin..}
-#'   \item{xmax}{..xmax..}
-#'   \item{yintercept}{..ymean..}
-#'   \item{height}{(..ymax.. - ..ymin..) * 2e-2}
-#'   \item{color}{..wb.color..}
-#' }
+#' @section Default aesthetics: Set by the statistic and available to geoms.
+#'   \describe{ \item{xmin}{..xmin..} \item{xmax}{..xmax..}
+#'   \item{yintercept}{..ymean..} \item{height}{(..ymax.. - ..ymin..) * 2e-2}
+#'   \item{color}{..wb.color..} }
 #'
-#' @section Required aesthetics:
-#' Required by the statistic and need to be set with \code{aes()}.
-#' \describe{
-#'   \item{x}{numeric, wavelength in nanometres}
-#'   \item{y}{numeric, a spectral quantity}
-#' }
+#' @section Required aesthetics: Required by the statistic and need to be set
+#'   with \code{aes()}. \describe{ \item{x}{numeric, wavelength in nanometres}
+#'   \item{y}{numeric, a spectral quantity} }
 #'
 #' @examples
 #' library(photobiology)
@@ -90,6 +76,16 @@
 #'   stat_wb_hbar(w.band = PAR(), size = 1, ypos.fixed = 0) +
 #'   scale_color_identity() +
 #'   theme_bw()
+#'
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_wb_hbar(w.band = CIE(), size = 1) +
+#'   scale_color_identity() +
+#'   theme_bw()
+#'
+#' @note If the argument passed to \code{w.band} is a BSWF it is silently
+#'   converted to a wavelength range and the average of spectral values without
+#'   any weighting is returned as default value for \code{y}.
 #'
 #' @export
 #' @family stats functions
@@ -149,11 +145,6 @@ StatWbHbar <-
                        mydata <- trim_tails(data$x, data$y, use.hinges = TRUE,
                                             low.limit = range[1],
                                             high.limit = range[2])
-                       if (is_effective(wb)) {
-                         warning("BSWFs not supported by summary: using wavelength range for ",
-                                 labels(wb)$label, "'.")
-                         wb <- waveband(wb)
-                       }
                        yint.tmp <- integral.fun(mydata$x, mydata$y)
                        ymean.tmp <- yint.tmp / spread(wb)
                        integ.df <- rbind(integ.df,

@@ -130,5 +130,5 @@ plot.waveband <-
     if ("title" %in% annotations) {
       out.ggplot <- out.ggplot + labs(title = deparse(substitute(x)))
     }
-    return(out.ggplot)
+    out.ggplot
   }
