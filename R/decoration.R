@@ -67,7 +67,7 @@ decoration <- function(w.band,
                       ignore_threshold = 0.02))
   }
   if ("peak.labels" %in% annotations) {
-    z <- c(z, stat_label_peaks(aes_(color = ~..txt.color..),
+    z <- c(z, stat_label_peaks(aes_(color = ~..BW.color..),
                          span = span, label.fmt = "%.4g",
                          ignore_threshold = 0.02,
                          segment.colour = "red",
@@ -133,11 +133,11 @@ decoration <- function(w.band,
 
     if ("labels" %in% annotations && "summaries" %in% annotations) {
       mapping <- aes_(label = quote(paste(..wb.name.., ..y.label.., sep = "\n")),
-                      color = ~..txt.color..)
+                      color = ~..BW.color..)
     } else if ("labels" %in% annotations) {
-      mapping <- aes_(label = ~..wb.name.., color = ~..txt.color..)
+      mapping <- aes_(label = ~..wb.name.., color = ~..BW.color..)
     } else if ("summaries" %in% annotations) {
-      mapping <- aes_(label = ~..y.label.., color = ~..txt.color..)
+      mapping <- aes_(label = ~..y.label.., color = ~..BW.color..)
     }
 
     if ("summaries" %in% annotations) {
@@ -192,7 +192,7 @@ decoration <- function(w.band,
                       na.rm = na.rm))
     } else {
       if (is.null(label.color)) {
-        z <- c(z, stat_wb_label(mapping = aes_(color = ~..txt.color..),
+        z <- c(z, stat_wb_label(mapping = aes_(color = ~..BW.color..),
                                 w.band = w.band,
                                 ypos.fixed = y.max * (1.143 + pos.shift),
                                 size = text.size,

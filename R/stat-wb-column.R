@@ -45,6 +45,8 @@
 #'   \item{ymean}{yint divided by spread(w.band)}
 #'   \item{y}{ymeam}
 #'   \item{wb.color}{color of the w.band}
+#'   \item{wb.name}{label of w.band}
+#'   \item{BW.color}{\code{black_or_white(wb.color)}}
 #' }
 #'
 #' @section Default aesthetics:
@@ -139,6 +141,7 @@ StatWbColumn <-
                                             high.limit = range[2])
                        yint.tmp <- integral.fun(mydata$x, mydata$y)
                        ymean.tmp <- yint.tmp / spread(wb)
+                       wb.color <- color(wb) # avoid 'expensive' recalculation
                        integ.df <- rbind(integ.df,
                                          data.frame(x = midpoint(mydata$x),
                                                     xmin = min(wb),
@@ -147,8 +150,9 @@ StatWbColumn <-
                                                     ymin = min(data$y),
                                                     ymax = max(data$y),
                                                     ymean = ymean.tmp,
-                                                    wb.color = color(wb),
-                                                    wb.name = labels(wb)$label)
+                                                    wb.color = wb.color,
+                                                    wb.name = labels(wb)$label,
+                                                    BW.color = black_or_white(wb.color))
                                          )
                      }
                     integ.df

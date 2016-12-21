@@ -68,7 +68,7 @@ ggplot(sun.spct) + geom_line() +
 ggplot(sun.spct) + geom_line() + 
   stat_peaks(shape = 21, span = 25, size = 2) + 
   scale_fill_identity() +
-  stat_peaks(aes(color = ..txt.color..), 
+  stat_peaks(aes(color = ..BW.color..), 
              geom = "label", span = 25, vjust = "bottom", size = 3) + 
   scale_color_identity()
 

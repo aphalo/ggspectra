@@ -185,7 +185,7 @@ StatLabelPeaks <-
                                                     photobiology::color(x, type = "CMF"),
                                                     "white")
                      )
-                     data[["txt.color"]] <- with(data,
+                     data[["BW.color"]] <- with(data,
                                                  ifelse(is_peak,
                                                         black_or_white(color),
                                                         "black")
@@ -194,7 +194,7 @@ StatLabelPeaks <-
                    },
                    default_aes = ggplot2::aes(label = ..x.label..,
                                               fill = ..color..,
-                                              color = ..txt.color..,
+                                              color = ..BW.color..,
                                               xintercept = ..x..,
                                               yintercept = ..y..),
                    required_aes = c("x", "y")
@@ -264,7 +264,7 @@ StatLabelValleys <-
                                                     photobiology::color(x, type = "CMF"),
                                                     "white")
                      )
-                     data[["txt.color"]] <- with(data,
+                     data[["BW.color"]] <- with(data,
                                                  ifelse(is_valley,
                                                         black_or_white(color),
                                                         "black")
@@ -273,7 +273,7 @@ StatLabelValleys <-
                    },
                    default_aes = ggplot2::aes(label = ..x.label..,
                                               fill = ..color..,
-                                              color = ..txt.color..,
+                                              color = ..BW.color..,
                                               xintercept = ..x..,
                                               yintercept = ..y..),
                    required_aes = c("x", "y")

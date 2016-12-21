@@ -135,7 +135,7 @@ StatWbLabel <-
                                                     xmax = max(wb),
                                                     wb.color = color(wb),
                                                     wb.name = labels(wb)$label,
-                                                    txt.color = black_or_white(color(wb)))
+                                                    BW.color = black_or_white(color(wb)))
                                          )
                      }
                      if (is.null(ypos.fixed)) {
@@ -152,6 +152,6 @@ StatWbLabel <-
                                               xmin = ..xmin..,
                                               xmax = ..xmax..,
                                               fill = ..wb.color..,
-                                              color = ..txt.color..),
+                                              color = ..BW.color..),
                    required_aes = c("x")
   )

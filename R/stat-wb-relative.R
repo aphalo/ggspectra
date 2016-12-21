@@ -60,6 +60,7 @@
 #'   \item{y}{ypos.fixed or top of data, adjusted by \code{ypos.mult}}
 #'   \item{wb.color}{color of the w.band}
 #'   \item{wb.name}{label of w.band}
+#'   \item{BW.color}{\code{black_or_white(wb.color)}}
 #' }
 #'
 #' @section Default aesthetics:
@@ -185,7 +186,7 @@ StatWbRelative <-
                                                     ymean = ymean.tmp,
                                                     wb.color = color(wb),
                                                     wb.name = labels(wb)$label,
-                                                    txt.color = black_or_white(color(wb)))
+                                                    BW.color = black_or_white(color(wb)))
                                          )
                      }
                      if (is.null(ypos.fixed)) {
@@ -205,6 +206,6 @@ StatWbRelative <-
                                               ymax = ..y.. + (..ymax.. - ..ymin..) * 0.03,
                                               yintercept = ..ymean..,
                                               fill = ..wb.color..,
-                                              color = ..txt.color..),
+                                              color = ..BW.color..),
                    required_aes = c("x", "y")
   )

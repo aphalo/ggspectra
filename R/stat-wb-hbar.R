@@ -46,9 +46,13 @@
 #'   }
 #'
 #' @section Default aesthetics: Set by the statistic and available to geoms.
-#'   \describe{ \item{xmin}{..xmin..} \item{xmax}{..xmax..}
-#'   \item{yintercept}{..ymean..} \item{height}{(..ymax.. - ..ymin..) * 2e-2}
-#'   \item{color}{..wb.color..} }
+#'   \describe{
+#'   \item{xmin}{..xmin..}
+#'   \item{xmax}{..xmax..}
+#'   \item{yintercept}{..ymean..}
+#'   \item{height}{(..ymax.. - ..ymin..) * 2e-2}
+#'   \item{color}{..wb.color..}
+##'   }
 #'
 #' @section Required aesthetics: Required by the statistic and need to be set
 #'   with \code{aes()}. \describe{ \item{x}{numeric, wavelength in nanometres}
