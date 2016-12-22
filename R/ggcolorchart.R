@@ -20,7 +20,7 @@
 #' @examples
 #'
 #' color_chart()
-#' color_chart(grep("dark", colors(), value = TRUE))
+#' color_chart(grep("dark", colors(), value = TRUE), text.size = 3.5)
 #'
 color_chart <- function(colors = grDevices::colors(),
                         ncol = NULL,

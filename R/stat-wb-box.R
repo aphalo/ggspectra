@@ -130,12 +130,13 @@ StatWbBox <-
                      if (!is.list(w.band) || is.waveband(w.band)) {
                        w.band <- list(w.band)
                      }
+                     w.band <- trim_wl(w.band, wl.range)
+
                      integ.df <- data.frame()
                      for (wb in w.band) {
                        if (is.numeric(wb)) { # user supplied a list of numeric vectors
                          wb <- waveband(wb)
                        }
-                       wb <- trim_wl(wb, wl.range)
 
                        range <- range(wb)
                        mydata <- trim_tails(data$x, data$y, use.hinges = TRUE,

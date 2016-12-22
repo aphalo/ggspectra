@@ -78,11 +78,18 @@ plot(sun.spct, unit.out = "photon")
 plot(sun.spct, w.band = VIS_bands(), unit.out = "photon")
 ```
 
-```{r, fig.width = 7, fig.height = 9}
-theme_set(theme_cowplot(8))
+```{r, fig.width = 7, fig.height = 15}
+theme_set(theme_cowplot(10))
 p1 <- plot(sun.spct, unit.out = "photon")
 p2 <- plot(yellow_gel.spct)
-p3 <- plot(Solidago_upper_adax.spct)
+p3 <- plot(Solidago_altissima.mspct$lower_adax)
 plot_grid(p1, p2, p3, ncol = 1, align = "V")
 ```
 
+```{r, fig.width = 7, fig.height = 15}
+theme_set(theme_grey(10))
+p1 <- plot(sun.spct, unit.out = "photon")
+p2 <- plot(yellow_gel.spct)
+p3 <- plot(Solidago_altissima.mspct$lower_adax)
+plot_grid(p1, p2, p3, ncol = 1, align = "V")
+```

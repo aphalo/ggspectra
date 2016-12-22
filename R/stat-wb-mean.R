@@ -89,14 +89,14 @@
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
 #' ggplot(sun.spct) +
 #'   stat_wb_column(w.band = VIS_bands()) +
-#'   stat_wb_mean(w.band = VIS_bands(), angle = 90) +
+#'   stat_wb_mean(w.band = VIS_bands(), angle = 90, color = "black") +
 #'   geom_line() +
 #'   scale_fill_identity() + scale_color_identity()
 #'
 #' ggplot(sun.spct) +
 #'   geom_line() +
 #'   stat_wb_hbar(w.band = VIS_bands(), size = 1.5) +
-#'   stat_wb_mean(w.band = VIS_bands(), angle = 90, ypos.mult = 1.05,
+#'   stat_wb_mean(w.band = VIS_bands(),
 #'                geom = "label_repel", nudge_y = +0.03,
 #'                segment.colour = NA) +
 #'   scale_fill_identity() + scale_color_identity()
