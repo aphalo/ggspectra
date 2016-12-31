@@ -88,7 +88,7 @@ stat_wb_label <- function(mapping = NULL, data = NULL, geom = "text",
                           w.band = NULL,
                           label.fmt = "%s",
                           ypos.fixed = 0,
-                          position = "identity", na.rm = FALSE, show.legend = NA,
+                          position = "identity", na.rm = TRUE, show.legend = NA,
                           inherit.aes = TRUE, ...) {
   ggplot2::layer(
     stat = StatWbLabel, data = data, mapping = mapping, geom = geom,

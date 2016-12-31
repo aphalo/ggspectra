@@ -75,7 +75,7 @@
 #'
 stat_wl_strip <- function(mapping = NULL, data = NULL, geom = "rect",
                        type = "CMF", w.band = NULL, length.out = 150,
-                       position = "identity", na.rm = FALSE, show.legend = FALSE,
+                       position = "identity", na.rm = TRUE, show.legend = FALSE,
                        inherit.aes = TRUE, ...) {
   ggplot2::layer(
     stat = StatColorGuide, data = data, mapping = mapping, geom = geom,

@@ -682,18 +682,18 @@ ggplot(data.frame(w.length = 300:800), aes(w.length)) +
 
 ```
 
-We can also in a similar way make a plot comparing different sets of wavebands, in the next example we compare the VIS and NIR bands of the different imagers used in Landsat missions 1 to 8. (In the current implementation warnings are triggered unless `na.rm = TRUE` is set in cases like this with gaps in between wavebands.)
+We can also in a similar way make a plot comparing different sets of wavebands, in the next example we compare the VIS and NIR bands of the different imagers used in Landsat missions 1 to 8.
 
 ```{r}
 ggplot(data.frame(w.length = 300:1100), aes(w.length)) +
-  stat_wl_strip(w.band = RBV_bands(), ymax = 1, ymin = 3, na.rm = TRUE) +
-  stat_wb_label(w.band = RBV_bands(), ypos.fixed = 2, angle = 90, vjust = 0.3, na.rm = TRUE) +
+  stat_wl_strip(w.band = RBV_bands(), ymax = 1, ymin = 3) +
+  stat_wb_label(w.band = RBV_bands(), ypos.fixed = 2, angle = 90, vjust = 0.3) +
   stat_wl_strip(w.band = MSS_bands(), ymax = 4, ymin = 6, na.rm = TRUE) +
-  stat_wb_label(w.band = MSS_bands(), ypos.fixed = 5, angle = 90, vjust = 0.3, na.rm = TRUE) +
+  stat_wb_label(w.band = MSS_bands(), ypos.fixed = 5, angle = 90, vjust = 0.3) +
   stat_wl_strip(w.band = ETM_bands(), ymax = 7, ymin = 9, na.rm = TRUE) +
-  stat_wb_label(w.band = ETM_bands(), ypos.fixed = 8, angle = 90, vjust = 0.3, na.rm = TRUE) +
+  stat_wb_label(w.band = ETM_bands(), ypos.fixed = 8, angle = 90, vjust = 0.3) +
   stat_wl_strip(w.band = OLI_bands(), ymax = 10, ymin = 12, na.rm = TRUE) +
-  stat_wb_label(w.band = OLI_bands(), ypos.fixed = 11, angle = 90, vjust = 0.3, na.rm = TRUE) +
+  stat_wb_label(w.band = OLI_bands(), ypos.fixed = 11, angle = 90, vjust = 0.3) +
   scale_fill_identity() + 
   scale_color_identity() + 
   scale_y_continuous(labels = c("RBV", "MSS", "TM/ETM", "OLI"), 
