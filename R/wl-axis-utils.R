@@ -12,7 +12,8 @@
 #' w_number(600)
 #' w_frequency(600)
 #'
-w_number <- function(w.length, unit.exponent = 0) {
+w_number <- function(w.length,
+                     unit.exponent = 0) {
   1e9 / w.length * 10^unit.exponent # 1/m
 }
 
@@ -20,7 +21,8 @@ w_number <- function(w.length, unit.exponent = 0) {
 #'
 #' @export
 #'
-w_frequency <- function(w.length, unit.exponent = 0) {
+w_frequency <- function(w.length,
+                        unit.exponent = 0) {
   299792458 / (w.length * 1e-9) / 10^unit.exponent # speed of light [m/s] / w.length [m]
 }
 
@@ -52,20 +54,20 @@ w_length_label <- function(unit.exponent = -9,
                                               default = "R.expression")) {
   if (tolower(format) == "latex") {
     if (has_SI_prefix(unit.exponent)) {
-      paste("Wavelength (",
+      paste("Wavelength, $\\lambda$ (",
             exponent2prefix(unit.exponent, char.set = "LaTeX"),
             "m)", sep = "")
     } else {
-      paste("Wavelength ($\\times 10^{",
+      paste("Wavelength, $\\lambda$ ($\\times 10^{",
             unit.exponent,
             "}$~m)", sep = "")
     }
   } else if (format %in% c("R.expression")) {
     if (has_SI_prefix(unit.exponent)) {
       prefix <- exponent2prefix(unit.exponent)
-      bquote(plain(Wavelength)~(plain(.(prefix))*plain(m)))
+      bquote(plain(Wavelength)~lambda~(plain(.(prefix))*plain(m)))
     } else {
-      bquote(plain(Wavelength)~(10^{.(unit.exponent)}~plain(m)))
+      bquote(plain(Wavelength)~lambda~(10^{.(unit.exponent)}~plain(m)))
     }
   } else if (format == "R.character" &&
              has_SI_prefix(unit.exponent)) {

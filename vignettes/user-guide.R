@@ -43,6 +43,34 @@ ggplot(yellow_gel.spct) + geom_line()
 ggplot(yellow_gel.spct, plot.qty = "absorbance") + geom_line()
 
 ## ------------------------------------------------------------------------
+ggplot(sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous()
+
+## ------------------------------------------------------------------------
+ggplot(sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous(sec.axis = sec_axis_w_number())
+
+## ------------------------------------------------------------------------
+ggplot(sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous(sec.axis = sec_axis_w_frequency())
+
+## ------------------------------------------------------------------------
+ggplot(sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous(sec.axis = sec_axis_w_frequency(15))
+
+## ------------------------------------------------------------------------
+ggplot(sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous(sec.axis = sec_axis_w_frequency(14))
+
+## ------------------------------------------------------------------------
+nearest_SI_exponent(14)
+
+## ------------------------------------------------------------------------
 ggplot(sun.spct) + geom_line() + stat_peaks(color = "red")
 
 ## ------------------------------------------------------------------------
