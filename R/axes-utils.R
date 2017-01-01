@@ -3,6 +3,7 @@
 #' Convert wavelength to wavenumber and frequency
 #'
 #' @param w.length numeric wavelength (nm)
+#' @param unit.exponent integer
 #'
 #' @export
 #'
@@ -11,16 +12,16 @@
 #' w_number(600)
 #' w_frequency(600)
 #'
-w_number <- function(w.length) {
-  1e6 / w.length # 1/m
+w_number <- function(w.length, unit.exponent = 0) {
+  1e6 / w.length / 10^unit.exponent # 1/m
 }
 
 #' @rdname w_number
 #'
 #' @export
 #'
-w_frequency <- function(w.length) {
-  299792458 / (w.length * 1e-6) # speed of light [m/s] / w.length [m]
+w_frequency <- function(w.length, unit.exponent = 0) {
+  299792458 / (w.length * 1e-6) / 10^unit.exponent # speed of light [m/s] / w.length [m]
 }
 
 #' Wave- axis labels
@@ -138,4 +139,3 @@ w_frequency_label <- function(format = "R", unit.exponent = "") {
     NA_character_
   }
 }
-
