@@ -4,7 +4,7 @@ ggspectra 0.2.1
 Update User Guide (add examples of graphical comparison of multiple lists of
 wavebands).
 Add utility functions for SI scale prefixes.
-Add utility functions for axis-labels.
+Add utility functions for x-axis-labels and secondary x-axis.
 
 ggspectra 0.2.0
 ===============
