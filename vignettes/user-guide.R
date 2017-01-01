@@ -428,6 +428,56 @@ ggplot(data.frame(w.length = 300:800), aes(w.length)) +
 
 
 ## ------------------------------------------------------------------------
+ggplot(data.frame(w.length = 300:1100), aes(w.length)) +
+  stat_wl_strip(w.band = RBV_bands(), ymax = 1, ymin = 3) +
+  stat_wb_label(w.band = RBV_bands(), ypos.fixed = 2, angle = 90, vjust = 0.3) +
+  stat_wl_strip(w.band = MSS_bands(), ymax = 4, ymin = 6, na.rm = TRUE) +
+  stat_wb_label(w.band = MSS_bands(), ypos.fixed = 5, angle = 90, vjust = 0.3) +
+  stat_wl_strip(w.band = ETM_bands(), ymax = 7, ymin = 9, na.rm = TRUE) +
+  stat_wb_label(w.band = ETM_bands(), ypos.fixed = 8, angle = 90, vjust = 0.3) +
+  stat_wl_strip(w.band = OLI_bands(), ymax = 10, ymin = 12, na.rm = TRUE) +
+  stat_wb_label(w.band = OLI_bands(), ypos.fixed = 11, angle = 90, vjust = 0.3) +
+  scale_fill_identity() + 
+  scale_color_identity() + 
+  scale_y_continuous(labels = c("RBV", "MSS", "TM/ETM", "OLI"), 
+                     breaks = c(2,5,8,11),
+                     limits = c(0, 13),
+                     name = "Imager",
+                     sec.axis = dup_axis(labels = c("L1-L2", "L1-L5", "L4-L7", "L8"), name = "Landsat mission")) +
+  scale_x_continuous(breaks = seq(from = 300, to = 1200, by = 100),
+                     limits = c(400, 1100),
+                     sec.axis = dup_axis()) +
+  labs(x = "Wavelength (nm)", title = "Landsat imagers: VIS and NIR bands") +
+  theme_classic()
+
+## ------------------------------------------------------------------------
+ggplot(data.frame(w.length = 100:400), aes(w.length)) +
+  stat_wl_strip(w.band = UV_bands("ISO"), ymax = 1, ymin = 3, color = "white") +
+  stat_wb_label(w.band = UV_bands("ISO"), ypos.fixed = 2, angle = 90, vjust = 0.3) +
+  stat_wl_strip(w.band = UV_bands("CIE"), ymax = 4, ymin = 6, color = "white") +
+  stat_wb_label(w.band = UV_bands("CIE"), ypos.fixed = 5, angle = 90, vjust = 0.3) +
+  stat_wl_strip(w.band = UV_bands("none"), ymax = 7, ymin = 9, color = "white") +
+  stat_wb_label(w.band = UV_bands("none"), ypos.fixed = 8, angle = 90, vjust = 0.3) +  stat_wl_strip(w.band = UV_bands("medical"), ymax = 10, ymin = 12, color = "white") +
+  stat_wb_label(w.band = UV_bands("medical"), ypos.fixed = 11, angle = 90, vjust = 0.3) +
+
+  scale_fill_identity() + 
+  scale_color_identity() + 
+  scale_y_continuous(labels = c("ISO", "CIE", "none", "medical"), 
+                     breaks = c(2,5,8,11),
+                     limits = c(0, 13),
+                     name = "Standard",
+                     sec.axis = dup_axis(labels = 
+                      c("use", "use", "avoid!", "avoid!"), name = "Recommendation")) +
+  scale_x_continuous(breaks = c(seq(from = 100, to = 400, by = 50), 280, 315),
+                     limits = c(100, 400),
+                     sec.axis = 
+                       dup_axis(breaks = 
+                                c(100, 150, 200, 220, 250, 290, 320, 350, 400))) +
+  labs(x = "Wavelength (nm)", title = "UV bands",
+       subtitle = "According to ISO standard, CIE recommendations, and non-standard use") +
+  theme_classic()
+
+## ------------------------------------------------------------------------
 my.data <- data.frame(x = 300:800)
 ggplot(my.data, aes(x)) + stat_wl_strip(ymin = -1, ymax = 1, color = NA) +
     scale_fill_identity()
@@ -511,7 +561,7 @@ color_chart(colors())
 color_chart(grep("blue", colors(), value = TRUE), ncol = 5, text.size = 4)
 
 ## ------------------------------------------------------------------------
-color_chart(w_length2rgb(570:689, color.name = as.character(570:689)), 
+ color_chart(w_length2rgb(570:689, color.name = as.character(570:689)), 
             use.names = TRUE, text.size = 4) +
-  ggtitle("Reddish colors by wavelength (nm)")
+  ggtitle("Reddish colors", subtitle = "Labels: wavelength (nm)")
 
