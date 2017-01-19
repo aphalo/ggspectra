@@ -128,3 +128,73 @@ nearest_SI_exponent <- function(exponent) {
   }
   max(exponent, min(exp_pfix.df[["exponents"]]))
 }
+
+#' Formatter for plain labels discounting for SI multipliers
+#'
+#' The labels generated represent numbers rescaled to compensate for a change
+#' in unit's by a factor of ten or by a power of ten.
+#'
+#' @return a function with single parameter x, a numeric vector, that
+#'   returns a character vector
+#' @param exponent numeric Power of 10 to use as multiplier
+#' @param digits number of significant digits to show
+#' @param ... other arguments passed on to \code{\link{format}}
+#' @param x a numeric vector to format
+#' @export
+#' @examples
+#' SI_pl_format()(1:10)
+#' SI_pl_format()(runif(10))
+#' SI_pl_format(exponent = 2)(runif(10))
+#' SI_plain(1:10)
+#' SI_plain(runif(10))
+#' SI_plain(runif(10), digits = 2)
+SI_pl_format <- function(exponent = 0, digits = 3, ...) {
+  function(x) SI_plain(x, exponent = exponent, digits = digits, ...)
+}
+
+#' @export
+#' @rdname SI_pl_format
+SI_plain <- function(x, exponent = 0, digits = 3, ...) {
+  x <- x / 10^exponent
+  x <- signif(x, digits)
+  format(x, trim = TRUE, scientific = FALSE, ...)
+}
+
+#' Formatter for tagged labels using SI multipliers
+#'
+#' The labels generated represent the same numbers, but with trailing zeros
+#' removed/added and compensated by attaching to each label an SI multiplier
+#' "prefix".
+#'
+#' @note If the exponent passed has no SI prefix defined, the exponent will
+#' be adjusted to match one.
+#'
+#' @return a function with single parameter x, a numeric vector, that
+#'   returns a character vector
+#' @param exponent numeric Power of 10 to use as multiplier
+#' @param digits number of significant digits to show
+#' @param ... other arguments passed on to \code{\link{format}}
+#' @param x a numeric vector to format
+#' @export
+#' @examples
+#' SI_tg_format()(1:10)
+#' SI_tg_format()(runif(10))
+#' SI_tg_format(exponent = 2)(runif(10))
+#' SI_tagged(1:10)
+#' SI_tagged(runif(10))
+#' SI_tagged(runif(10), digits = 2)
+#'
+SI_tg_format <- function(exponent = 0, digits = 3, ...) {
+  function(x) SI_tagged(x, exponent = exponent, digits = digits, ...)
+}
+
+#' @export
+#' @rdname SI_tg_format
+SI_tagged <- function(x, exponent = 0, digits = 3, ...) {
+  exponent <- nearest_SI_exponent(exponent)
+  x <- x / 10^exponent
+  x <- signif(x, digits)
+  paste(format(x, trim = TRUE, scientific = FALSE, ...),
+        exponent2prefix(exponent), sep = "")
+}
+

@@ -188,6 +188,27 @@ nearest_SI_exponent(14)
 
 ### Spectral irradiance
 
+```{r}
+ggplot(sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_s.e.irrad_continuous()
+```
+```{r}
+ggplot(sun.spct, unit.out = "photon") + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_s.q.irrad_continuous()
+```
+
+We can change the SI unit multipliers on-the-fly. Beware that these are not data transformations, only the labelling of the axes changes! Consequently summary values will not be affected. We will express the spectral irradiance using milli watts instead of watts and wavelengths in micrometres instead of nanometres.
+
+```{r}
+ggplot(sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous(-6) +
+  scale_y_s.e.irrad_continuous(-3)
+```
 ### etc.
 
 ## Stats

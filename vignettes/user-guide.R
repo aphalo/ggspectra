@@ -71,6 +71,24 @@ ggplot(sun.spct) +
 nearest_SI_exponent(14)
 
 ## ------------------------------------------------------------------------
+ggplot(sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_s.e.irrad_continuous()
+
+## ------------------------------------------------------------------------
+ggplot(sun.spct, unit.out = "photon") + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_s.q.irrad_continuous()
+
+## ------------------------------------------------------------------------
+ggplot(sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous(-6) +
+  scale_y_s.e.irrad_continuous(-3)
+
+## ------------------------------------------------------------------------
 ggplot(sun.spct) + geom_line() + stat_peaks(color = "red")
 
 ## ------------------------------------------------------------------------

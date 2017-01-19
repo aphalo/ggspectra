@@ -211,6 +211,13 @@ sec_axis_w_frequency <- function(unit.exponent = 12) {
 #'
 #' Scale x continuous with defaults suitable for wavelengths in nanometres.
 #'
+#' @param unit.exponent integer
+#' @param name The name of the scale, used for the axis-label.
+#' @param breaks The positions of ticks or a function to generate them.
+#' @param labels The tick labels or a function to generate them from the tick
+#'   positions.
+#' @param ... other named arguments passed to \code{scale_y_continuous}
+#'
 #' @note This function only alters two default arguments, please, see
 #' documentation for \code{\link[ggplot2]{scale_x_continuous}}
 #'
@@ -228,10 +235,18 @@ sec_axis_w_frequency <- function(unit.exponent = 12) {
 #'   geom_line() +
 #'   scale_x_wl_continuous(sec.axis = sec_axis_w_number())
 #'
-scale_x_wl_continuous <- function(name = w_length_label(),
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   scale_x_wl_continuous(unit.exponent = -6,
+#'                         sec.axis = sec_axis_w_number())
+#'
+scale_x_wl_continuous <- function(unit.exponent = -9,
+                                  name = w_length_label(unit.exponent = unit.exponent),
                                   breaks = scales::pretty_breaks(n=7),
+                                  labels = SI_pl_format(exponent = unit.exponent + 9),
                                   ...) {
   scale_x_continuous(name = name,
                      breaks = breaks,
+                     labels = labels,
                      ...)
 }
