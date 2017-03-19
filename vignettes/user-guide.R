@@ -476,13 +476,13 @@ ggplot(data.frame(w.length = 300:800), aes(w.length)) +
 ## ------------------------------------------------------------------------
 ggplot(data.frame(w.length = 300:1100), aes(w.length)) +
   stat_wl_strip(w.band = RBV_bands(), ymax = 1, ymin = 3) +
-  stat_wb_label(w.band = RBV_bands(), ypos.fixed = 2, angle = 90, vjust = 0.3) +
+  stat_wb_label(w.band = RBV_bands(), ypos.fixed = 2, angle = 90, vjust = 0.3, size = 3) +
   stat_wl_strip(w.band = MSS_bands(), ymax = 4, ymin = 6, na.rm = TRUE) +
-  stat_wb_label(w.band = MSS_bands(), ypos.fixed = 5, angle = 90, vjust = 0.3) +
+  stat_wb_label(w.band = MSS_bands(), ypos.fixed = 5, angle = 90, vjust = 0.3, size = 3) +
   stat_wl_strip(w.band = ETM_bands(), ymax = 7, ymin = 9, na.rm = TRUE) +
-  stat_wb_label(w.band = ETM_bands(), ypos.fixed = 8, angle = 90, vjust = 0.3) +
+  stat_wb_label(w.band = ETM_bands(), ypos.fixed = 8, angle = 90, vjust = 0.3, size = 3) +
   stat_wl_strip(w.band = OLI_bands(), ymax = 10, ymin = 12, na.rm = TRUE) +
-  stat_wb_label(w.band = OLI_bands(), ypos.fixed = 11, angle = 90, vjust = 0.3) +
+  stat_wb_label(w.band = OLI_bands(), ypos.fixed = 11, angle = 90, vjust = 0.3, size = 3) +
   scale_fill_identity() + 
   scale_color_identity() + 
   scale_y_continuous(labels = c("RBV", "MSS", "TM/ETM", "OLI"), 
@@ -499,12 +499,13 @@ ggplot(data.frame(w.length = 300:1100), aes(w.length)) +
 ## ------------------------------------------------------------------------
 ggplot(data.frame(w.length = 100:400), aes(w.length)) +
   stat_wl_strip(w.band = UV_bands("ISO"), ymax = 1, ymin = 3, color = "white") +
-  stat_wb_label(w.band = UV_bands("ISO"), ypos.fixed = 2, angle = 90, vjust = 0.3) +
+  stat_wb_label(w.band = UV_bands("ISO"), ypos.fixed = 2, size = 3) +
   stat_wl_strip(w.band = UV_bands("CIE"), ymax = 4, ymin = 6, color = "white") +
-  stat_wb_label(w.band = UV_bands("CIE"), ypos.fixed = 5, angle = 90, vjust = 0.3) +
+  stat_wb_label(w.band = UV_bands("CIE"), ypos.fixed = 5, size = 3) +
   stat_wl_strip(w.band = UV_bands("none"), ymax = 7, ymin = 9, color = "white") +
-  stat_wb_label(w.band = UV_bands("none"), ypos.fixed = 8, angle = 90, vjust = 0.3) +  stat_wl_strip(w.band = UV_bands("medical"), ymax = 10, ymin = 12, color = "white") +
-  stat_wb_label(w.band = UV_bands("medical"), ypos.fixed = 11, angle = 90, vjust = 0.3) +
+  stat_wb_label(w.band = UV_bands("none"), ypos.fixed = 8, size = 3) +  
+  stat_wl_strip(w.band = UV_bands("medical"), ymax = 10, ymin = 12, color = "white") +
+  stat_wb_label(w.band = UV_bands("medical"), ypos.fixed = 11, size = 3) +
 
   scale_fill_identity() + 
   scale_color_identity() + 
@@ -518,7 +519,7 @@ ggplot(data.frame(w.length = 100:400), aes(w.length)) +
                      limits = c(100, 400),
                      sec.axis = 
                        dup_axis(breaks = 
-                                c(100, 150, 200, 220, 250, 290, 320, 350, 400))) +
+                                c(100, 150, 200, 220, 250, 290, 320, 340, 400))) +
   labs(x = "Wavelength (nm)", title = "UV bands",
        subtitle = "According to ISO standard, CIE recommendations, and non-standard use") +
   theme_classic()
