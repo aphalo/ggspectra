@@ -63,11 +63,11 @@ cps_label <- function(unit.exponent = 0,
 #' library(ggplot2)
 #' library(photobiology)
 #'
-#' ggplot(led.cps_spct) +
+#' ggplot(white_led.cps_spct) +
 #'   geom_line() +
 #'   scale_y_cps_continuous()
 #'
-#' ggplot(led.cps_spct) +
+#' ggplot(white_led.cps_spct) +
 #'   geom_line() +
 #'   scale_y_cps_continuous(3)
 #'

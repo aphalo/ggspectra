@@ -60,15 +60,15 @@ counts_label <- function(unit.exponent = 3,
 #' library(ggplot2)
 #' library(photobiology)
 #'
-#' ggplot(led.raw_spct) +
+#' ggplot(white_led.raw_spct) +
 #'   geom_line() +
 #'   scale_y_counts_continuous()
 #'
-#' ggplot(led.raw_spct) +
+#' ggplot(white_led.raw_spct) +
 #'   geom_line() +
 #'   scale_y_counts_continuous(0)
 #'
-#' ggplot(led.raw_spct) +
+#' ggplot(white_led.raw_spct) +
 #'   geom_line() +
 #'   scale_y_counts_tg_continuous()
 #'

@@ -153,7 +153,11 @@ ggplot.reflector_spct <- function(data, mapping = NULL, ..., plot.qty = NULL,
 ggplot.cps_spct <- function(data, mapping = NULL, ...,
                                   environment = parent.frame()) {
   if (is.null(mapping)) {
-    mapping <- aes_(~w.length, ~cps)
+    if ("cps" %in% names(data)) {
+      mapping <- aes_(~w.length, ~cps)
+    } else {
+      mapping <- aes_(~w.length, ~cps_1)
+    }
   }
   rmDerivedSpct(data)
   ggplot(data = data, mapping = mapping, ...,
@@ -166,7 +170,11 @@ ggplot.cps_spct <- function(data, mapping = NULL, ...,
 ggplot.raw_spct <- function(data, mapping = NULL, ...,
                             environment = parent.frame()) {
   if (is.null(mapping)) {
-    mapping <- aes_(~w.length, ~counts)
+    if ("counts" %in% names(data)) {
+      mapping <- aes_(~w.length, ~counts)
+    } else {
+      mapping <- aes_(~w.length, ~counts_1)
+    }
   }
   rmDerivedSpct(data)
   ggplot(data = data, mapping = mapping, ...,

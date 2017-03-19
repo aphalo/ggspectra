@@ -71,6 +71,7 @@ Required by the statistic and need to be set with \code{aes()}.
   \item{y}{numeric, a spectral quantity}
 }
 }
+
 \examples{
 library(photobiology)
 library(ggplot2)
@@ -92,4 +93,3 @@ Other stats functions: \code{\link{stat_label_peaks}},
   \code{\link{stat_wb_total}}, \code{\link{stat_wl_strip}},
   \code{\link{stat_wl_summary}}
 }
-

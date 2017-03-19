@@ -616,11 +616,11 @@ O_plot <- function(spct,
   if (length(Tfr.type) == 0) {
     Tfr.type <- "unknown"
   }
-  if (Rfr.type == "specular") {
+  if (Rfr.type != "total") {
     stop("Only 'total' reflectance can be plotted in a combined plot")
   }
-  if (Tfr.type == "internal") {
-    stop("Only 'total' transmittance can be plotted in a combined plot")
+  if (Tfr.type != "internal") {
+    stop("Only 'internal' transmittance can be plotted in a combined plot")
   }
   s.Rfr.label <- expression(atop(Spectral~~reflectance~R(lambda)~~spectral~~absorptance~~A(lambda), and~~spectral~~transmittance~T(lambda)))
   y.max <- 1
