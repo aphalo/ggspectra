@@ -1,6 +1,9 @@
 ggspectra 0.2.1
 ===============
 
+Track changes in package 'photobiology' 0.9.14.
+Add continuous scales with defaults suitable for spectral data, with support
+for automatic axis labels both as R-expressions and as LaTeX mark-up.
 Add utility functions for SI scale prefixes.
 Add utility functions for x-axis-labels and secondary x-axis.
 Add utility functions for y-axis-labels.

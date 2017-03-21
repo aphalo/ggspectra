@@ -233,6 +233,10 @@ sec_axis_w_frequency <- function(unit.exponent = 12) {
 #'
 #' ggplot(sun.spct) +
 #'   geom_line() +
+#'   scale_x_wl_continuous(-6)
+#'
+#' ggplot(sun.spct) +
+#'   geom_line() +
 #'   scale_x_wl_continuous(sec.axis = sec_axis_w_number())
 #'
 #' ggplot(sun.spct) +

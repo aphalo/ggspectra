@@ -61,6 +61,27 @@ The new scales are convenience wrapper functions built on top of the scales expo
 
 Functions for automatic generation of secondary x-axes in the case when a variable containing wavelength data (nm) is mapped to the _x_ _aesthetic_ simplify the task of adding an axis with frequencies or wavenumbers to the plot of a spectrum.
 
+| _scale_     | unit.exponent | name | labels                       |  breaks  |
+|:---------------|:---------------------|:---------------|:----------------|:---------------|
+| scale_y_cps_continuous | 0 | cps_label() | SI_pl_format() | |
+| scale_y_counts_continuous | 3 | counts_label() | SI_pl_format() | |
+| scale_y_counts_tg_continuous | 3 | counts_label() | SI_tg_format() | |
+| scale_y_A_internal_continuous | 0 | A_internal_label() | SI_pl_format() | |
+| scale_y_A_total_continuous | 0 | A_total_label() | SI_pl_format() | |
+| scale_y_Tfr_internal_continuous | 0 | Tfr_internal_label() | SI_pl_format() | |
+| scale_y_Tfr_total_continuous | 0 | Tfr_total_label() | SI_pl_format() | |
+| scale_y_Rfr_internal_continuous | 0 | Rfr_internal_label() | SI_pl_format() | |
+| scale_y_Rfr_total_continuous | 0 | Rfr_total_label() | SI_pl_format() | |
+| scale_y_s.e.irrad_continuous | 0 | s.e.irrad_label() | SI_pl_format() | |
+| scale_y_s.q.irrad_continuous | -6 | s.q.irrad_label() | SI_pl_format() | |
+| scale_y_s.e.response_continuous | 0 | s.e.response_label() | SI_pl_format() | |
+| scale_y_s.q.response_continuous | 0 | s.q.response_label() | SI_pl_format() | |
+| scale_x_wl_continuous | -9 | w_length_label() | SI_pl_format() | pretty_breaks(n=7) |
+ 
+
+In addition secondary axis definitions, `sec_axis_w_number()` and `sec_axis_w_frequency()`, and SI system formatters `SI_pl_format`, and `SI_tg_format` are exported, together with auxiliary functions for finding the nearest SI multiplier based on an arbitrary exponent.
+
+
 ### What are functions `color_chart()` and `black_or_white()` for?
 
 Function `color_chart()` makes a color chart of cuadrangular tiles from a vector R color definitions. The chart returned is a `ggplot` object. Funtion `black_or_white()` accepts a vector of color definitions and returns a vector with colors `"white"` or `"black"` depending on the approximate luminosity of the each color in the input. The main use is to automatically achieve suitable contrast between text plotted on top of a color background.
@@ -184,7 +205,32 @@ nearest_SI_exponent(14)
 ```
 ### Raw counts
 
+```{r}
+ggplot(white_led.raw_spct) + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_counts_continuous()
+  
+```
+
+```{r}
+ggplot(white_led.raw_spct) + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_counts_tg_continuous()
+  
+```
+
 ### Counts per second
+
+```{r}
+ggplot(white_led.cps_spct) + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_counts_continuous()
+  
+```
+
 
 ### Spectral irradiance
 
@@ -209,7 +255,43 @@ ggplot(sun.spct) +
   scale_x_wl_continuous(-6) +
   scale_y_s.e.irrad_continuous(-3)
 ```
-### etc.
+
+### Response
+
+```{r}
+ggplot(ccd.spct, unit.out = "photon") + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_s.q.response_continuous()
+```
+
+### Transmittance
+
+```{r}
+ggplot(yellow_gel.spct) + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_Tfr_total_continuous()
+  
+```
+
+### Absorbance
+
+```{r}
+ggplot(yellow_gel.spct, plot.qty = "absorbance") + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_A_total_continuous()
+```
+
+### Reflectance
+
+```{r}
+ggplot(green_leaf.spct) + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_Rfr_total_continuous()
+```
 
 ## Stats
 

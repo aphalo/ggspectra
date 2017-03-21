@@ -71,6 +71,27 @@ ggplot(sun.spct) +
 nearest_SI_exponent(14)
 
 ## ------------------------------------------------------------------------
+ggplot(white_led.raw_spct) + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_counts_continuous()
+  
+
+## ------------------------------------------------------------------------
+ggplot(white_led.raw_spct) + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_counts_tg_continuous()
+  
+
+## ------------------------------------------------------------------------
+ggplot(white_led.cps_spct) + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_counts_continuous()
+  
+
+## ------------------------------------------------------------------------
 ggplot(sun.spct) + 
   geom_line() +
   scale_x_wl_continuous() +
@@ -87,6 +108,31 @@ ggplot(sun.spct) +
   geom_line() +
   scale_x_wl_continuous(-6) +
   scale_y_s.e.irrad_continuous(-3)
+
+## ------------------------------------------------------------------------
+ggplot(ccd.spct, unit.out = "photon") + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_s.q.response_continuous()
+
+## ------------------------------------------------------------------------
+ggplot(yellow_gel.spct) + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_Tfr_total_continuous()
+  
+
+## ------------------------------------------------------------------------
+ggplot(yellow_gel.spct, plot.qty = "absorbance") + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_A_total_continuous()
+
+## ------------------------------------------------------------------------
+ggplot(green_leaf.spct) + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_Rfr_total_continuous()
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + geom_line() + stat_peaks(color = "red")

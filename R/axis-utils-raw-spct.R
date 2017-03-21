@@ -62,15 +62,18 @@ counts_label <- function(unit.exponent = 3,
 #'
 #' ggplot(white_led.raw_spct) +
 #'   geom_line() +
-#'   scale_y_counts_continuous()
+#'   scale_y_counts_continuous() +
+#'   scale_x_wl_continuous()
 #'
 #' ggplot(white_led.raw_spct) +
 #'   geom_line() +
-#'   scale_y_counts_continuous(0)
+#'   scale_y_counts_continuous(0) +
+#'   scale_x_wl_continuous()
 #'
 #' ggplot(white_led.raw_spct) +
 #'   geom_line() +
-#'   scale_y_counts_tg_continuous()
+#'   scale_y_counts_tg_continuous() +
+#'   scale_x_wl_continuous()
 #'
 scale_y_counts_continuous <- function(unit.exponent = 3,
                                       name = counts_label(unit.exponent = unit.exponent),

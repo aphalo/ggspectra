@@ -57,6 +57,30 @@ exponent2prefix <- function(exponent,
   }
 }
 
+
+#' @rdname exponent2prefix
+#'
+#' @param if.zero.exponent character string to return when exponent is equal to zero.
+#'
+#' @export
+#'
+#' @examples
+#'
+#' exponent2factor(3)
+#' exponent2factor(0)
+#' exponent2factor(0, NULL)
+#' exponent2factor(0, "")
+#' exponent2factor(-6)
+#'
+exponent2factor <- function(exponent = 0,
+                            if.zero.exponent = "1") {
+  if (exponent == 0 && !is.null(if.zero.exponent)) {
+    if.zero.exponent
+  } else {
+    paste("10^{", exponent, "}", sep = "")
+  }
+}
+
 #' @rdname exponent2prefix
 #'
 #' @export

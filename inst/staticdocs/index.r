@@ -26,7 +26,22 @@ sd_section("Statistics",
     "stat_wl_summary")
 )
 
-sd_section("Plot creation", "Plot methods for spectra and a function for color-patch charts",
+sd_section("Scales",
+           "Scales control the mapping between data and aesthetics.
+           These scales are continuous scales with defaults suitable for spectral data.",
+           c("scale_x_wl_continuous",
+             "scale_y_s.e.response_continuous",
+             "scale_y_s.e.irrad_continuous",
+             "scale_y_A_internal_continuous",
+             "scale_y_Tfr_internal_continuous",
+             "scale_y_Rfr_specular_continuous",
+             "scale_y_cps_continuous",
+             "scale_y_counts_continuous",
+             "sec_axis_w_number"
+             )
+)
+
+sd_section("Plot creation", "Plot methods for spectra and a function for color-patch charts.",
   c("ggplot",
     "plot.raw_spct",
     "plot.cps_spct",
@@ -36,10 +51,24 @@ sd_section("Plot creation", "Plot methods for spectra and a function for color-p
     "plot.reflector_spct",
     "plot.object_spct",
     "plot.waveband",
-    "color_chart")
+    "color_chart"
+    )
 )
 
-sd_section("Helper functions", "",
+sd_section("Helper functions", "Formatters, International System of units, unit conversions.",
            c("multiplot",
-             "black_or_white")
+             "black_or_white",
+             "exponent2prefix",
+             "SI_pl_format",
+             "SI_tg_format",
+             "w_number",
+             "A_internal_label",
+             "counts_label",
+             "cps_label",
+             "Rfr_specular_label",
+             "Tfr_internal_label",
+             "s.e.irrad_label",
+             "s.e.response_label",
+             "w_length_label"
+           )
 )

@@ -65,11 +65,13 @@ cps_label <- function(unit.exponent = 0,
 #'
 #' ggplot(white_led.cps_spct) +
 #'   geom_line() +
-#'   scale_y_cps_continuous()
+#'   scale_y_cps_continuous() +
+#'   scale_x_wl_continuous()
 #'
 #' ggplot(white_led.cps_spct) +
 #'   geom_line() +
-#'   scale_y_cps_continuous(3)
+#'   scale_y_cps_continuous(3) +
+#'   scale_x_wl_continuous()
 #'
 scale_y_cps_continuous <- function(unit.exponent = 0,
                                    name = cps_label(unit.exponent = unit.exponent),
