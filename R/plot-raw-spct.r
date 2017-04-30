@@ -105,7 +105,7 @@ raw_plot <- function(spct,
                          value.name = "counts")
   setRawSpct(spct, multiple.wl = length(counts.cols))
   y.max <- max(spct[["counts"]], na.rm = TRUE)
-  y.min <- 0
+  y.min <- min(spct[["counts"]], 0, na.rm = TRUE)
   plot <- ggplot(spct) + aes_(linetype = ~scan)
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.counts.label)
