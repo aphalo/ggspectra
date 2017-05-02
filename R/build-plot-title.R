@@ -7,31 +7,19 @@
 #' object for its  metadata.
 #'
 #' @param x An R object.
-#' @param format A character string.
+#' @param default.what A character string.
 #' @param ... Additional parameters of derived methods.
 #'
 #' @export
 #'
-build_title <- function(x) UseMethod("build_title")
-
-#' @rdname build_title
-#'
-#' @export
-#'
-build_title.default <- function(x, format = NULL, ...) {
-  character()
-}
-
-#' @rdname build_title
-#'
-#' @export
-#'
-build_title.generic_spct <- function(x, format = NULL, ...) {
+title_spct <- function(x,
+                       default.what = character(0),
+                       ...) {
   what <- getWhatMeasured(x)
   if (is.na(what)) {
-    what <- character(0)
+    what <- default.what
   }
-  paste(what, collapse = ", ")
+  paste(what, collapse = ", ", ...)
 }
 
 # Automatic subtitle ---------------------------------------------------------
@@ -42,36 +30,27 @@ build_title.generic_spct <- function(x, format = NULL, ...) {
 #' object for its  metadata.
 #'
 #' @param x An R object.
-#' @param format A character string.
+#' @param default.when datetime object.
+#' @param default.where One-row data.frame with at least variables \code{lat},
+#'   and \code{lon}.
 #' @param ... Additional parameters of derived methods.
 #'
 #' @export
 #'
-build_subtitle <- function(x) UseMethod("build_subtitle")
-
-#' @rdname build_subtitle
-#'
-#' @export
-#'
-build_subtitle.default <- function(x, format = NULL, ...) {
-  character()
-}
-
-#' @rdname build_subtitle
-#'
-#' @export
-#'
-build_subtitle.generic_spct <- function(x, format = NULL, ...) {
+subtitle_spct.generic_spct <- function(x,
+                                       default.when = character(0),
+                                       default.where = character(0),
+                                       ...) {
+  when <- getWhenMeasured(x)
+  if (is.na(when)) {
+    when <- default.when
+  }
   where <- getWhereMeasured(x)
   if (any(is.na(where))) {
-    where <- character(0)
+    where <- default.where
   } else {
     where <- paste(names(where), where, collapse = ", ", sep = ": ")
   }
-  when <- getWhenMeasured(x)
-  if (is.na(when)) {
-    when <- character(0)
-  }
-  paste(when, where, sep = "; ")
+  paste(when, where, sep = "; ", ...)
 }
 
