@@ -90,6 +90,7 @@ Function `color_chart()` makes a color chart of cuadrangular tiles from a vector
 
 ```{r}
 library(ggplot2)
+library(scales)
 library(photobiology)
 library(photobiologyWavebands)
 library(ggspectra)
@@ -256,6 +257,38 @@ ggplot(sun.spct) +
   scale_y_s.e.irrad_continuous(-3)
 ```
 
+The scales are just wrappers on the _scales_ defined in packages '**ggplot2**' and '**scales**' with defaults suitable for spectral data. They pass additional arguments to the underlying scale functions allowing, for example, the control of the formatting of tick labels.
+
+```{r}
+ggplot(sun.spct, unit.out = "photon") + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_s.q.irrad_continuous(unit.exponent = 0,
+                               labels = scientific_format())
+```
+
+In addition to formatters defined in package '**scales**' as used above, additional formatters are defined in package '**ggspectra**', like those used in the next example.
+
+```{r}
+library(scales)
+ggplot(sun.spct, unit.out = "photon") + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_s.q.irrad_continuous(unit.exponent = 0,
+                               labels = SI_tg_format(exponent = -6))
+```
+
+Transformation objects for '**scales**', or user defined, can be also passed as arguments,
+
+```{r}
+ggplot(sun.spct, unit.out = "photon") + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_s.q.irrad_continuous(unit.exponent = 0,
+                               trans = "log10",
+                               labels = trans_format("log10", math_format()))
+```
+
 ### Response
 
 ```{r}
@@ -263,6 +296,14 @@ ggplot(ccd.spct, unit.out = "photon") +
   geom_line() +
   scale_x_wl_continuous() +
   scale_y_s.q.response_continuous()
+```
+
+```{r}
+ggplot(ccd.spct, unit.out = "photon") + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_s.q.response_continuous(trans = "log10",
+                                  labels = trans_format("log10", math_format()))
 ```
 
 ### Transmittance
@@ -275,6 +316,13 @@ ggplot(yellow_gel.spct) +
   
 ```
 
+```{r}
+ggplot(yellow_gel.spct) + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_Tfr_total_continuous(labels = percent)
+  
+```
 ### Absorbance
 
 ```{r}
