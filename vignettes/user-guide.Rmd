@@ -1,5 +1,6 @@
 ---
-title: "`ggspectra` `r packageVersion('ggspectra')`<br>User Guide"
+title: "User Guide"
+subtitle: "'ggspectra' `r packageVersion('ggspectra')`"
 author: "Pedro J. Aphalo"
 date: "`r Sys.Date()`"
 output: 

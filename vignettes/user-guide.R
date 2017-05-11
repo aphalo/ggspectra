@@ -1,5 +1,6 @@
 ## ------------------------------------------------------------------------
 library(ggplot2)
+library(scales)
 library(photobiology)
 library(photobiologyWavebands)
 library(ggspectra)
@@ -110,16 +111,53 @@ ggplot(sun.spct) +
   scale_y_s.e.irrad_continuous(-3)
 
 ## ------------------------------------------------------------------------
+ggplot(sun.spct, unit.out = "photon") + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_s.q.irrad_continuous(unit.exponent = 0,
+                               labels = scientific_format())
+
+## ------------------------------------------------------------------------
+library(scales)
+ggplot(sun.spct, unit.out = "photon") + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_s.q.irrad_continuous(unit.exponent = 0,
+                               labels = SI_tg_format(exponent = -6))
+
+## ------------------------------------------------------------------------
+ggplot(sun.spct, unit.out = "photon") + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_s.q.irrad_continuous(unit.exponent = 0,
+                               trans = "log10",
+                               labels = trans_format("log10", math_format()))
+
+## ------------------------------------------------------------------------
 ggplot(ccd.spct, unit.out = "photon") + 
   geom_line() +
   scale_x_wl_continuous() +
   scale_y_s.q.response_continuous()
 
 ## ------------------------------------------------------------------------
+ggplot(ccd.spct, unit.out = "photon") + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_s.q.response_continuous(trans = "log10",
+                                  labels = trans_format("log10", math_format()))
+
+## ------------------------------------------------------------------------
 ggplot(yellow_gel.spct) + 
   geom_line() +
   scale_x_wl_continuous() +
   scale_y_Tfr_total_continuous()
+  
+
+## ------------------------------------------------------------------------
+ggplot(yellow_gel.spct) + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_Tfr_total_continuous(labels = percent)
   
 
 ## ------------------------------------------------------------------------
