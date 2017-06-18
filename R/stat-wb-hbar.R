@@ -159,7 +159,7 @@ StatWbHbar <-
                                                     ymax = max(data$y),
                                                     yint = yint.tmp,
                                                     ymean = ymean.tmp,
-                                                    wb.color = color(wb),
+                                                    wb.color = color_of(wb),
                                                     wb.name = labels(wb)$label)
                                          )
                      }

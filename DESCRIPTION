@@ -1,8 +1,8 @@
 Package: ggspectra
 Type: Package
 Title: Extensions to 'ggplot2' for Radiation Spectra
-Version: 0.2.1.9002
-Date: 2017-05-02
+Version: 0.2.1.9003
+Date: 2017-06-18
 Authors@R:
    c(
     person("Pedro J.", "Aphalo", email = "pedro.aphalo@helsinki.fi", role = c("aut", "cre")),
@@ -19,9 +19,9 @@ LazyData: TRUE
 LazyLoad: TRUE
 ByteCompile: TRUE
 Depends:
-    R (>= 3.2.0)
+    R (>= 3.3.0)
 Imports:
-    photobiology (>= 0.9.14),
+    photobiology (> 0.9.15),
     photobiologyWavebands (> 0.4.1),
     scales (>= 0.4.1),
     ggplot2 (>= 2.2.1),

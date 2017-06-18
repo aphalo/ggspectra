@@ -80,7 +80,7 @@ ggplot(sun.spct) + geom_line() +
 
 }
 \seealso{
-\code{\link[photobiology]{color}}, which is used internally.
+\code{\link[photobiology]{color_of}}, which is used internally.
 
 Other stats functions: \code{\link{stat_label_peaks}},
   \code{\link{stat_peaks}}, \code{\link{stat_wb_box}},

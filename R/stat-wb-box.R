@@ -148,9 +148,9 @@ StatWbBox <-
                                                     xmax = max(wb),
                                                     ymin = min(data$y),
                                                     ymax = max(data$y),
-                                                    wb.color = color(wb),
+                                                    wb.color = color_of(wb),
                                                     wb.name = labels(wb)$label,
-                                                    BW.color = black_or_white(color(wb)))
+                                                    BW.color = black_or_white(color_of(wb)))
                                          )
                      }
                      if (is.null(ypos.fixed)) {

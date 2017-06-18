@@ -57,7 +57,7 @@
 #'   \item{x}{numeric, wavelength in nanometres}
 #' }
 #'
-#' @seealso \code{\link[photobiology]{color}}, which is used internally.
+#' @seealso \code{\link[photobiology]{color_of}}, which is used internally.
 #'
 #' @examples
 #' library(photobiology)

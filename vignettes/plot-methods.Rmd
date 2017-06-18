@@ -250,9 +250,9 @@ plot(yellow_gel.spct, plot.qty = "absorptance", annotations = c("-", "peaks"))
 If one really needs to, one can add a suitable _stat_ using 'local' data. A peak annotaion could be added manually.
 
 ```{r}
-plot(sun.spct) + geom_spct(fill = color(sun.spct)) + 
+plot(sun.spct) + geom_spct(fill = color_of(sun.spct)) + 
   geom_spct(data = yellow_gel.spct * sun.spct, color = "black", 
-            fill = color(yellow_gel.spct * sun.spct))
+            fill = color_of(yellow_gel.spct * sun.spct))
 ```
 
 ## Ploting collections of spectra

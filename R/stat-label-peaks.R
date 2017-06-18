@@ -183,7 +183,7 @@ StatLabelPeaks <-
                      )
                      data[["color"]] <- with(data,
                                              ifelse(is_peak,
-                                                    photobiology::color(x, type = "CMF"),
+                                                    photobiology::color_of(x, type = "CMF"),
                                                     "white")
                      )
                      data[["BW.color"]] <- with(data,
@@ -262,7 +262,7 @@ StatLabelValleys <-
                      )
                      data[["color"]] <- with(data,
                                              ifelse(is_valley,
-                                                    photobiology::color(x, type = "CMF"),
+                                                    photobiology::color_of(x, type = "CMF"),
                                                     "white")
                      )
                      data[["BW.color"]] <- with(data,

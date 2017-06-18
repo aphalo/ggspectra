@@ -47,7 +47,7 @@
 #'   \item{y}{numeric, a spectral quantity}
 #' }
 #'
-#' @seealso \code{\link[photobiology]{color}}, which is used internally.
+#' @seealso \code{\link[photobiology]{color_of}}, which is used internally.
 #'
 #' @examples
 #' library(photobiology)
@@ -81,7 +81,7 @@ StatColor <-
                    compute_group = function(data,
                                             scales,
                                             type) {
-                   dplyr::mutate(data, color = photobiology::color(x, type))
+                   dplyr::mutate(data, color = photobiology::color_of(x, type))
                    },
                    default_aes = ggplot2::aes(color = ..color..,
                                               fill = ..color..),

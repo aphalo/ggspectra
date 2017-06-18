@@ -133,7 +133,7 @@ The only difference between these specializations and the base `ggplot()` method
 ggplot(sun.spct) + geom_line()
 ```
 
-It is possible to the defaults by means of `+` and `aes()` as shown below.
+It is possible to add to the defaults by means of `+` and `aes()` as shown below.
 
 ```{r}
 ggplot(two_suns.spct) + aes(color = spct.idx) + geom_line()
@@ -581,7 +581,7 @@ Or we can add the _aesthetic_ twice with two different geoms to get the value pl
 
 ```{r}
 ggplot(sun.spct) +
-  stat_wl_summary(range = c(400,500), geom = "rect", alpha = 0.2, fill = color(450)) +
+  stat_wl_summary(range = c(400,500), geom = "rect", alpha = 0.2, fill = color_of(450)) +
   stat_wl_summary(range = c(400,500), label.fmt = "Mean = %.3g", vjust = -0.3, geom = "text") + 
   geom_line()
 ```
@@ -1025,12 +1025,12 @@ Using as fill the _color_ calculated from the spectral data is different to earl
 
 ```{r}
 ggplot(sun.spct) + 
-  geom_spct(fill = color(sun.spct))
+  geom_spct(fill = color_of(sun.spct))
 ```
 
 ```{r}
 ggplot(sun.spct * yellow_gel.spct) + 
-  geom_spct(fill = color(sun.spct * yellow_gel.spct))
+  geom_spct(fill = color_of(sun.spct * yellow_gel.spct))
 ```
 
 ## Packaged stats, geoms plus scales

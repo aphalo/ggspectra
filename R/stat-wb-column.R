@@ -141,7 +141,7 @@ StatWbColumn <-
                                             high.limit = range[2])
                        yint.tmp <- integral.fun(mydata$x, mydata$y)
                        ymean.tmp <- yint.tmp / spread(wb)
-                       wb.color <- color(wb) # avoid 'expensive' recalculation
+                       wb.color <- color_of(wb) # avoid 'expensive' recalculation
                        integ.df <- rbind(integ.df,
                                          data.frame(x = midpoint(mydata$x),
                                                     xmin = min(wb),

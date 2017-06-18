@@ -319,7 +319,7 @@ ggplot(sun.spct) +
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) +
-  stat_wl_summary(range = c(400,500), geom = "rect", alpha = 0.2, fill = color(450)) +
+  stat_wl_summary(range = c(400,500), geom = "rect", alpha = 0.2, fill = color_of(450)) +
   stat_wl_summary(range = c(400,500), label.fmt = "Mean = %.3g", vjust = -0.3, geom = "text") + 
   geom_line()
 
@@ -656,11 +656,11 @@ ggplot(sun.spct) + geom_spct()
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + 
-  geom_spct(fill = color(sun.spct))
+  geom_spct(fill = color_of(sun.spct))
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct * yellow_gel.spct) + 
-  geom_spct(fill = color(sun.spct * yellow_gel.spct))
+  geom_spct(fill = color_of(sun.spct * yellow_gel.spct))
 
 ## ------------------------------------------------------------------------
 ggplot(sun.spct) + 

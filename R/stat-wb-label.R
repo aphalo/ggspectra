@@ -133,9 +133,9 @@ StatWbLabel <-
                                          data.frame(x = midpoint(wb),
                                                     xmin = min(wb),
                                                     xmax = max(wb),
-                                                    wb.color = color(wb),
+                                                    wb.color = color_of(wb),
                                                     wb.name = labels(wb)$label,
-                                                    BW.color = black_or_white(color(wb)))
+                                                    BW.color = black_or_white(color_of(wb)))
                                          )
                      }
                      if (is.null(ypos.fixed)) {

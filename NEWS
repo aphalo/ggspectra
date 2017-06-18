@@ -1,6 +1,7 @@
 ggspectra 0.2.2
 ===============
 
+Track changes in package 'photobiology' 0.9.16.
 Do not force y scale to positive range for raw-counts (they can be negative as
 a result of computations).
 
