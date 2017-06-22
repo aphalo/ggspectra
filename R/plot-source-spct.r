@@ -173,8 +173,14 @@ e_plot <- function(spct,
     plot <- plot +
       scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
   } else {
-    plot <- plot + scale_y_continuous(limits = y.limits)
+    plot <- plot +
+      scale_y_continuous(limits = y.limits)
   }
+
+  if (y.min < (-0.001 * y.max)) {
+    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
+  }
+
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 }
 
@@ -358,12 +364,18 @@ q_plot <- function(spct,
     y.limits <- c(y.min, y.max * 1.05)
     x.limits <- range(spct)
   }
+
   if (abs(y.min) < 5e-2 && (abs(y.max - 1) < 5.e-2)) {
     plot <- plot +
       scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
   } else {
     plot <- plot + scale_y_continuous(limits = y.limits)
   }
+
+  if (y.min < (-0.001 * y.max)) {
+    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
+  }
+
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 }
 

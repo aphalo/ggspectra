@@ -203,6 +203,11 @@ e_rsp_plot <- function(spct,
     y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
   }
+
+  if (y.min < (-0.001 * y.max)) {
+    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
+  }
+
   if (abs(y.min) < 5e-2 && (abs(y.max - 1) < 5.e-2)) {
     plot <- plot +
       scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
@@ -417,6 +422,11 @@ q_rsp_plot <- function(spct,
     y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
   }
+
+  if (y.min < (-0.001 * y.max)) {
+    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
+  }
+
   if (abs(y.min) < 5e-2 && (abs(y.max - 1) < 5.e-2)) {
     plot <- plot +
       scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)

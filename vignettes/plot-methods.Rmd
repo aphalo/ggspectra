@@ -255,6 +255,14 @@ plot(sun.spct) + geom_spct(fill = color_of(sun.spct)) +
             fill = color_of(yellow_gel.spct * sun.spct))
 ```
 
+### Handling of off-range data
+
+If the supplied data include off-range values such as negative irradiance or fractional transmittance, reflectance, or absorptance outside the zero to one range the exceeded boundary is highlighted.
+
+```{r}
+plot(yellow_gel.spct - 0.01)
+```
+
 ## Ploting collections of spectra
 
 ```{r}

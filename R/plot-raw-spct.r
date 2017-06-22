@@ -138,6 +138,11 @@ raw_plot <- function(spct,
     y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
   }
+
+  if (y.min < (-0.001 * y.max)) {
+    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
+  }
+
   plot <- plot + scale_y_continuous(limits = y.limits)
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 

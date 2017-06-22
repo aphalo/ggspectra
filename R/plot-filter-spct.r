@@ -35,7 +35,7 @@ Afr_plot <- function(spct,
                      text.size,
                      na.rm,
                      ...) {
-  if (!is.filter_spct(spct)) {
+  if (!is.filter_spct(spct)) { #!!! check code in this fucntion!!! ERRORS
     stop("Afr_plot() can only plot filter_spct objects.")
   }
   A2T(spct, byref = TRUE)
@@ -117,8 +117,8 @@ Afr_plot <- function(spct,
     Afr.label <- ""
   }
 
-  y.max <- 1
-  y.min <- 0
+  y.max <- max(1, spct[["Afr"]])
+  y.min <- min(0, spct[["Afr"]])
 
   plot <- ggplot(spct, aes_(~w.length, ~Afr))
   plot <- plot + geom_line(na.rm = na.rm)
@@ -157,6 +157,13 @@ Afr_plot <- function(spct,
   } else {
     plot <- plot + scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1),
                                       limits = y.limits)
+  }
+
+  if (y.max > 1.001) {
+    plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "red")
+  }
+  if (y.min < -0.001) {
+    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
   }
 
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
@@ -260,8 +267,9 @@ T_plot <- function(spct,
   } else {
     Tfr.label <- ""
   }
-  y.max <- 1
-  y.min <- 0
+
+  y.max <- max(1, spct[["Tfr"]])
+  y.min <- min(0, spct[["Tfr"]])
 
   plot <- ggplot(spct, aes_(~w.length, ~Tfr))
   plot <- plot + geom_line(na.rm = na.rm)
@@ -300,6 +308,13 @@ T_plot <- function(spct,
   } else {
     plot <- plot + scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1),
                                       limits = y.limits)
+  }
+
+  if (y.max > 1.001) {
+    plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "red")
+  }
+  if (y.min < -0.001) {
+    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
   }
 
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
@@ -385,7 +400,8 @@ A_plot <- function(spct,
   }
 
   y.max <- max(spct[["A"]], na.rm = TRUE)
-  y.min <- 0
+  y.min <- min(0, spct[["A"]], na.rm = TRUE)
+
   plot <- ggplot(spct, aes_(~w.length, ~A))
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.A.label)
@@ -556,8 +572,15 @@ R_plot <- function(spct,
     plot <- plot + scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1),
                                       limits = y.limits)
   }
-  plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 
+  if (y.max > 1.001) {
+    plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "red")
+  }
+  if (y.min < -0.001) {
+    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
+  }
+
+  plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 }
 
 #' Plot an object spectrum
