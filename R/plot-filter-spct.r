@@ -35,7 +35,7 @@ Afr_plot <- function(spct,
                      text.size,
                      na.rm,
                      ...) {
-  if (!is.filter_spct(spct)) { #!!! check code in this fucntion!!! ERRORS
+  if (!is.filter_spct(spct)) {
     stop("Afr_plot() can only plot filter_spct objects.")
   }
   A2T(spct, byref = TRUE)
