@@ -162,6 +162,13 @@ e_rsp_plot <- function(spct,
   }
 
   plot <- ggplot(spct, aes_(~w.length, ~s.e.response))
+
+  # We want data plotted on top of the boundary lines
+  # Negative response is valid!
+  if ("boundaries" %in% annotations) {
+    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+  }
+
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.rsp.label)
 
@@ -202,10 +209,6 @@ e_rsp_plot <- function(spct,
   } else {
     y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
-  }
-
-  if (y.min < (-0.001 * y.max)) {
-    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
   }
 
   if (abs(y.min) < 5e-2 && (abs(y.max - 1) < 5.e-2)) {
@@ -381,6 +384,13 @@ q_rsp_plot <- function(spct,
   }
 
   plot <- ggplot(spct, aes_(~w.length, ~s.q.response))
+
+  # We want data plotted on top of the boundary lines
+  # Negative response is valid!
+  if ("boundaries" %in% annotations) {
+    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+  }
+
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.rsp.label)
 
@@ -421,10 +431,6 @@ q_rsp_plot <- function(spct,
   } else {
     y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
-  }
-
-  if (y.min < (-0.001 * y.max)) {
-    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
   }
 
   if (abs(y.min) < 5e-2 && (abs(y.max - 1) < 5.e-2)) {

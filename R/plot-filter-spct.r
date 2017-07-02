@@ -121,6 +121,19 @@ Afr_plot <- function(spct,
   y.min <- min(0, spct[["Afr"]])
 
   plot <- ggplot(spct, aes_(~w.length, ~Afr))
+
+  # We want data plotted on top of the boundary lines
+  if (y.max > 1.001) {
+    plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "red")
+  } else if ("boundaries" %in% annotations) {
+    plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "black")
+  }
+  if (y.min < -0.001) {
+    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
+  } else if ("boundaries" %in% annotations) {
+    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+  }
+
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.Afr.label)
 
@@ -157,13 +170,6 @@ Afr_plot <- function(spct,
   } else {
     plot <- plot + scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1),
                                       limits = y.limits)
-  }
-
-  if (y.max > 1.001) {
-    plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "red")
-  }
-  if (y.min < -0.001) {
-    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
   }
 
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
@@ -272,6 +278,19 @@ T_plot <- function(spct,
   y.min <- min(0, spct[["Tfr"]])
 
   plot <- ggplot(spct, aes_(~w.length, ~Tfr))
+
+  # We want data plotted on top of the boundary lines
+  if (y.max > 1.001) {
+    plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "red")
+  } else if ("boundaries" %in% annotations) {
+    plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "black")
+  }
+  if (y.min < -0.001) {
+    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
+  } else if ("boundaries" %in% annotations) {
+    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+  }
+
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.Tfr.label)
 
@@ -308,13 +327,6 @@ T_plot <- function(spct,
   } else {
     plot <- plot + scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1),
                                       limits = y.limits)
-  }
-
-  if (y.max > 1.001) {
-    plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "red")
-  }
-  if (y.min < -0.001) {
-    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
   }
 
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
@@ -536,6 +548,19 @@ R_plot <- function(spct,
   y.max <- 1
   y.min <- 0
   plot <- ggplot(spct, aes_(~w.length, ~Rfr))
+
+  # We want data plotted on top of the boundary lines
+  if (y.max > 1.001) {
+    plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "red")
+  } else if ("boundaries" %in% annotations) {
+    plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "black")
+  }
+  if (y.min < -0.001) {
+    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
+  } else if ("boundaries" %in% annotations) {
+    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+  }
+
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.Rfr.label)
 
@@ -571,13 +596,6 @@ R_plot <- function(spct,
   } else {
     plot <- plot + scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1),
                                       limits = y.limits)
-  }
-
-  if (y.max > 1.001) {
-    plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "red")
-  }
-  if (y.min < -0.001) {
-    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
   }
 
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))

@@ -4,7 +4,11 @@ ggspectra 0.2.2
 Track changes in package 'photobiology' 0.9.16.
 Do not force y scale to positive range for raw-counts (they can be negative as
 a result of computations).
-Highlight limits if data fall outside the expected/range.
+Add new annotation "boundaries" to highlight with horizontal line(s) the
+expected range of the plotted quantity.
+Highlight limits if data fall outside the expected/range using a red boundary
+line.
+Revise vignettes.
 
 ggspectra 0.2.1
 ===============

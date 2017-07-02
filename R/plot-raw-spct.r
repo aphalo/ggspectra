@@ -49,6 +49,15 @@ raw_plot <- function(spct,
   if (!is.null(w.band)) {
     w.band <- trim_wl(w.band, range = range(spct))
   }
+
+  # Attempt to retrieve max.counts from metadata
+  linearized <- getInstrSettings(spct)[["linearized"]]
+  if (!(is.null(linearized) || linearized)) {
+    upper.boundary <- getInstrDesc(spct)[["max.counts"]]
+  } else {
+    upper.boundary <- NA_real_
+  }
+
   counts.cols <- names(spct)[grep("^counts", names(spct))]
 #  other.cols <- setdiff(names(x), counts.cols)
   if (is.null(norm)) {
@@ -104,9 +113,31 @@ raw_plot <- function(spct,
                          variable.name = "scan",
                          value.name = "counts")
   setRawSpct(spct, multiple.wl = length(counts.cols))
-  y.max <- max(spct[["counts"]], na.rm = TRUE)
+  y.max <- max(spct[["counts"]],
+               ifelse(is.na(upper.boundary), 0, upper.boundary - 1),
+               na.rm = TRUE)
   y.min <- min(spct[["counts"]], 0, na.rm = TRUE)
   plot <- ggplot(spct) + aes_(linetype = ~scan)
+
+  # We want data plotted on top of the boundary lines
+  if (!is.null(upper.boundary) && is.finite(upper.boundary)) {
+    if (y.max >= upper.boundary) {
+      plot <- plot + geom_hline(yintercept = upper.boundary,
+                                linetype = "dashed", colour = "red")
+    } else if ("boundaries" %in% annotations) {
+      plot <- plot + geom_hline(yintercept = upper.boundary,
+                                linetype = "dashed", colour = "black")
+    }
+  }
+
+  if (y.min < 0) {
+    plot <- plot + geom_hline(yintercept = 0,
+                              linetype = "dashed", colour = "red")
+  } else if ("boundaries" %in% annotations) {
+    plot <- plot + geom_hline(yintercept = 0,
+                              linetype = "dashed", colour = "black")
+  }
+
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.counts.label)
 
@@ -137,10 +168,6 @@ raw_plot <- function(spct,
   } else {
     y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
-  }
-
-  if (y.min < (-0.001 * y.max)) {
-    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
   }
 
   plot <- plot + scale_y_continuous(limits = y.limits)

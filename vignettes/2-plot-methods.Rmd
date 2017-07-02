@@ -1,5 +1,5 @@
 ---
-title: "Plot Methods"
+title: "User Guide: Plot Methods"
 subtitle: "'ggspectra' `r packageVersion('ggspectra')`"
 author: "Pedro J. Aphalo"
 date: "`r Sys.Date()`"
@@ -7,7 +7,7 @@ output:
   rmarkdown::html_vignette:
     toc: yes
 vignette: >
-  %\VignetteIndexEntry{Plot Methods}
+  %\VignetteIndexEntry{User Guide: Plot Methods}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,6 +20,7 @@ Although the package uses internally `ggplot2`, `photobiology` and `photobiology
 
 ```{r}
 library(ggplot2)
+library(dplyr)
 library(photobiology)
 library(photobiologyWavebands)
 library(ggspectra)
@@ -98,7 +99,7 @@ plot(sun.spct, unit.out = "photon")
 
 ### Automatic annotations
 
-Which _annotations_ are included can be controlled through parameter `annotations`. These are passed as a vector of character strings, with three values with special meaning for the first element (with index = 1): `"="` means use only the annotations that follow in the vector, `"+"` means add to the default the annotations that follow, and `"-"` means remove the annotations that follow from the defaults. A `NULL` value means use defaults as is, `""` means no annotations, and `"reserve.space"` means no annotations, but expand axis limits and set identity scales ready for mannually adding annotations.
+Which _annotations_ are included can be controlled through parameter `annotations`. These are passed as a vector of character strings, with three values with special meaning for the first element (with index = 1): `"="` means use only the annotations that follow in the vector, `"+"` means add to the default the annotations that follow, and `"-"` means remove the annotations that follow from the defaults. A `NULL` value means use defaults as is, `""` means no annotations, and `"reserve.space"` means no annotations, but expand axis limits and set identity scales ready for manually adding annotations.
 
 | annotation | default for classes                       | overrides    |
 |:-----------|:------------------------------------------|:-------------|
@@ -111,20 +112,31 @@ Which _annotations_ are included can be controlled through parameter `annotation
 | "valley.labels" | none            | "valleys"    |
 | "labels"   | all                  |              |
 | "summaries" | `source_spct`, `response_spct`, `filter_spct`, `reflector_spct` |              |
+| "boundaries"  | none                 |              |
 
-We can list all the annotations to be included in the plot, in which case `"="` is optional so as to maintain compatibility with earlier versions.
+We can add an annotation to the defaults. In this case `"boundaries"`, an annotation that adds a horizontal dashed line and does not override any other annotation.
 
 ```{r}
 plot(sun.spct, 
-     annotations = c("=", "segments", "labels", "summaries", "color.guide", "peaks"))
+     annotations = c("+", "boundaries"))
 ```
-The same plot can be obtained by simply adding `"segments"`, as these override the default `"boxes"`.
+
+We can list all the annotations to be included in a plot, in which case `"="` is optional so as to maintain compatibility with earlier versions.
+
+```{r}
+plot(sun.spct, 
+     annotations = c("=", "labels", "summaries", "color.guide", "peaks", "boundaries"))
+```
+
+As indicated in the table above, some annotations override other annotations which fulfil a similar role. Here `"segments"` overrides `"boxes"`, in the default.
+
 ```{r}
 plot(sun.spct, 
      annotations = c("+", "segments"))
 ```
 
 We can also _remove_ some of the default annotations.
+
 ```{r}
 plot(sun.spct, annotations = c("-", "summaries", "peaks"))
 ```
@@ -134,7 +146,9 @@ We add `"valleys"` as annotations, and control with `span` how near peaks and va
 ```{r}
 plot(sun.spct, annotations = c("+", "valleys"), span = 41)
 ```
-The annotations `"peak.labels"` and `"valley.labels"` overridde `"peaks"` and `"valleys"`. They use the _repulsive_ geometry `geom_label_repel` from package 'ggrepel'.
+
+The annotations `"peak.labels"` and `"valley.labels"` override `"peaks"` and `"valleys"`. They use the _repulsive_ geometry `geom_label_repel` from package 'ggrepel'.
+
 ```{r}
 plot(sun.spct, annotations = c("+", "peak.labels", "valley.labels"), span = 41)
 ```
@@ -172,7 +186,7 @@ plot(sun.spct, w.band = PAR())
 plot(sun.spct, w.band = CIE())
 ```
 
-`NULL` as argument for `w.band` is replaced by a waveband covering the full range of the spectral datat.
+`NULL` as argument for `w.band` is replaced by a waveband covering the full range of the spectral data.
 
 ```{r}
 plot(sun.spct, w.band = NULL)
@@ -189,7 +203,6 @@ plot(sun.spct, w.band = NULL, range = PAR())
 ```{r}
 plot(sun.spct, w.band = PAR(), range = PAR())
 ```
-
 
 ```{r}
 plot(sun.spct, w.band = VIS_bands(), range = VIS())
@@ -208,7 +221,7 @@ Even though the `plot()` methods can return a finished plot, the returned object
 plot(two_suns.spct, label.qty = "mean") + facet_wrap(~spct.idx)
 ```
 
-When using grouping the `"summaries"` annotation would be overplotted, and needs to be suppressed.
+When using grouping the `"summaries"` annotation would be over-plotted, and needs to be suppressed.
 ```{r}
 plot(two_suns.spct, annotations = c("-", "summaries")) + 
   aes(linetype = spct.idx)
@@ -247,13 +260,41 @@ yellow_gel.spct$Rfr <- 1 - max(yellow_gel.spct$Tfr)
 plot(yellow_gel.spct, plot.qty = "absorptance", annotations = c("-", "peaks"))
 ```
 
-If one really needs to, one can add a suitable _stat_ using 'local' data. A peak annotaion could be added manually.
+If one really needs to, one can add a suitable _stat_ using 'local' data. A peak annotation could be added manually.
 
 ```{r}
 plot(sun.spct) + geom_spct(fill = color_of(sun.spct)) + 
   geom_spct(data = yellow_gel.spct * sun.spct, color = "black", 
             fill = color_of(yellow_gel.spct * sun.spct))
 ```
+
+The examples above use an emission spectrum. All the spectral classes defined in package 'photobiology' are supported, however.
+
+```{r}
+plot(yellow_gel.spct)
+```
+
+In the case of quantities like transmittance which have a certain range of valid values, both upper and lower boundaries are highlighted.
+
+```{r}
+plot(yellow_gel.spct, annotations = c("+", "boundaries"))
+```
+
+In the case of raw instrument counts data, if the spectral object contains an instrument descriptor as metadata, the upper boundary is set to the maximum counts of the detector.
+
+```{r}
+plot(white_led.raw_spct, annotations = c("+", "boundaries"))
+```
+
+Both `raw_spct` and `cps_spct` objects contain multiple data columns when integration time bracketing has been used during data acquisition. In such cases, if one wants to plot only one of the raw spectra, method `select()` from package 'dplyr' should be used instead of subscripting (`[ ]`) to preserve the metadata.
+
+```{r}
+plot(select(white_led.raw_spct, w.length, counts_1),
+     annotations = c("+", "boundaries"))
+```
+
+
+
 
 ### Handling of off-range data
 
@@ -290,7 +331,7 @@ plot(rbindspct(two_suns.mspct),
   aes(linetype = spct.idx)
 ```
 
-Using colors is slightly more involved as the identity scale is in use. For this same reason no color key in generated automatically, and a single peak is found unless we change the default span. (In the case of more than two spectra it is easier to use `plyr::mapvalues` instead of several nested `ifelse` calls.)
+Using colors is slightly more involved as the identity scale is in use for annotations. For this same reason no color key in generated automatically, and a single peak is found unless we change the default span. (In the case of more than two spectra it is easier to use `plyr::mapvalues` instead of several nested `ifelse` calls.)
 
 ```{r}
 plot(rbindspct(two_suns.mspct), 
@@ -298,7 +339,7 @@ plot(rbindspct(two_suns.mspct),
   aes(color = ifelse(spct.idx == "sun1", "darkgreen", "darkred"))
 ```
 
-Plots created with `plot()` method can be used as the starting point for customizations.
+Plots created with `plot()` method are `ggplot` objects and can be customized, bearing in mind that any added layers will be plotted on top or existing layers.
 
 ```{r}
 plot(rbindspct(two_suns.mspct), annotations = "") + 

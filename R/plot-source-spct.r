@@ -110,7 +110,16 @@ e_plot <- function(spct,
   spct[["s.e.irrad"]] <- spct[["s.e.irrad"]] * scale.factor
   y.max <- max(c(spct[["s.e.irrad"]], 0), na.rm = TRUE)
   y.min <- min(c(spct[["s.e.irrad"]], 0), na.rm = TRUE)
+
   plot <- ggplot(spct, aes_(~w.length, ~s.e.irrad))
+
+  # We want data plotted on top of the boundary lines
+  if (y.min < (-0.001 * y.max)) {
+    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
+  } else if ("boundaries" %in% annotations) {
+    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+  }
+
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.irrad.label)
 
@@ -175,10 +184,6 @@ e_plot <- function(spct,
   } else {
     plot <- plot +
       scale_y_continuous(limits = y.limits)
-  }
-
-  if (y.min < (-0.001 * y.max)) {
-    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
   }
 
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
@@ -306,7 +311,16 @@ q_plot <- function(spct,
   spct[["s.q.irrad"]] <- spct[["s.q.irrad"]] * scale.factor
   y.max <- max(c(spct[["s.q.irrad"]], 0), na.rm = TRUE)
   y.min <- min(c(spct[["s.q.irrad"]], 0), na.rm = TRUE)
+
   plot <- ggplot(spct, aes_(~w.length, ~s.q.irrad))
+
+  # We want data plotted on top of the boundary lines
+  if (y.min < (-0.001 * y.max)) {
+    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
+  } else if ("boundaries" %in% annotations) {
+    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+  }
+
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.irrad.label)
 
@@ -370,10 +384,6 @@ q_plot <- function(spct,
       scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
   } else {
     plot <- plot + scale_y_continuous(limits = y.limits)
-  }
-
-  if (y.min < (-0.001 * y.max)) {
-    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
   }
 
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))

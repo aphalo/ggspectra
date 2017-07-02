@@ -1,5 +1,5 @@
 ---
-title: "User Guide"
+title: "User Guide: Grammar of Graphics"
 subtitle: "'ggspectra' `r packageVersion('ggspectra')`"
 author: "Pedro J. Aphalo"
 date: "`r Sys.Date()`"
@@ -7,7 +7,7 @@ output:
   rmarkdown::html_vignette:
     toc: yes
 vignette: >
-  %\VignetteIndexEntry{User Guide}
+  %\VignetteIndexEntry{User Guide: Grammar of Graphics}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -18,11 +18,11 @@ Package `ggspectra` extends `ggplot2` with stats, geoms, scales and annotations 
 
 The new elements can be freely combined with methods and functions defined in packages `ggplot2`, `scales`, `ggrepel` and `cowplot`.
 
-### What are `plot` especializations for?
+### What are `plot` specializations for?
 
 The `plot` specializations produce fully annotated plots as `ggplot` objects, which can be further manipulated if so desired. They use the metadata stored in spectral objects of classes defined in package 'photobiology' to automatically generate suitable axis labels, scales and annotations. (Please, see vignette "Plot methods" for details.)
 
-### What are `ggplot` especializations for?
+### What are `ggplot` specializations for?
 
 The `ggplot` specializations set default `aes` according to the type of spectral object. They also add support for `unit.out` arguments allowing on-the-fly conversion of units of expression or spectral quantities. These are only defaults and can be overridden by explicit use of `aes()` to set the mapping of _aesthetics_.
 
@@ -60,7 +60,7 @@ The `geom_spct` _geometry_ is a special case of `geom_area`, but with the minimu
 
 The new scales are convenience wrapper functions built on top of the scales exported by package 'ggplot2', but with default arguments that are suitable for spectral data. 
 
-Functions for automatic generation of secondary x-axes in the case when a variable containing wavelength data (nm) is mapped to the _x_ _aesthetic_ simplify the task of adding an axis with frequencies or wavenumbers to the plot of a spectrum.
+Functions for automatic generation of secondary x-axes in the case when a variable containing wavelength data (nm) is mapped to the _x_ _aesthetic_ simplify the task of adding an axis with frequencies or wave numbers to the plot of a spectrum.
 
 | _scale_     | unit.exponent | name | labels                       |  breaks  |
 |:---------------|:---------------------|:---------------|:----------------|:---------------|
@@ -85,7 +85,7 @@ In addition secondary axis definitions, `sec_axis_w_number()` and `sec_axis_w_fr
 
 ### What are functions `color_chart()` and `black_or_white()` for?
 
-Function `color_chart()` makes a color chart of cuadrangular tiles from a vector R color definitions. The chart returned is a `ggplot` object. Funtion `black_or_white()` accepts a vector of color definitions and returns a vector with colors `"white"` or `"black"` depending on the approximate luminosity of the each color in the input. The main use is to automatically achieve suitable contrast between text plotted on top of a color background.
+Function `color_chart()` makes a color chart of rectangular tiles from a vector R color definitions. The chart returned is a `ggplot` object. Function `black_or_white()` accepts a vector of color definitions and returns a vector with colors `"white"` or `"black"` depending on the approximate luminosity of the each color in the input. The main use is to automatically achieve suitable contrast between text plotted on top of a color background.
 
 ## Set up 
 
@@ -175,7 +175,7 @@ ggplot(sun.spct) +
   scale_x_wl_continuous()
 ```
 
-Functions for automating the addition of secundary axes are also defined.
+Functions for automating the addition of secondary axes are also defined.
 
 ```{r}
 ggplot(sun.spct) + 
@@ -752,7 +752,7 @@ ggplot(sun.daily.spct) +
   theme_bw()
 ```
 
-Here we pass a list of `waveband` objects. And add areas to facilitate comparisons as irradiances are intergral over wavelengths.
+Here we pass a list of `waveband` objects. And add areas to facilitate comparisons as irradiances are integral over wavelengths.
 
 ```{r}
 ggplot(sun.spct, unit.out = "photon") +
@@ -875,7 +875,7 @@ ggplot(sun.spct) +
 
 ## Labels from wavebands
 
-Sometimes we may want to only annotate a plot with waveband names and regions without calculating any summary quantity. `stat_wb_label()` fills this role. Although the same result can be achieved with some of the summary statistics, if no summary is needed this statistic can avoid unnecessary computations, and more importantly used in plots where the $y$ is not mapped, as only the $x$ easthetic is required.
+Sometimes we may want to only annotate a plot with waveband names and regions without calculating any summary quantity. `stat_wb_label()` fills this role. Although the same result can be achieved with some of the summary statistics, if no summary is needed this statistic can avoid unnecessary computations, and more importantly used in plots where the $y$ is not mapped, as only the $x$ aesthetic is required.
 
 ```{r}
 ggplot(data.frame(w.length = 300:800), aes(w.length)) +
@@ -916,7 +916,7 @@ ggplot(data.frame(w.length = 300:1100), aes(w.length)) +
   theme_classic()
 ```
 
-The different definitions of the ulatrviolet regions.
+The different definitions of the ultraviolet regions.
 
 ```{r}
 ggplot(data.frame(w.length = 100:400), aes(w.length)) +
@@ -946,7 +946,7 @@ ggplot(data.frame(w.length = 100:400), aes(w.length)) +
        subtitle = "According to ISO standard, CIE recommendations, and non-standard use") +
   theme_classic()
 ```
-It should be noted that this approach is rather different from the way one would normally plot a horizontal bar plot with the grammar of graphics of 'ggplot2', but for plottings existing waveband definitions it is convenient and ensures that the waveband definitions agree with those used for computing summary quantites elsewhere.
+It should be noted that this approach is rather different from the way one would normally plot a horizontal bar plot with the grammar of graphics of 'ggplot2', but for plottings existing waveband definitions it is convenient and ensures that the waveband definitions agree with those used for computing summary quantities elsewhere.
 
 ## Wavelength colours at new _x_-values 
 
@@ -1061,7 +1061,7 @@ ggplot(sun.spct) +
   geom_spct(alpha = 0.75, colour = "white", size = 1) 
 ```
 
-In the next example we demonstrate a trick achieved by overploting two line of different width (`size`) to make the spectrum visible on a background of variable luminosity.
+In the next example we demonstrate a trick achieved by over-ploting two lines of different width (`size`) to make the spectrum visible on a background of variable luminosity and colour.
 
 ```{r}
 ggplot(sun.spct) + 

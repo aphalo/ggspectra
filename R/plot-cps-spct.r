@@ -107,6 +107,14 @@ cps_plot <- function(spct,
   y.max <- max(c(spct[["cps"]], 0), na.rm = TRUE)
   y.min <- min(c(spct[["cps"]], 0), na.rm = TRUE)
   plot <- ggplot(spct) + aes_(linetype = ~scan)
+
+  # We want data plotted on top of the boundary lines
+  if (y.min < (-0.001 * y.max)) {
+    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
+  } else if ("boundaries" %in% annotations) {
+    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+  }
+
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.cps.label)
 
@@ -135,10 +143,6 @@ cps_plot <- function(spct,
   } else {
     y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
-  }
-
-  if (y.min < (-0.001 * y.max)) {
-    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
   }
 
   plot <- plot + scale_y_continuous(limits = y.limits)
