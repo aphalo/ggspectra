@@ -117,21 +117,23 @@ Afr_plot <- function(spct,
     Afr.label <- ""
   }
 
-  y.max <- max(1, spct[["Afr"]])
-  y.min <- min(0, spct[["Afr"]])
+  y.max <- max(1, spct[["Afr"]], na.rm = TRUE)
+  y.min <- min(0, spct[["Afr"]], na.rm = TRUE)
 
   plot <- ggplot(spct, aes_(~w.length, ~Afr))
 
   # We want data plotted on top of the boundary lines
-  if (y.max > 1.001) {
-    plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "red")
-  } else if ("boundaries" %in% annotations) {
-    plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "black")
-  }
-  if (y.min < -0.001) {
-    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
-  } else if ("boundaries" %in% annotations) {
-    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+  if ("boundaries" %in% annotations) {
+    if (y.max > 1.01) {
+      plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "red")
+    } else {
+      plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "black")
+    }
+    if (y.min < -0.01) {
+      plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
+    } else {
+      plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+    }
   }
 
   plot <- plot + geom_line(na.rm = na.rm)
@@ -274,21 +276,23 @@ T_plot <- function(spct,
     Tfr.label <- ""
   }
 
-  y.max <- max(1, spct[["Tfr"]])
-  y.min <- min(0, spct[["Tfr"]])
+  y.max <- max(1, spct[["Tfr"]], na.rm = TRUE)
+  y.min <- min(0, spct[["Tfr"]], na.rm = TRUE)
 
   plot <- ggplot(spct, aes_(~w.length, ~Tfr))
 
   # We want data plotted on top of the boundary lines
-  if (y.max > 1.001) {
-    plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "red")
-  } else if ("boundaries" %in% annotations) {
-    plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "black")
-  }
-  if (y.min < -0.001) {
-    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
-  } else if ("boundaries" %in% annotations) {
-    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+  if ("boundaries" %in% annotations) {
+    if (y.max > 1.01) {
+      plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "red")
+    } else {
+      plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "black")
+    }
+    if (y.min < -0.01) {
+      plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
+    } else {
+      plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+    }
   }
 
   plot <- plot + geom_line(na.rm = na.rm)
@@ -545,20 +549,23 @@ R_plot <- function(spct,
   } else {
     Rfr.label <- ""
   }
-  y.max <- 1
-  y.min <- 0
+  y.max <- max(1, spct[["Rfr"]], na.rm = TRUE)
+  y.min <- min(0, spct[["Rfr"]], na.rm = TRUE)
+
   plot <- ggplot(spct, aes_(~w.length, ~Rfr))
 
   # We want data plotted on top of the boundary lines
-  if (y.max > 1.001) {
-    plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "red")
-  } else if ("boundaries" %in% annotations) {
-    plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "black")
-  }
-  if (y.min < -0.001) {
-    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
-  } else if ("boundaries" %in% annotations) {
-    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+  if ("boundaries" %in% annotations) {
+    if (y.max > 1.01) {
+      plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "red")
+    } else {
+      plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "black")
+    }
+    if (y.min < -0.01) {
+      plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
+    } else {
+      plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+    }
   }
 
   plot <- plot + geom_line(na.rm = na.rm)
@@ -658,14 +665,26 @@ O_plot <- function(spct,
     Tfr.type <- "unknown"
   }
   if (Rfr.type != "total") {
-    stop("Only 'total' reflectance can be plotted in a combined plot")
+    warning("Only 'total' reflectance can be meaningfully plotted in a combined plot")
   }
-  if (Tfr.type != "internal") {
-    stop("Only 'internal' transmittance can be plotted in a combined plot")
+  if (Tfr.type != "total") {
+    warning("Only 'total' transmittance can be meaningfully plotted in a combined plot")
+  }
+  if ((spct[["Tfr"]] + spct[["Rfr"]]) > 1.01) {
+    message("Bad data or fluorescence.")
+    if (stacked) {
+      warning("Changing mode to not stacked")
+      stacked <- FALSE
+    }
   }
   s.Rfr.label <- expression(atop(Spectral~~reflectance~R(lambda)~~spectral~~absorptance~~A(lambda), and~~spectral~~transmittance~T(lambda)))
-  y.max <- 1
-  y.min <- 0
+  if (stacked) {
+    y.max <- 1
+    y.min <- 0
+  } else {
+    y.max <- max(1, spct[["Rfr"]], spct[["Tfr"]], na.rm = TRUE)
+    y.min <- min(0, spct[["Rfr"]], spct[["Tfr"]], na.rm = TRUE)
+  }
   spct[["Afr"]] <- 1.0 - spct[["Tfr"]] - spct[["Rfr"]]
   molten.spct <-
     tidyr::gather_(dplyr::select_(spct, "w.length", "Tfr", "Afr", "Rfr"),

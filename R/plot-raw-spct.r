@@ -120,22 +120,23 @@ raw_plot <- function(spct,
   plot <- ggplot(spct) + aes_(linetype = ~scan)
 
   # We want data plotted on top of the boundary lines
-  if (!is.null(upper.boundary) && is.finite(upper.boundary)) {
-    if (y.max >= upper.boundary) {
-      plot <- plot + geom_hline(yintercept = upper.boundary,
+  if ("boundaries" %in% annotations) {
+    if (!is.null(upper.boundary) && is.finite(upper.boundary)) {
+      if (y.max >= upper.boundary) {
+        plot <- plot + geom_hline(yintercept = upper.boundary,
+                                  linetype = "dashed", colour = "red")
+      } else {
+        plot <- plot + geom_hline(yintercept = upper.boundary,
+                                  linetype = "dashed", colour = "black")
+      }
+    }
+    if (y.min < -0.01 * y.max) {
+      plot <- plot + geom_hline(yintercept = 0,
                                 linetype = "dashed", colour = "red")
     } else if ("boundaries" %in% annotations) {
-      plot <- plot + geom_hline(yintercept = upper.boundary,
+      plot <- plot + geom_hline(yintercept = 0,
                                 linetype = "dashed", colour = "black")
     }
-  }
-
-  if (y.min < 0) {
-    plot <- plot + geom_hline(yintercept = 0,
-                              linetype = "dashed", colour = "red")
-  } else if ("boundaries" %in% annotations) {
-    plot <- plot + geom_hline(yintercept = 0,
-                              linetype = "dashed", colour = "black")
   }
 
   plot <- plot + geom_line(na.rm = na.rm)
