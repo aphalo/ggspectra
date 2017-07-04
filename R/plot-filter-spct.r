@@ -38,11 +38,11 @@ Afr_plot <- function(spct,
   if (!is.filter_spct(spct)) {
     stop("Afr_plot() can only plot filter_spct objects.")
   }
-  A2T(spct, byref = TRUE)
-  Tfr.type <- getTfrType(spct)
   if (!is.null(range)) {
     spct <- trim_wl(spct, range = range)
   }
+  A2T(spct, byref = TRUE)
+  Tfr.type <- getTfrType(spct)
   if (!is.null(w.band)) {
     w.band <- trim_wl(w.band, range = range(spct))
   }
@@ -218,11 +218,11 @@ T_plot <- function(spct,
   if (!is.filter_spct(spct)) {
     stop("T_plot() can only plot filter_spct objects.")
   }
-  A2T(spct, byref = TRUE)
-  Tfr.type <- getTfrType(spct)
   if (!is.null(range)) {
     spct <- trim_wl(spct, range = range)
   }
+  A2T(spct, byref = TRUE)
+  Tfr.type <- getTfrType(spct)
   if (!is.null(w.band)) {
     w.band <- trim_wl(w.band, range = range(spct))
   }
@@ -375,10 +375,10 @@ A_plot <- function(spct,
   if (!is.filter_spct(spct)) {
     stop("A_plot() can only plot filter_spct objects.")
   }
-  T2A(spct, action = "replace", byref = TRUE)
   if (!is.null(range)) {
     spct <- trim_wl(spct, range = range)
   }
+  T2A(spct, action = "replace", byref = TRUE)
   if (!is.null(w.band)) {
     w.band <- trim_wl(w.band, range = range(spct))
   }
@@ -419,6 +419,19 @@ A_plot <- function(spct,
   y.min <- min(0, spct[["A"]], na.rm = TRUE)
 
   plot <- ggplot(spct, aes_(~w.length, ~A))
+
+  # We want data plotted on top of the boundary lines
+  if ("boundaries" %in% annotations) {
+    if (y.max > 6) {
+      plot <- plot + geom_hline(yintercept = 6, linetype = "dashed", colour = "red")
+    }
+    if (y.min < -0.01) {
+      plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
+    } else {
+      plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+    }
+  }
+
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.A.label)
 
@@ -429,7 +442,7 @@ A_plot <- function(spct,
   plot <- plot + scale_fill_identity() + scale_color_identity()
 
   plot <- plot + decoration(w.band = w.band,
-                            y.max = y.max,
+                            y.max = min(y.max, 6),
                             y.min = y.min,
                             x.max = max(spct),
                             x.min = min(spct),
@@ -442,10 +455,10 @@ A_plot <- function(spct,
 
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide", "reserve.space"), annotations)) > 0L) {
-    y.limits <- c(y.min, y.max * 1.25)
+    y.limits <- c(y.min, min(y.max, 6) * 1.25)
     x.limits <- c(min(spct) - spread(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
-    y.limits <- c(y.min, y.max)
+    y.limits <- c(y.min, min(y.max, 6))
     x.limits <- range(spct)
   }
   plot <- plot + scale_y_continuous(limits = y.limits)
@@ -670,22 +683,22 @@ O_plot <- function(spct,
   if (Tfr.type != "total") {
     warning("Only 'total' transmittance can be meaningfully plotted in a combined plot")
   }
-  if ((spct[["Tfr"]] + spct[["Rfr"]]) > 1.01) {
+  s.Rfr.label <- expression(atop(Spectral~~reflectance~R(lambda)~~spectral~~absorptance~~A(lambda), and~~spectral~~transmittance~T(lambda)))
+  spct[["Afr"]] <- 1.0 - spct[["Tfr"]] - spct[["Rfr"]]
+  if (any((spct[["Afr"]]) < -0.01)) {
     message("Bad data or fluorescence.")
     if (stacked) {
       warning("Changing mode to not stacked")
       stacked <- FALSE
     }
   }
-  s.Rfr.label <- expression(atop(Spectral~~reflectance~R(lambda)~~spectral~~absorptance~~A(lambda), and~~spectral~~transmittance~T(lambda)))
   if (stacked) {
-    y.max <- 1
-    y.min <- 0
+    y.max <- 1.01 # take care of rounding off
+    y.min <- -0.01 # take care of rounding off
   } else {
-    y.max <- max(1, spct[["Rfr"]], spct[["Tfr"]], na.rm = TRUE)
-    y.min <- min(0, spct[["Rfr"]], spct[["Tfr"]], na.rm = TRUE)
+    y.max <- max(1, spct[["Rfr"]], spct[["Tfr"]], spct[["Afr"]], na.rm = TRUE)
+    y.min <- min(0, spct[["Rfr"]], spct[["Tfr"]], spct[["Afr"]], na.rm = TRUE)
   }
-  spct[["Afr"]] <- 1.0 - spct[["Tfr"]] - spct[["Rfr"]]
   molten.spct <-
     tidyr::gather_(dplyr::select_(spct, "w.length", "Tfr", "Afr", "Rfr"),
                    "variable", "value", c("Tfr", "Afr", "Rfr"))
