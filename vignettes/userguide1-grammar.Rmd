@@ -161,7 +161,9 @@ In the case of `ggplot.filter_spct()` the additional parameter is called `plot.q
 ggplot(yellow_gel.spct, plot.qty = "absorbance") + geom_line()
 ```
 
-The names of the additional parameters are consistent with those by method `plot()` in this package and in the now deprecated package `photobiologygg`.
+In the case of `ggplot.object_spct()` three values (`"reflectance"`, `"transmittance"` and `"all"` are accepted. Passing `"all"` as argument results in the spectral data being molten into a long form, using `value` and `variable` as value and key columns, respectively. The column `variable` has three levels `Tfr`, `Rfr` and `Afr` indexing the `Tfr` and `Rfr` from the `object_spct` object plus newly calculated absorptance values. 
+
+The names of the additional parameters are consistent with those used in the `plot()` methods defined in this package.
 
 ## Scales
 
@@ -691,7 +693,7 @@ ggplot(sun.spct * yellow_gel.spct) +
 
 ### Irradiances by waveband
 
-The _stat_s in previous sections can be used for unweighted irradiances, but not for BSWFs. These `irrad` _stat_s have additional formal parameters for passing metadata, and use method `photobiology::irrad()` internally on a `photobiology::source_spct` object constructed from the
+The _stat_s in previous sections can be used for non-weighed irradiances, but not for BSWFs. These `irrad` _stat_s have additional formal parameters for passing metadata, and use method `photobiology::irrad()` internally on a `photobiology::source_spct` object constructed from the
 data for $x$ and $y$ _aesthetics_. Function `stat_wb_sirrad()` is equivalent to `stat_wb_mean()` and function `stat_wb_irrad()` is equivalent to `stat_wb_total()` following the same naming convention as in package `photobiology`. 
 
 ```{r}
@@ -1061,7 +1063,7 @@ ggplot(sun.spct) +
   geom_spct(alpha = 0.75, colour = "white", size = 1) 
 ```
 
-In the next example we demonstrate a trick achieved by over-ploting two lines of different width (`size`) to make the spectrum visible on a background of variable luminosity and colour.
+In the next example we demonstrate a trick achieved by over-plotting two lines of different width (`size`) to make the spectrum visible on a background of variable luminosity and colour.
 
 ```{r}
 ggplot(sun.spct) + 

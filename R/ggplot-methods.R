@@ -55,6 +55,9 @@
 #' ggplot(yellow_gel.spct) + geom_line()
 #' ggplot(yellow_gel.spct, plot.qty = "absorbance") + geom_line()
 #'
+#' ggplot(Ler_leaf.spct) + facet_grid(~variable) + geom_line()
+#' ggplot(Ler_leaf.spct) + aes(linetype = variable) + geom_line()
+#'
 #' @note Current implementation does not merge default mapping with user
 #' supplied mapping. If user supplies a mapping, it is used as is, and
 #' variables should be present in the spectral object. In contrast, when
@@ -108,7 +111,9 @@ ggplot.response_spct <-
 }
 #' @rdname ggplot
 #'
-#' @param plot.qty character string one of "transmittance" or "absorbance".
+#' @param plot.qty character string one of "transmittance" or "absorbance" for
+#'   filter_spct, and one of "transmittance", "reflectance" or "all" for
+#'   object_spct.
 #'
 #' @export
 #'
@@ -180,3 +185,38 @@ ggplot.raw_spct <- function(data, mapping = NULL, ...,
   ggplot(data = data, mapping = mapping, ...,
          environment = environment)
 }
+#' @rdname ggplot
+#'
+#' @export
+#'
+ggplot.object_spct <-
+  function(data, mapping = NULL, ...,
+           plot.qty = getOption("photobiology.object.qty", default = "all"),
+           environment = parent.frame()) {
+    # If plotting a single variable, we use other methods
+    if (plot.qty == "reflectance") {
+      return(ggplot(as.reflector_spct(data)))
+    } else if (plot.qty %in% c("transmittance", "absorbance")) {
+      return(ggplot(as.filter_spct(data)))
+    } else if (plot.qty != "all") {
+      stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
+    }
+    # compute absorptance
+    data[["Afr"]] <- 1.0 - data[["Tfr"]] - data[["Rfr"]]
+    if (any((data[["Afr"]]) < -0.01)) {
+      message("Bad data or fluorescence.")
+    }
+    # melt data into long form
+    molten.data <-
+      tidyr::gather_(dplyr::select_(data, "w.length", "Tfr", "Afr", "Rfr"),
+                     "variable", "value", c("Tfr", "Afr", "Rfr"))
+    # if not supplied create a mapping
+    if (is.null(mapping)) {
+      mapping <- aes_(~w.length, ~value)
+    }
+    # convert to a tibble so that dispatch goes to ggplot2::ggplot.data.frame()
+    rmDerivedSpct(molten.data)
+    ggplot(data = molten.data, mapping = mapping, ...,
+           environment = environment)
+  }
+
