@@ -2,9 +2,8 @@ ggspectra 0.2.2
 ===============
 
 Track changes in package 'photobiology' 0.9.16 and 0.9.17.
-Expand y scale to expected range in all cases, but do not force these limits in any case when data exceeds them (unexpected values can be produced as a result
-of computations, instrument bias and/or real phenomena like fluorescence of
-filter materials).
+Expand y scale to expected range in all cases, but do not force these limits in any case when data exceeds them, except for absorbance for which the y scale is
+not expanded past 6 a.u.
 Add new annotation "boundaries" to highlight with horizontal line(s) the
 expected range of the plotted quantity, highliting the limits affected when data
 fall outside the expected/range.

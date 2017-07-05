@@ -12,7 +12,7 @@
 #'   min annd max wavelengths (nm)
 #' @param pc.out logical, if TRUE use percents instead of fraction of one
 #' @param label.qty character string giving the type of summary quantity to use
-#'   for labels
+#'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
@@ -234,7 +234,7 @@ e_rsp_plot <- function(spct,
 #'   min annd max wavelengths (nm)
 #' @param pc.out logical, if TRUE use percents instead of fraction of one
 #' @param label.qty character string giving the type of summary quantity to use
-#'   for labels
+#'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
@@ -459,7 +459,7 @@ q_rsp_plot <- function(spct,
 #'   for plotting: "photon" or its synomin "quantum", or "energy"
 #' @param pc.out logical, if TRUE use percents instead of fraction of one
 #' @param label.qty character string giving the type of summary quantity to use
-#'   for labels
+#'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.

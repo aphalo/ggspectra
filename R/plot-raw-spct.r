@@ -14,7 +14,7 @@
 #'   min annd max wavelengths (nm)
 #' @param pc.out logical, if TRUE use percents instead of fraction of one
 #' @param label.qty character string giving the type of summary quantity to use
-#'   for labels
+#'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
@@ -192,7 +192,8 @@ raw_plot <- function(spct,
 #' with min annd max wavelengths (nm)
 #' @param unit.out character IGNORED
 #' @param pc.out logical, if TRUE use percents instead of fraction of one
-#' @param label.qty character IGNORED
+#' @param label.qty character string giving the type of summary quantity to use
+#'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
@@ -217,7 +218,7 @@ plot.raw_spct <-
            range = NULL,
            unit.out = "counts",
            pc.out = FALSE,
-           label.qty = "average",
+           label.qty = "mean",
            span = NULL,
            annotations = NULL,
            norm = NULL,

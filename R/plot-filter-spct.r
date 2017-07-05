@@ -1,10 +1,7 @@
 #' Plot a filter spectrum.
 #'
 #' This function returns a ggplot object with an annotated plot of a source_spct
-#' object showing transmittance.
-#'
-#' @note Note that scales are expanded so as to make space for the annotations.
-#'   The object returned is a ggplot objects, and can be further manipulated.
+#' object showing absorptance.
 #'
 #' @param spct a filter_spct object
 #' @param w.band list of waveband objects
@@ -468,8 +465,8 @@ A_plot <- function(spct,
 
 #' Plot a reflector spectrum
 #'
-#' This function returns a ggplot object with an annotated plot of a
-#' reflector_spct object.
+#' This function returns a ggplot object with an annotated plot of spectral
+#' reflectance.
 #'
 #' @note Note that scales are expanded so as to make space for the annotations.
 #'   The object returned is a ggplot objects, and can be further manipulated.
@@ -623,8 +620,8 @@ R_plot <- function(spct,
 
 #' Plot an object spectrum
 #'
-#' This function returns a ggplot object with an annotated plot of a object_spct
-#' object.
+#' This function returns a ggplot object with an annotated plot of spectral
+#' transmittance, absorptance and reflectance.
 #'
 #' @note Note that scales are expanded so as to make space for the annotations.
 #'   The object returned is a ggplot object, and can be further manipulated.
@@ -777,8 +774,16 @@ O_plot <- function(spct,
 #' This function returns a ggplot object with an annotated plot of a filter_spct
 #' object.
 #'
-#' @note Note that scales are expanded so as to make space for the annotations.
-#'   The object returned is a ggplot objects, and can be further manipulated.
+#' @note The ggplot object returned can be further manipulated and added to.
+#'   Except when no annotations are added, limits are set for the x-axis and
+#'   y-axis scales. The y scale limits are expanded to include all data, or at
+#'   least to the range of expected values. The plotting of absorbance is an
+#'   exception as the y-axis is not extended past 6 a.u. In the case of
+#'   absorbance, values larger than 6 a.u. are rarely meaningful due to stray
+#'   light during measurement. However, when transmittance values below the
+#'   detection limit are rounded to zero, and later converted into absorbance,
+#'   values Inf a.u. result, disrupting the plot. Scales are further expanded so
+#'   as to make space for the annotations.
 #'
 #' @param x a filter_spct object
 #' @param ... other arguments passed along, such as \code{label.qty}
@@ -788,7 +793,7 @@ O_plot <- function(spct,
 #' @param plot.qty character string one of "transmittance" or "absorbance"
 #' @param pc.out logical, if TRUE use percents instead of fraction of one
 #' @param label.qty character string giving the type of summary quantity to use
-#'   for labels
+#'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
@@ -892,8 +897,11 @@ plot.filter_spct <-
 #' This function returns a ggplot object with an annotated plot of a
 #' reflector_spct object.
 #'
-#' @note Note that scales are expanded so as to make space for the annotations.
-#'   The object returned is a ggplot objects, and can be further manipulated.
+#' @note The ggplot object returned can be further manipulated and added to.
+#'   Except when no annotations are added, limits are set for the x-axis and
+#'   y-axis scales. The y scale limits are expanded to include all data, or at
+#'   least to the range of expected values. Scales are further expanded so
+#'   as to make space for the annotations.
 #'
 #' @param x a reflector_spct object
 #' @param ... other arguments passed along, such as \code{label.qty}
@@ -903,7 +911,7 @@ plot.filter_spct <-
 #' @param plot.qty character string (currently ignored)
 #' @param pc.out logical, if TRUE use percents instead of fraction of one
 #' @param label.qty character string giving the type of summary quantity to use
-#'   for labels
+#'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
@@ -983,8 +991,11 @@ plot.reflector_spct <-
 #' This function returns a ggplot object with an annotated plot of an
 #' object_spct object.
 #'
-#' @note Note that scales are expanded so as to make space for the annotations.
-#'   The object returned is a ggplot objects, and can be further manipulated.
+#' @note The ggplot object returned can be further manipulated and added to.
+#'   Except when no annotations are added, limits are set for the x-axis and
+#'   y-axis scales. The y scale limits are expanded to include all data, or at
+#'   least to the range of expected values. Scales are further expanded so
+#'   as to make space for the annotations.
 #'
 #' @param x an object_spct object
 #' @param ... other arguments passed along, such as \code{label.qty}
@@ -995,7 +1006,7 @@ plot.reflector_spct <-
 #'   "absorbance", "absorptance", or "reflectance".
 #' @param pc.out logical, if TRUE use percents instead of fraction of one
 #' @param label.qty character string giving the type of summary quantity to use
-#'   for labels
+#'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.

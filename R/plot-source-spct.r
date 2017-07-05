@@ -11,7 +11,7 @@
 #' @param range an R object on which range() returns a vector of length 2, with
 #'   min annd max wavelengths (nm)
 #' @param label.qty character string giving the type of summary quantity to use
-#'   for labels
+#'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
@@ -204,7 +204,7 @@ e_plot <- function(spct,
 #' @param range an R object on which range() returns a vector of length 2, with
 #'   min annd max wavelengths (nm)
 #' @param label.qty character string giving the type of summary quantity to use
-#'   for labels
+#'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
@@ -409,7 +409,7 @@ q_plot <- function(spct,
 #' @param unit.out character string indicating type of radiation units to use
 #'   for plotting: "photon" or its synomin "quantum", or "energy"
 #' @param label.qty character string giving the type of summary quantity to use
-#'   for labels
+#'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
