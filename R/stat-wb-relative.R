@@ -168,7 +168,8 @@ StatWbRelative <-
                        range <- range(wb)
                        mydata <- trim_tails(data$x, data$y, use.hinges = TRUE,
                                             low.limit = range[1],
-                                            high.limit = range[2])
+                                            high.limit = range[2],
+                                            verbose = FALSE)
                        if (is_effective(wb)) {
                          warning("BSWFs not supported by summary: using wavelength range for ",
                                  labels(wb)$label, "'.")

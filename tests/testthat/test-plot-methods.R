@@ -45,6 +45,12 @@ test_that("source_spct", {
                               plot(white_led.source_spct, label.qty = "average"))
   vdiffr::expect_doppelganger("source-label-mean",
                               plot(white_led.source_spct, label.qty = "mean"))
+  vdiffr::expect_doppelganger("source-label-total",
+                              plot(white_led.source_spct, label.qty = "total"))
+  vdiffr::expect_doppelganger("source-label-contrib",
+                              plot(white_led.source_spct, label.qty = "contribution"))
+  vdiffr::expect_doppelganger("source-label-relative",
+                              plot(white_led.source_spct, label.qty = "relative"))
   vdiffr::expect_doppelganger("source-range-num",
                               plot(white_led.source_spct, range = c(500, 700)))
   vdiffr::expect_doppelganger("source-range-wb",
@@ -83,7 +89,7 @@ test_that("source_spct", {
   vdiffr::expect_doppelganger("source-plus-segments-q",
                               plot(white_led.source_spct, unit.out = "photon", annotations = c("+", "segments")))
 
-  vdiffr::expect_doppelganger("source-normalized",
+    vdiffr::expect_doppelganger("source-normalized",
                               plot(normalize(white_led.source_spct)))
   vdiffr::expect_doppelganger("source-normalized-wl",
                               plot(normalize(white_led.source_spct, norm = 550)))
@@ -333,6 +339,12 @@ test_that("response_spct", {
                               plot(ccd.spct, label.qty = "average"))
   vdiffr::expect_doppelganger("response-label-mean",
                               plot(ccd.spct, label.qty = "mean"))
+  vdiffr::expect_doppelganger("response-label-total",
+                              plot(ccd.spct, label.qty = "total"))
+  vdiffr::expect_doppelganger("response-label-contrib",
+                              plot(ccd.spct, label.qty = "contribution"))
+  vdiffr::expect_doppelganger("response-label-relative",
+                              plot(ccd.spct, label.qty = "relative"))
   vdiffr::expect_doppelganger("response-range-num",
                               plot(ccd.spct, range = c(300, 700)))
   vdiffr::expect_doppelganger("response-range-wb",
@@ -356,6 +368,12 @@ test_that("response_spct", {
                               plot(ccd.spct, unit.out = "photon", label.qty = "average"))
   vdiffr::expect_doppelganger("response-label-mean-q",
                               plot(ccd.spct, unit.out = "photon", label.qty = "mean"))
+  vdiffr::expect_doppelganger("response-label-total-q",
+                              plot(ccd.spct, unit.out = "photon", label.qty = "total"))
+  vdiffr::expect_doppelganger("response-label-contrib-q",
+                              plot(ccd.spct, unit.out = "photon", label.qty = "contribution"))
+  vdiffr::expect_doppelganger("response-label-relative-q",
+                              plot(ccd.spct, unit.out = "photon", label.qty = "relative"))
   vdiffr::expect_doppelganger("response-range-num-q",
                               plot(ccd.spct, unit.out = "photon", range = c(500, 700)))
   vdiffr::expect_doppelganger("response-range-wb-q",
