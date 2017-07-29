@@ -3,6 +3,7 @@ library(photobiology)
 library(photobiologyWavebands)
 
 test_that("raw_spct", {
+  # skip_on_cran()
   vdiffr::expect_doppelganger("raw-default",
                       plot(white_led.raw_spct))
   vdiffr::expect_doppelganger("raw-range-num",
