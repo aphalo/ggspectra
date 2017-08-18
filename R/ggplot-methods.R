@@ -85,7 +85,8 @@ ggplot.source_spct <-
   rmDerivedSpct(data)
   ggplot(data = data, mapping = mapping, ...,
                     environment = environment)
-}
+  }
+
 #' @rdname ggplot
 #'
 #' @export
@@ -108,7 +109,8 @@ ggplot.response_spct <-
   rmDerivedSpct(data)
   ggplot(data = data, mapping = mapping, ...,
          environment = environment)
-}
+  }
+
 #' @rdname ggplot
 #'
 #' @param plot.qty character string one of "transmittance" or "absorbance" for
@@ -125,6 +127,9 @@ ggplot.filter_spct <-
     if (plot.qty == "transmittance") {
       data <- A2T(data)
       mapping <- aes_(~w.length, ~Tfr)
+    } else if (plot.qty == "absorptance") {
+      data <- T2Afr(data)
+      mapping <- aes_(~w.length, ~Afr)
     } else if (plot.qty == "absorbance") {
       data <- T2A(data)
       mapping <- aes_(~w.length, ~A)
@@ -135,7 +140,8 @@ ggplot.filter_spct <-
   rmDerivedSpct(data)
   ggplot(data = data, mapping = mapping, ...,
          environment = environment)
-}
+  }
+
 #' @rdname ggplot
 #'
 #' @note plot.qty is ignored for reflectors.
@@ -151,6 +157,7 @@ ggplot.reflector_spct <- function(data, mapping = NULL, ..., plot.qty = NULL,
   ggplot(data = data, mapping = mapping, ...,
          environment = environment)
 }
+
 #' @rdname ggplot
 #'
 #' @export
@@ -168,6 +175,7 @@ ggplot.cps_spct <- function(data, mapping = NULL, ...,
   ggplot(data = data, mapping = mapping, ...,
          environment = environment)
 }
+
 #' @rdname ggplot
 #'
 #' @export
@@ -185,6 +193,7 @@ ggplot.raw_spct <- function(data, mapping = NULL, ...,
   ggplot(data = data, mapping = mapping, ...,
          environment = environment)
 }
+
 #' @rdname ggplot
 #'
 #' @export
@@ -196,7 +205,7 @@ ggplot.object_spct <-
     # If plotting a single variable, we use other methods
     if (plot.qty == "reflectance") {
       return(ggplot(as.reflector_spct(data)))
-    } else if (plot.qty %in% c("transmittance", "absorbance")) {
+    } else if (plot.qty %in% c("transmittance", "absorbance", "absorptance")) {
       return(ggplot(as.filter_spct(data)))
     } else if (plot.qty != "all") {
       stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")

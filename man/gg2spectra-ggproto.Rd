@@ -28,7 +28,7 @@
 \alias{StatColorGuide}
 \alias{StatWlSummary}
 \title{\code{Stat*} Objects}
-\format{An object of class \code{StatValleys} (inherits from \code{Stat}, \code{ggproto}) of length 4.}
+\format{An object of class \code{StatValleys} (inherits from \code{Stat}, \code{ggproto}, \code{gg}) of length 4.}
 \usage{
 StatLabelValleys
 
