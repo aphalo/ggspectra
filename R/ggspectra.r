@@ -25,7 +25,7 @@
 #' Package 'ggspectra' is useful solely for plotting spectral data as most
 #' functions depend on the x aesthetic being mapped to a variable containing
 #' wavelength values expressed in nanometres. It works well together with
-#' some other extensions to package 'ggplot2' such as pacakegs 'ggrepel' and
+#' some other extensions to package 'ggplot2' such as packages 'ggrepel' and
 #' 'cowplot'.
 #'
 #' This package is part of a suite of R packages for photobiological
