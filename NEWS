@@ -7,8 +7,8 @@ Expand y scale to expected range in all cases, but do not force these limits in
 any case when data exceeds them, except for absorbance for which the y scale is
 not expanded past 6 a.u.
 Add new annotation "boundaries" to highlight with horizontal line(s) the
-expected range of the plotted quantity, highliting the limits affected when data
-fall outside the expected/range.
+expected range of the plotted quantity, highlighting the limit(s) exceeded if
+data fall outside the expected/range.
 Add previously missing ggplot() method for class object_spct.
 Revise vignettes.
 Add visual test cases for plot() and ggplot() methods.

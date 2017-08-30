@@ -1,5 +1,5 @@
 ---
-title: "User Guide: Grammar of Graphics"
+title: "User Guide: 1 Grammar of Graphics"
 subtitle: "'ggspectra' `r packageVersion('ggspectra')`"
 author: "Pedro J. Aphalo"
 date: "`r Sys.Date()`"
@@ -7,7 +7,7 @@ output:
   rmarkdown::html_vignette:
     toc: yes
 vignette: >
-  %\VignetteIndexEntry{User Guide: Grammar of Graphics}
+  %\VignetteIndexEntry{User Guide: 1 Grammar of Graphics}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -145,11 +145,27 @@ If a mapping is supplied directly through `ggplot`, $x$ and $y$ should be includ
 ggplot(two_suns.spct, aes(w.length, s.e.irrad, color = spct.idx)) + geom_line()
 ```
 
-In the case of `ggplot.source_spct()` an additional parameter allows setting the type of units to use in the plot. This not only sets a suitable `aes()` for $y$ but also if needed converts the spectral data. The two possible values are `"energy"` and `"photon"` and the default, depends on option `photobiology.radiation.unit`.
+In the case of `ggplot.source_spct()` an additional parameter allows setting the type of units to use in the plot. This not only sets a suitable `aes()` for $y$ but also if needed converts the spectral data. The two possible values are `"energy"` and `"photon"` and the default, depends on option `photobiology.radiation.unit`. This parameter has a default value that can be modified through option `"photobiology.radiation.unit"`. Package 'photobiology' defines convenience functions for this.
 
 ```{r}
 ggplot(sun.spct, unit.out = "photon") + geom_line()
 ```
+
+After evaluation of `photon_as_default()`, a new default is in effect, but we can override it with an explicit argument if needed.
+
+```{r}
+photon_as_default()
+ggplot(sun.spct) + geom_line()
+ggplot(sun.spct, unit.out = "energy") + geom_line()
+```
+
+This new default will remain active for the rest of the R session, unless changed. We can easily either unset this default, or all photobiology-package related user set defaults.
+
+```{r}
+unset_user_defaults()
+```
+
+The next example is for spectral properties of filters.
 
 ```{r}
 ggplot(yellow_gel.spct) + geom_line()
@@ -162,6 +178,15 @@ ggplot(yellow_gel.spct, plot.qty = "absorbance") + geom_line()
 ```
 
 In the case of `ggplot.object_spct()` three values (`"reflectance"`, `"transmittance"` and `"all"` are accepted. Passing `"all"` as argument results in the spectral data being molten into a long form, using `value` and `variable` as value and key columns, respectively. The column `variable` has three levels `Tfr`, `Rfr` and `Afr` indexing the `Tfr` and `Rfr` from the `object_spct` object plus newly calculated absorptance values. 
+
+This parameter has a default value that can be modified through option `"photobiology.filter.qty"`. Package 'photobiology' defines convenience functions for this.
+
+```{r}
+Afr_as_default()
+ggplot(yellow_gel.spct) + geom_line()
+ggplot(polyester.spct) + geom_line()
+unset_user_defaults()
+```
 
 The names of the additional parameters are consistent with those used in the `plot()` methods defined in this package.
 

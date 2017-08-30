@@ -428,8 +428,6 @@ q_plot <- function(spct,
 #' library(photobiology)
 #' plot(sun.spct)
 #' plot(sun.spct, unit.out = "photon")
-#' plot(sun.daily.spct)
-#' plot(sun.daily.spct, unit.out = "photon")
 #'
 #' @family plot functions
 #'

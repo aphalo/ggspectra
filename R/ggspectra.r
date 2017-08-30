@@ -52,25 +52,18 @@
 #' library(photobiology)
 #' library(photobiologyWavebands)
 #'
-#' # maximum
-#' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
-#' stat_peaks(span = NULL)
-#'
-#' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
-#' stat_peaks(span = 21, geom = "text")
-#'
-#' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
-#'   stat_valleys(span = 21, geom = "text")
+#' ggplot(sun.spct) + geom_line() + stat_peaks(span = NULL)
 #'
 #' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
 #'   stat_peaks(span = 21, geom = "point", colour = "red") +
 #'   stat_peaks(span = 51, geom = "text", colour = "red", vjust = -0.3,
 #'              label.fmt = "%3.0f nm")
 #'
-#' ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
-#'   stat_color() + scale_color_identity()
+#' ggplot(polyester.spct) + geom_line()
 #'
 #' plot(sun.spct)
-#' plot(polyester.spct, UV_bands(), range = UV())
+#'
+#' plot(polyester.spct, UV_bands(), range = UV(),
+#'      annotations = c("=", "segments", "labels"))
 #'
 "_PACKAGE"
