@@ -32,9 +32,7 @@ Imports:
     reshape2 (>= 1.4.2)
 Suggests:
     knitr (>= 1.16),
-    rmarkdown (>= 1.6),
-    testthat,
-    vdiffr
+    rmarkdown (>= 1.6)
 URL: http://www.r4photobiology.info,
     https://bitbucket.org/aphalo/ggspectra
 BugReports: https://bitbucket.org/aphalo/ggspectra

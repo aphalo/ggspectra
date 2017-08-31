@@ -92,7 +92,7 @@
 #'   geom_line() +
 #'   scale_fill_identity() + scale_color_identity()
 #'
-#' \donrun{
+#' \dontrun{
 #' # example takes long to run
 #' library(ggrepel)
 #' ggplot(sun.spct) +
