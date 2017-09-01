@@ -9,7 +9,7 @@ Authors@R:
     person("Titta K.", "Kotilainen", email = "titta.kotilainen@helsinki.fi", role = "ctb")
     )
 Maintainer: Pedro J. Aphalo <pedro.aphalo@helsinki.fi>
-Description: Additional annotations, and statsfor plotting "light"
+Description: Additional annotations, and stats for plotting "light"
     spectra with 'ggplot2', together with specializations of ggplot()
     and plot() methods for spectral data stored in objects of the classes
     defined in package 'photobiology' and a plot() method for objects of

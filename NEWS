@@ -11,7 +11,6 @@ expected range of the plotted quantity, highlighting the limit(s) exceeded if
 data fall outside the expected/range.
 Add previously missing ggplot() method for class object_spct.
 Revise vignettes.
-Add visual test cases for plot() and ggplot() methods.
 
 ggspectra 0.2.1
 ===============
