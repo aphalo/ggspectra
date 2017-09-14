@@ -40,11 +40,44 @@ remove_geoms <- function(x, geom_type) {
 
 #' @rdname remove_geoms
 #'
+remove_stats <- function(x, stat_type) {
+  # Find layers that match the requested type.
+  selector <- sapply(x$layers,
+                     function(y) {
+                       class(y$stat)[1] == stat_type
+                     })
+  # Delete the layers.
+  x$layers[selector] <- NULL
+  x
+}
+
+
+#' @rdname remove_geoms
+#'
 move_geoms <- function(x, geom_type, position = "top") {
   # Find layers that match the requested type.
   selector <- sapply(x$layers,
                      function(y) {
                        class(y$geom)[1] == geom_type
+                     })
+  # Move the layers.
+  if (position == "top") {
+    x$layers <- c(x$layers[!selector], x$layers[selector])
+  } else if (position == "bottom") {
+    x$layers <- c(x$layers[selector], x$layers[!selector])
+  } else {
+    stop("Position must be one of 'top' or 'bottom'")
+  }
+  x
+}
+
+#' @rdname remove_geoms
+#'
+move_stats <- function(x, stat_type, position = "top") {
+  # Find layers that match the requested type.
+  selector <- sapply(x$layers,
+                     function(y) {
+                       class(y$stat)[1] == stat_type
                      })
   # Move the layers.
   if (position == "top") {
