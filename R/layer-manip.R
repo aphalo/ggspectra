@@ -11,7 +11,9 @@
 #' \url{https://stackoverflow.com/questions/13407236/remove-a-layer-from-a-ggplot2-chart}
 #'
 #' @note
-#' Not exported as code assumes all layers are geoms
+#' These functions must be used with care as they select all layers
+#' using the provided geom or stat ggproto object class. Layers added
+#' with a stat do use a geom, and vice versa.
 #'
 #' @examples
 #'
@@ -50,7 +52,6 @@ remove_stats <- function(x, stat_type) {
   x$layers[selector] <- NULL
   x
 }
-
 
 #' @rdname remove_geoms
 #'
