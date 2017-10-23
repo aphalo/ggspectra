@@ -180,6 +180,24 @@ ggplot.cps_spct <- function(data, mapping = NULL, ...,
 #'
 #' @export
 #'
+ggplot.calibration_spct <- function(data, mapping = NULL, ...,
+                                    environment = parent.frame()) {
+  if (is.null(mapping)) {
+    if ("irrad.mult" %in% names(data)) {
+      mapping <- aes_(~w.length, ~irrad.mult)
+    } else {
+      mapping <- aes_(~w.length, ~irrad.mult_1)
+    }
+  }
+  rmDerivedSpct(data)
+  ggplot(data = data, mapping = mapping, ...,
+         environment = environment)
+}
+
+#' @rdname ggplot
+#'
+#' @export
+#'
 ggplot.raw_spct <- function(data, mapping = NULL, ...,
                             environment = parent.frame()) {
   if (is.null(mapping)) {

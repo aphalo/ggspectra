@@ -1,3 +1,10 @@
+ggspectra 0.2.3
+===============
+
+Track changes in package 'photobiology' 0.9.18.
+* Add plot.calibration_spct()
+* Add ggplot.calibration_spct()
+
 ggspectra 0.2.2
 ===============
 
