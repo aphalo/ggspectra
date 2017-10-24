@@ -883,10 +883,10 @@ plot.filter_spct <-
     } else {
       stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
     }
-    if ("title" %in% annotations) {
-      out.ggplot <- out.ggplot + labs(title = deparse(substitute(x)))
-    }
-    out.ggplot
+    out.ggplot +
+      ggtitle_spct(x = x,
+                   x.name = deparse(substitute(x)),
+                   annotations = annotations)
   }
 
 #' Plot method for reflector spectra.
@@ -976,10 +976,10 @@ plot.reflector_spct <-
     } else {
       stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
     }
-    if ("title" %in% annotations) {
-      out.ggplot <- out.ggplot + labs(title = deparse(substitute(x)))
-    }
-    out.ggplot
+    out.ggplot +
+      ggtitle_spct(x = x,
+                   x.name = deparse(substitute(x)),
+                   annotations = annotations)
   }
 
 
@@ -1121,8 +1121,8 @@ plot.object_spct <-
     } else {
       stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
     }
-    if ("title" %in% annotations) {
-      out.ggplot <- out.ggplot + labs(title = deparse(substitute(x)))
-    }
-    out.ggplot
+    out.ggplot +
+      ggtitle_spct(x = x,
+                   x.name = deparse(substitute(x)),
+                   annotations = annotations)
   }

@@ -483,8 +483,8 @@ plot.source_spct <-
     } else {
       stop("Invalid 'radiation.unit' argument value: '", unit.out, "'")
     }
-    if ("title" %in% annotations) {
-      out.ggplot <- out.ggplot + labs(title = deparse(substitute(x)))
-    }
-    out.ggplot
+    out.ggplot +
+      ggtitle_spct(x = x,
+                   x.name = deparse(substitute(x)),
+                   annotations = annotations)
   }

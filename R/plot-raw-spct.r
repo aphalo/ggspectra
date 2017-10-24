@@ -54,6 +54,9 @@ raw_plot <- function(spct,
   linearized <- getInstrSettings(spct)[["linearized"]]
   if (!(is.null(linearized) || linearized)) {
     upper.boundary <- getInstrDesc(spct)[["max.counts"]]
+    if (is.null(upper.boundary)) {
+      upper.boundary <- NA_real_
+    }
   } else {
     upper.boundary <- NA_real_
   }
@@ -226,7 +229,8 @@ plot.raw_spct <-
            na.rm = TRUE) {
     annotations.default <-
       getOption("photobiology.plot.annotations",
-                default = c("boxes", "labels", "colour.guide", "peaks"))
+                default = c("boxes", "labels", "colour.guide",
+                            "peaks", "boundaries"))
     annotations <- decode_annotations(annotations,
                                       annotations.default)
     if (length(w.band) == 0) {
@@ -239,21 +243,20 @@ plot.raw_spct <-
       }
     }
 
-    out.ggplot <- raw_plot(spct = x,
-                           w.band = w.band,
-                           range = range,
-                           label.qty = label.qty,
-                           span = span,
-                           pc.out = pc.out,
-                           annotations = annotations,
-                           norm = norm,
-                           text.size = text.size,
-                           na.rm = na.rm,
-                           ...)
-    if ("title" %in% annotations) {
-      out.ggplot <- out.ggplot + labs(title = deparse(substitute(x)))
-    }
-    out.ggplot
+    raw_plot(spct = x,
+             w.band = w.band,
+             range = range,
+             label.qty = label.qty,
+             span = span,
+             pc.out = pc.out,
+             annotations = annotations,
+             norm = norm,
+             text.size = text.size,
+             na.rm = na.rm,
+             ...) +
+      ggtitle_spct(x = x,
+                   x.name = deparse(substitute(x)),
+                   annotations = annotations)
   }
 
 

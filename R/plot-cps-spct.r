@@ -214,18 +214,17 @@ plot.cps_spct <-
       }
     }
 
-    out.ggplot <- cps_plot(spct = x, w.band = w.band, range = range,
-                           label.qty = label.qty,
-                           span = span,
-                           pc.out = pc.out,
-                           annotations = annotations, norm = norm,
-                           text.size = text.size,
-                           na.rm = na.rm,
-                           ...)
-    if ("title" %in% annotations) {
-      out.ggplot <- out.ggplot + labs(title = deparse(substitute(x)))
-    }
-    out.ggplot
+    cps_plot(spct = x, w.band = w.band, range = range,
+             label.qty = label.qty,
+             span = span,
+             pc.out = pc.out,
+             annotations = annotations, norm = norm,
+             text.size = text.size,
+             na.rm = na.rm,
+             ...) +
+      ggtitle_spct(x = x,
+                   x.name = deparse(substitute(x)),
+                   annotations = annotations)
   }
 
 

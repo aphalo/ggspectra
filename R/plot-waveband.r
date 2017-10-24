@@ -118,17 +118,16 @@ plot.waveband <-
     } else {
       w.band.range <- w.band
     }
-    out.ggplot <- plot(spct,
-                       w.band=w.band.range,
-                       annotations = annotations,
-                       wb.trim = wb.trim,
-                       span = span,
-                       norm = norm,
-                       text.size = text.size,
-                       na.rm = na.rm,
-                       ...)
-    if ("title" %in% annotations) {
-      out.ggplot <- out.ggplot + labs(title = deparse(substitute(x)))
-    }
-    out.ggplot
+    plot(spct,
+         w.band=w.band.range,
+         annotations = annotations,
+         wb.trim = wb.trim,
+         span = span,
+         norm = norm,
+         text.size = text.size,
+         na.rm = na.rm,
+         ...) +
+      ggtitle_spct(x = x,
+                   x.name = deparse(substitute(x)),
+                   annotations = annotations)
   }
