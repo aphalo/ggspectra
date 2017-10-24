@@ -112,9 +112,21 @@ Which _annotations_ are included can be controlled through parameter `annotation
 | "valley.labels" | none            | "valleys"    |
 | "labels"   | all                  |              |
 | "summaries" | `source_spct`, `response_spct`, `filter_spct`, `reflector_spct` |              |
-| "boundaries"  | none                 |              |
+| "boundaries"  | `raw_spct`       |               |
+| "title"    | none                |               |
+| "title:_type_" |   none | |
+| "title:_type_:_type_" |   none | |
 
-We can add an annotation to the defaults. In this case `"boundaries"`, an annotation that adds a horizontal dashed line and does not override any other annotation.
+Titles come in different flavours. Package 'ggplot2' now supports both titles
+and subtitles. The `"title"` annotation takes optional modifiers that can be used to specify the contents of the title and subtitle. These modifiers are: `objt`, `what`, `when`, `where`, `none`. For example `"title:objt"`, the default, adds a title with the name of the object being plotted. `what`, `when` and `where` use these three attributes if available. For example `"title:what:when" will use the `what.measured` attribute for the title and the `when.measured` attribute for the subtitle. 
+
+We can add an annotation to the defaults. 
+```{r}
+plot(sun.spct, 
+     annotations = c("+", "title:when:where"))
+```
+
+In this case `"boundaries"`, an annotation that adds a horizontal dashed line and does not override any other annotation.
 
 ```{r}
 plot(sun.spct, 
