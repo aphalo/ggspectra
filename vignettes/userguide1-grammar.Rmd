@@ -87,6 +87,10 @@ In addition secondary axis definitions, `sec_axis_w_number()` and `sec_axis_w_fr
 
 Function `color_chart()` makes a color chart of rectangular tiles from a vector R color definitions. The chart returned is a `ggplot` object. Function `black_or_white()` accepts a vector of color definitions and returns a vector with colors `"white"` or `"black"` depending on the approximate luminosity of the each color in the input. The main use is to automatically achieve suitable contrast between text plotted on top of a color background.
 
+### What is functions `ggtitle_spct()` for?
+
+Function `ggtitle_spct()` adds a title and/or subtitle to a plot. The difference with `ggtitle()` from package 'ggplot2' is that this function can automatically retrieve metadata from the plotted object and display it in the title. It used internally by all `plot()` methods defined in package 'ggspectra' and its use is decribed in _User Guide 2: Plot Methods_ together with plot annottaions.
+
 ## Set up 
 
 ```{r}
