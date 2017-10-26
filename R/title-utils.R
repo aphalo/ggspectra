@@ -42,8 +42,25 @@ ggtitle_spct <- function(x,
            objt = x.name,
            class = class(x)[1],
            what = getWhatMeasured(x)[[1]],
-           when = getWhenMeasured(x),
-           where = paste(getWhereMeasured(x), collapse = "; "),
+           when = format(getWhenMeasured(x), usetz = TRUE),
+           where =
+           {where <- getWhereMeasured(x)
+           if (!is.na(where[[1]])) {
+             where[["lon"]] <- ifelse(where[["lon"]] < 0,
+                                      paste(abs(where[["lon"]]), " W"),
+                                      paste(where[["lon"]], " E"))
+             where[["lat"]] <- ifelse(where[["lat"]] < 0,
+                                      paste(abs(where[["lat"]]), " S"),
+                                      paste(where[["lat"]], " N"))
+             if (exists("address", where = where)) {
+               where[["address"]] <- as.character(where[["address"]])
+             } else {
+               where[["address"]] <- character()
+             }
+           }
+           # the order o columns in the data frame can vary
+           paste(where[["lat"]], where[["lon"]], where[["address"]], sep = ", ")
+           },
            inst.name = getInstrDesc(x)[["spectrometer.name"]],
            inst.sn = getInstrDesc(x)[["spectrometer.sn"]],
            none = NULL,

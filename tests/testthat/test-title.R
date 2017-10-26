@@ -13,7 +13,7 @@ test_that("title", {
   vdiffr::expect_doppelganger("cps-title-when",
                               plot(white_led.cps_spct, annotations = c("+", "title:when")))
   vdiffr::expect_doppelganger("cps-title-where",
-                              plot(white_led.cps_spct, annotations = c("+", "title:where")))
+                              plot(sun.spct, annotations = c("+", "title:where")))
   vdiffr::expect_doppelganger("cps-title-inst.name",
                               plot(white_led.cps_spct, annotations = c("+", "title:inst.name")))
   vdiffr::expect_doppelganger("cps-title-inst.sn",
@@ -32,7 +32,7 @@ test_that("subtitle", {
   vdiffr::expect_doppelganger("cps-title-none-when",
                               plot(white_led.cps_spct, annotations = c("+", "title:none:when")))
   vdiffr::expect_doppelganger("cps-title-none-where",
-                              plot(white_led.cps_spct, annotations = c("+", "title:none:where")))
+                              plot(sun.spct, annotations = c("+", "title:none:where")))
   vdiffr::expect_doppelganger("cps-title-none-inst.name",
                               plot(white_led.cps_spct, annotations = c("+", "title:none:inst.name")))
   vdiffr::expect_doppelganger("cps-title-none-inst.sn",

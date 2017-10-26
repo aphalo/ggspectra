@@ -19,19 +19,19 @@ LazyData: TRUE
 LazyLoad: TRUE
 ByteCompile: TRUE
 Depends:
-    R (>= 3.3.0)
+    R (>= 3.3.3)
 Imports:
     photobiology (> 0.9.17),
     photobiologyWavebands (>= 0.4.2),
     scales (>= 0.4.1),
     ggplot2 (>= 2.2.1),
-    ggrepel (>= 0.6.5),
-    dplyr (>= 0.7.1),
+    ggrepel (>= 0.7.0),
+    dplyr (>= 0.7.4),
     lubridate (>= 1.6.0),
-    tidyr (>= 0.6.3),
+    tidyr (>= 0.7.2),
     reshape2 (>= 1.4.2)
 Suggests:
-    knitr (>= 1.16),
+    knitr (>= 1.17),
     rmarkdown (>= 1.6)
 URL: http://www.r4photobiology.info,
     https://bitbucket.org/aphalo/ggspectra
