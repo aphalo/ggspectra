@@ -118,7 +118,20 @@ Which _annotations_ are included can be controlled through parameter `annotation
 | "title:_type_:_type_" |   none | |
 
 Titles come in different flavours. Package 'ggplot2' now supports both titles
-and subtitles. The `"title"` annotation takes optional modifiers that can be used to specify the contents of the title and subtitle. These modifiers are: `objt`, `what`, `when`, `where`, `none`. For example `"title:objt"`, the default, adds a title with the name of the object being plotted. `what`, `when` and `where` use these three attributes if available. For example `"title:what:when" will use the `what.measured` attribute for the title and the `when.measured` attribute for the subtitle. 
+and subtitles. The `"title"` annotation takes optional modifiers that can be used to specify the contents of the title and subtitle. Currently supported modifiers are shown in the table below. If the metatdata item is not stored in the plotted spectral object, the title or subtitle will show `NA`. See the documentation of packages 'photobiology' and 'ooacquire' for information on how to set and unset attributes of spectral objects.
+
+| Modifier | text source |
+| -------- | ------------- |
+| `objt`   | name of the object plotted |
+| `class`  | class of the plotted object |
+| `what`   | what.measured attribute |
+| `when`   | when.measured attribute |
+| `where`  | where.measured attribute |
+| `inst.name` | spectrometer name |
+| `inst.sn` | spectrometer serial number |
+| `none` | _no title_ or _no subtitle_ |
+
+For example `"title:objt"`, the default for `"title"`, adds a title with the name of the object being plotted. `what`, `when` and `where` use these three attributes if available. For example `"title:what:when" will use the `what.measured` attribute for the title and the `when.measured` attribute for the subtitle. 
 
 We can add an annotation to the defaults. 
 ```{r}
