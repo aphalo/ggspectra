@@ -7,7 +7,7 @@ Track changes in package 'photobiology' 0.9.18.
 
 Improve handling of plot titles.
 * Add utility function ggtitle_spct()
-* Update all plot() methods to allow flexible contents in titles.
+* Update all plot() methods to allow flexible contents in automatic titles.
 
 ggspectra 0.2.2
 ===============
