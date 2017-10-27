@@ -3,13 +3,14 @@ reference:
     contents:
     - '`ggspectra-package`'
   - title: Plot basics
-    desc: `ggplot()` is a generic function defined in package 'ggplot2', especialisations defined in package 'ggspectra' provide default `aes()` for spectral classes.
+    desc: Function `ggplot()` is a generic method defined in package 'ggplot2', especialisations defined in package 'ggspectra' provide default `aes()` for spectral classes.
+    contents:
     - ggplot
-  - title: Layer: Geoms
+  - title: 'Layer: Geoms'
     desc: Geoms, short for geometric objects, describe the type of plot you will produce.
     contents:
     - geom_spct
-  - title: Layer: Statistics
+  - title: 'Layer: Statistics'
     desc: It is often useful to summarize spectral data before plotting, and that is what these transformations do.
     contents:
     - stat_color
