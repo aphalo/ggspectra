@@ -2,11 +2,14 @@ reference:
   - title: Package overview
     contents:
     - '`ggspectra-package`'
-  - title: Geoms
+  - title: Plot basics
+    desc: `ggplot()` is a generic function defined in package 'ggplot2', especialisations defined in package 'ggspectra' provide default `aes()` for spectral classes.
+    - ggplot
+  - title: Layer: Geoms
     desc: Geoms, short for geometric objects, describe the type of plot you will produce.
     contents:
     - geom_spct
-  - title: Statistics
+  - title: Layer: Statistics
     desc: It is often useful to summarize spectral data before plotting, and that is what these transformations do.
     contents:
     - stat_color
@@ -25,8 +28,9 @@ reference:
     - stat_wl_strip
     - stat_wl_summary
   - title: Scales
-    desc: Scales control the mapping between data and aesthetics. These scales are continuous scales with defaults suitable for spectral data.
+    desc: Scales control the mapping between data and aesthetics. The scales defined in package 'ggspectra' are continuous scales with defaults suitable for spectral data.
     contents:
+    - ggtitle_spct
     - scale_x_wl_continuous
     - scale_y_s.e.response_continuous
     - scale_y_s.e.irrad_continuous
@@ -36,11 +40,11 @@ reference:
     - scale_y_cps_continuous
     - scale_y_counts_continuous
     - sec_axis_w_number
-  - title: Plot creation
-    desc: Plot methods for spectra and a function for color-patch charts.
+  - title: Automatic plot creation
+    desc: Plot methods for spectra and a function for color-patch charts. They all return `gg` objects.
     contents:
-    - ggplot
     - plot.raw_spct
+    - plot.calibration_spct
     - plot.cps_spct
     - plot.source_spct
     - plot.response_spct
@@ -52,7 +56,6 @@ reference:
   - title: Helper functions
     desc: Formatters, International System of units, unit conversions.
     contents:
-    - multiplot
     - black_or_white
     - exponent2prefix
     - SI_pl_format
@@ -66,3 +69,4 @@ reference:
     - s.e.irrad_label
     - s.e.response_label
     - w_length_label
+    - multiplot
