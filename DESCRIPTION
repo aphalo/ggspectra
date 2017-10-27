@@ -2,7 +2,7 @@ Package: ggspectra
 Type: Package
 Title: Extensions to 'ggplot2' for Radiation Spectra
 Version: 0.2.2.9001
-Date: 2017-10-26
+Date: 2017-10-27
 Authors@R:
    c(
     person("Pedro J.", "Aphalo", email = "pedro.aphalo@helsinki.fi", role = c("aut", "cre")),
