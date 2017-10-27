@@ -20,6 +20,7 @@ test_that("title", {
                               plot(white_led.cps_spct, annotations = c("+", "title:inst.sn")))
   vdiffr::expect_doppelganger("cps-title-none",
                               plot(white_led.cps_spct, annotations = c("+", "title:none")))
+  testthat::expect_warning(plot(white_led.cps_spct, annotations = c("+", "title:zzz")))
 })
 
 test_that("subtitle", {
@@ -39,6 +40,7 @@ test_that("subtitle", {
                               plot(white_led.cps_spct, annotations = c("+", "title:none:inst.sn")))
   vdiffr::expect_doppelganger("cps-title-none-none",
                               plot(white_led.cps_spct, annotations = c("+", "title:none:none")))
+  testthat::expect_warning(plot(white_led.cps_spct, annotations = c("+", "title:none:zzz")))
 })
 
 test_that("ggtitle_spct", {
@@ -46,6 +48,10 @@ test_that("ggtitle_spct", {
                               ggplot(white_led.cps_spct) +
                                 geom_line() +
                                 ggtitle_spct(white_led.cps_spct))
+  vdiffr::expect_doppelganger("cps-ggtitle-title",
+                              ggplot(white_led.cps_spct) +
+                                geom_line() +
+                                ggtitle_spct(white_led.cps_spct, annotations = "title"))
   vdiffr::expect_doppelganger("cps-ggtitle-object",
                               ggplot(white_led.cps_spct) +
                                 geom_line() +
@@ -54,4 +60,19 @@ test_that("ggtitle_spct", {
                               ggplot(white_led.cps_spct) +
                                 geom_line() +
                                 ggtitle_spct(white_led.cps_spct, annotations = "title:objt:class"))
+  vdiffr::expect_doppelganger("cps-ggtitle-no-ann1",
+                              ggplot(white_led.cps_spct) +
+                                geom_line() +
+                                ggtitle_spct(white_led.cps_spct, annotations = ""))
+  vdiffr::expect_doppelganger("cps-ggtitle-no-ann2",
+                              ggplot(white_led.cps_spct) +
+                                geom_line() +
+                                ggtitle_spct(white_led.cps_spct, annotations = NULL))
+  vdiffr::expect_doppelganger("cps-ggtitle-no-ann3",
+                              ggplot(white_led.cps_spct) +
+                                geom_line() +
+                                ggtitle_spct(white_led.cps_spct, annotations = character()))
+  testthat::expect_warning(ggplot(white_led.cps_spct) +
+                             geom_line() +
+                             ggtitle_spct(white_led.cps_spct, annotations = "title:zzz"))
 })

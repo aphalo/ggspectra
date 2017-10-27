@@ -58,7 +58,7 @@ ggtitle_spct <- function(x,
                where[["address"]] <- character()
              }
            }
-           # the order o columns in the data frame can vary
+           # the order of columns in the data frame can vary
            paste(where[["lat"]], where[["lon"]], where[["address"]], sep = ", ")
            },
            inst.name = getInstrDesc(x)[["spectrometer.name"]],
@@ -78,6 +78,7 @@ ggtitle_spct <- function(x,
   title.ann <- c(strsplit(title.ann[1], ":")[[1]][-1], "none", "none")
   title <- get_title_text(title.ann[1])
   subtitle <- get_title_text(title.ann[2])
-  ggtitle(title, subtitle)
+  # this is equivalent to ggtitle(tittle, subtitle)
+  ggplot2::labs(title = title, subtitle = subtitle)
 }
 
