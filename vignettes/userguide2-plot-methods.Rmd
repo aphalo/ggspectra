@@ -118,7 +118,7 @@ Which _annotations_ are included can be controlled through parameter `annotation
 | "title:_type_:_type_" |   none | |
 
 Titles come in different flavours. Package 'ggplot2' now supports both titles
-and subtitles. The `"title"` as argument to parameter `annotation` of `plot()` methods and of function `ggtitle_spct()` takes optional modifiers that can be used to specify the contents of the _automatic_ title and subtitle. Currently supported modifiers are shown in the table below. If the metadata item is not stored in the plotted spectral object, the title or subtitle will show `NA`. See the documentation of packages 'photobiology' and 'ooacquire' for information on how to set and unset attributes of spectral objects. To add an abitrary title and/or subtitle to a plot, use either function `ggtitle()` or function `labs()` from package 'ggplot2'.
+and subtitles. The `"title"` as argument to parameter `annotation` of `plot()` methods and of function `ggtitle_spct()` takes optional modifiers that can be used to specify the contents of the _automatic_ title and subtitle. Currently supported modifiers are shown in the table below. If the metadata item is not stored in the plotted spectral object, the title or subtitle will show `NA`. See the documentation of packages 'photobiology' and 'ooacquire' for information on how to set and unset attributes of spectral objects. To add an arbitrary title and/or subtitle to a plot, use either function `ggtitle()` or function `labs()` from package 'ggplot2'.
 
 | Modifier | text source used |
 | -------- | ------------- |
