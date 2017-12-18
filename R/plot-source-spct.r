@@ -414,6 +414,8 @@ q_plot <- function(spct,
 #'   than all other elements within a window of width span centered at that
 #'   element.
 #' @param annotations a character vector
+#' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
+#' @param tz character Time zone to use for title and/or subtitle.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param na.rm logical.
 #'
@@ -440,6 +442,8 @@ plot.source_spct <-
            label.qty = NULL,
            span = NULL,
            annotations = NULL,
+           time.format = "",
+           tz = "UTC",
            text.size = 2.5,
            na.rm = TRUE) {
     annotations.default <-
@@ -486,5 +490,7 @@ plot.source_spct <-
     out.ggplot +
       ggtitle_spct(x = x,
                    x.name = deparse(substitute(x)),
+                   time.format = time.format,
+                   tz = tz,
                    annotations = annotations)
   }

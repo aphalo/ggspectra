@@ -4,7 +4,7 @@
 #' you want find local minima, you can use \code{stat_valleys} instead.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
-#'    \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_string}}. Only needs to be set
+#'    \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be set
 #'    at the layer level if you are overriding the plot defaults.
 #' @param data A layer specific dataset - only needed if you want to override
 #'    the plot defaults.
@@ -77,8 +77,8 @@
 #'   returned can be controlled by the user.
 #'
 #' @note These stats work nicely together with geoms
-#'   \code{\link[ggrepel]{geom_text_repel}} and
-#'   \code{\link[ggrepel]{geom_label_repel}} from package
+#'   \code{geom_text_repel} and
+#'   \code{geom_label_repel} from package
 #'   \code{\link[ggrepel]{ggrepel}} to solve the problem of overlapping labels
 #'   by displacing them. To discard overlapping labels use \code{check_overlap =
 #'   TRUE} as argument to \code{geom_text}.

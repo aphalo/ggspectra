@@ -1,7 +1,7 @@
 
 # Automatic title ---------------------------------------------------------
 
-#' Build a plot title from object metadata
+#' Build a plot title from object metadata (deprecated!)
 #'
 #' Build a character string to be used as plot title by quering spectral
 #' object for its  metadata.
@@ -11,6 +11,8 @@
 #' @param ... Additional parameters of derived methods.
 #'
 #' @export
+#'
+#' @keywords internal
 #'
 title_spct <- function(x,
                        default.what = character(0),
@@ -24,7 +26,7 @@ title_spct <- function(x,
 
 # Automatic subtitle ---------------------------------------------------------
 
-#' Build a plot subtitle from object metadata
+#' Build a plot subtitle from object metadata (deprecated!)
 #'
 #' Build a character string to be used as plot title by quering spectral
 #' object for its  metadata.
@@ -36,6 +38,8 @@ title_spct <- function(x,
 #' @param ... Additional parameters of derived methods.
 #'
 #' @export
+#'
+#' @keywords internal
 #'
 subtitle_spct.generic_spct <- function(x,
                                        default.when = character(0),

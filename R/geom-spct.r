@@ -4,12 +4,12 @@
 #' \code{geom_spct} is a special case of \code{geom_area}, where the minimum of
 #' the range is fixed to 0, but stacking is not enabled.
 #'
-#' An spectrum plot is the analog of a line plot (see \code{\link{geom_line}}),
+#' An spectrum plot is the analog of a line plot (see \code{\link[ggplot2]{geom_path}}),
 #' and can be used to show y varies over the range of x. The difference is that
 #' the area under the line is filled.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
-#'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_string}}. Only needs
+#'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs
 #'   to be set at the layer level if you are overriding the plot defaults.
 #' @param data A data frame. If specified, overrides the default data frame
 #'   defined at the top level of the plot.
@@ -31,8 +31,8 @@
 #'   \code{\link[ggplot2]{layer}} for more details.
 #' @section Aesthetics: See \code{\link[ggplot2]{geom_ribbon}}
 #'
-#' @seealso \code{\link[ggplot2]{geom_area}} for stacked areas,
-#' \code{\link[ggplot2]{geom_line}} for lines (lines),
+#' @seealso \code{\link[ggplot2]{geom_ribbon}} for stacked areas,
+#' \code{\link[ggplot2]{geom_path}} for lines (lines),
 #' \code{\link[ggplot2]{geom_point}} for scatter plots.
 #'
 #' @examples

@@ -798,6 +798,8 @@ O_plot <- function(spct,
 #'   than all other elements within a window of width span centered at that
 #'   element.
 #' @param annotations a character vector
+#' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
+#' @param tz character Time zone to use for title and/or subtitle.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param na.rm logical.
 #'
@@ -824,6 +826,8 @@ plot.filter_spct <-
            label.qty = NULL,
            span = NULL,
            annotations = NULL,
+           time.format = "",
+           tz = "UTC",
            text.size = 2.5,
            na.rm = TRUE) {
     annotations.default <-
@@ -885,6 +889,8 @@ plot.filter_spct <-
     }
     out.ggplot +
       ggtitle_spct(x = x,
+                   time.format = time.format,
+                   tz = tz,
                    x.name = deparse(substitute(x)),
                    annotations = annotations)
   }
@@ -913,6 +919,8 @@ plot.filter_spct <-
 #'   than all other elements within a window of width span centered at that
 #'   element.
 #' @param annotations a character vector
+#' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
+#' @param tz character Time zone to use for title and/or subtitle.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param na.rm logical.
 #'
@@ -939,6 +947,8 @@ plot.reflector_spct <-
            label.qty = NULL,
            span = NULL,
            annotations = NULL,
+           time.format = "",
+           tz = "UTC",
            text.size = 2.5,
            na.rm = TRUE) {
     annotations.default <-
@@ -978,6 +988,8 @@ plot.reflector_spct <-
     }
     out.ggplot +
       ggtitle_spct(x = x,
+                   time.format = time.format,
+                   tz = tz,
                    x.name = deparse(substitute(x)),
                    annotations = annotations)
   }
@@ -1008,6 +1020,8 @@ plot.reflector_spct <-
 #'   than all other elements within a window of width span centered at that
 #'   element.
 #' @param annotations a character vector
+#' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
+#' @param tz character Time zone to use for title and/or subtitle.
 #' @param stacked logical
 #' @param text.size numeric size of text in the plot decorations.
 #' @param na.rm logical.
@@ -1035,6 +1049,8 @@ plot.object_spct <-
            label.qty = NULL,
            span = 61,
            annotations = NULL,
+           time.format = "",
+           tz = "UTC",
            stacked = TRUE,
            text.size = 2.5,
            na.rm = TRUE) {
@@ -1123,6 +1139,8 @@ plot.object_spct <-
     }
     out.ggplot +
       ggtitle_spct(x = x,
+                   time.format = time.format,
+                   tz = tz,
                    x.name = deparse(substitute(x)),
                    annotations = annotations)
   }

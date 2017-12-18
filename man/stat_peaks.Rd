@@ -17,7 +17,7 @@ stat_valleys(mapping = NULL, data = NULL, geom = "point", span = 5,
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
-\code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_string}}. Only needs to be set
+\code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be set
 at the layer level if you are overriding the plot defaults.}
 
 \item{data}{A layer specific dataset - only needed if you want to override
@@ -82,8 +82,8 @@ These stats use \code{geom_point} by default as it is the geom most
 }
 \note{
 These stats work nicely together with geoms
-  \code{\link[ggrepel]{geom_text_repel}} and
-  \code{\link[ggrepel]{geom_label_repel}} from package
+  \code{geom_text_repel} and
+  \code{geom_label_repel} from package
   \code{\link[ggrepel]{ggrepel}} to solve the problem of overlapping labels
   by displacing them. To discard overlapping labels use \code{check_overlap =
   TRUE} as argument to \code{geom_text}.

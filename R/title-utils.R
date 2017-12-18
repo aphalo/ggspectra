@@ -7,6 +7,8 @@
 #' @param x.name character The name of the object being plotted.
 #' @param annotations character vector Annotations as described for
 #'   \code{plot()} methods, values unrelated to title are ignored.
+#' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
+#' @param tz character time zone used in labels.
 #' @param default.title character vector The default used for \code{annotations
 #'   = "title"}.
 #'
@@ -35,6 +37,8 @@
 ggtitle_spct <- function(x,
                          x.name = deparse(substitute(x)),
                          annotations = "title",
+                         time.format = "",
+                         tz = lubridate::tz(getWhenMeasured(x)),
                          default.title  = "title:objt") {
 
   get_title_text <- function(key) {
@@ -42,7 +46,10 @@ ggtitle_spct <- function(x,
            objt = x.name,
            class = class(x)[1],
            what = getWhatMeasured(x)[[1]],
-           when = format(getWhenMeasured(x), usetz = TRUE),
+           when = strftime(x = getWhenMeasured(x),
+                           format = time.format,
+                           tz = tz,
+                           usetz = TRUE),
            where =
            {where <- getWhereMeasured(x)
            if (!is.na(where[[1]])) {

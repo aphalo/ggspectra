@@ -18,7 +18,7 @@
 #'   element.
 #' @param unit.in the type of unit we assume as reference "energy" or "photon"
 #'   based
-#' @param annotations a character vector
+#' @param annotations a character vector.
 #' @param wb.trim logical
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.

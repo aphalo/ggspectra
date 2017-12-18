@@ -103,7 +103,7 @@ A_total_label <- function(unit.exponent = 0,
 #' @param ... other named arguments passed to \code{scale_y_continuous}
 #'
 #' @note This function only alters two default arguments, please, see
-#' documentation for \code{\link[ggplot2]{scale_y_continuous}}
+#' documentation for \code{\link[ggplot2]{scale_continuous}}
 #'
 #' @export
 #'
@@ -243,7 +243,7 @@ Tfr_total_label <- function(unit.exponent = 0,
 #' @param ... other named arguments passed to \code{scale_y_continuous}
 #'
 #' @note This function only alters two default arguments, please, see
-#' documentation for \code{\link[ggplot2]{scale_y_continuous}}
+#' documentation for \code{\link[ggplot2]{scale_continuous}}
 #'
 #' @export
 #'
@@ -392,7 +392,7 @@ Rfr_total_label <- function(unit.exponent = 0,
 #' @param ... other named arguments passed to \code{scale_y_continuous}
 #'
 #' @note This function only alters two default arguments, please, see
-#' documentation for \code{\link[ggplot2]{scale_y_continuous}}
+#' documentation for \code{\link[ggplot2]{scale_continuous}}
 #'
 #' @export
 #'

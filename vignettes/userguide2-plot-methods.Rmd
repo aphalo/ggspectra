@@ -175,7 +175,7 @@ plot(sun.spct, annotations = c("+", "valleys"), span = 41)
 The annotations `"peak.labels"` and `"valley.labels"` override `"peaks"` and `"valleys"`. They use the _repulsive_ geometry `geom_label_repel` from package 'ggrepel'.
 
 ```{r}
-plot(sun.spct, annotations = c("+", "peak.labels", "valley.labels"), span = 41)
+plot(sun.spct, annotations = c("+", "peak.labels", "valley.labels"), span = 71)
 ```
 
 Passing `""` as argument to `annotations` results in a plot with no annotations, and no _scales_ set. 

@@ -219,7 +219,7 @@ sec_axis_w_frequency <- function(unit.exponent = 12) {
 #' @param ... other named arguments passed to \code{scale_y_continuous}
 #'
 #' @note This function only alters two default arguments, please, see
-#' documentation for \code{\link[ggplot2]{scale_x_continuous}}
+#' documentation for \code{\link[ggplot2]{scale_continuous}}
 #'
 #' @export
 #'

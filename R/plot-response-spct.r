@@ -464,6 +464,8 @@ q_rsp_plot <- function(spct,
 #'   than all other elements within a window of width span centered at that
 #'   element.
 #' @param annotations a character vector
+#' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
+#' @param tz character Time zone to use for title and/or subtitle.
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
 #' @param text.size numeric size of text in the plot decorations.
@@ -493,6 +495,8 @@ plot.response_spct <-
            label.qty = NULL,
            span = NULL,
            annotations = NULL,
+           time.format = "",
+           tz = "UTC",
            norm = "max",
            text.size = 2.5,
            na.rm = TRUE) {
@@ -546,6 +550,8 @@ plot.response_spct <-
     }
     out.ggplot +
       ggtitle_spct(x = x,
+                   time.format = time.format,
+                   tz = tz,
                    x.name = deparse(substitute(x)),
                    annotations = annotations)
   }

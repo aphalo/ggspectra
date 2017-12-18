@@ -3,6 +3,6 @@
 inst/web
 not-used
 vignettes/figure
-^docs$
 ^tests$
-^_pkgdown.yml$
+^docs$
+^_pkgdown\.yml$
