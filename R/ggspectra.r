@@ -34,9 +34,13 @@
 #'
 #'
 #' @references
+#' Aphalo, Pedro J. (2015) The r4photobiology suite. UV4Plants Bulletin, 2015:1,
+#' 21-29. \url{http://doi.org/10.19232/uv4pb.2015.1.14}.
+#'
 #' \code{ggplot2} web site at \url{http://ggplot2.org/}\cr
 #' \code{ggplot2} source code at \url{https://github.com/hadley/ggplot2}\cr
 #' Function \code{multiplot} from \url{http://www.cookbook-r.com/}
+#'
 #'
 #' @import photobiology photobiologyWavebands ggplot2 ggrepel
 #' @importFrom graphics plot

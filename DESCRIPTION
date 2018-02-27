@@ -13,7 +13,8 @@ Description: Additional annotations, and stats for plotting "light"
     spectra with 'ggplot2', together with specializations of ggplot()
     and plot() methods for spectral data stored in objects of the classes
     defined in package 'photobiology' and a plot() method for objects of
-    class "waveband", also defined in package 'photobiology'.
+    class "waveband", also defined in package 'photobiology'. Part of the 
+    'r4photobiology' suite, Aphalo P. J. (2015) <doi:10.19232/uv4pb.2015.1.14>.
 License: GPL (>= 2)
 LazyData: TRUE
 LazyLoad: TRUE
