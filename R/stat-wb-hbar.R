@@ -41,7 +41,7 @@
 #'   \item{x}{w.band-midpoint} \item{xmin}{w.band minimum} \item{xmax}{w.band
 #'   maximum} \item{ymin}{data$y minimum} \item{ymax}{data$y maximum}
 #'   \item{yint}{data$y integral for the range of \code{w.band}}
-#'   \item{ymean}{yint divided by spread(w.band)} \item{y}{ypos.fixed or mean of
+#'   \item{ymean}{yint divided by wl_expanse(w.band)} \item{y}{ypos.fixed or mean of
 #'   data} \item{wb.color}{color of the w.band} \item{wb.name}{label of w.band}
 #'   }
 #'
@@ -150,7 +150,7 @@ StatWbHbar <-
                                             low.limit = range[1],
                                             high.limit = range[2])
                        yint.tmp <- integral.fun(mydata$x, mydata$y)
-                       ymean.tmp <- yint.tmp / spread(wb)
+                       ymean.tmp <- yint.tmp / wl_expanse(wb)
                        integ.df <- rbind(integ.df,
                                          data.frame(x = midpoint(mydata$x),
                                                     xmin = min(wb),

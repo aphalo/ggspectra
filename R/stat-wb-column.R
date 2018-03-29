@@ -42,7 +42,7 @@
 #'   \item{xmax}{w.band maximum}
 #'   \item{ymin}{data$y minimum}
 #'   \item{ymax}{data$y maximum}
-#'   \item{ymean}{yint divided by spread(w.band)}
+#'   \item{ymean}{yint divided by wl_expanse(w.band)}
 #'   \item{y}{ymeam}
 #'   \item{wb.color}{color of the w.band}
 #'   \item{wb.name}{label of w.band}
@@ -140,7 +140,7 @@ StatWbColumn <-
                                             low.limit = range[1],
                                             high.limit = range[2])
                        yint.tmp <- integral.fun(mydata$x, mydata$y)
-                       ymean.tmp <- yint.tmp / spread(wb)
+                       ymean.tmp <- yint.tmp / wl_expanse(wb)
                        wb.color <- color_of(wb) # avoid 'expensive' recalculation
                        integ.df <- rbind(integ.df,
                                          data.frame(x = midpoint(mydata$x),

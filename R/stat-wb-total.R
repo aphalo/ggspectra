@@ -55,7 +55,7 @@
 #'   \item{ymin}{data$y minimum}
 #'   \item{ymax}{data$y maximum}
 #'   \item{yint}{data$y integral for the range of \code{w.band}}
-#'   \item{xmean}{yint divided by spread(w.band)}
+#'   \item{xmean}{yint divided by wl_expanse(w.band)}
 #'   \item{y}{ypos.fixed or top of data, adjusted by \code{ypos.mult}}
 #'   \item{wb.color}{color of the w.band}
 #'   \item{wb.name}{label of w.band}
@@ -168,7 +168,7 @@ StatWbTotal <-
                          wb <- waveband(wb)
                        }
                        yint.tmp <- integral.fun(mydata$x, mydata$y)
-                       ymean.tmp <- yint.tmp / spread(wb)
+                       ymean.tmp <- yint.tmp / wl_expanse(wb)
                        integ.df <- rbind(integ.df,
                                          data.frame(x = midpoint(mydata$x),
                                                     xmin = min(wb),
