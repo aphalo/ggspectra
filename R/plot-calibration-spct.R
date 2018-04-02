@@ -99,11 +99,10 @@ cal_plot <- function(spct,
     counts.label <- ""
   }
 
-  spct <- reshape2::melt(spct,
-                         id.vars = "w.length",
-                         measure.vars = mult.cols,
-                         variable.name = "scan",
-                         value.name = "irrad.mult")
+  spct <- tidyr::gather(spct,
+                        .dots = mult.cols,
+                        key = "scan",
+                        value = "irrad.mult")
   setCalibrationSpct(spct, multiple.wl = length(mult.cols))
   y.max <- max(spct[["irrad.mult"]], 0, na.rm = TRUE)
   y.min <- min(spct[["irrad.mult"]], 0, na.rm = TRUE)

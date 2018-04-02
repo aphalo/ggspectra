@@ -98,11 +98,10 @@ cps_plot <- function(spct,
     cps.label <- ""
   }
 
-  spct <- reshape2::melt(spct,
-                         id.vars = "w.length",
-                         measure.vars = cps.cols,
-                         variable.name = "scan",
-                         value.name = "cps")
+  spct <- tidyr::gather(spct,
+                        .dots = cps.cols,
+                        key = "scan",
+                        value = "cps")
   setCpsSpct(spct, multiple.wl = length(cps.cols))
   y.max <- max(c(spct[["cps"]], 0), na.rm = TRUE)
   y.min <- min(c(spct[["cps"]], 0), na.rm = TRUE)

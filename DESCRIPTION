@@ -22,15 +22,14 @@ ByteCompile: TRUE
 Depends:
     R (>= 3.3.0)
 Imports:
-    photobiology (>= 0.9.18),
+    photobiology (>= 0.9.20),
     photobiologyWavebands (>= 0.4.2),
     scales (>= 0.4.1),
     ggplot2 (>= 2.2.1),
     ggrepel (>= 0.7.0),
     dplyr (>= 0.7.4),
     lubridate (>= 1.7.1),
-    tidyr (>= 0.7.2),
-    reshape2 (>= 1.4.3)
+    tidyr (>= 0.7.2)
 Suggests:
     knitr (>= 1.17),
     rmarkdown (>= 1.8)

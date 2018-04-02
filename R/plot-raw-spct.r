@@ -110,11 +110,10 @@ raw_plot <- function(spct,
     counts.label <- ""
   }
 
-  spct <- reshape2::melt(spct,
-                         id.vars = "w.length",
-                         measure.vars = counts.cols,
-                         variable.name = "scan",
-                         value.name = "counts")
+  spct <- tidyr::gather(spct,
+                        .dots = counts.cols,
+                        key = "scan",
+                        value = "counts")
   setRawSpct(spct, multiple.wl = length(counts.cols))
   y.max <- max(spct[["counts"]],
                ifelse(is.na(upper.boundary), 0, upper.boundary - 1),
