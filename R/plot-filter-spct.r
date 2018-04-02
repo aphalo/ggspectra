@@ -158,7 +158,7 @@ Afr_plot <- function(spct,
   if (!is.null(annotations) &&
       length(intersect(c("labels", "summaries", "colour.guide", "reserve.space"), annotations)) > 0L) {
     y.limits <- c(y.min, y.max * 1.25)
-    x.limits <- c(min(spct) - spread(spct) * 0.025, NA) # NA needed because of rounding errors
+    x.limits <- c(min(spct) - wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
     y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
@@ -317,7 +317,7 @@ T_plot <- function(spct,
   if (!is.null(annotations) &&
       length(intersect(c("labels", "summaries", "colour.guide", "reserve.space"), annotations)) > 0L) {
     y.limits <- c(y.min, y.max * 1.25)
-    x.limits <- c(min(spct) - spread(spct) * 0.025, NA) # NA needed because of rounding errors
+    x.limits <- c(min(spct) - wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
     y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
@@ -453,7 +453,7 @@ A_plot <- function(spct,
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide", "reserve.space"), annotations)) > 0L) {
     y.limits <- c(y.min, min(y.max, 6) * 1.25)
-    x.limits <- c(min(spct) - spread(spct) * 0.025, NA) # NA needed because of rounding errors
+    x.limits <- c(min(spct) - wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
     y.limits <- c(y.min, min(y.max, 6))
     x.limits <- range(spct)
@@ -602,7 +602,7 @@ R_plot <- function(spct,
   if (!is.null(annotations) &&
       length(intersect(c("labels", "summaries", "colour.guide", "reserve.space"), annotations)) > 0L) {
     y.limits <- c(y.min, y.max * 1.25)
-    x.limits <- c(min(spct) - spread(spct) * 0.025, NA) # NA needed because of rounding errors
+    x.limits <- c(min(spct) - wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
     y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
@@ -754,7 +754,7 @@ O_plot <- function(spct,
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "colour.guide", "reserve.space"), annotations)) > 0L) {
     y.limits <- c(y.min, y.max * 1.25)
-    x.limits <- c(min(spct) - spread(spct) * 0.025, NA)
+    x.limits <- c(min(spct) - wl_expanse(spct) * 0.025, NA)
   } else {
     y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
