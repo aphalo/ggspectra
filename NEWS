@@ -1,5 +1,10 @@
-ggspectra 0.2.3
-===============
+ggspectra 0.2.4 (2018-04-03)
+============================
+
+Revise to track changes in 'photobiology' 0.9.20 to avoid spurious messages.
+
+ggspectra 0.2.3 (2017-12-18)
+============================
 
 Track changes in package 'photobiology' 0.9.18.
 * Add plot.calibration_spct()
