@@ -6,3 +6,5 @@ vignettes/figure
 ^tests$
 ^docs$
 ^_pkgdown\.yml$
+^README\.Rmd$
+^README-.*\.png$
