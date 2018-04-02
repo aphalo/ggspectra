@@ -3,7 +3,9 @@
 ggspectra
 =========
 
-The goal of 'ggspectra' is to make it easy to plot light spectra and similar data, such and transmittance, absorbance and reflectance spectra, producing fully annotated publication- and presentation-ready plots. It is an extension to packages 'ggplot2' and 'photobiology', and part of the 'r4phototbiology' suite.
+[![](http://www.r-pkg.org/badges/version-last-release/ggspectra)](https://cran.r-project.org/package=ggspectra) [![](http://cranlogs.r-pkg.org/badges/ggspectra)](https://cran.r-project.org/package=ggspectra) [![](http://cranlogs.r-pkg.org/badges/grand-total/ggspectra)](https://cran.r-project.org/package=ggspectra)
+
+The goal of 'ggspectra' is to make it easy to plot radiation spectra and similar data, such and transmittance, absorbance and reflectance spectra, producing fully annotated publication- and presentation-ready plots. It is an extension to packages 'ggplot2' and 'photobiology', and part of the 'r4phototbiology' suite.
 
 Package 'ggspectra' provides stats, geoms, scales and functions to be used for plotting radiation-related spectra and annotating the plots with quantities derived from spectral data. All summary quantities implemented in 'photobiology' can be used for annotations including biologically effective irradiances and exposures.
 
@@ -20,7 +22,7 @@ library(ggspectra)
 plot(sun.spct)
 ```
 
-![](README-example-1.png)
+![](man/figures/README-example-1.png)
 
 This second example uses the grammar of graphics approach, as implemented in 'ggplot2'.
 
@@ -34,7 +36,7 @@ ggplot(sun.spct) +
   theme_bw()
 ```
 
-![](README-example2-1.png)
+![](man/figures/README-example2-1.png)
 
 Installation
 ------------
