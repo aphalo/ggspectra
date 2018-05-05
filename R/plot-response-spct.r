@@ -161,7 +161,12 @@ e_rsp_plot <- function(spct,
     rsp.label <- ""
   }
 
-  plot <- ggplot(spct, aes_(~w.length, ~s.e.response))
+  plot <- ggplot(spct)
+  if (getMultipleWl(spct) == 1L) {
+    plot <- plot + aes_(~w.length, ~s.e.response)
+  } else {
+    plot <- plot + aes_(~w.length, ~s.e.response, linetype = ~spct.idx)
+  }
 
   # We want data plotted on top of the boundary lines
   # Negative response is valid!
@@ -383,7 +388,12 @@ q_rsp_plot <- function(spct,
     rsp.label <- ""
   }
 
-  plot <- ggplot(spct, aes_(~w.length, ~s.q.response))
+  plot <- ggplot(spct)
+  if (getMultipleWl(spct) == 1L) {
+    plot <- plot + aes_(~w.length, ~s.q.response)
+  } else {
+    plot <- plot + aes_(~w.length, ~s.q.response, linetype = ~spct.idx)
+  }
 
   # We want data plotted on top of the boundary lines
   # Negative response is valid!
@@ -503,6 +513,9 @@ plot.response_spct <-
     annotations.default <-
       getOption("photobiology.plot.annotations",
                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
+    if (getMultipleWl(x) > 1L) {
+      annotations.default <- setdiff(annotations.default, "summaries")
+    }
     annotations <- decode_annotations(annotations,
                                       annotations.default)
     if (is.null(label.qty)) {
@@ -556,4 +569,16 @@ plot.response_spct <-
                    annotations = annotations)
   }
 
+#' @rdname plot.response_spct
+#'
+#' @export
+#'
+plot.response_mspct <-
+  function(x, ..., range = NULL) {
+    if (!is.null(range)) {
+      x <- trim_wl(x, range = range, use.hinges = TRUE, fill = NULL)
+    }
+    z <- rbindspct(x)
+    plot(x = z, range = NULL, ...)
+  }
 

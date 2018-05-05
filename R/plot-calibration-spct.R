@@ -51,6 +51,10 @@ cal_plot <- function(spct,
   }
 
   mult.cols <- names(spct)[grep("^irrad.mult", names(spct))]
+  num.mult.cols <- length(mult.cols)
+  if (num.mult.cols > 1L && getMultipleWl(spct) != 1L) {
+    stop("Error: spectra can be either in wide or long format, but not both.")
+  }
 #  other.cols <- setdiff(names(x), mult.cols)
   if (is.null(norm)) {
     # we will use the original data
@@ -99,14 +103,26 @@ cal_plot <- function(spct,
     counts.label <- ""
   }
 
-  spct <- tidyr::gather(spct,
-                        .dots = mult.cols,
-                        key = "scan",
-                        value = "irrad.mult")
-  setCalibrationSpct(spct, multiple.wl = length(mult.cols))
-  y.max <- max(spct[["irrad.mult"]], 0, na.rm = TRUE)
-  y.min <- min(spct[["irrad.mult"]], 0, na.rm = TRUE)
-  plot <- ggplot(spct) + aes_(linetype = ~scan)
+  if (num.mult.cols > 1L) {
+    spct <- tidyr::gather(spct,
+                          .dots = mult.cols,
+                          key = "scan",
+                          value = "irrad.mult")
+    setCalibrationSpct(spct, multiple.wl = length(mult.cols))
+    y.max <- max(spct[["irrad.mult"]], 0, na.rm = TRUE)
+    y.min <- min(spct[["irrad.mult"]], 0, na.rm = TRUE)
+  }
+
+  plot <- ggplot(spct)
+  if (getMultipleWl(spct) == 1L) {
+    if (num.mult.cols > 1L) {
+      plot <- plot + aes_(~w.length, ~irrad.mult, linetype = ~scan)
+    } else {
+      plot <- plot + aes_(~w.length, ~irrad.mult)
+    }
+  } else {
+    plot <- plot + aes_(~w.length, ~irrad.mult, linetype = ~spct.idx)
+  }
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
@@ -241,4 +257,16 @@ plot.calibration_spct <-
                    annotations = annotations)
   }
 
+#' @rdname plot.calibration_spct
+#'
+#' @export
+#'
+plot.calibration_mspct <-
+  function(x, ..., range = NULL) {
+    if (!is.null(range)) {
+      x <- trim_wl(x, range = range, use.hinges = TRUE, fill = NULL)
+    }
+    z <- rbindspct(x)
+    plot(x = z, range = NULL, ...)
+  }
 

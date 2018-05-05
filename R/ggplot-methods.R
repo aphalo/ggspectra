@@ -247,3 +247,18 @@ ggplot.object_spct <-
            environment = environment)
   }
 
+# collections of spectra --------------------------------------------------
+
+#' @rdname ggplot
+#'
+#' @export
+#'
+ggplot.generic_mspct <-
+  function(data, mapping = NULL, ..., range = NULL,
+           environment = parent.frame()) {
+    if (!is.null(range)) {
+      x <- trim_wl(x, range = range, use.hinges = TRUE, fill = NULL)
+    }
+    spct <- rbindspct(data)
+    ggplot(data = spct, mapping = mapping, ...)
+  }

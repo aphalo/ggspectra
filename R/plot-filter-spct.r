@@ -43,7 +43,7 @@ Afr_plot <- function(spct,
   if (!is.null(w.band)) {
     w.band <- trim_wl(w.band, range = range(spct))
   }
-  setGenericSpct(spct) # so that we can assign variable Afr
+  setGenericSpct(spct, multiple.wl = getMultipleWl(spct)) # so that we can assign variable Afr
   if (! "Afr" %in% names(spct)) {
     if (Tfr.type == "internal" &&
         "Rfr" %in% names(spct)) {
@@ -117,7 +117,12 @@ Afr_plot <- function(spct,
   y.max <- max(1, spct[["Afr"]], na.rm = TRUE)
   y.min <- min(0, spct[["Afr"]], na.rm = TRUE)
 
-  plot <- ggplot(spct, aes_(~w.length, ~Afr))
+  plot <- ggplot(spct)
+  if (getMultipleWl(spct) == 1L) {
+    plot <- plot + aes_(~w.length, ~Afr)
+  } else {
+    plot <- plot + aes_(~w.length, ~Afr, linetype = ~spct.idx)
+  }
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
@@ -276,7 +281,12 @@ T_plot <- function(spct,
   y.max <- max(1, spct[["Tfr"]], na.rm = TRUE)
   y.min <- min(0, spct[["Tfr"]], na.rm = TRUE)
 
-  plot <- ggplot(spct, aes_(~w.length, ~Tfr))
+  plot <- ggplot(spct)
+  if (getMultipleWl(spct) == 1L) {
+    plot <- plot + aes_(~w.length, ~Tfr)
+  } else {
+    plot <- plot + aes_(~w.length, ~Tfr, linetype = ~spct.idx)
+  }
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
@@ -415,7 +425,12 @@ A_plot <- function(spct,
   y.max <- max(spct[["A"]], na.rm = TRUE)
   y.min <- min(0, spct[["A"]], na.rm = TRUE)
 
-  plot <- ggplot(spct, aes_(~w.length, ~A))
+  plot <- ggplot(spct)
+  if (getMultipleWl(spct) == 1L) {
+    plot <- plot + aes_(~w.length, ~A)
+  } else {
+    plot <- plot + aes_(~w.length, ~A, linetype = ~spct.idx)
+  }
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
@@ -562,7 +577,12 @@ R_plot <- function(spct,
   y.max <- max(1, spct[["Rfr"]], na.rm = TRUE)
   y.min <- min(0, spct[["Rfr"]], na.rm = TRUE)
 
-  plot <- ggplot(spct, aes_(~w.length, ~Rfr))
+  plot <- ggplot(spct)
+  if (getMultipleWl(spct) == 1L) {
+    plot <- plot + aes_(~w.length, ~Rfr)
+  } else {
+    plot <- plot + aes_(~w.length, ~Rfr, linetype = ~spct.idx)
+  }
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
@@ -657,6 +677,9 @@ O_plot <- function(spct,
                    text.size,
                    na.rm,
                    ...) {
+  if (getMultipleWl(spct) > 1L) {
+    stop("Only one object spectrum per plot supported")
+  }
   if (!is.object_spct(spct)) {
     stop("O_plot() can only plot object_spct objects.")
   }
@@ -833,6 +856,9 @@ plot.filter_spct <-
     annotations.default <-
       getOption("photobiology.plot.annotations",
                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
+    if (getMultipleWl(x) > 1L) {
+      annotations.default <- setdiff(annotations.default, "summaries")
+    }
     annotations <- decode_annotations(annotations,
                                       annotations.default)
     if (is.null(label.qty)) {
@@ -895,6 +921,19 @@ plot.filter_spct <-
                    annotations = annotations)
   }
 
+#' @rdname plot.filter_spct
+#'
+#' @export
+#'
+plot.filter_mspct <-
+  function(x, ..., range = NULL) {
+    if (!is.null(range)) {
+      x <- trim_wl(x, range = range, use.hinges = TRUE, fill = NULL)
+    }
+    z <- rbindspct(x)
+    plot(x = z, range = NULL, ...)
+  }
+
 #' Plot method for reflector spectra.
 #'
 #' This function returns a ggplot object with an annotated plot of a
@@ -954,6 +993,9 @@ plot.reflector_spct <-
     annotations.default <-
       getOption("photobiology.plot.annotations",
                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
+    if (getMultipleWl(x) > 1L) {
+      annotations.default <- setdiff(annotations.default, "summaries")
+    }
     annotations <- decode_annotations(annotations,
                                       annotations.default)
     if (is.null(label.qty)) {
@@ -994,6 +1036,18 @@ plot.reflector_spct <-
                    annotations = annotations)
   }
 
+#' @rdname plot.reflector_spct
+#'
+#' @export
+#'
+plot.reflector_mspct <-
+  function(x, ..., range = NULL) {
+    if (!is.null(range)) {
+      x <- trim_wl(x, range = range, use.hinges = TRUE, fill = NULL)
+    }
+    z <- rbindspct(x)
+    plot(x = z, range = NULL, ...)
+  }
 
 #' Plot method for object spectra.
 #'
@@ -1057,6 +1111,9 @@ plot.object_spct <-
     annotations.default <-
       getOption("photobiology.plot.annotations",
                 default = c("boxes", "labels", "colour.guide", "peaks"))
+    # if (getMultipleWl(x) > 1L) {
+    #   annotations.default <- setdiff(annotations.default, "summaries")
+    # }
     annotations <- decode_annotations(annotations,
                                       annotations.default)
     if (is.null(label.qty)) {
@@ -1144,3 +1201,15 @@ plot.object_spct <-
                    x.name = deparse(substitute(x)),
                    annotations = annotations)
   }
+
+#' @rdname plot.object_spct
+#'
+#' @export
+#'
+plot.object_mspct <-
+  function(x, ..., range = NULL) {
+    stop("plot() not implemented for 'object_mspct'")
+    # z <- rbindspct(x)
+    # plot(x = z, ...)
+  }
+
