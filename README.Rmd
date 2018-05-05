@@ -21,7 +21,7 @@ The goal of 'ggspectra' is to make it easy to plot radiation spectra and similar
 
 Package 'ggspectra' provides stats, geoms, scales and functions to be used for plotting radiation-related spectra and annotating the plots with quantities derived from spectral data. All summary quantities implemented in 'photobiology' can be used for annotations including biologically effective irradiances and exposures.
 
-Please, see the web site [r4photobiology](http://www.r4photobiology.info) for details on other packages available as part of the suite, and on how to install them.
+Please, see the web site [r4photobiology](https://www.r4photobiology.info) for details on other packages available as part of the suite, and on how to install them.
 
 ## Example
 
@@ -64,7 +64,7 @@ devtools::install_bitbucket("aphalo/ggspectra")
 
 HTML documentation is available at (http://docs.r4photobiology.info/ggspectra/), including a _User Guide_.
 
-News on updates to the different packages of the 'r4photobiology' suite are regularly posted at (http://www.r4photobiology.info/).
+News on updates to the different packages of the 'r4photobiology' suite are regularly posted at (https://www.r4photobiology.info/).
 
 Two articles introduce the basic ideas behind the design of the suite and its use:
 Aphalo P. J. (2015) (https://doi.org/10.19232/uv4pb.2015.1.14) and Aphalo P. J. (2016)  (https://doi.org/10.19232/uv4pb.2016.1.15).
@@ -76,7 +76,7 @@ Aphalo, P. J., Albert, A., Björn, L. O., McLeod, A. R., Robson, T. M., & Rosenq
 
 ## Contributing
 
-Pull requests, bug reports, and feature requests are welcome at (http://bitbucket.org/aphalo/ggspectra).
+Pull requests, bug reports, and feature requests are welcome at (https://bitbucket.org/aphalo/ggspectra).
 
 ## Citation
 

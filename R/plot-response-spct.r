@@ -452,15 +452,16 @@ q_rsp_plot <- function(spct,
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 }
 
-#' Plot method for response spectra.
+#' Plot methods for response spectra.
 #'
-#' This function returns a ggplot object with an annotated plot of a
-#' response_spct object.
+#' These methods return a ggplot object with an annotated plot of a
+#' response_spct object or of the spectra contained in a response_mspct object.
 #'
 #' @note Note that scales are expanded so as to make space for the annotations.
-#'   The object returned is a ggplot objects, and can be further manipulated.
+#'   The object returned is a ggplot object, and can be further manipulated and
+#'   added to.
 #'
-#' @param x a response_spct object
+#' @param x a response_spct object or a response_mspct object.
 #' @param ... other arguments passed along, such as \code{label.qty}
 #' @param w.band a single waveband object or a list of waveband objects
 #' @param range an R object on which range() returns a vector of length 2, with
@@ -474,7 +475,8 @@ q_rsp_plot <- function(spct,
 #'   than all other elements within a window of width span centered at that
 #'   element.
 #' @param annotations a character vector
-#' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
+#' @param time.format character Format as accepted by
+#'   \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.

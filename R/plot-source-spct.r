@@ -402,27 +402,28 @@ q_plot <- function(spct,
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 }
 
-#' Plot method for light-source spectra.
+#' Plot methods for light-source spectra.
 #'
-#' This function returns a ggplot object with an annotated plot of a source_spct
-#' object.
+#' These methods return a ggplot object with an annotated plot of a source_spct
+#' object or of the spectra contained in a source_mspct object.
 #'
 #' @note Note that scales are expanded so as to make space for the annotations.
-#'   The object returned is a ggplot objects, and can be further manipulated.
+#'   The object returned is a ggplot object, and can be further manipulated
+#'   and added to.
 #'
-#' @param x a source_spct object
-#' @param ... other arguments passed along, such as \code{label.qty}
-#' @param w.band a single waveband object or a list of waveband objects
+#' @param x a source_spct or a source_mspct object.
+#' @param ... other arguments passed along, such as \code{label.qty}.
+#' @param w.band a single waveband object or a list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
-#'   min annd max wavelengths (nm)
+#'   min annd max wavelengths (nm).
 #' @param unit.out character string indicating type of radiation units to use
-#'   for plotting: "photon" or its synomin "quantum", or "energy"
+#'   for plotting: "photon" or its synomin "quantum", or "energy".
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
-#' @param annotations a character vector
+#' @param annotations a character vector.
 #' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
 #' @param text.size numeric size of text in the plot decorations.

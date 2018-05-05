@@ -6,4 +6,5 @@ vignettes/*.R
 vignettes/*.html
 man
 inst/web
+inst/doc
 docs/

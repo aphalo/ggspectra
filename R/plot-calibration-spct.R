@@ -172,28 +172,28 @@ cal_plot <- function(spct,
 
 }
 
-
-#' Plot method for spectral irradiation calibrations.
+#' Plot methods for spectral irradiation calibrations.
 #'
-#' This function returns a ggplot object with an annotated plot of a
-#' calibration_spct object.
+#' These methods return a ggplot object with an annotated plot of a
+#' calibration_spct object or of the spectra contained in a calibration_mspct
+#' object.
 #'
 #' @note Note that scales are expanded so as to make space for the annotations.
 #' The object returned is a ggplot objects, and can be further manipulated.
 #'
-#' @param x a calibration_spct object
-#' @param ... other arguments passed along, such as \code{label.qty}
-#' @param w.band a single waveband object or a list of waveband objects
+#' @param x a calibration_spct object or a calibration_mspct object.
+#' @param ... other arguments passed along, such as \code{label.qty}.
+#' @param w.band a single waveband object or a list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2,
-#' with min annd max wavelengths (nm)
-#' @param unit.out character IGNORED
-#' @param pc.out logical, if TRUE use percents instead of fraction of one
+#' with min annd max wavelengths (nm).
+#' @param unit.out character IGNORED.
+#' @param pc.out logical, if TRUE use percents instead of fraction of one.
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
-#' @param annotations a character vector ("summaries" is ignored)
+#' @param annotations a character vector ("summaries" is ignored).
 #' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
 #' @param norm numeric normalization wavelength (nm) or character string "max"
