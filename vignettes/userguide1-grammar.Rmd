@@ -117,10 +117,18 @@ opts_chunk$set(fig.path = 'figure/guide-pos-', fig.align = 'center',
 options(warnPartialMatchArgs = FALSE)
 ```
 
-We bind two spectra, to later on demonstrate grouping.
+Create a collection of two source_spct objects.
 
 ```{r}
-two_suns.spct <- rbindspct(list(sun1 = sun.spct, sun2 = sun.spct * 2))
+two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct / 2))
+```
+
+We bind the two spectra in the colelction into a single spectral object. This object
+includes an indexing factor, by default names `spct.idx`. We use this new object to 
+later on demonstrate grouping in ggplots.
+
+```{r}
+two_suns.spct <- rbindspct(two_suns.mspct)
 ```
 
 We change the default theme.
@@ -194,6 +202,38 @@ unset_user_defaults()
 
 The names of the additional parameters are consistent with those used in the `plot()` methods defined in this package.
 
+## ggplot() methods for collections fof spectra
+
+The `ggplot()` methods for collections of spectra work similarly to the methods 
+for spectra when used with an spectral object containing concatenated spectra, as
+that shown in the previous section.
+
+Plotting a collection of spectra using an aesthetic.
+
+```{r}
+ggplot(two_suns.mspct) + 
+  aes(linetype = spct.idx) +
+  wl_guide(ymax = -0.05) +
+  geom_line()
+```
+
+Using facets.
+
+```{r}
+ggplot(two_suns.mspct) + 
+  wl_guide(ymax = -0.05) +
+  geom_spct() +
+  geom_line() +
+  facet_wrap(~spct.idx, ncol = 1L)
+```
+
+```{r}
+ggplot(two_suns.mspct) + 
+  wl_guide(ymax = -0.05) +
+  geom_spct() +
+  geom_line() +
+  facet_wrap(~spct.idx, ncol = 1L, scales = "free_y")
+```
 ## Scales
 
 ### Wavelength
