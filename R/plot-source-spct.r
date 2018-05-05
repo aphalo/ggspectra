@@ -320,9 +320,9 @@ q_plot <- function(spct,
 
   plot <- ggplot(spct)
   if (getMultipleWl(spct) == 1L) {
-    plot <- plot + aes_(~w.length, ~s.e.irrad)
+    plot <- plot + aes_(~w.length, ~s.q.irrad)
   } else {
-    plot <- plot + aes_(~w.length, ~s.e.irrad, linetype = ~spct.idx)
+    plot <- plot + aes_(~w.length, ~s.q.irrad, linetype = ~spct.idx)
   }
 
   # We want data plotted on top of the boundary lines
