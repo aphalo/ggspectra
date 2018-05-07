@@ -22,6 +22,22 @@ test_that("source_spct", {
   expect_error(ggplot(white_led.source_spct, unit.out = "zzz") + geom_line())
 })
 
+test_that("source_mspct", {
+  two_leds.mspct <- source_mspct(list(one = white_led.source_spct,
+                                      half = white_led.source_spct / 2))
+  vdiffr::expect_doppelganger("source-mspct-ggplot",
+                              ggplot(two_leds.mspct) +
+                                aes(linetype = spct.idx) +
+                                geom_line())
+  vdiffr::expect_doppelganger("source-mspct-ggplot-p",
+                              ggplot(two_leds.mspct, unit.out = "photon") +
+                                aes(linetype = spct.idx) +
+                                geom_line())
+  expect_error(ggplot(two_leds.mspct, unit.out = "zzz") +
+                 aes(linetype = spct.idx) +
+                 geom_line())
+})
+
 test_that("response_spct", {
   vdiffr::expect_doppelganger("response-ggplot",
                               ggplot(ccd.spct) + geom_line())
@@ -34,9 +50,66 @@ test_that("response_spct", {
   expect_error(ggplot(ccd.spct, unit.out = "zzz") + geom_line())
 })
 
+test_that("response_mspct", {
+  two_ccd.mspct <- response_mspct(list(one = ccd.spct,
+                                        half = ccd.spct / 2))
+  vdiffr::expect_doppelganger("response-mspect-ggplot",
+                              ggplot(two_ccd.mspct) +
+                                aes(linetype = spct.idx) +
+                                geom_line())
+  vdiffr::expect_doppelganger("response-mspect-ggplot-e",
+                              ggplot(two_ccd.mspct, unit.out = "energy") +
+                                aes(linetype = spct.idx) +
+                                geom_line())
+  vdiffr::expect_doppelganger("response-mspect-ggplot-p",
+                              ggplot(two_ccd.mspct, unit.out = "photon") +
+                                aes(linetype = spct.idx) +
+                                geom_line())
+  expect_error(ggplot(two_ccd.mspct, unit.out = "zzz") +
+                 aes(linetype = spct.idx) +
+                 geom_line())
+})
+
 test_that("filter_spct", {
   vdiffr::expect_doppelganger("filter-ggplot",
                               ggplot(polyester.spct) + geom_line())
+  vdiffr::expect_doppelganger("filter-ggplot-A",
+                              ggplot(polyester.spct,
+                                     plot.qty = "absorbance") + geom_line())
+  vdiffr::expect_doppelganger("filter-ggplot-Afr",
+                              ggplot(polyester.spct,
+                                     plot.qty = "absorptance") + geom_line())
+  vdiffr::expect_doppelganger("filter-ggplot-Tfr",
+                              ggplot(polyester.spct,
+                                     plot.qty = "transmittance") + geom_line())
+  expect_error(ggplot(polyester.spct, plot.qty = "zzz") + geom_line())
+})
+
+test_that("filter_mspct", {
+  two_polyester.mspct <- filter_mspct(list(one = polyester.spct,
+                                           half = polyester.spct / 2))
+  vdiffr::expect_doppelganger("filter-mspct-ggplot",
+                              ggplot(two_polyester.mspct) +
+                                aes(linetype = spct.idx) +
+                                geom_line())
+  vdiffr::expect_doppelganger("filter-mspct-ggplot-A",
+                              ggplot(two_polyester.mspct,
+                                     plot.qty = "absorbance") +
+                                aes(linetype = spct.idx) +
+                                geom_line())
+  vdiffr::expect_doppelganger("filter-mspct-ggplot-Afr",
+                              ggplot(two_polyester.mspct,
+                                     plot.qty = "absorptance") +
+                                aes(linetype = spct.idx) +
+                                geom_line())
+  vdiffr::expect_doppelganger("filter-mspct-ggplot-Tfr",
+                              ggplot(two_polyester.mspct,
+                                     plot.qty = "transmittance") +
+                                aes(linetype = spct.idx) +
+                                geom_line())
+  expect_error(ggplot(two_polyester.mspct, plot.qty = "zzz") +
+                 aes(linetype = spct.idx) +
+                 geom_line())
 })
 
 test_that("object_spct", {

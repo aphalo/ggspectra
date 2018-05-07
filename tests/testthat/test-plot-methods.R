@@ -90,7 +90,7 @@ test_that("source_spct", {
   vdiffr::expect_doppelganger("source-plus-segments-q",
                               plot(white_led.source_spct, unit.out = "photon", annotations = c("+", "segments")))
 
-    vdiffr::expect_doppelganger("source-normalized",
+  vdiffr::expect_doppelganger("source-normalized",
                               plot(normalize(white_led.source_spct)))
   vdiffr::expect_doppelganger("source-normalized-wl",
                               plot(normalize(white_led.source_spct, norm = 550)))
@@ -112,7 +112,21 @@ test_that("source_spct", {
                               plot(sun.spct * CIE()))
   vdiffr::expect_doppelganger("source-product-BSWF-wl",
                               plot(sun.spct * CIE(300)))
+})
 
+test_that("source_mspct", {
+  two_leds.mspct <- source_mspct(list(one = white_led.source_spct,
+                                      half = white_led.source_spct / 2))
+  vdiffr::expect_doppelganger("source-mspct-default",
+                              plot(two_leds.mspct))
+  vdiffr::expect_doppelganger("source-mspct-default-range",
+                              plot(two_leds.mspct, range = c(500, 700)))
+  vdiffr::expect_doppelganger("source-mspct-default-e",
+                              plot(two_leds.mspct, unit.out = "energy"))
+  vdiffr::expect_doppelganger("source-mspct-default-p",
+                              plot(two_leds.mspct, unit.out = "photon"))
+  vdiffr::expect_doppelganger("source-mspct-no-annotations",
+                              plot(two_leds.mspct, annotations = ""))
 })
 
 test_that("filter_spct", {
@@ -254,6 +268,28 @@ test_that("filter_spct", {
                               plot(Ler_leaf_trns_i.spct, plot.qty = "transmittance", annotations = c("+", "segments")))
 })
 
+test_that("filter_mspct", {
+  two_leaves.mspct <- filter_mspct(list(one = Ler_leaf_trns_i.spct,
+                                      half = Ler_leaf_trns_i.spct / 2))
+  vdiffr::expect_doppelganger("filter-mspct-default",
+                              plot(two_leaves.mspct))
+  vdiffr::expect_doppelganger("filter-mspct-default-range",
+                              plot(two_leaves.mspct, range = c(500, 700)))
+  # use range to avoid Tfr == 0 values.
+  vdiffr::expect_doppelganger("filter-mspct-default-A",
+                              plot(two_leaves.mspct,
+                                   range = c(400,750),
+                                   plot.qty = "absorbance"))
+  vdiffr::expect_doppelganger("filter-mspct-default-Afr",
+                              plot(two_leaves.mspct,
+                                   range = c(400,750),
+                                   plot.qty = "absorptance"))
+  vdiffr::expect_doppelganger("filter-mspct-default-Tfr",
+                              plot(two_leaves.mspct, plot.qty = "transmittance"))
+  vdiffr::expect_doppelganger("filter-mspct-no-annotations",
+                              plot(two_leaves.mspct, annotations = ""))
+})
+
 test_that("reflector_spct", {
   vdiffr::expect_doppelganger("reflector-default-tot",
                               plot(Ler_leaf_rflt.spct))
@@ -279,6 +315,17 @@ test_that("reflector_spct", {
                               plot(Ler_leaf_rflt.spct, annotations = c("-", "summaries")))
   vdiffr::expect_doppelganger("reflector-plus-annotations-tot",
                               plot(Ler_leaf_rflt.spct, annotations = c("+", "boundaries")))
+})
+
+test_that("reflector_mspct", {
+  two_leaves_Rfr.mspct <- reflector_mspct(list(one = Ler_leaf_rflt.spct,
+                                        half = Ler_leaf_rflt.spct / 2))
+  vdiffr::expect_doppelganger("reflector-mspct-default",
+                              plot(two_leaves_Rfr.mspct))
+  vdiffr::expect_doppelganger("reflector-mspct-default-range",
+                              plot(two_leaves_Rfr.mspct, range = c(500, 700)))
+  vdiffr::expect_doppelganger("reflector-mspct-no-annotations",
+                              plot(two_leaves_Rfr.mspct, annotations = ""))
 })
 
 test_that("object_spct", {
@@ -389,6 +436,21 @@ test_that("response_spct", {
                               plot(ccd.spct, unit.out = "photon", annotations = c("+", "boundaries")))
   vdiffr::expect_doppelganger("response-plus-segments-q",
                               plot(ccd.spct, unit.out = "photon", annotations = c("+", "segments")))
+})
+
+test_that("response_mspct", {
+  two_ccds.mspct <- response_mspct(list(one = ccd.spct,
+                                      half = ccd.spct / 2))
+  vdiffr::expect_doppelganger("response-mspct-default",
+                              plot(two_ccds.mspct))
+  vdiffr::expect_doppelganger("response-mspct-default-range",
+                              plot(two_ccds.mspct, range = c(500, 700)))
+  vdiffr::expect_doppelganger("response-mspct-default-e",
+                              plot(two_ccds.mspct, unit.out = "energy"))
+  vdiffr::expect_doppelganger("response-mspct-default-p",
+                              plot(two_ccds.mspct, unit.out = "photon"))
+  vdiffr::expect_doppelganger("response-mspct-no-annotations",
+                              plot(two_ccds.mspct, annotations = ""))
 })
 
 test_that("waveband", {
