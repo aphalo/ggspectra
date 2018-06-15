@@ -18,6 +18,13 @@
 #' @param annotations.default a character vector
 #' @param annotations a character vector
 #' @param text.size numeric size of text in the plot decorations.
+#' @param idfactor character Name of an index column in data holding a
+#'   \code{factor} with each spectrum in a long-form multispectrum object
+#'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
+#'   the factor is retrieved from metadata or if no metadata found, the
+#'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
+#'   to the spectra and the user needs to use 'ggplot2' functions to manually
+#'   map an aesthetic or use facets for the spectra.
 #' @param na.rm logical.
 #' @param ... other arguments passed to annotate_plot()
 #'
@@ -32,6 +39,7 @@ e_plot <- function(spct,
                    span,
                    annotations,
                    text.size,
+                   idfactor,
                    na.rm,
                    ...) {
   if (!is.source_spct(spct)) {
@@ -112,11 +120,22 @@ e_plot <- function(spct,
   y.min <- min(c(spct[["s.e.irrad"]], 0), na.rm = TRUE)
 
   plot <- ggplot(spct)
-  if (getMultipleWl(spct) == 1L) {
-    plot <- plot + aes_(~w.length, ~s.e.irrad)
-  } else {
-    plot <- plot + aes_(~w.length, ~s.e.irrad, linetype = ~spct.idx)
+  if ((is.null(idfactor) || !is.na(idfactor)) && getMultipleWl(spct) > 1L) {
+    if (is.null(idfactor)) {
+      idfactor <- getIdFactor(spct)
+    }
+    if (is.na(idfactor)) {
+      # handle objects created with 'photobiology' <= 9.20
+      idfactor <- "spct.idx"
+    }
+    if (!exists(idfactor, spct, inherits = FALSE)) {
+      message("'multiple.wl > 1' but no idexing factor found.")
+    } else {
+      annotations <- setdiff(annotations, "summaries")
+      plot <- plot + aes_string(linetype = idfactor)
+    }
   }
+
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
     if (y.min < (-0.01 * y.max)) {
@@ -215,6 +234,13 @@ e_plot <- function(spct,
 #' @param annotations.default a character vector
 #' @param annotations a character vector
 #' @param text.size numeric size of text in the plot decorations.
+#' @param idfactor character Name of an index column in data holding a
+#'   \code{factor} with each spectrum in a long-form multispectrum object
+#'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
+#'   the factor is retrieved from metadata or if no metadata found, the
+#'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
+#'   to the spectra and the user needs to use 'ggplot2' functions to manually
+#'   map an aesthetic or use facets for the spectra.
 #' @param na.rm logical.
 #' @param ... other arguments passed to annotate_plot()
 #'
@@ -230,6 +256,7 @@ q_plot <- function(spct,
                    annotations.default,
                    annotations,
                    text.size,
+                   idfactor,
                    na.rm,
                    ...) {
   if (!is.source_spct(spct)) {
@@ -318,11 +345,21 @@ q_plot <- function(spct,
   y.max <- max(c(spct[["s.q.irrad"]], 0), na.rm = TRUE)
   y.min <- min(c(spct[["s.q.irrad"]], 0), na.rm = TRUE)
 
-  plot <- ggplot(spct)
-  if (getMultipleWl(spct) == 1L) {
-    plot <- plot + aes_(~w.length, ~s.q.irrad)
-  } else {
-    plot <- plot + aes_(~w.length, ~s.q.irrad, linetype = ~spct.idx)
+  plot <- ggplot(spct) + aes_(~w.length, ~s.q.irrad)
+  if ((is.null(idfactor) || !is.na(idfactor)) && getMultipleWl(spct) > 1L) {
+    if (is.null(idfactor)) {
+      idfactor <- getIdFactor(spct)
+    }
+    if (is.na(idfactor)) {
+      # handle objects created with 'photobiology' <= 9.20
+      idfactor <- "spct.idx"
+    }
+    if (!exists(idfactor, spct, inherits = FALSE)) {
+      message("'multiple.wl > 1' but no idexing factor found.")
+    } else {
+      annotations <- setdiff(annotations, "summaries")
+      plot <- plot + aes_string(linetype = idfactor)
+    }
   }
 
   # We want data plotted on top of the boundary lines
@@ -428,6 +465,11 @@ q_plot <- function(spct,
 #' @param tz character Time zone to use for title and/or subtitle.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param na.rm logical.
+#' @param idfactor character Name of an index column in data holding a
+#'   \code{factor} with each spectrum in a long-form multispectrum object
+#'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
+#'   the factor is retrieved from metadata or if no metadata found, the
+#'   default "spct.idx" is tried.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -455,13 +497,11 @@ plot.source_spct <-
            time.format = "",
            tz = "UTC",
            text.size = 2.5,
+           idfactor = NULL,
            na.rm = TRUE) {
     annotations.default <-
       getOption("photobiology.plot.annotations",
                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
-    if (getMultipleWl(x) > 1L) {
-      annotations.default <- setdiff(annotations.default, "summaries")
-    }
     annotations <- decode_annotations(annotations,
                                       annotations.default)
     if (is.null(label.qty)) {
@@ -487,6 +527,7 @@ plot.source_spct <-
                            span = span,
                            annotations = annotations,
                            text.size = text.size,
+                           idfactor = idfactor,
                            na.rm = na.rm,
                            ...)
     } else if (unit.out == "energy") {
@@ -495,6 +536,7 @@ plot.source_spct <-
                            span = span,
                            annotations = annotations,
                            text.size = text.size,
+                           idfactor = idfactor,
                            na.rm = na.rm,
                            ...)
     } else {

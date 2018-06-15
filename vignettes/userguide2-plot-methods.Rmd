@@ -58,6 +58,13 @@ plot(sun.spct)
 
 Although the defaults provide a useful plot, the `plot()` methods accepts arguments for several parameters that allow to tweak the looks and contents of the plots without explicit manipulation of the spectral data.
 
+If a single object contains multiple spectra in long form, they are both plotted. In addition no summary values are displayed.
+
+```{r}
+plot(two_suns.spct)
+```
+
+
 ### Summary quantities in labels
 
 In this first example we pass `"mean"` as argument to `label.qty`, to print means instead of integrals in the labels. Note that the units and quantity labels for the waveband summaries have also changed.
