@@ -119,7 +119,7 @@ e_plot <- function(spct,
   y.max <- max(c(spct[["s.e.irrad"]], 0), na.rm = TRUE)
   y.min <- min(c(spct[["s.e.irrad"]], 0), na.rm = TRUE)
 
-  plot <- ggplot(spct)
+  plot <- ggplot(spct, unit.out = "energy")
   if ((is.null(idfactor) || !is.na(idfactor)) && getMultipleWl(spct) > 1L) {
     if (is.null(idfactor)) {
       idfactor <- getIdFactor(spct)
@@ -345,7 +345,7 @@ q_plot <- function(spct,
   y.max <- max(c(spct[["s.q.irrad"]], 0), na.rm = TRUE)
   y.min <- min(c(spct[["s.q.irrad"]], 0), na.rm = TRUE)
 
-  plot <- ggplot(spct) + aes_(~w.length, ~s.q.irrad)
+  plot <- ggplot(spct, unit.out = "photon")
   if ((is.null(idfactor) || !is.na(idfactor)) && getMultipleWl(spct) > 1L) {
     if (is.null(idfactor)) {
       idfactor <- getIdFactor(spct)
