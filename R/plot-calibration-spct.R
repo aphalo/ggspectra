@@ -4,8 +4,8 @@
 #' calibration_spct object.
 #'
 #' @note Note that scales are expanded so as to make space for the annotations.
-#'   The object returned is a ggplot objects, and can be further manipulated.
-#'   When spct has more than one column with spectral data, each of these
+#'   The object returned is a ggplot object, and can be further manipulated.
+#'   When \code{spct} has more than one column with spectral data, each of these
 #'   columns is normalized individually.
 #'
 #' @param spct a calibration_spct object
@@ -122,21 +122,9 @@ cal_plot <- function(spct,
   }
 
   plot <- ggplot(spct) + aes_(x ~ w.length, y ~ irrad.mult)
-  if ((is.null(idfactor) || !is.na(idfactor)) && getMultipleWl(spct) > 1L) {
-    if (is.null(idfactor)) {
-      idfactor <- getIdFactor(spct)
-    }
-    if (is.na(idfactor)) {
-      # handle objects created with 'photobiology' <= 9.20
-      idfactor <- "spct.idx"
-    }
-    if (!exists(idfactor, spct, inherits = FALSE)) {
-      message("'multiple.wl > 1' but no idexing factor found.")
-    } else {
-      annotations <- setdiff(annotations, "summaries")
-      plot <- plot + aes_string(linetype = idfactor)
-    }
-  }
+  plot <- plot + find_idfactor(spct = spct,
+                               idfactor = idfactor,
+                               annotations = annotations)
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {

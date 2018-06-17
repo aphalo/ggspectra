@@ -120,21 +120,9 @@ e_plot <- function(spct,
   y.min <- min(c(spct[["s.e.irrad"]], 0), na.rm = TRUE)
 
   plot <- ggplot(spct, unit.out = "energy")
-  if ((is.null(idfactor) || !is.na(idfactor)) && getMultipleWl(spct) > 1L) {
-    if (is.null(idfactor)) {
-      idfactor <- getIdFactor(spct)
-    }
-    if (is.na(idfactor)) {
-      # handle objects created with 'photobiology' <= 9.20
-      idfactor <- "spct.idx"
-    }
-    if (!exists(idfactor, spct, inherits = FALSE)) {
-      message("'multiple.wl > 1' but no idexing factor found.")
-    } else {
-      annotations <- setdiff(annotations, "summaries")
-      plot <- plot + aes_string(linetype = idfactor)
-    }
-  }
+  plot <- plot + find_idfactor(spct = spct,
+                               idfactor = idfactor,
+                               annotations = annotations)
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
@@ -346,21 +334,9 @@ q_plot <- function(spct,
   y.min <- min(c(spct[["s.q.irrad"]], 0), na.rm = TRUE)
 
   plot <- ggplot(spct, unit.out = "photon")
-  if ((is.null(idfactor) || !is.na(idfactor)) && getMultipleWl(spct) > 1L) {
-    if (is.null(idfactor)) {
-      idfactor <- getIdFactor(spct)
-    }
-    if (is.na(idfactor)) {
-      # handle objects created with 'photobiology' <= 9.20
-      idfactor <- "spct.idx"
-    }
-    if (!exists(idfactor, spct, inherits = FALSE)) {
-      message("'multiple.wl > 1' but no idexing factor found.")
-    } else {
-      annotations <- setdiff(annotations, "summaries")
-      plot <- plot + aes_string(linetype = idfactor)
-    }
-  }
+  plot <- plot + find_idfactor(spct = spct,
+                               idfactor = idfactor,
+                               annotations = annotations)
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
@@ -464,12 +440,12 @@ q_plot <- function(spct,
 #' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
 #' @param text.size numeric size of text in the plot decorations.
-#' @param na.rm logical.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
 #'   the factor is retrieved from metadata or if no metadata found, the
 #'   default "spct.idx" is tried.
+#' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
 #'

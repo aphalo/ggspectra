@@ -1,9 +1,17 @@
-ggspectra 0.2.4 (2018-05-05)
+ggspectra 0.2.4 (2018-06-17)
 ============================
 
-Revise to track changes in 'photobiology' 0.9.20 to avoid spurious messages.
+Revise to track changes in 'photobiology' version 0.9.21 to avoid spurious
+messages.
 * Add ggplot() method specialization for collections of spectra.
 * Add plot() method specializations for collections of spectra.
+* Revise plot() methods to support objects with multiple spectra in long form.
+* Revise plot() methods to not use by default calculated summaries in annotations
+when a plot contains multiple spectra.
+* Revise plot() methods to retrieve and validate the name of the factor used
+to identify multiple spectra, using as default the value stored in the attribute
+"idfactor" implemented in 'photobiology' 0.9.21.
+* Tested compatible with 'ggplot2' 2.3.0.
 
 ggspectra 0.2.3 (2017-12-18)
 ============================

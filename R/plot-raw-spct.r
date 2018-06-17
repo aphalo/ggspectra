@@ -22,6 +22,11 @@
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
 #' @param text.size numeric size of text in the plot decorations.
+#' @param idfactor character Name of an index column in data holding a
+#'   \code{factor} with each spectrum in a long-form multispectrum object
+#'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
+#'   the factor is retrieved from metadata or if no metadata found, the
+#'   default "spct.idx" is tried.
 #' @param na.rm logical.
 #' @param ... other arguments
 #'
@@ -38,6 +43,7 @@ raw_plot <- function(spct,
                      annotations,
                      norm,
                      text.size,
+                     idfactor,
                      na.rm,
                      ...) {
   if (!is.raw_spct(spct)) {
@@ -62,6 +68,8 @@ raw_plot <- function(spct,
   }
 
   counts.cols <- names(spct)[grep("^counts", names(spct))]
+  num.counts.cols <- length(counts.cols)
+  stopifnot(num.counts.cols == 1L || getMultipleWl(spct) <= 1L)
 #  other.cols <- setdiff(names(x), counts.cols)
   if (is.null(norm)) {
     # we will use the original data
@@ -110,16 +118,23 @@ raw_plot <- function(spct,
     counts.label <- ""
   }
 
-  spct <- tidyr::gather(spct,
-                        .dots = counts.cols,
-                        key = "scan",
-                        value = "counts")
-  setRawSpct(spct, multiple.wl = length(counts.cols))
+  if (num.counts.cols > 1L) {
+    spct <- tidyr::gather(spct,
+                          .dots = counts.cols,
+                          key = "scan",
+                          value = "counts")
+    setRawSpct(spct, multiple.wl = length(counts.cols))
+    plot <- ggplot(spct) + aes_(linetype = ~scan)
+  } else {
+    plot <- ggplot(spct) + find_idfactor(spct = spct,
+                                         idfactor = idfactor,
+                                         annotations = annotations)
+  }
+
   y.max <- max(spct[["counts"]],
                ifelse(is.na(upper.boundary), 0, upper.boundary - 1),
                na.rm = TRUE)
   y.min <- min(spct[["counts"]], 0, na.rm = TRUE)
-  plot <- ggplot(spct) + aes_(linetype = ~scan)
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
@@ -205,6 +220,11 @@ raw_plot <- function(spct,
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #' for normalization at the wavelength of highest peak.
 #' @param text.size numeric size of text in the plot decorations.
+#' @param idfactor character Name of an index column in data holding a
+#'   \code{factor} with each spectrum in a long-form multispectrum object
+#'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
+#'   the factor is retrieved from metadata or if no metadata found, the
+#'   default "spct.idx" is tried.
 #' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
@@ -229,6 +249,7 @@ plot.raw_spct <-
            tz = "UTC",
            norm = NULL,
            text.size = 2.5,
+           idfactor = NULL,
            na.rm = TRUE) {
     annotations.default <-
       getOption("photobiology.plot.annotations",
@@ -255,6 +276,7 @@ plot.raw_spct <-
              annotations = annotations,
              norm = norm,
              text.size = text.size,
+             idfactor = idfactor,
              na.rm = na.rm,
              ...) +
       ggtitle_spct(x = x,

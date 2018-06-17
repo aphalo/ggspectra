@@ -20,6 +20,11 @@
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
 #' @param text.size numeric size of text in the plot decorations.
+#' @param idfactor character Name of an index column in data holding a
+#'   \code{factor} with each spectrum in a long-form multispectrum object
+#'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
+#'   the factor is retrieved from metadata or if no metadata found, the
+#'   default "spct.idx" is tried.
 #' @param na.rm logical.
 #' @param ... other arguments passed to e_response()
 #'
@@ -36,6 +41,7 @@ e_rsp_plot <- function(spct,
                        annotations,
                        norm,
                        text.size,
+                       idfactor,
                        na.rm,
                        ...) {
   if (!is.response_spct(spct)) {
@@ -161,12 +167,10 @@ e_rsp_plot <- function(spct,
     rsp.label <- ""
   }
 
-  plot <- ggplot(spct)
-  if (getMultipleWl(spct) == 1L) {
-    plot <- plot + aes_(~w.length, ~s.e.response)
-  } else {
-    plot <- plot + aes_(~w.length, ~s.e.response, linetype = ~spct.idx)
-  }
+  plot <- ggplot(spct) + aes_(~w.length, ~s.e.response)
+  plot <- plot + find_idfactor(spct = spct,
+                               idfactor = idfactor,
+                               annotations = annotations)
 
   # We want data plotted on top of the boundary lines
   # Negative response is valid!
@@ -247,6 +251,11 @@ e_rsp_plot <- function(spct,
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
 #' @param text.size numeric size of text in the plot decorations.
+#' @param idfactor character Name of an index column in data holding a
+#'   \code{factor} with each spectrum in a long-form multispectrum object
+#'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
+#'   the factor is retrieved from metadata or if no metadata found, the
+#'   default "spct.idx" is tried.
 #' @param na.rm logical.
 #' @param ... other arguments passed to q_response()
 #'
@@ -263,6 +272,7 @@ q_rsp_plot <- function(spct,
                        annotations,
                        norm,
                        text.size,
+                       idfactor,
                        na.rm,
                        ...) {
   if (!is.response_spct(spct)) {
@@ -388,12 +398,10 @@ q_rsp_plot <- function(spct,
     rsp.label <- ""
   }
 
-  plot <- ggplot(spct)
-  if (getMultipleWl(spct) == 1L) {
-    plot <- plot + aes_(~w.length, ~s.q.response)
-  } else {
-    plot <- plot + aes_(~w.length, ~s.q.response, linetype = ~spct.idx)
-  }
+  plot <- ggplot(spct) + aes_(~w.length, ~s.q.response)
+  plot <- plot + find_idfactor(spct = spct,
+                               idfactor = idfactor,
+                               annotations = annotations)
 
   # We want data plotted on top of the boundary lines
   # Negative response is valid!
@@ -481,6 +489,11 @@ q_rsp_plot <- function(spct,
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
 #' @param text.size numeric size of text in the plot decorations.
+#' @param idfactor character Name of an index column in data holding a
+#'   \code{factor} with each spectrum in a long-form multispectrum object
+#'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
+#'   the factor is retrieved from metadata or if no metadata found, the
+#'   default "spct.idx" is tried.
 #' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
@@ -511,13 +524,11 @@ plot.response_spct <-
            tz = "UTC",
            norm = "max",
            text.size = 2.5,
+           idfactor = NULL,
            na.rm = TRUE) {
     annotations.default <-
       getOption("photobiology.plot.annotations",
                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
-    if (getMultipleWl(x) > 1L) {
-      annotations.default <- setdiff(annotations.default, "summaries")
-    }
     annotations <- decode_annotations(annotations,
                                       annotations.default)
     if (is.null(label.qty)) {
@@ -547,6 +558,7 @@ plot.response_spct <-
                                annotations = annotations,
                                norm = norm,
                                text.size = text.size,
+                               idfactor = idfactor,
                                na.rm = na.rm,
                                ...)
     } else if (unit.out=="energy") {
@@ -558,6 +570,7 @@ plot.response_spct <-
                                span = span,
                                annotations = annotations, norm = norm,
                                text.size = text.size,
+                               idfactor = idfactor,
                                na.rm = na.rm,
                                ...)
     } else {
