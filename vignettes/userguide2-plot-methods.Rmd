@@ -50,20 +50,26 @@ theme_set(theme_bw(10))
 
 The most automatic way of plotting spectral data stored in one of the classes defined in package `photobiology` is to use the `plot()`methods. These go much further than the `plot()` method defined in base-R for numeric data, as these classes store metadata that allows the automatic construction of axis labels as quantities and units are well defined.
 
-Here we use the same example `source_spct` object from package `photobiology` used in the User Guide. In contrast to the examples in the User Guide, here we obtain with a very simple statement a complete annotated plot of the solar spectrum at ground level.
+Here we use the same example `source_spct` object from package `photobiology` used in the User Guide. In contrast to the examples in the User Guide 1, here we obtain with a very simple statement a complete annotated plot of the solar spectrum at ground level.
 
 ```{r}
 plot(sun.spct)
 ```
 
-Although the defaults provide a useful plot, the `plot()` methods accepts arguments for several parameters that allow to tweak the looks and contents of the plots without explicit manipulation of the spectral data.
+We can change the basis of expression of spectral irradiance and irradiance from `"energy"` to `"photon"`. Be aware that by design, all values, summaries and spectral data will always use the same base of expression.
 
-If a single object contains multiple spectra in long form, they are both plotted. In addition no summary values are displayed.
+
+```{r}
+plot(sun.spct, unit.out = "photon")
+```
+
+If a single object contains multiple spectra in long form, they are all plotted. In addition no summary values are displayed as they would overalp.
 
 ```{r}
 plot(two_suns.spct)
 ```
 
+Although the defaults provide a useful plot, the `plot()` methods accepts arguments for several parameters that allow to tweak the looks and contents of the plots without explicit manipulation of the spectral data.
 
 ### Summary quantities in labels
 
@@ -73,7 +79,7 @@ In this first example we pass `"mean"` as argument to `label.qty`, to print mean
 plot(sun.spct, label.qty = "mean")
 ```
 
-Two `label.qty` values need explanation. The first one, `"relative"` displays in labels the relative contribution of the integral of each waveband, to the sum of the integrals of all wavebands. The second one, `"contribution"` displays in labels the integral of each waveband divided by the integral of the whole spectrum. Consequently, this second option should be interpreted with caution, as the spectral data is unlikely in many cases to include the whole emission or absorption spectrum of a source.
+Two `label.qty` values need explanation. The first one, `"relative"` displays in labels the relative contribution of the integral of each waveband, to the sum of the integrals of all wavebands. The second one, `"contribution"` displays in labels the integral of each waveband divided by the integral of the whole spectrum. Consequently, this second option should be interpreted with caution, as the spectral data is unlikely in many cases to include the whole emission or absorption spectrum of a source. Using `"relative.pc"` or `"contribution.pc"` results in the corresponding values being expressed as percentages.
 
 ```{r}
 plot(sun.spct, label.qty = "contribution")
@@ -83,23 +89,9 @@ plot(sun.spct, label.qty = "contribution")
 plot(sun.spct, label.qty = "relative")
 ```
 
-```{r}
-plot(sun.spct, label.qty = "mean", unit.out = "photon")
-```
-
-```{r}
-plot(sun.spct, label.qty = "relative.pc")
-```
-
-We can change the basis of expression of spectral irradiance and irradiance from `"energy"` to `"photon"`. Be aware that by design, all values, summaries and spectral data will always use the same base of expression.
-
-```{r}
-plot(sun.spct, unit.out = "photon")
-```
-
 ### Automatic annotations
 
-Which _annotations_ are included can be controlled through parameter `annotations`. These are passed as a vector of character strings, with three values with special meaning for the first element (with index = 1): `"="` means use only the annotations that follow in the vector, `"+"` means add to the default the annotations that follow, and `"-"` means remove the annotations that follow from the defaults. A `NULL` value means use defaults as is, `""` means no annotations, and `"reserve.space"` means no annotations, but expand axis limits and set identity scales ready for manually adding annotations.
+Which _annotations_ are included can be controlled through parameter `annotations`. These are passed as a vector of character strings, with three values with special meaning for the first element (with index = 1): `"="` means use only the annotations that follow in the vector, `"+"` means add to the default the annotations that follow, and `"-"` means remove the annotations that follow from the defaults. A `NULL` value means use defaults as is, `""` means no annotations, and `"reserve.space"` means no annotations, but expand axis limits and set identity scales ready for manually adding annotations. Which annotations are added by default can be changed by setting R option `"photobiology.plot.annotations"` to a character vector with the names of the desired default annotations.
 
 | annotation | default for classes                       | overrides    |
 |:-----------|:------------------------------------------|:-------------|
@@ -160,13 +152,13 @@ plot(sun.spct,
      annotations = c("+", "segments"))
 ```
 
-We can also _remove_ some of the default annotations.
+We can also _remove_ some of the default annotations on a case by case basis.
 
 ```{r}
 plot(sun.spct, annotations = c("-", "summaries", "peaks"))
 ```
 
-We add `"valleys"` as annotations, and control with `span` how near peaks and valleys are found.
+The behaviour of some annotations can be tweaked. below we add `"valleys"` as annotations, and control with `span` how close to each other are the peaks and valleys found.
 
 ```{r}
 plot(sun.spct, annotations = c("+", "valleys"), span = 41)
@@ -240,24 +232,21 @@ getTimeUnit(sun.daily.spct)
 plot(sun.daily.spct)
 ```
 
-Even though the `plot()` methods can return a finished plot, the returned object is a `ggplot` object and can be built upon by adding additional elements like _facets_, _aesthetics_ and even additional _layers_.
+Even though the `plot()` methods can return a finished plot, the returned object is a `ggplot` object and can be built upon by adding additional elements like _facets_, _aesthetics_ and even additional _layers_. We pass `idfactor = NA` to supress the mapping of the spectra to `linetype`.
 
 ```{r}
-plot(two_suns.spct, label.qty = "mean") + facet_wrap(~spct.idx)
+plot(two_suns.spct, idfactor = NA) + facet_wrap(~spct.idx)
 ```
 
-When using grouping the `"summaries"` annotation would be over-plotted, and needs to be suppressed.
-```{r}
-plot(two_suns.spct, annotations = c("-", "summaries")) + 
-  aes(linetype = spct.idx)
-```
 
-It is possible to construct and bind the spectra on-the-fly.
+
+It is possible to construct and bind the spectra on-the-fly, and to use arbitrary variable names for the index factor. This works automatically as long as row binding is done with function `rbindspct()` which saves the name of the factor.
 
 ```{r}
-plot(rbindspct(list(sun = sun.spct, filtered = yellow_gel.spct * sun.spct)),
-     annotations = c("-", "summaries")) + 
-  aes(linetype = spct.idx)
+filter_no_yes.spct <- 
+  rbindspct(list(sun = sun.spct, filtered = yellow_gel.spct * sun.spct), 
+            idfactor = "Source")
+plot(filter_no_yes.spct)
 ```
 
 In the examples above the `source_spct` object `sun.spct` was used. The `plot()` methods for other spectral classes have slight differences. We show some examples for `filter_spct` objects.
@@ -295,11 +284,7 @@ plot(sun.spct) + geom_spct(fill = color_of(sun.spct)) +
 
 The examples above use an emission spectrum. All the spectral classes defined in package 'photobiology' are supported, however.
 
-```{r}
-plot(yellow_gel.spct)
-```
-
-In the case of quantities like transmittance which have a certain range of valid values, both upper and lower boundaries are highlighted.
+In the case of quantities like transmittance which have a certain range of valid values, both upper and lower boundaries are highlighted, but in other cases only one, or even none depending on the possible valid ranges for the spectral quantities.
 
 ```{r}
 plot(yellow_gel.spct, annotations = c("+", "boundaries"))
@@ -311,28 +296,29 @@ In the case of raw instrument counts data, if the spectral object contains an in
 plot(white_led.raw_spct, annotations = c("+", "boundaries"))
 ```
 
-Both `raw_spct` and `cps_spct` objects contain multiple data columns when integration time bracketing has been used during data acquisition. In such cases, if one wants to plot only one of the raw spectra, method `select()` from package 'dplyr' should be used instead of subscripting (`[ ]`) to preserve the metadata.
+Both `raw_spct` and `cps_spct` objects contain multiple data columns when integration time bracketing has been used during data acquisition. In such cases, if one wants to plot only one of the raw spectra, method `select()` from package 'dplyr' should be used instead of subscripting (`[ ]`) ao as to preserve the metadata. In addition renaming of the variable is needed as shown below when a single column is extracted.
 
 ```{r}
-plot(select(white_led.raw_spct, w.length, counts_1),
+plot(dplyr::select(white_led.raw_spct, w.length, counts = counts_1),
      annotations = c("+", "boundaries"))
 ```
 
-
-
+```{r}
+plot(dplyr::select(white_led.raw_spct, w.length, counts_1, counts_3),
+     annotations = c("+", "boundaries"))
+```
 
 ### Handling of off-range data
 
 If the supplied data include off-range values such as negative irradiance or fractional transmittance, reflectance, or absorptance outside the zero to one range the exceeded boundary is highlighted.
 
 ```{r}
-plot(yellow_gel.spct - 0.01)
+plot(yellow_gel.spct - 0.01, annotations = c("+", "boundaries"))
 ```
 
 ## Ploting collections of spectra
 
-A `plot()` is available for collections of spectra. We use in the examples a
-simple collection of two spectra.
+`plot()` methods are available for collections of spectra. We use in the examples a simple collection of two spectra. The output and acceptable arguments are the same as those in the `plot()` methods for multiple spectra in long form described above.
 
 ```{r}
 two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct / 2))
@@ -345,10 +331,10 @@ Plot accepting all defaults.
 plot(two_suns.mspct)
 ```
 
-Plot using one panel per spectrum.
+Plot using one panel per spectrum. Setting `idfactor = NA` supresses the default mapping to `linetype`.
 
 ```{r, fig.width = 7, fig.height = 8}
-plot(two_suns.mspct, annotations = c("+", "summaries")) + 
+plot(two_suns.mspct, idfactor = NA) + 
   facet_wrap(~spct.idx, ncol = 1)
 ```
 

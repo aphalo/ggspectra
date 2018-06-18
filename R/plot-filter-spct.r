@@ -134,12 +134,12 @@ Afr_plot <- function(spct,
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
-    if (y.max > 1.01) {
+    if (y.max > 1.005) {
       plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "red")
     } else {
       plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "black")
     }
-    if (y.min < -0.01) {
+    if (y.min < -0.005) {
       plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
     } else {
       plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
@@ -306,12 +306,12 @@ T_plot <- function(spct,
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
-    if (y.max > 1.01) {
+    if (y.max > 1.005) {
       plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "red")
     } else {
       plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "black")
     }
-    if (y.min < -0.01) {
+    if (y.min < -0.005) {
       plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
     } else {
       plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
@@ -618,12 +618,12 @@ R_plot <- function(spct,
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
-    if (y.max > 1.01) {
+    if (y.max > 1.005) {
       plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "red")
     } else {
       plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "black")
     }
-    if (y.min < -0.01) {
+    if (y.min < -0.005) {
       plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
     } else {
       plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
