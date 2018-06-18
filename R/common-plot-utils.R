@@ -7,14 +7,15 @@
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
-#'   the factor is retrieved from metadata or if no metadata found, the
-#'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
-#'   to the spectra and the user needs to use 'ggplot2' functions to manually
-#'   map an aesthetic or use facets for the spectra.
+#'   the factor is retrieved from metadata or if no metadata found, the default
+#'   "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped to the
+#'   spectra and the user needs to use 'ggplot2' functions to manually map an
+#'   aesthetic or use facets for the spectra.
 #' @param annotations a character vector.
 #' @param ... currently not used.
 #'
-#' @return A list object with ggplot components.
+#' @return A list object containing a list of ggplot components and a vector of
+#'   annotations names as members.
 #'
 #' @keywords internal
 #'
@@ -32,10 +33,14 @@ find_idfactor <- function(spct,
     }
     if (!exists(idfactor, spct, inherits = FALSE)) {
       message("'multiple.wl > 1' but no idexing factor found.")
-      list()
+      ggplot_comp <- list()
     } else {
+      ggplot_comp <- list(aes_string(linetype = idfactor))
       annotations <- setdiff(annotations, "summaries")
-      list(aes_string(linetype = idfactor))
     }
+  } else { # only one spectrum
+    ggplot_comp <- list()
   }
+  list(annotations = annotations,
+       ggplot_comp = ggplot_comp)
 }

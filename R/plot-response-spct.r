@@ -167,10 +167,12 @@ e_rsp_plot <- function(spct,
     rsp.label <- ""
   }
 
-  plot <- ggplot(spct) + aes_(~w.length, ~s.e.response)
-  plot <- plot + find_idfactor(spct = spct,
-                               idfactor = idfactor,
-                               annotations = annotations)
+  plot <- ggplot(spct, aes_(~w.length, ~s.e.response))
+  temp <- find_idfactor(spct = spct,
+                        idfactor = idfactor,
+                        annotations = annotations)
+  plot <- plot + temp$ggplot_comp
+  annotations <- temp$annotations
 
   # We want data plotted on top of the boundary lines
   # Negative response is valid!
@@ -398,10 +400,12 @@ q_rsp_plot <- function(spct,
     rsp.label <- ""
   }
 
-  plot <- ggplot(spct) + aes_(~w.length, ~s.q.response)
-  plot <- plot + find_idfactor(spct = spct,
-                               idfactor = idfactor,
-                               annotations = annotations)
+  plot <- ggplot(spct, aes_(x = ~w.length, y = ~s.q.response))
+  temp <- find_idfactor(spct = spct,
+                        idfactor = idfactor,
+                        annotations = annotations)
+  plot <- plot + temp$ggplot_comp
+  annotations <- temp$annotations
 
   # We want data plotted on top of the boundary lines
   # Negative response is valid!

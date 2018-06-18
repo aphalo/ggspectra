@@ -125,10 +125,12 @@ Afr_plot <- function(spct,
   y.max <- max(1, spct[["Afr"]], na.rm = TRUE)
   y.min <- min(0, spct[["Afr"]], na.rm = TRUE)
 
-  plot <- ggplot(spct) + aes_(~w.length, ~Afr)
-  plot <- plot + find_idfactor(spct = spct,
-                               idfactor = idfactor,
-                               annotations = annotations)
+  plot <- ggplot(spct, aes_(x = ~w.length, y = ~Afr))
+  temp <- find_idfactor(spct = spct,
+                        idfactor = idfactor,
+                        annotations = annotations)
+  plot <- plot + temp$ggplot_comp
+  annotations <- temp$annotations
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
@@ -295,10 +297,12 @@ T_plot <- function(spct,
   y.max <- max(1, spct[["Tfr"]], na.rm = TRUE)
   y.min <- min(0, spct[["Tfr"]], na.rm = TRUE)
 
-  plot <- ggplot(spct) + aes_(~w.length, ~Tfr)
-  plot <- plot + find_idfactor(spct = spct,
-                               idfactor = idfactor,
-                               annotations = annotations)
+  plot <- ggplot(spct, aes_(x = ~w.length, y = ~Tfr))
+  temp <- find_idfactor(spct = spct,
+                        idfactor = idfactor,
+                        annotations = annotations)
+  plot <- plot + temp$ggplot_comp
+  annotations <- temp$annotations
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
@@ -445,10 +449,12 @@ A_plot <- function(spct,
   y.max <- max(spct[["A"]], na.rm = TRUE)
   y.min <- min(0, spct[["A"]], na.rm = TRUE)
 
-  plot <- ggplot(spct) + aes_(~w.length, ~A)
-  plot <- plot + find_idfactor(spct = spct,
-                               idfactor = idfactor,
-                               annotations = annotations)
+  plot <- ggplot(spct, aes_(x = ~w.length, y = ~A))
+  temp <- find_idfactor(spct = spct,
+                        idfactor = idfactor,
+                        annotations = annotations)
+  plot <- plot + temp$ggplot_comp
+  annotations <- temp$annotations
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
@@ -603,10 +609,12 @@ R_plot <- function(spct,
   y.max <- max(1, spct[["Rfr"]], na.rm = TRUE)
   y.min <- min(0, spct[["Rfr"]], na.rm = TRUE)
 
-  plot <- ggplot(spct) + aes_(~w.length, ~Rfr)
-  plot <- plot + find_idfactor(spct = spct,
-                               idfactor = idfactor,
-                               annotations = annotations)
+  plot <- ggplot(spct, aes_(x = ~w.length, y = ~Rfr))
+  temp <- find_idfactor(spct = spct,
+                        idfactor = idfactor,
+                        annotations = annotations)
+  plot <- plot + temp$ggplot_comp
+  annotations <- temp$annotations
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {

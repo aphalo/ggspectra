@@ -121,10 +121,12 @@ cal_plot <- function(spct,
     y.min <- min(spct[["irrad.mult"]], 0, na.rm = TRUE)
   }
 
-  plot <- ggplot(spct) + aes_(x ~ w.length, y ~ irrad.mult)
-  plot <- plot + find_idfactor(spct = spct,
-                               idfactor = idfactor,
-                               annotations = annotations)
+  plot <- ggplot(spct, aes_(x = ~w.length, y = ~irrad.mult))
+  temp <- find_idfactor(spct = spct,
+                        idfactor = idfactor,
+                        annotations = annotations)
+  plot <- plot + temp$ggplot_comp
+  annotations <- temp$annotations
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {

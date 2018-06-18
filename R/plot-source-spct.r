@@ -119,10 +119,12 @@ e_plot <- function(spct,
   y.max <- max(c(spct[["s.e.irrad"]], 0), na.rm = TRUE)
   y.min <- min(c(spct[["s.e.irrad"]], 0), na.rm = TRUE)
 
-  plot <- ggplot(spct, unit.out = "energy")
-  plot <- plot + find_idfactor(spct = spct,
-                               idfactor = idfactor,
-                               annotations = annotations)
+  plot <- ggplot(spct, aes_(x = ~w.length, y = ~s.e.irrad))
+  temp <- find_idfactor(spct = spct,
+                        idfactor = idfactor,
+                        annotations = annotations)
+  plot <- plot + temp$ggplot_comp
+  annotations <- temp$annotations
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
@@ -333,10 +335,12 @@ q_plot <- function(spct,
   y.max <- max(c(spct[["s.q.irrad"]], 0), na.rm = TRUE)
   y.min <- min(c(spct[["s.q.irrad"]], 0), na.rm = TRUE)
 
-  plot <- ggplot(spct, unit.out = "photon")
-  plot <- plot + find_idfactor(spct = spct,
-                               idfactor = idfactor,
-                               annotations = annotations)
+  plot <- ggplot(spct, aes_(x = ~w.length, y = ~s.q.irrad))
+  temp <- find_idfactor(spct = spct,
+                        idfactor = idfactor,
+                        annotations = annotations)
+  plot <- plot + temp$ggplot_comp
+  annotations <- temp$annotations
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {

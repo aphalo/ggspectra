@@ -112,11 +112,14 @@ cps_plot <- function(spct,
                           key = "scan",
                           value = "cps")
     setCpsSpct(spct, multiple.wl = length(cps.cols))
-    plot <- ggplot(spct) + aes_(linetype = ~scan)
+    plot <- ggplot(spct, aes_(x = ~w.length, y = ~cps, linetype = ~scan))
   } else {
-    plot <- ggplot(spct) + find_idfactor(spct = spct,
-                                         idfactor = idfactor,
-                                         annotations = annotations)
+    plot <- ggplot(spct, aes_(x = ~w.length, y = ~cps))
+    temp <- find_idfactor(spct = spct,
+                          idfactor = idfactor,
+                          annotations = annotations)
+    plot <- plot + temp$ggplot_comp
+    annotations <- temp$annotations
   }
 
   y.max <- max(c(spct[["cps"]], 0), na.rm = TRUE)

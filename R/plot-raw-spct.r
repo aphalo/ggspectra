@@ -124,11 +124,14 @@ raw_plot <- function(spct,
                           key = "scan",
                           value = "counts")
     setRawSpct(spct, multiple.wl = length(counts.cols))
-    plot <- ggplot(spct) + aes_(linetype = ~scan)
+    plot <- ggplot(spct) + aes_(x = ~w.length, y = ~counts, linetype = ~scan)
   } else {
-    plot <- ggplot(spct) + find_idfactor(spct = spct,
-                                         idfactor = idfactor,
-                                         annotations = annotations)
+    plot <- ggplot(spct) + aes_(x = ~w.length, y = ~counts)
+    temp <- find_idfactor(spct = spct,
+                          idfactor = idfactor,
+                          annotations = annotations)
+    plot <- plot + temp$ggplot_comp
+    annotations <- temp$annotations
   }
 
   y.max <- max(spct[["counts"]],
