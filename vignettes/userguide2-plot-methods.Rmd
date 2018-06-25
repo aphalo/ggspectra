@@ -63,7 +63,7 @@ We can change the basis of expression of spectral irradiance and irradiance from
 plot(sun.spct, unit.out = "photon")
 ```
 
-If a single object contains multiple spectra in long form, they are all plotted. In addition no summary values are displayed as they would overalp.
+If a single object contains multiple spectra in long form, they are all plotted. In addition no summary values are displayed as they would overlap.
 
 ```{r}
 plot(two_suns.spct)
@@ -232,7 +232,7 @@ getTimeUnit(sun.daily.spct)
 plot(sun.daily.spct)
 ```
 
-Even though the `plot()` methods can return a finished plot, the returned object is a `ggplot` object and can be built upon by adding additional elements like _facets_, _aesthetics_ and even additional _layers_. We pass `idfactor = NA` to supress the mapping of the spectra to `linetype`.
+Even though the `plot()` methods can return a finished plot, the returned object is a `ggplot` object and can be built upon by adding additional elements like _facets_, _aesthetics_ and even additional _layers_. We pass `idfactor = NA` to suppress the mapping of the spectra to `linetype`.
 
 ```{r}
 plot(two_suns.spct, idfactor = NA) + facet_wrap(~spct.idx)
@@ -296,7 +296,7 @@ In the case of raw instrument counts data, if the spectral object contains an in
 plot(white_led.raw_spct, annotations = c("+", "boundaries"))
 ```
 
-Both `raw_spct` and `cps_spct` objects contain multiple data columns when integration time bracketing has been used during data acquisition. In such cases, if one wants to plot only one of the raw spectra, method `select()` from package 'dplyr' should be used instead of subscripting (`[ ]`) ao as to preserve the metadata. In addition renaming of the variable is needed as shown below when a single column is extracted.
+Both `raw_spct` and `cps_spct` objects contain multiple data columns when integration time bracketing has been used during data acquisition. In such cases, if one wants to plot only one of the raw spectra, method `select()` from package 'dplyr' should be used instead of subscripting (`[ ]`) so as to preserve the metadata. In addition renaming of the variable is needed as shown below when a single column is extracted.
 
 ```{r}
 plot(dplyr::select(white_led.raw_spct, w.length, counts = counts_1),
@@ -331,7 +331,7 @@ Plot accepting all defaults.
 plot(two_suns.mspct)
 ```
 
-Plot using one panel per spectrum. Setting `idfactor = NA` supresses the default mapping to `linetype`.
+Plot using one panel per spectrum. Setting `idfactor = NA` suppresses the default mapping to `linetype`.
 
 ```{r, fig.width = 7, fig.height = 8}
 plot(two_suns.mspct, idfactor = NA) + 

@@ -40,9 +40,10 @@
 #' @param range an R object on which range() returns a vector of length 2, with
 #'   min annd max wavelengths (nm).
 #' @param unit.out character string indicating type of units to use for
-#'   plotting.
+#'   plotting spectral irradiance or spectral response, \code{"photon"} or
+#'   \code{"energy"}.
 #' @param ... Other arguments passed on to methods.
-#' @param environment If an variable defined in the aesthetic mapping is not
+#' @param environment If a variable defined in the aesthetic mapping is not
 #'   found in the data, ggplot will look for it in this environment. It defaults
 #'   to using the environment in which \code{ggplot()} is called.
 #'
@@ -127,9 +128,10 @@ ggplot.response_spct <-
 
 #' @rdname ggplot
 #'
-#' @param plot.qty character string one of "transmittance" or "absorbance" for
-#'   filter_spct, and one of "transmittance", "reflectance" or "all" for
-#'   object_spct.
+#' @param plot.qty character string one of \code{"transmittance"} or
+#'   \code{"absorbance"} for \code{filter_spct}, and one of
+#'   \code{"transmittance"}, \code{"reflectance"} or \code{"all"} for
+#'   \code{object_spct}.
 #'
 #' @export
 #'

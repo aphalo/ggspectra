@@ -11,10 +11,10 @@
 #' are more generaly useful for plotting UV, VIS and NIR spectra of light
 #' emission, transmittance, reflectance, absorptance, and responses.
 #'
-#' The available summary qantities are both simple statistical summaries and
+#' The available summary quantities are both simple statistical summaries and
 #' response-weighted summaries. Simple derived quantities represent summaries of a
 #' given range of wavelengths, and can be expressed either in energy or photon
-#' based units. Derived _biologically effective_ quantities are used to quantify
+#' based units. Derived biologically effective quantities are used to quantify
 #' the effect of radiation on different organisms or processes within organisms.
 #' These effects can range from damage to perception of informational light
 #' signals. Additional features of spectra may be important and worthwhile
@@ -47,8 +47,8 @@
 #' @importFrom ggplot2 ggplot
 #'
 #' @note
-#' This package makes use of the new features of 'ggplot2' 2.0.0 that make
-#' writing this kind of extensions really easy and is consequently not
+#' This package makes use of the new features of 'ggplot2' >= 2.0.0 that make
+#' writing this kind of extensions easy and is consequently not
 #' compatible with earlier versions of 'ggplot2'.
 #'
 #' @examples

@@ -85,7 +85,7 @@ In addition secondary axis definitions, `sec_axis_w_number()` and `sec_axis_w_fr
 
 ### What are functions `color_chart()` and `black_or_white()` for?
 
-Function `color_chart()` makes a color chart of rectangular tiles from a vector R color definitions. The chart returned is a `ggplot` object. Function `black_or_white()` accepts a vector of color definitions and returns a vector with colors `"white"` or `"black"` depending on the approximate luminosity of the each color in the input. The main use is to automatically achieve suitable contrast between text plotted on top of a color background.
+Function `color_chart()` makes a color chart of rectangular tiles from a vector R color definitions. The chart returned is a `ggplot` object. Function `black_or_white()` accepts a vector of color definitions and returns a vector with colors `"white"` or `"black"` depending on the approximate luminosity of each color in the input. The main use is to automatically achieve suitable contrast between text plotted on top of a color background.
 
 ### What is function `ggtitle_spct()` for?
 
@@ -104,7 +104,7 @@ library(ggrepel)
 
 ```{r, include=FALSE, echo=FALSE}
 library(knitr)
-opts_chunk$set(fig.path = 'figure/guide-pos-', fig.align = 'center', 
+opts_chunk$set(fig.path = 'figure/grammar-pos-', fig.align = 'center', 
                fig.show = 'hold', fig.width = 7, fig.height = 4,
                cache = FALSE)
 options(warnPartialMatchArgs = FALSE)
@@ -116,7 +116,7 @@ Create a collection of two source_spct objects.
 two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct / 2))
 ```
 
-We bind the two spectra in the colelction into a single spectral object. This object
+We bind the two spectra in the collection into a single spectral object. This object
 includes an indexing factor, by default names `spct.idx`. We use this new object to 
 later on demonstrate grouping in ggplots.
 
@@ -344,7 +344,7 @@ ggplot(sun.spct, unit.out = "photon") +
 ```
 
 Transformation objects for '**scales**', or user defined, can be also passed as arguments. We replace zeros to avoid a warnings from the `log10()` call, and as the scale `limits`
-dicards some observations, we use `na.rm = TRUE` to silence this additional warning.
+discards some observations, we use `na.rm = TRUE` to silence this additional warning.
 
 ```{r}
 temp.spct <- clean(sun.spct, range.s.data = c(1e-20, Inf), fill = 1e-20)
