@@ -3,17 +3,17 @@
 #' This function returns a ggplot object with an annotated plot of a source_spct
 #' object showing absorptance.
 #'
-#' @param spct a filter_spct object
-#' @param w.band list of waveband objects
+#' @param spct a filter_spct object.
+#' @param w.band list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
-#'   min annd max wavelengths (nm)
-#' @param pc.out logical, if TRUE use percents instead of fraction of one
+#'   min annd max wavelengths (nm).
+#' @param pc.out logical, if TRUE use percents instead of fraction of one.
 #' @param label.qty character string giving the type of summary quantity to use
-#'   for labels
+#'   for labels.
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
-#' @param annotations a character vector
+#' @param annotations a character vector.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
@@ -23,7 +23,7 @@
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
 #' @param na.rm logical.
-#' @param ... other arguments passed to transmittance()
+#' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -206,7 +206,7 @@ Afr_plot <- function(spct,
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
-#' @param annotations a character vector
+#' @param annotations a character vector.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
@@ -216,7 +216,7 @@ Afr_plot <- function(spct,
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
 #' @param na.rm logical.
-#' @param ... other arguments passed to transmittance()
+#' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -377,7 +377,7 @@ T_plot <- function(spct,
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
-#' @param annotations a character vector
+#' @param annotations a character vector.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
@@ -387,7 +387,7 @@ T_plot <- function(spct,
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
 #' @param na.rm logical.
-#' @param ... other arguments passed to absorbance()
+#' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -520,7 +520,7 @@ A_plot <- function(spct,
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
-#' @param annotations a character vector
+#' @param annotations a character vector.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
@@ -530,7 +530,7 @@ A_plot <- function(spct,
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
 #' @param na.rm logical.
-#' @param ... other arguments passed to reflectance()
+#' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -678,21 +678,21 @@ R_plot <- function(spct,
 #' @note Note that scales are expanded so as to make space for the annotations.
 #'   The object returned is a ggplot object, and can be further manipulated.
 #'
-#' @param spct an object_spct object
-#' @param w.band list of waveband objects
+#' @param spct an object_spct object.
+#' @param w.band list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
-#'   min annd max wavelengths (nm)
-#' @param pc.out logical, if TRUE use percents instead of fraction of one
+#'   min annd max wavelengths (nm).
+#' @param pc.out logical, if TRUE use percents instead of fraction of one.
 #' @param label.qty character string giving the type of summary quantity to use
-#'   for labels
+#'   for labels.
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
-#' @param annotations a character vector
-#' @param stacked logical
+#' @param annotations a character vector.
+#' @param stacked logical.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param na.rm logical.
-#' @param ... other arguments passed to reflectance()
+#' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -842,7 +842,8 @@ O_plot <- function(spct,
 #'   as to make space for the annotations.
 #'
 #' @param x a filter_spct object or a filter_mspct object.
-#' @param ... other arguments passed along, such as \code{label.qty}.
+#' @param ... in the case of collections of spectra, additional arguments passed
+#'   to the plot methods for individual spectra, otherwise currently ignored.
 #' @param w.band a single waveband object or a list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
 #'   min annd max wavelengths (nm).
@@ -988,18 +989,19 @@ plot.filter_mspct <-
 #'   make space for the annotations.
 #'
 #' @param x a reflector_spct object or a reflector_mspct object.
-#' @param ... other arguments passed along, such as \code{label.qty}
-#' @param w.band a single waveband object or a list of waveband objects
+#' @param ... in the case of collections of spectra, additional arguments passed
+#'   to the plot methods for individual spectra, otherwise currently ignored.
+#' @param w.band a single waveband object or a list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
-#'   min annd max wavelengths (nm)
-#' @param plot.qty character string (currently ignored)
-#' @param pc.out logical, if TRUE use percents instead of fraction of one
+#'   min annd max wavelengths (nm).
+#' @param plot.qty character string (currently ignored).
+#' @param pc.out logical, if TRUE use percents instead of fraction of one.
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
-#' @param annotations a character vector
+#' @param annotations a character vector.
 #' @param time.format character Format as accepted by
 #'   \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
@@ -1111,7 +1113,8 @@ plot.reflector_mspct <-
 #'   plotted, a single set of spectra is accepted as input.
 #'
 #' @param x an object_spct object
-#' @param ... other arguments passed along, such as \code{label.qty}
+#' @param ... in the case of collections of spectra, additional arguments passed
+#'   to the plot methods for individual spectra, otherwise currently ignored.
 #' @param w.band a single waveband object or a list of waveband objects
 #' @param range an R object on which range() returns a vector of length 2, with
 #'   min annd max wavelengths (nm)

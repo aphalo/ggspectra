@@ -6,17 +6,17 @@
 #' @note Note that scales are expanded so as to make space for the annotations.
 #'   The object returned is a ggplot objects, and can be further manipulated.
 #'
-#' @param spct a response_spct object
-#' @param w.band list of waveband objects
+#' @param spct a response_spct object.
+#' @param w.band list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
-#'   min annd max wavelengths (nm)
-#' @param pc.out logical, if TRUE use percents instead of fraction of one
+#'   min annd max wavelengths (nm).
+#' @param pc.out logical, if TRUE use percents instead of fraction of one.
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
-#' @param annotations a character vector
+#' @param annotations a character vector.
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
 #' @param text.size numeric size of text in the plot decorations.
@@ -26,7 +26,7 @@
 #'   the factor is retrieved from metadata or if no metadata found, the
 #'   default "spct.idx" is tried.
 #' @param na.rm logical.
-#' @param ... other arguments passed to e_response()
+#' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -239,17 +239,17 @@ e_rsp_plot <- function(spct,
 #' @note Note that scales are expanded so as to make space for the annotations.
 #'   The object returned is a ggplot objects, and can be further manipulated.
 #'
-#' @param spct a response_spct object
-#' @param w.band list of waveband objects
+#' @param spct a response_spct object.
+#' @param w.band list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
-#'   min annd max wavelengths (nm)
-#' @param pc.out logical, if TRUE use percents instead of fraction of one
+#'   min annd max wavelengths (nm).
+#' @param pc.out logical, if TRUE use percents instead of fraction of one.
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
-#' @param annotations a character vector
+#' @param annotations a character vector.
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
 #' @param text.size numeric size of text in the plot decorations.
@@ -259,7 +259,7 @@ e_rsp_plot <- function(spct,
 #'   the factor is retrieved from metadata or if no metadata found, the
 #'   default "spct.idx" is tried.
 #' @param na.rm logical.
-#' @param ... other arguments passed to q_response()
+#' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -474,19 +474,20 @@ q_rsp_plot <- function(spct,
 #'   added to.
 #'
 #' @param x a response_spct object or a response_mspct object.
-#' @param ... other arguments passed along, such as \code{label.qty}
-#' @param w.band a single waveband object or a list of waveband objects
+#' @param ... in the case of collections of spectra, additional arguments passed
+#'   to the plot methods for individual spectra, otherwise currently ignored.
+#' @param w.band a single waveband object or a list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
-#'   min annd max wavelengths (nm)
+#'   min annd max wavelengths (nm).
 #' @param unit.out character string indicating type of radiation units to use
-#'   for plotting: "photon" or its synomin "quantum", or "energy"
+#'   for plotting: "photon" or its synomin "quantum", or "energy".
 #' @param pc.out logical, if TRUE use percents instead of fraction of one
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
-#' @param annotations a character vector
+#' @param annotations a character vector.
 #' @param time.format character Format as accepted by
 #'   \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.

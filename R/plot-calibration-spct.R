@@ -30,7 +30,7 @@
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
 #' @param na.rm logical.
-#' @param ... other arguments
+#' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -186,7 +186,8 @@ cal_plot <- function(spct,
 #' The object returned is a ggplot objects, and can be further manipulated.
 #'
 #' @param x a calibration_spct object or a calibration_mspct object.
-#' @param ... other arguments passed along, such as \code{label.qty}.
+#' @param ... in the case of collections of spectra, additional arguments passed
+#'   to the plot methods for individual spectra, otherwise currently ignored.
 #' @param w.band a single waveband object or a list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2,
 #' with min annd max wavelengths (nm).

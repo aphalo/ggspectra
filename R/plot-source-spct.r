@@ -6,17 +6,16 @@
 #' @note Note that scales are expanded so as to make space for the annotations.
 #'   The object returned is a ggplot objects, and can be further manipulated.
 #'
-#' @param spct a source_spct object
-#' @param w.band list of waveband objects
+#' @param spct a source_spct object.
+#' @param w.band list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
-#'   min annd max wavelengths (nm)
+#'   min annd max wavelengths (nm).
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
-#' @param annotations.default a character vector
-#' @param annotations a character vector
+#' @param annotations a character vector.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
@@ -26,7 +25,7 @@
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
 #' @param na.rm logical.
-#' @param ... other arguments passed to annotate_plot()
+#' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -212,16 +211,15 @@ e_plot <- function(spct,
 #' @note Note that scales are expanded so as to make space for the annotations.
 #'   The object returned is a ggplot objects, and can be further manipulated.
 #'
-#' @param spct a source_spct object
-#' @param w.band list of waveband objects
+#' @param spct a source_spct object.
+#' @param w.band list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
-#'   min annd max wavelengths (nm)
+#'   min annd max wavelengths (nm).
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
-#' @param annotations.default a character vector
 #' @param annotations a character vector
 #' @param text.size numeric size of text in the plot decorations.
 #' @param idfactor character Name of an index column in data holding a
@@ -232,7 +230,7 @@ e_plot <- function(spct,
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
 #' @param na.rm logical.
-#' @param ... other arguments passed to annotate_plot()
+#' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -243,7 +241,6 @@ q_plot <- function(spct,
                    range,
                    label.qty,
                    span,
-                   annotations.default,
                    annotations,
                    text.size,
                    idfactor,
@@ -251,14 +248,6 @@ q_plot <- function(spct,
                    ...) {
   if (!is.source_spct(spct)) {
     stop("q_plot() can only plot source_spct objects.")
-  }
-  if ("color.guide" %in% annotations) {
-    annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
-  }
-  if (is.null(annotations)) {
-    annotations <- annotations.default
-  } else if (tolower(annotations[1]) %in% c("!", "not")) {
-    annotations <- setdiff(annotations.default, annotations[-1])
   }
   e2q(spct, byref = TRUE)
   if (!is.null(range)) {
@@ -425,11 +414,12 @@ q_plot <- function(spct,
 #' object or of the spectra contained in a source_mspct object.
 #'
 #' @note Note that scales are expanded so as to make space for the annotations.
-#'   The object returned is a ggplot object, and can be further manipulated
-#'   and added to.
+#'   The object returned is a ggplot object, and can be further manipulated and
+#'   added to.
 #'
 #' @param x a source_spct or a source_mspct object.
-#' @param ... other arguments passed along, such as \code{label.qty}.
+#' @param ... in the case of collections of spectra, additional arguments passed
+#'   to the plot methods for individual spectra, otherwise currently ignored.
 #' @param w.band a single waveband object or a list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
 #'   min annd max wavelengths (nm).
@@ -441,14 +431,15 @@ q_plot <- function(spct,
 #'   than all other elements within a window of width span centered at that
 #'   element.
 #' @param annotations a character vector.
-#' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
+#' @param time.format character Format as accepted by
+#'   \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
-#'   the factor is retrieved from metadata or if no metadata found, the
-#'   default "spct.idx" is tried.
+#'   the factor is retrieved from metadata or if no metadata found, the default
+#'   "spct.idx" is tried.
 #' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.

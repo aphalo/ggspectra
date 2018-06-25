@@ -6,20 +6,20 @@
 #' @note Note that scales are expanded so as to make space for the annotations.
 #'   The object returned is a ggplot object, and can be further manipulated.
 #'
-#' @param x a waveband object
-#' @param ... other arguments passed to plot.response_spct()
+#' @param x a waveband object.
+#' @param ... currently ignored.
 #' @param w.length numeric vector of wavelengths (nm)
 #' @param range an R object on which range() returns a vector of length 2, with
-#'   min annd max wavelengths (nm)
+#'   min annd max wavelengths (nm).
 #' @param fill value to use as response for wavelngths outside the waveband
-#'   range
+#'   range.
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
 #' @param unit.in the type of unit we assume as reference "energy" or "photon"
-#'   based
+#'   based.
 #' @param annotations a character vector.
-#' @param wb.trim logical
+#' @param wb.trim logical.
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
 #' @param text.size numeric size of text in the plot decorations.

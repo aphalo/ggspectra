@@ -28,7 +28,7 @@
 #'   the factor is retrieved from metadata or if no metadata found, the
 #'   default "spct.idx" is tried.
 #' @param na.rm logical.
-#' @param ... other arguments
+#' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -177,19 +177,20 @@ cps_plot <- function(spct,
 #' @note Note that scales are expanded so as to make space for the annotations.
 #'   The object returned is a ggplot objects, and can be further manipulated.
 #'
-#' @param x a cps_spct object
-#' @param ... other arguments passed along, such as \code{label.qty}
-#' @param w.band a single waveband object or a list of waveband objects
+#' @param x a cps_spct object.
+#' @param ... in the case of collections of spectra, additional arguments passed
+#'   to the plot methods for individual spectra, otherwise currently ignored.
+##' @param w.band a single waveband object or a list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
-#'   min annd max wavelengths (nm)
-#' @param unit.out character IGNORED
+#'   min annd max wavelengths (nm).
+#' @param unit.out character IGNORED.
 #' @param pc.out logical, if TRUE use percents instead of fraction of one
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
-#' @param annotations a character vector ("summaries" is ignored)
+#' @param annotations a character vector ("summaries" is ignored).
 #' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
 #' @param norm numeric normalization wavelength (nm) or character string "max"
