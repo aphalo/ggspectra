@@ -2,6 +2,17 @@ context("plot")
 library(photobiology)
 library(photobiologyWavebands)
 
+# We prepare shorter data objects for spectra to improve tests' runtime
+sun.spct <- interpolate_spct(sun.spct, length.out = 50)
+white_led.raw_spct <- interpolate_spct(white_led.raw_spct, length.out = 50)
+white_led.cps_spct <- interpolate_spct(white_led.cps_spct, length.out = 50)
+white_led.source_spct <- interpolate_spct(white_led.source_spct, length.out = 50)
+Ler_leaf_trns.spct <- interpolate_spct(Ler_leaf_trns.spct, length.out = 50)
+Ler_leaf_trns_i.spct <- interpolate_spct(Ler_leaf_trns_i.spct, length.out = 50)
+Ler_leaf_rflt.spct <- interpolate_spct(Ler_leaf_rflt.spct, length.out = 50)
+Ler_leaf.spct <- interpolate_spct(Ler_leaf.spct, length.out = 50)
+ccd.spct <- interpolate_spct(ccd.spct, length.out = 50)
+
 test_that("raw_spct", {
   # skip_on_cran()
   vdiffr::expect_doppelganger("raw-default",
