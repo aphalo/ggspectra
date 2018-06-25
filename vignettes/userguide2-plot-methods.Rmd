@@ -2,7 +2,7 @@
 title: "User Guide: 2 Plot Methods"
 subtitle: "'ggspectra' `r packageVersion('ggspectra')`"
 author: "Pedro J. Aphalo"
-date: "`r Sys.Date()`"
+date: "`r packageDate('ggspectra')`"
 output: 
   rmarkdown::html_vignette:
     toc: yes
