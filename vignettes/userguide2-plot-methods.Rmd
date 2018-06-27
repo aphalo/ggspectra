@@ -2,7 +2,7 @@
 title: "User Guide: 2 Plot Methods"
 subtitle: "'ggspectra' `r packageVersion('ggspectra')`"
 author: "Pedro J. Aphalo"
-date: "`r packageDate('ggspectra')`"
+date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
     toc: yes
@@ -29,7 +29,7 @@ library(ggspectra)
 
 ```{r, include=FALSE, echo=FALSE}
 library(knitr)
-opts_chunk$set(fig.path = 'figure/plot-pos-', fig.align = 'center', fig.show = 'hold',
+opts_chunk$set(fig.path = 'figure2/', fig.align = 'center', fig.show = 'hold',
                fig.width = 7, fig.height = 4, cache = FALSE)
 options(warnPartialMatchArgs = FALSE)
 ```
