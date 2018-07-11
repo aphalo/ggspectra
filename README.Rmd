@@ -15,6 +15,9 @@ knitr::opts_chunk$set(
 
 # ggspectra
 
+[![cran version](http://www.r-pkg.org/badges/version/photobiology)](https://cran.r-project.org/package=photobiology) 
+[![cran checks](https://cranchecks.info/badges/worst/photobiology)](https://cran.r-project.org/web/checks/check_results_photobiology.html)
+
 The goal of 'ggspectra' is to make it easy to plot radiation spectra and similar data, such and transmittance, absorbance and reflectance spectra, producing fully annotated publication- and presentation-ready plots. It is an extension to packages 'ggplot2' and 'photobiology', and part of the 'r4phototbiology' suite.
 
 Package 'ggspectra' provides stats, geoms, scales and functions to be used for plotting radiation-related spectra and annotating the plots with quantities derived from spectral data. All summary quantities implemented in 'photobiology' can be used for annotations including biologically effective irradiances and exposures.
