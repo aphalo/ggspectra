@@ -4,9 +4,9 @@
 \alias{stat_color}
 \title{Calculate colours from wavelength.}
 \usage{
-stat_color(mapping = NULL, data = NULL, geom = "point", type = "CMF",
-  position = "identity", na.rm = FALSE, show.legend = FALSE,
-  inherit.aes = TRUE, ...)
+stat_color(mapping = NULL, data = NULL, geom = "point",
+  type = "CMF", position = "identity", na.rm = FALSE,
+  show.legend = FALSE, inherit.aes = TRUE, ...)
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
@@ -93,3 +93,4 @@ Other stats functions: \code{\link{stat_label_peaks}},
   \code{\link{stat_wb_total}}, \code{\link{stat_wl_strip}},
   \code{\link{stat_wl_summary}}
 }
+\concept{stats functions}

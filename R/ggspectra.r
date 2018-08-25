@@ -44,7 +44,7 @@
 #'
 #' @import photobiology photobiologyWavebands ggplot2 ggrepel
 #' @importFrom graphics plot
-#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 ggplot autoplot
 #'
 #' @note
 #' This package makes use of the new features of 'ggplot2' >= 2.0.0 that make

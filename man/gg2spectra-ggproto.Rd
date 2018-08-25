@@ -12,7 +12,6 @@
 \alias{Stats}
 \alias{StatLabelPeaks}
 \alias{StatLabelValleys}
-\alias{Stats}
 \alias{StatPeaks}
 \alias{StatValleys}
 \alias{StatWbBox}

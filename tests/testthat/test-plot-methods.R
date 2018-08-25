@@ -474,3 +474,40 @@ test_that("waveband", {
   vdiffr::expect_doppelganger("waveband-plus-segments",
                               plot(Red(), annotations = c("+", "segments")))
 })
+
+## autoplot tests use same names as equivalent plot tests
+## consequently testing that output from both methods is identical
+
+test_that("autoplot_spct", {
+  # skip_on_cran()
+  vdiffr::expect_doppelganger("raw-default",
+                              autoplot(white_led.raw_spct))
+  vdiffr::expect_doppelganger("cps-default",
+                              autoplot(white_led.cps_spct))
+  vdiffr::expect_doppelganger("source-default",
+                              autoplot(white_led.source_spct))
+  vdiffr::expect_doppelganger("source-product-BSWF",
+                              autoplot(sun.spct * CIE()))
+  vdiffr::expect_doppelganger("filter-default-tot",
+                              autoplot(Ler_leaf_trns.spct))
+  vdiffr::expect_doppelganger("reflector-default-tot",
+                              autoplot(Ler_leaf_rflt.spct))
+  vdiffr::expect_doppelganger("object-default-tot",
+                              autoplot(Ler_leaf.spct))
+  vdiffr::expect_doppelganger("object-default-stk",
+                              autoplot(Ler_leaf.spct, stacked = FALSE))
+  vdiffr::expect_doppelganger("response-default",
+                              autoplot(ccd.spct))
+})
+
+test_that("autoplot_mspct", {
+  two_ccds.mspct <- response_mspct(list(one = ccd.spct,
+                                        half = ccd.spct / 2))
+  vdiffr::expect_doppelganger("response-mspct-default",
+                              autoplot(two_ccds.mspct))
+})
+
+test_that("autoplot_waveband", {
+  vdiffr::expect_doppelganger("waveband-default-cie",
+                              autoplot(CIE(), range = c(230, 430)))
+})

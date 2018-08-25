@@ -1,7 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 inst/web
-not-used
+inst-not
 vignettes/figure
 ^tests$
 ^docs$
