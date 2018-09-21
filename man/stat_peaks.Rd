@@ -143,6 +143,7 @@ ggplot(sun.spct, unit.out = "photon") + geom_point() +
 \code{\link[photobiology]{find_peaks}}, which is used internally.
 
 Other stats functions: \code{\link{stat_color}},
+  \code{\link{stat_find_qty}}, \code{\link{stat_find_wls}},
   \code{\link{stat_label_peaks}},
   \code{\link{stat_wb_box}}, \code{\link{stat_wb_column}},
   \code{\link{stat_wb_contribution}},

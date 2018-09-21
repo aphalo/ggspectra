@@ -82,9 +82,10 @@ ggplot(sun.spct) + geom_line() +
 \seealso{
 \code{\link[photobiology]{color_of}}, which is used internally.
 
-Other stats functions: \code{\link{stat_label_peaks}},
-  \code{\link{stat_peaks}}, \code{\link{stat_wb_box}},
-  \code{\link{stat_wb_column}},
+Other stats functions: \code{\link{stat_find_qty}},
+  \code{\link{stat_find_wls}},
+  \code{\link{stat_label_peaks}}, \code{\link{stat_peaks}},
+  \code{\link{stat_wb_box}}, \code{\link{stat_wb_column}},
   \code{\link{stat_wb_contribution}},
   \code{\link{stat_wb_hbar}}, \code{\link{stat_wb_irrad}},
   \code{\link{stat_wb_label}}, \code{\link{stat_wb_mean}},
