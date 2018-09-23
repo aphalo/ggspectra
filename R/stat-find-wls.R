@@ -163,7 +163,7 @@ StatFindWls <-
 
 #' Find quantity value for target wavelength value.
 #'
-#' \code{stat_find_qty} finds at which y positions values equal to an x target
+#' \code{stat_find_qtys} finds at which y positions values equal to an x target
 #' are located.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
@@ -245,17 +245,17 @@ StatFindWls <-
 #' library(ggplot2)
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
 #' ggplot(yellow_gel.spct) + geom_line() +
-#'   stat_find_qty(target = "half.range")
+#'   stat_find_qtys(target = "half.range")
 #' ggplot(yellow_gel.spct) + geom_line() +
-#'   stat_find_qty(target = c(490, 500, 510))
+#'   stat_find_qtys(target = c(490, 500, 510))
 #' ggplot(yellow_gel.spct) + geom_line() +
-#'   stat_find_qty(target = 500, geom = "point", colour = "red") +
-#'   stat_find_qty(target = 500, geom = "text", colour = "red",
+#'   stat_find_qtys(target = 500, geom = "point", colour = "red") +
+#'   stat_find_qtys(target = 500, geom = "text", colour = "red",
 #'              hjust = 1.1, label.fmt = "Tfr = %1.2f")
 #' @export
 #' @family stats functions
 #'
-stat_find_qty <- function(mapping = NULL, data = NULL, geom = "point",
+stat_find_qtys <- function(mapping = NULL, data = NULL, geom = "point",
                           target = "half.maximum", interpolate = TRUE,
                           label.fmt = "%.3g",
                           x.label.fmt = label.fmt, y.label.fmt = label.fmt,
