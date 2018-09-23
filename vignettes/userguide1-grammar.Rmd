@@ -37,7 +37,7 @@ The _stats_ defined in this package help with with the generation of annotations
 | `stat_label_peaks`   |  text (wavelength label)  | spectral quantity label (support 'ggrepel') |
 | `stat_label_valleys`   | text (wavelength label)  | spectral quantity label (support 'ggrepel') |
 | `stat_find_wls` | point (highlight wls at qty)  | wavelength label, spectral quantity label | 
-| `stat_find_qty` | point (highlight qty at wl)  | wavelength label, spectral quantity label | 
+| `stat_find_qtys` | point (highlight qty at wl)  | wavelength label, spectral quantity label | 
 | `stat_color`         | color, fill |                                              |
 | `stat_wb_label` | text (waveband name) | rect (showing range of waveband and its color) |
 | `stat_wb_total` | text (y integral) | label(s) with waveband integral |
@@ -418,12 +418,12 @@ Several `ggplot` stats are defined by this package. All of them target light spe
 ### Peaks, valleys and target values
 
 Four stats are available for peaks and valleys, with the same formal parameters. These stats do not fit peaks, simply search for local maxima and local minima in the data as supplied. Stats `stat_peaks()` and `stat_valleys()` subset the original data while `stat_label_peaks()` and `stat_label_valleys()` only set a boolean flag to mark the local extremes.
-Two stats are available for highlighting arbitrary locations in spectra, one of them, `stat_find_wls()` accepts a target for the spectral quantity and locates the corresponding wavelength values while the other, `stat_find_qty()` accepts a target wavelength value and locates the corresponding spectral quantity value. Stats `stat_find_wls()` and `stat_find_qty()` subset the original data or generate new data by interpolation.
+Two stats are available for highlighting arbitrary locations in spectra, one of them, `stat_find_wls()` accepts a target for the spectral quantity and locates the corresponding wavelength values while the other, `stat_find_qtys()` accepts a target wavelength value and locates the corresponding spectral quantity value. Stats `stat_find_wls()` and `stat_find_qtys()` subset the original data or generate new data by interpolation.
 
 All six stats set the same default aesthetics based on calculated values. Not all of these default aesthetics are used by the default geom, but they make using other geoms easier. Furthermore generated text labels are formatted with `sptintf()` and these six stats accept format definitions through parameters `label.fmt`, `x.label.fmt`, and `y.label.fmt`. Please
 see the documentation for a list of all the computed varaibles returned in `data`. These stats use internally functions `photobiology::find_peaks()` and `photobiology::find_wls()` and arguments are passed down to them.
 
-The examples that follow, apply with minimal changes to `stat_peaks()`, `stat_valleys()`, `stat_find_wls()` and `stat_find_qty()`.
+The examples that follow, apply with minimal changes to `stat_peaks()`, `stat_valleys()`, `stat_find_wls()` and `stat_find_qtys()`.
 
 ```{r}
 ggplot(sun.spct) + geom_line() + stat_peaks(color = "red")
@@ -441,7 +441,7 @@ The complement to `stat_peaks()` is `stat_valleys`.
 ggplot(sun.spct) + geom_line() + stat_valleys(color = "blue")
 ```
 
-Stats `stat_find_wls()` and `stat_find_qty()` are another complementary pair. The default target, used in this example, is the half maximum. 
+Stats `stat_find_wls()` and `stat_find_qtys()` are another complementary pair. The default target, used in this example, is the half maximum. 
 
 ```{r}
 ggplot(yellow_gel.spct) + geom_line() + stat_find_wls(color = "darkgreen")
