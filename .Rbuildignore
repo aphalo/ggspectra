@@ -8,3 +8,4 @@ vignettes/figure
 ^_pkgdown\.yml$
 ^README\.Rmd$
 ^README-.*\.png$
+^.*\.sh$

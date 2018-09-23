@@ -26,6 +26,8 @@ reference:
     desc: It is often useful to summarize spectral data before plotting, and that is what these transformations do.
     contents:
     - stat_color
+    - stat_find_qty
+    - stat_find_wls
     - stat_peaks
     - stat_label_peaks
     - stat_wb_box
