@@ -182,10 +182,10 @@ StatLabelPeaks <-
                      out.df[peaks.idx, "is_peak"] <- TRUE
                      out.df[["x.label"]] <- ifelse(out.df[["is_peak"]],
                                                    sprintf(x.label.fmt, out.df[["x"]]),
-                                                   "")
+                                                   NA_character_)
                      out.df[["y.label"]] <- ifelse(out.df[["is_peak"]],
                                                    sprintf(y.label.fmt, out.df[["y"]]),
-                                                   "")
+                                                   NA_character_)
                      out.df[["wl.color"]] <- ifelse(out.df[["is_peak"]],
                                                  photobiology::color_of(out.df[["x"]], type = "CMF"),
                                                  rgb(1, 1, 1, 0))
@@ -258,10 +258,10 @@ StatLabelValleys <-
                      out.df[valleys.idx, "is_valley"] <- TRUE
                      out.df[["x.label"]] <- ifelse(out.df[["is_valley"]],
                                                  sprintf(x.label.fmt, out.df[["x"]]),
-                                                 "")
+                                                 NA_character_)
                      out.df[["y.label"]] <- ifelse(out.df[["is_valley"]],
                                                  sprintf(y.label.fmt, out.df[["y"]]),
-                                                 "")
+                                                 NA_character_)
                      out.df[["wl.color"]] <-  ifelse(out.df[["is_valley"]],
                                                 photobiology::color_of(out.df[["x"]], type = "CMF"),
                                                 rgb(1, 1, 1, 0))
