@@ -147,7 +147,7 @@ StatWbContrib <-
                                             ypos.mult,
                                             ypos.fixed) {
                      if (length(w.band) == 0) {
-                       w.band <- waveband(data$x)
+                       w.band <- waveband(data[["x"]])
                      }
                      if (is.any_spct(w.band) ||
                          (is.numeric(w.band) && length(na.omit(w.band)) >= 2)) {
@@ -157,7 +157,7 @@ StatWbContrib <-
                        w.band <- list(w.band)
                      }
                      stopifnot(is.function(integral.fun))
-                     w.band <- trim_wl(w.band, data$x)
+                     w.band <- trim_wl(w.band, data[["x"]])
                      integ.df <- data.frame()
                      for (wb in w.band) {
                        if (is.numeric(wb)) { # user supplied a list of numeric vectors
@@ -165,45 +165,45 @@ StatWbContrib <-
                        }
 
                        range <- range(wb)
-                       mydata <- trim_tails(data$x, data$y, use.hinges = TRUE,
+                       mydata <- trim_tails(data[["x"]], data[["y"]], use.hinges = TRUE,
                                             low.limit = range[1],
                                             high.limit = range[2],
                                             verbose = FALSE)
                        if (is_effective(wb)) {
                          warning("BSWFs not supported by summary: using wavelength range for ",
-                                 labels(wb)$label, "'.")
+                                 labels(wb)[["label"]], "'.")
                          wb <- waveband(wb)
                        }
-                       yint.tmp <- integral.fun(mydata$x, mydata$y)
+                       yint.tmp <- integral.fun(mydata[["x"]], mydata[["y"]])
                        ymean.tmp <- yint.tmp / wl_expanse(wb)
                        integ.df <- rbind(integ.df,
-                                         data.frame(x = midpoint(mydata$x),
-                                                    xmin = min(wb),
-                                                    xmax = max(wb),
-                                                    ymin = min(data$y),
-                                                    ymax = max(data$y),
-                                                    yint = yint.tmp,
-                                                    ymean = ymean.tmp,
+                                         data.frame(x = midpoint(mydata[["x"]]),
+                                                    wb.xmin = min(wb),
+                                                    wb.xmax = max(wb),
+                                                    wb.ymin = min(data[["y"]]),
+                                                    wb.ymax = max(data[["y"]]),
+                                                    wb.yint = yint.tmp,
+                                                    wb.ymean = ymean.tmp,
                                                     wb.color = color_of(wb),
-                                                    wb.name = labels(wb)$label,
+                                                    wb.name = labels(wb)[["label"]],
                                                     BW.color = black_or_white(color_of(wb)))
                                          )
                      }
                      if (is.null(ypos.fixed)) {
-                       integ.df$y <- with(integ.df, ymin + (ymax - ymin) * ypos.mult)
+                       integ.df[["y"]] <- with(integ.df, wb.ymin + (wb.ymax - wb.ymin) * ypos.mult)
                      } else {
-                       integ.df$y <- ypos.fixed
+                       integ.df[["y"]] <- ypos.fixed
                      }
-                     integ.df$yint <- integ.df$yint / integral.fun(data$x, data$y)
-                     integ.df$y.label <- sprintf(label.fmt, integ.df$yint * label.mult)
+                     integ.df[["wb.yint"]] <- integ.df[["wb.yint"]] / integral.fun(data[["x"]], data[["y"]])
+                     integ.df[["y.label"]] <- sprintf(label.fmt, integ.df[["wb.yint"]] * label.mult)
                      integ.df
                    },
                    default_aes = ggplot2::aes(label = ..y.label..,
-                                              xmin = ..xmin..,
-                                              xmax = ..xmax..,
-                                              ymin = ..y.. - (..ymax.. - ..ymin..) * 0.03,
-                                              ymax = ..y.. + (..ymax.. - ..ymin..) * 0.03,
-                                              yintercept = ..ymean..,
+                                              xmin = ..wb.xmin..,
+                                              xmax = ..wb.xmax..,
+                                              ymin = ..y.. - (..wb.ymax.. - ..wb.ymin..) * 0.03,
+                                              ymax = ..y.. + (..wb.ymax.. - ..wb.ymin..) * 0.03,
+                                              yintercept = ..wb.ymean..,
                                               fill = ..wb.color..,
                                               color = ..BW.color..),
                    required_aes = c("x", "y")

@@ -38,12 +38,12 @@
 #' with default \code{integrate_xy}.
 #' \describe{
 #'   \item{x}{w.band-midpoint}
-#'   \item{xmin}{w.band minimum}
-#'   \item{xmax}{w.band maximum}
-#'   \item{ymin}{data$y minimum}
-#'   \item{ymax}{data$y maximum}
-#'   \item{ymean}{yint divided by wl_expanse(w.band)}
-#'   \item{y}{ymeam}
+#'   \item{wb.xmin}{w.band minimum}
+#'   \item{wb.xmax}{w.band maximum}
+#'   \item{wb.ymin}{data$y minimum}
+#'   \item{wb.ymax}{data$y maximum}
+#'   \item{wb.ymean}{yint divided by wl_expanse(w.band)}
+#'   \item{y}{wb.ymeam}
 #'   \item{wb.color}{color of the w.band}
 #'   \item{wb.name}{label of w.band}
 #'   \item{BW.color}{\code{black_or_white(wb.color)}}
@@ -52,10 +52,10 @@
 #' @section Default aesthetics:
 #' Set by the statistic and available to geoms.
 #' \describe{
-#'   \item{xmin}{..xmin..}
-#'   \item{xmax}{..xmax..}
+#'   \item{xmin}{..wb.xmin..}
+#'   \item{xmax}{..wb.xmax..}
 #'   \item{ymin}{0}
-#'   \item{ymax}{..ymean..}
+#'   \item{ymax}{..wb.ymean..}
 #'   \item{fill}{..wb.color..}
 #' }
 #'
@@ -118,7 +118,7 @@ StatWbColumn <-
                                             w.band,
                                             integral.fun) {
                      if (length(w.band) == 0) {
-                       w.band <- waveband(data$x)
+                       w.band <- waveband(data[["x"]])
                      }
                      if (is.any_spct(w.band) ||
                          (is.numeric(w.band) && length(na.omit(w.band)) >= 2)) {
@@ -128,7 +128,7 @@ StatWbColumn <-
                        w.band <- list(w.band)
                      }
                      stopifnot(is.function(integral.fun))
-                     w.band <- trim_wl(w.band, data$x)
+                     w.band <- trim_wl(w.band, data[["x"]])
                      integ.df <- data.frame()
                      for (wb in w.band) {
                        if (is.numeric(wb)) { # user supplied a list of numeric vectors
@@ -136,31 +136,32 @@ StatWbColumn <-
                        }
 
                        range <- range(wb)
-                       mydata <- trim_tails(data$x, data$y, use.hinges = TRUE,
+                       mydata <- trim_tails(data[["x"]], data[["y"]], use.hinges = TRUE,
                                             low.limit = range[1],
                                             high.limit = range[2])
-                       yint.tmp <- integral.fun(mydata$x, mydata$y)
+                       yint.tmp <- integral.fun(mydata[["x"]], mydata[["y"]])
                        ymean.tmp <- yint.tmp / wl_expanse(wb)
                        wb.color <- color_of(wb) # avoid 'expensive' recalculation
                        integ.df <- rbind(integ.df,
-                                         data.frame(x = midpoint(mydata$x),
-                                                    xmin = min(wb),
-                                                    xmax = max(wb),
+                                         data.frame(x = midpoint(mydata[["x"]]),
+                                                    wb.xmin = min(wb),
+                                                    wb.xmax = max(wb),
                                                     y =  ymean.tmp,
-                                                    ymin = min(data$y),
-                                                    ymax = max(data$y),
-                                                    ymean = ymean.tmp,
+                                                    yzero = 0,
+                                                    wb.ymin = min(data[["y"]]),
+                                                    wb.ymax = max(data[["y"]]),
+                                                    wb.ymean = ymean.tmp,
                                                     wb.color = wb.color,
-                                                    wb.name = labels(wb)$label,
+                                                    wb.name = labels(wb)[["label"]],
                                                     BW.color = black_or_white(wb.color))
                                          )
                      }
                     integ.df
                    },
-                   default_aes = ggplot2::aes(xmin = ..xmin..,
-                                              xmax = ..xmax..,
-                                              ymax = ..ymean..,
-                                              ymin = 0,
+                   default_aes = ggplot2::aes(xmin = ..wb.xmin..,
+                                              xmax = ..wb.xmax..,
+                                              ymax = ..wb.ymean..,
+                                              ymin = ..yzero.., # a numeric constant is ignored!!
                                               fill = ..wb.color..),
                    required_aes = c("x", "y")
   )

@@ -50,13 +50,13 @@
 #'   \item{y.label}{yint multiplied by \code{label.mult} and formatted
 #'   according to \code{label.fmt}}
 #'   \item{x}{w.band-midpoint}
-#'   \item{xmin}{w.band minimum}
-#'   \item{xmax}{w.band maximum}
-#'   \item{ymin}{data$y minimum}
-#'   \item{ymax}{data$y maximum}
-#'   \item{yint}{data$y integral for each mebmer of w.band / sum of data$y
+#'   \item{wb.xmin}{w.band minimum}
+#'   \item{wb.xmax}{w.band maximum}
+#'   \item{wb.ymin}{data$y minimum}
+#'   \item{wb.ymax}{data$y maximum}
+#'   \item{wb.yint}{data$y integral for each mebmer of w.band / sum of data$y
 #'   integrals for all wavebands in w.band}
-#'   \item{xmean}{yint divided by wl_expanse(w.band)}
+#'   \item{wb.xmean}{yint divided by wl_expanse(w.band)}
 #'   \item{y}{ypos.fixed or top of data, adjusted by \code{ypos.mult}}
 #'   \item{wb.color}{color of the w.band}
 #'   \item{wb.name}{label of w.band}
@@ -68,11 +68,11 @@
 #' \describe{
 #'   \item{label}{..y.label..}
 #'   \item{x}{..x..}
-#'   \item{xmin}{..xmin..}
-#'   \item{xmax}{..xmax..}
-#'   \item{ymin}{..y.. - (..ymax.. - ..ymin..) * 0.03}
-#'   \item{ymax}{..y.. + (..ymax.. - ..ymin..) * 0.03}
-#'   \item{yintercept}{..ymean..}
+#'   \item{xmin}{..wb.xmin..}
+#'   \item{xmax}{..wb.xmax..}
+#'   \item{ymin}{..y.. - (..wb.ymax.. - ..wb.ymin..) * 0.03}
+#'   \item{ymax}{..y.. + (..wb.ymax.. - ..wb.ymin..) * 0.03}
+#'   \item{yintercept}{..wb.ymean..}
 #'   \item{fill}{..wb.color..}
 #' }
 #'

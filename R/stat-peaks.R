@@ -47,7 +47,7 @@
 #'   \item{y}{y-value at the peak (or valley) as numeric}
 #'   \item{x.label}{x-value at the peak (or valley) formatted as character}
 #'   \item{y.label}{y-value at the peak (or valley) formatted as character}
-#'   \item{color}{color definition calculated by assuming that x-values are
+#'   \item{wl.color}{color definition calculated by assuming that x-values are
 #'   wavelengths expressed in nanometres.}
 #' }
 #'
@@ -57,7 +57,7 @@
 #'   \item{label}{..x.label..}
 #'   \item{xintercept}{..x..}
 #'   \item{yintercept}{..y..}
-#'   \item{fill}{..color..}
+#'   \item{fill}{..wl.color..}
 #' }
 #'
 #' @section Required aesthetics:
@@ -103,7 +103,7 @@
 #' @family stats functions
 #'
 stat_peaks <- function(mapping = NULL, data = NULL, geom = "point",
-                       span = 5, ignore_threshold = 0, strict = FALSE,
+                       span = 5, ignore_threshold = 0.01, strict = FALSE,
                        label.fmt = "%.3g",
                        x.label.fmt = label.fmt, y.label.fmt = label.fmt,
                        position = "identity", na.rm = FALSE, show.legend = FALSE,
@@ -150,7 +150,6 @@ StatPeaks <-
                                             label.fmt,
                                             x.label.fmt,
                                             y.label.fmt) {
-#                     force(data)
                      if (is.null(span)) {
                        peaks.df <- data[which.max(data$y), , drop = FALSE]
                      } else {
@@ -162,14 +161,16 @@ StatPeaks <-
                      dplyr::mutate(peaks.df,
                                    x.label = sprintf(x.label.fmt, x),
                                    y.label = sprintf(y.label.fmt, y),
-                                   color = photobiology::color_of(x, type = "CMF"),
+                                   wl.color = photobiology::color_of(x, type = "CMF"),
                                    BW.color = black_or_white(photobiology::color_of(x, type = "CMF")))
                    },
                    default_aes = ggplot2::aes(label = ..x.label..,
-                                              fill = ..color..,
+                                              fill = ..wl.color..,
 #                                              color = ..BW.color..,
                                               xintercept = ..x..,
-                                              yintercept = ..y..),
+                                              yintercept = ..y..,
+                                              hjust = 0.5,
+                                              vjust = 0.5),
                    required_aes = c("x", "y")
   )
 
@@ -178,7 +179,7 @@ StatPeaks <-
 #' @export
 #'
 stat_valleys <- function(mapping = NULL, data = NULL, geom = "point",
-                         span = 5, ignore_threshold = 0, strict = FALSE,
+                         span = 5, ignore_threshold = -0.01, strict = FALSE,
                          label.fmt = "%.3g",
                          x.label.fmt = label.fmt, y.label.fmt = label.fmt,
                          position = "identity", na.rm = FALSE, show.legend = FALSE,
@@ -211,26 +212,27 @@ StatValleys <-
                                             label.fmt,
                                             x.label.fmt,
                                             y.label.fmt) {
-#                     force(data)
                      if (is.null(span)) {
                        valleys.df <- data[which.min(data$y), , drop = FALSE]
                      } else {
                        valleys.df <- data[photobiology::find_peaks(-data$y,
-                                                                 span = span,
-                                                                 ignore_threshold = ignore_threshold,
-                                                                 strict = strict), , drop = FALSE]
+                                                                   span = span,
+                                                                   ignore_threshold = ignore_threshold,
+                                                                   strict = strict), , drop = FALSE]
                      }
                      dplyr::mutate(valleys.df,
                                    x.label = sprintf(x.label.fmt, x),
                                    y.label = sprintf(y.label.fmt, y),
-                                   color = photobiology::color_of(x, type = "CMF"),
+                                   wl.color = photobiology::color_of(x, type = "CMF"),
                                    BW.color = black_or_white(photobiology::color_of(x, type = "CMF")))
                    },
                    default_aes = ggplot2::aes(label = ..x.label..,
-                                              fill = ..color..,
+                                              fill = ..wl.color..,
 #                                              color = ..BW.color..,
                                               xintercept = ..x..,
-                                              yintercept = ..y..),
+                                              yintercept = ..y..,
+                                              hjust = 0.5,
+                                              vjust = 0.5),
                    required_aes = c("x", "y")
-)
+  )
 

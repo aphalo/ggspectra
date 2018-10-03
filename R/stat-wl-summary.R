@@ -34,9 +34,9 @@
 #' with default \code{integrate_xy}.
 #' \describe{
 #'   \item{y.label}{y formatted according to \code{label.fmt}}
-#'   \item{x}{w.band-midpoint}
-#'   \item{xmin}{range minimum}
-#'   \item{xmax}{range maximum}
+#'   \item{x}{range-midpoint}
+#'   \item{wb.xmin}{range minimum}
+#'   \item{wb.xmax}{range maximum}
 #'   \item{y}{data$y integral for the range by the expanse of the range}
 #' }
 #'
@@ -45,8 +45,8 @@
 #' \describe{
 #'   \item{label}{..label..}
 #'   \item{x}{..x..}
-#'   \item{xmin}{..xmin..}
-#'   \item{xmax}{..xmax..}
+#'   \item{xmin}{..wb.xmin..}
+#'   \item{xmax}{..wb.xmax..}
 #'   \item{y}{..y..}
 #'   \item{ymin}{0}
 #'   \item{ymax}{..y..}
@@ -103,22 +103,22 @@ StatWlSummary <-
                                             summary.fmt) {
                      range <-
                        normalize_range_arg(arg.range = range,
-                                           wl.range = range(data$x))
-                     mydata <- trim_tails(data$x, data$y,
+                                           wl.range = range(data[["x"]]))
+                     mydata <- trim_tails(data[["x"]], data[["y"]],
                                           low.limit = range[1],
                                           high.limit = range[2])
-                     integ.df <- data.frame(x = midpoint(mydata$x),
-                                            xmin = range[1],
-                                            xmax = range[2],
-                                            y = integral.fun(mydata$x, mydata$y) /
+                     integ.df <- data.frame(x = midpoint(mydata[["x"]]),
+                                            wb.xmin = range[1],
+                                            wb.xmax = range[2],
+                                            y = integral.fun(mydata[["x"]], mydata[["y"]]) /
                                               (range[2] - range[1]))
-                     integ.df$label <- sprintf(label.fmt, integ.df$y)
+                     integ.df[["y.label"]] <- sprintf(label.fmt, integ.df[["y"]])
                      integ.df
                    },
-                   default_aes = ggplot2::aes(label = ..label..,
+                   default_aes = ggplot2::aes(label = ..y.label..,
                                               x = ..x..,
-                                              xmin = ..xmin..,
-                                              xmax = ..xmax..,
+                                              xmin = ..wb.xmin..,
+                                              xmax = ..wb.xmax..,
                                               y = ..y..,
                                               ymax = ..y..,
                                               ymin = 0 * ..y..,

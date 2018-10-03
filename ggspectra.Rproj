@@ -21,3 +21,6 @@ PackageInstallArgs: --with-keep.source
 PackageBuildArgs: --compact-vignettes
 PackageCheckArgs: --as-cran
 PackageRoxygenize: rd,collate,namespace,vignette
+
+QuitChildProcessesOnExit: Yes
+DisableExecuteRprofile: Yes

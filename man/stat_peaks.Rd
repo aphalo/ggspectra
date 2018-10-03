@@ -6,13 +6,13 @@
 \title{Find peaks and valleys.}
 \usage{
 stat_peaks(mapping = NULL, data = NULL, geom = "point", span = 5,
-  ignore_threshold = 0, strict = FALSE, label.fmt = "\%.3g",
+  ignore_threshold = 0.01, strict = FALSE, label.fmt = "\%.3g",
   x.label.fmt = label.fmt, y.label.fmt = label.fmt,
   position = "identity", na.rm = FALSE, show.legend = FALSE,
   inherit.aes = TRUE, ...)
 
 stat_valleys(mapping = NULL, data = NULL, geom = "point", span = 5,
-  ignore_threshold = 0, strict = FALSE, label.fmt = "\%.3g",
+  ignore_threshold = -0.01, strict = FALSE, label.fmt = "\%.3g",
   x.label.fmt = label.fmt, y.label.fmt = label.fmt,
   position = "identity", na.rm = FALSE, show.legend = FALSE,
   inherit.aes = TRUE, ...)
@@ -101,7 +101,7 @@ These stats work nicely together with geoms
   \item{y}{y-value at the peak (or valley) as numeric}
   \item{x.label}{x-value at the peak (or valley) formatted as character}
   \item{y.label}{y-value at the peak (or valley) formatted as character}
-  \item{color}{color definition calculated by assuming that x-values are
+  \item{wl.color}{color definition calculated by assuming that x-values are
   wavelengths expressed in nanometres.}
 }
 }
@@ -113,7 +113,7 @@ Set by the statistic and available to geoms.
   \item{label}{..x.label..}
   \item{xintercept}{..x..}
   \item{yintercept}{..y..}
-  \item{fill}{..color..}
+  \item{fill}{..wl.color..}
 }
 }
 

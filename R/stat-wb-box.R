@@ -40,10 +40,10 @@
 #' to the data, with default \code{integrate_xy}.
 #' \describe{
 #'   \item{x}{w.band-midpoint}
-#'   \item{xmin}{w.band minimum}
-#'   \item{xmax}{w.band maximum}
-#'   \item{ymin}{data$y minimum}
-#'   \item{ymax}{data$y maximum}
+#'   \item{wb.xmin}{w.band minimum}
+#'   \item{wb.xmax}{w.band maximum}
+#'   \item{wb.ymin}{data$y minimum}
+#'   \item{wb.ymax}{data$y maximum}
 #'   \item{y}{ypos.fixed or top of data, adjusted by \code{ypos.mult}}
 #'   \item{wb.color}{color of the w.band}
 #'   \item{wb.name}{label of w.band}
@@ -53,10 +53,10 @@
 #' @section Default aesthetics:
 #' Set by the statistic and available to geoms.
 #' \describe{
-#'   \item{xmin}{..xmin..}
-#'   \item{xmax}{..xmax..}
-#'   \item{ymin}{..y.. - (..ymax.. - ..ymin..) * 0.03}
-#'   \item{ymax}{..y.. + (..ymax.. - ..ymin..) * 0.03}
+#'   \item{xmin}{..wb.xmin..}
+#'   \item{xmax}{..wb.xmax..}
+#'   \item{ymin}{..y.. - (..wb.ymax.. - ..wb.ymin..) * 0.03}
+#'   \item{ymax}{..y.. + (..wb.ymax.. - ..wb.ymin..) * 0.03}
 #'   \item{fill}{..wb.color..}
 #' }
 #'
@@ -144,26 +144,26 @@ StatWbBox <-
                                             high.limit = range[2])
                        integ.df <- rbind(integ.df,
                                          data.frame(x = midpoint(mydata$x),
-                                                    xmin = min(wb),
-                                                    xmax = max(wb),
-                                                    ymin = min(data$y),
-                                                    ymax = max(data$y),
+                                                    wb.xmin = min(wb),
+                                                    wb.xmax = max(wb),
+                                                    wb.ymin = min(data[["y"]]),
+                                                    wb.ymax = max(data[["y"]]),
                                                     wb.color = color_of(wb),
-                                                    wb.name = labels(wb)$label,
+                                                    wb.name = labels(wb)[["label"]],
                                                     BW.color = black_or_white(color_of(wb)))
                                          )
                      }
                      if (is.null(ypos.fixed)) {
-                       integ.df$y <- with(integ.df, ymin + (ymax - ymin) * ypos.mult)
+                       integ.df[["y"]] <- with(integ.df, wb.ymin + (wb.ymax - wb.ymin) * ypos.mult)
                      } else {
-                       integ.df$y <- ypos.fixed
+                       integ.df[["y"]] <- ypos.fixed
                      }
                      integ.df
                    },
-                   default_aes = ggplot2::aes(xmin = ..xmin..,
-                                              xmax = ..xmax..,
-                                              ymin = ..y.. - (..ymax.. - ..ymin..) * 0.03,
-                                              ymax = ..y.. + (..ymax.. - ..ymin..) * 0.03,
+                   default_aes = ggplot2::aes(xmin = ..wb.xmin..,
+                                              xmax = ..wb.xmax..,
+                                              ymin = ..y.. - (..wb.ymax.. - ..wb.ymin..) * 0.03,
+                                              ymax = ..y.. + (..wb.ymax.. - ..wb.ymin..) * 0.03,
                                               fill = ..wb.color..),
                    required_aes = c("x", "y")
   )

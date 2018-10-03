@@ -29,7 +29,7 @@
 \alias{StatColorGuide}
 \alias{StatWlSummary}
 \title{\code{Stat*} Objects}
-\format{An object of class \code{StatValleys} (inherits from \code{Stat}, \code{ggproto}, \code{gg}) of length 4.}
+\format{An object of class \code{StatLabelValleys} (inherits from \code{Stat}, \code{ggproto}, \code{gg}) of length 4.}
 \usage{
 StatLabelValleys
 
@@ -41,7 +41,7 @@ contains a \code{Stat*} object (like \code{StatBin}). The \code{Stat*}
 object is responsible for rendering the data in the plot.
 
 All \code{stat_*} functions (like \code{stat_bin}) return a layer that
-contains a \code{Stat*} object (like \code{StatBin}). The \code{Stat*}
+contains a \code{Stat} object (like \code{StatBin}). The \code{Stat*}
 object is responsible for rendering the data in the plot.
 
 All \code{stat_*} functions (like \code{stat_bin}) return a layer that

@@ -101,9 +101,9 @@ StatColorGuide <-
                                             w.band,
                                             length.out) {
                      if (length(w.band) == 0) {
-                       w.band <- split_bands(range(data$x), length.out = length.out)
+                       w.band <- split_bands(range(data[["x"]]), length.out = length.out)
                      } else {
-                       w.band <- trim_waveband(w.band = w.band, range = data$x, trim = TRUE)
+                       w.band <- trim_waveband(w.band = w.band, range = data[["x"]], trim = TRUE)
                      }
 
                      z <- wb2rect_spct(w.band = w.band)

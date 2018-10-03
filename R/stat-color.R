@@ -29,15 +29,15 @@
 #'
 #' @section Computed variable:
 #' \describe{
-#'   \item{color}{color corresponding to x-value giving wavelength in
+#'   \item{wl.color}{color corresponding to x-value giving wavelength in
 #'   nanometres.}
 #' }
 #'
 #' @section Default aesthetics:
 #' Set by the statistic and available to geoms.
 #' \describe{
-#'   \item{color}{..color..}
-#'   \item{fill}{..color..}
+#'   \item{color}{..wl.color..}
+#'   \item{fill}{..wl.color..}
 #' }
 #'
 #' @section Required aesthetics:
@@ -81,9 +81,9 @@ StatColor <-
                    compute_group = function(data,
                                             scales,
                                             type) {
-                   dplyr::mutate(data, color = photobiology::color_of(x, type))
+                   dplyr::mutate(data, wl.color = photobiology::color_of(x, type))
                    },
-                   default_aes = ggplot2::aes(color = ..color..,
-                                              fill = ..color..),
+                   default_aes = ggplot2::aes(color = ..wl.color..,
+                                              fill = ..wl.color..),
                    required_aes = c("x", "y")
   )

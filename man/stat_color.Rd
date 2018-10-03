@@ -49,7 +49,7 @@ The original data frame with a variable with color definitions added.
 \section{Computed variable}{
 
 \describe{
-  \item{color}{color corresponding to x-value giving wavelength in
+  \item{wl.color}{color corresponding to x-value giving wavelength in
   nanometres.}
 }
 }
@@ -58,8 +58,8 @@ The original data frame with a variable with color definitions added.
 
 Set by the statistic and available to geoms.
 \describe{
-  \item{color}{..color..}
-  \item{fill}{..color..}
+  \item{color}{..wl.color..}
+  \item{fill}{..wl.color..}
 }
 }
 

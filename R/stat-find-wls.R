@@ -47,12 +47,12 @@
 #'   match to the target as numeric} \item{y}{target value or y-value nearest to
 #'   the target as numeric} \item{x.label}{x-value at or nearest to the match
 #'   formatted as character} \item{y.label}{target value or y-value nearest to
-#'   the target formatted as character} \item{color}{color definition calculated
+#'   the target formatted as character} \item{wl.color}{color definition calculated
 #'   by assuming that x-values are wavelengths expressed in nanometres.} }
 #'
 #' @section Default aesthetics: Set by the statistic and available to geoms.
 #'   \describe{ \item{label}{..x.label..} \item{xintercept}{..x..}
-#'   \item{yintercept}{..y..} \item{fill}{..color..} }
+#'   \item{yintercept}{..y..} \item{fill}{..wl.color..} }
 #'
 #' @section Required aesthetics: Required by the statistic and need to be set
 #'   with \code{aes()}. \describe{ \item{x}{numeric, wavelength in nanometres}
@@ -135,29 +135,45 @@ StatFindWls <-
                                             label.fmt,
                                             x.label.fmt,
                                             y.label.fmt) {
-                     hits.ls <- list()
-                     for (t in target) {
-                       hits.ls <-
-                         c(hits.ls,
-                           list(photobiology::find_wls(data,
-                                                       .fun = `<=`,
-                                                       target = t,
-                                                       interpolate = interpolate,
-                                                       col.name.x = "x",
-                                                       col.name = "y")))
+                     if (is.numeric(target)) {
+                       target <- target[target >= min(data[["y"]], na.rm = TRUE) &
+                                          target <= max(data[["y"]], na.rm = TRUE)]
                      }
-                     wls.df <- dplyr::bind_rows(hits.ls)
-                     dplyr::mutate(wls.df,
-                                   x.label = sprintf(x.label.fmt, x),
-                                   y.label = sprintf(y.label.fmt, y),
-                                   color = photobiology::color_of(x, type = "CMF"),
-                                   BW.color = black_or_white(photobiology::color_of(x, type = "CMF")))
+                     if (length(target) == 0L) {
+                       # if target is NULL or an out-of-range then return an empty tibble
+                       rows.df <-
+                         tibble::tibble(x = numeric(), y = numeric(),
+                                        x.label = character(),
+                                        y.label = character(),
+                                        color = character(),
+                                        BW.color = character())
+                     } else {
+                       rows.df <- NULL
+                       for (t in target) {
+                         rows.df <-
+                           dplyr::bind_rows(rows.df,
+                                            photobiology::find_wls(data,
+                                                                   .fun = `<=`,
+                                                                   target = t,
+                                                                   interpolate = interpolate,
+                                                                   col.name.x = "x",
+                                                                   col.name = "y"))
+                       }
+                       rows.df <-
+                         dplyr::mutate(rows.df,
+                                       x.label = sprintf(x.label.fmt, x),
+                                       y.label = sprintf(y.label.fmt, y),
+                                       wl.color = photobiology::color_of(x, type = "CMF"),
+                                       BW.color = black_or_white(photobiology::color_of(x, type = "CMF")))
+                     }
+                     rows.df
                    },
                    default_aes = ggplot2::aes(label = ..x.label..,
-                                              fill = ..color..,
-#                                              color = ..BW.color..,
+                                              fill = ..wl.color..,
                                               xintercept = ..x..,
-                                              yintercept = ..y..),
+                                              yintercept = ..y..,
+                                              hjust = 0.5,
+                                              vjust = 0.5),
                    required_aes = c("x", "y")
   )
 
@@ -277,7 +293,7 @@ stat_find_qtys <- function(mapping = NULL, data = NULL, geom = "point",
 #' \code{Stat*} Objects
 #'
 #' All \code{stat_*} functions (like \code{stat_bin}) return a layer that
-#' contains a \code{Stat*} object (like \code{StatBin}). The \code{Stat*}
+#' contains a \code{Stat} object (like \code{StatBin}). The \code{Stat*}
 #' object is responsible for rendering the data in the plot.
 #'
 #' Each of the \code{Stat*} objects is a \code{\link[ggplot2]{ggproto}} object, descended
@@ -301,30 +317,45 @@ StatFindQty <-
                                             label.fmt,
                                             x.label.fmt,
                                             y.label.fmt) {
-                     # By swapping the column names, we obtain qty values
-                     hits.ls <- list()
-                     for (t in target) {
-                       hits.ls <-
-                         c(hits.ls,
-                           list(photobiology::find_wls(data,
-                                                       .fun = `<=`,
-                                                       target = t,
-                                                       interpolate,
-                                                       col.name.x = "y",
-                                                       col.name = "x")))
+                     # By swapping the column names, we obtain qty values instead of wls
+                     if (is.numeric(target)) {
+                       target <- target[target >= min(data[["x"]], na.rm = TRUE) &
+                                          target <= max(data[["x"]], na.rm = TRUE)]
                      }
-                     wls.df <- dplyr::bind_rows(hits.ls)
-                     dplyr::mutate(qty.df,
-                                   x.label = sprintf(x.label.fmt, x),
-                                   y.label = sprintf(y.label.fmt, y),
-                                   color = photobiology::color_of(x, type = "CMF"),
-                                   BW.color = black_or_white(photobiology::color_of(x, type = "CMF")))
+                     if (length(target) == 0L) {
+                       # if target is NULL or an out-of-range then return an empty tibble
+                       rows.df <-
+                         tibble::tibble(x = numeric(), y = numeric(),
+                                        x.label = character(),
+                                        y.label = character(),
+                                        color = character(),
+                                        BW.color = character())
+                     } else {
+                       rows.df <- NULL
+                       for (t in target) {
+                         rows.df <-
+                           dplyr::bind_rows(rows.df,
+                                            photobiology::find_wls(data,
+                                                                   .fun = `<=`,
+                                                                   target = t,
+                                                                   interpolate = interpolate,
+                                                                   col.name.x = "y",
+                                                                   col.name = "x"))
+                       }
+                       rows.df <-
+                         dplyr::mutate(rows.df,
+                                       x.label = sprintf(x.label.fmt, x),
+                                       y.label = sprintf(y.label.fmt, y),
+                                       wl.color = photobiology::color_of(x, type = "CMF"),
+                                       BW.color = black_or_white(photobiology::color_of(x, type = "CMF")))
+                     }
+                     rows.df
                    },
                    default_aes = ggplot2::aes(label = ..y.label..,
-                                              fill = ..color..,
-                                              #                                              color = ..BW.color..,
+                                              fill = ..wl.color..,
                                               xintercept = ..x..,
-                                              yintercept = ..y..),
+                                              yintercept = ..y..,
+                                              hjust = 0.5,
+                                              vjust = 0.5),
                    required_aes = c("x", "y")
   )
-

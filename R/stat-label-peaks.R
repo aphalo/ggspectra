@@ -47,8 +47,9 @@
 #'   empty string (\code{""}) otherwise}
 #'   \item{y.label}{y-value at the peak (or valley) formatted as character or an
 #'   empty string (\code{""}) otherwise}
-#'   \item{color}{At peaks and valleys, color definition calculated by assuming that x-values are
-#'   wavelengths expressed in nanometres, otherwise, "white".}
+#'   \item{wl.color}{At peaks and valleys, color definition calculated by assuming that x-values are
+#'   wavelengths expressed in nanometres, otherwise, \code{rgb(1, 1, 1, 0)} or
+#'   transparent white.}
 #' }
 #'
 #' @section Default aesthetics:
@@ -57,8 +58,8 @@
 #'   \item{label}{..x.label..}
 #'   \item{xintercept}{..x..}
 #'   \item{yintercept}{..y..}
-#'   \item{color}{ifelse(..color.. == "white", "black", ..color..)}
-#'   \item{fill}{..color..}
+#'   \item{color}{black_or_white(..wl.color..)}
+#'   \item{fill}{..wl.color..}
 #' }
 #'
 #' @section Required aesthetics:
@@ -105,6 +106,7 @@
 #' # too slow for CRAN checks
 #' \dontrun{
 #' library(ggrepel)
+#' library(photobiology)
 #' ggplot(sun.spct) + geom_line() +
 #'   stat_peaks(span = 41, shape = 21, size = 3) +
 #'   stat_label_peaks(span = 41, geom = "label_repel", segment.colour = "red",
@@ -119,7 +121,7 @@
 #'
 stat_label_peaks <-
   function(mapping = NULL, data = NULL, geom = "text",
-           span = 5, ignore_threshold = 0, strict = FALSE,
+           span = 5, ignore_threshold = 0, strict = TRUE,
            label.fmt = "%.3g",
            x.label.fmt = label.fmt, y.label.fmt = label.fmt,
            position = "identity", na.rm = TRUE, show.legend = FALSE,
@@ -157,7 +159,7 @@ stat_label_peaks <-
 #' @keywords internal
 #' @seealso \code{\link[ggplot2]{ggplot2-ggproto}}
 StatLabelPeaks <-
-  ggplot2::ggproto("StatPeaks", ggplot2::Stat,
+  ggplot2::ggproto("StatLabelPeaks", ggplot2::Stat,
                    compute_group = function(data,
                                             scales,
                                             span,
@@ -166,44 +168,41 @@ StatLabelPeaks <-
                                             label.fmt,
                                             x.label.fmt,
                                             y.label.fmt) {
+                     out.df <- tibble::as.tibble(data)
                      if (is.null(span)) {
-                       peaks.idx <- which.max(data$y)
+                       peaks.idx <- which.max(data[["y"]])
                      } else {
                        peaks.idx <-
-                         photobiology::find_peaks(data$y,
+                         photobiology::find_peaks(data[["y"]],
                                                   span = span,
                                                   ignore_threshold = ignore_threshold,
                                                   strict = strict)
                      }
-                     data[["is_peak"]] <- FALSE
-                     data[peaks.idx, "is_peak"] <- TRUE
-                     data[["x.label"]] <- with(data,
-                                               ifelse(is_peak,
-                                                      sprintf(x.label.fmt, x),
-                                                      "")
-                     )
-                     data[["y.label"]] <- with(data,
-                                               ifelse(is_peak,
-                                                      sprintf(x.label.fmt, y),
-                                                      "")
-                     )
-                     data[["color"]] <- with(data,
-                                             ifelse(is_peak,
-                                                    photobiology::color_of(x, type = "CMF"),
-                                                    "white")
-                     )
-                     data[["BW.color"]] <- with(data,
-                                                 ifelse(is_peak,
-                                                        black_or_white(color),
-                                                        "black")
-                     )
-                     data
+                     out.df[["is_peak"]] <- FALSE
+                     out.df[peaks.idx, "is_peak"] <- TRUE
+                     out.df[["x.label"]] <- ifelse(out.df[["is_peak"]],
+                                                   sprintf(x.label.fmt, out.df[["x"]]),
+                                                   "")
+                     out.df[["y.label"]] <- ifelse(out.df[["is_peak"]],
+                                                   sprintf(y.label.fmt, out.df[["y"]]),
+                                                   "")
+                     out.df[["wl.color"]] <- ifelse(out.df[["is_peak"]],
+                                                 photobiology::color_of(out.df[["x"]], type = "CMF"),
+                                                 rgb(1, 1, 1, 0))
+                     out.df[["BW.color"]] <- ifelse(out.df[["is_peak"]],
+                                                    black_or_white(out.df[["wl.color"]]),
+                                                    rgb(0, 0, 0, 0))
+                     out.df[["lab.hjust"]] <- 0.5
+                     out.df[["lab.vjust"]] <- 0.0
+                     out.df
                    },
                    default_aes = ggplot2::aes(label = ..x.label..,
-                                              fill = ..color..,
+                                              fill = ..wl.color..,
                                               color = ..BW.color..,
                                               xintercept = ..x..,
-                                              yintercept = ..y..),
+                                              yintercept = ..y..,
+                                              hjust = ..lab.hjust..,
+                                              vjust = ..lab.vjust..),
                    required_aes = c("x", "y")
   )
 
@@ -212,7 +211,7 @@ StatLabelPeaks <-
 #' @export
 #'
 stat_label_valleys <- function(mapping = NULL, data = NULL, geom = "text",
-                               span = 5, ignore_threshold = 0, strict = FALSE,
+                               span = 5, ignore_threshold = 0, strict = TRUE,
                                label.fmt = "%.3g",
                                x.label.fmt = label.fmt, y.label.fmt = label.fmt,
                                position = "identity", na.rm = TRUE, show.legend = FALSE,
@@ -236,7 +235,7 @@ stat_label_valleys <- function(mapping = NULL, data = NULL, geom = "text",
 #' @export
 #'
 StatLabelValleys <-
-  ggplot2::ggproto("StatValleys", ggplot2::Stat,
+  ggplot2::ggproto("StatLabelValleys", ggplot2::Stat,
                    compute_group = function(data,
                                             scales,
                                             span,
@@ -245,44 +244,41 @@ StatLabelValleys <-
                                             label.fmt,
                                             x.label.fmt,
                                             y.label.fmt) {
+                     out.df <- data
                      if (is.null(span)) {
-                       valleys.idx <- which.min(data$y)
+                       valleys.idx <- which.min(data[["y"]])
                      } else {
                        valleys.idx <-
-                         photobiology::find_peaks(-data$y,
+                         photobiology::find_peaks(-data[["y"]],
                                                   span = span,
                                                   ignore_threshold = ignore_threshold,
                                                   strict = strict)
                      }
-                     data[["is_valley"]] <- FALSE
-                     data[valleys.idx, "is_valley"] <- TRUE
-                     data[["x.label"]] <- with(data,
-                                               ifelse(is_valley,
-                                                      sprintf(x.label.fmt, x),
-                                                      "")
-                     )
-                     data[["y.label"]] <- with(data,
-                                               ifelse(is_valley,
-                                                      sprintf(x.label.fmt, y),
-                                                      "")
-                     )
-                     data[["color"]] <- with(data,
-                                             ifelse(is_valley,
-                                                    photobiology::color_of(x, type = "CMF"),
-                                                    "white")
-                     )
-                     data[["BW.color"]] <- with(data,
-                                                 ifelse(is_valley,
-                                                        black_or_white(color),
-                                                        "black")
-                     )
-                     data
+                     out.df[["is_valley"]] <- FALSE
+                     out.df[valleys.idx, "is_valley"] <- TRUE
+                     out.df[["x.label"]] <- ifelse(out.df[["is_valley"]],
+                                                 sprintf(x.label.fmt, out.df[["x"]]),
+                                                 "")
+                     out.df[["y.label"]] <- ifelse(out.df[["is_valley"]],
+                                                 sprintf(y.label.fmt, out.df[["y"]]),
+                                                 "")
+                     out.df[["wl.color"]] <-  ifelse(out.df[["is_valley"]],
+                                                photobiology::color_of(out.df[["x"]], type = "CMF"),
+                                                rgb(1, 1, 1, 0))
+                     out.df[["BW.color"]] <- ifelse(out.df[["is_valley"]],
+                                                  black_or_white(out.df[["wl.color"]]),
+                                                  rgb(0, 0, 0, 0))
+                     out.df[["lab.hjust"]] <- 0.5
+                     out.df[["lab.vjust"]] <- 1.0
+                     out.df
                    },
                    default_aes = ggplot2::aes(label = ..x.label..,
-                                              fill = ..color..,
+                                              fill = ..wl.color..,
                                               color = ..BW.color..,
                                               xintercept = ..x..,
-                                              yintercept = ..y..),
+                                              yintercept = ..y..,
+                                              hjust = ..lab.hjust..,
+                                              vjust = ..lab.vjust..),
                    required_aes = c("x", "y")
 )
 

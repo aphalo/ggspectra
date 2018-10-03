@@ -39,8 +39,8 @@
 #' @section Computed variables:
 #' \describe{
 #'   \item{x}{w.band-midpoint}
-#'   \item{xmin}{w.band minimum}
-#'   \item{xmax}{w.band maximum}
+#'   \item{wb.xmin}{w.band minimum}
+#'   \item{wb.xmax}{w.band maximum}
 #'   \item{y}{ypos.fixed or zero}
 #'   \item{wb.color}{color of the w.band}
 #'   \item{wb.name}{label of w.band}
@@ -52,8 +52,8 @@
 #' \describe{
 #'   \item{label}{..wb.label..}
 #'   \item{x}{..x..}
-#'   \item{xmin}{..xmin..}
-#'   \item{xmax}{..xmax..}
+#'   \item{xmin}{..wb.xmin..}
+#'   \item{xmax}{..wb.xmax..}
 #'   \item{fill}{..wb.color..}
 #' }
 #'
@@ -113,7 +113,7 @@ StatWbLabel <-
                                             label.fmt,
                                             ypos.fixed) {
                      if (length(w.band) == 0) {
-                       w.band <- waveband(data$x)
+                       w.band <- waveband(data[["x"]])
                      }
                      if (is.any_spct(w.band) ||
                          (is.numeric(w.band) && length(na.omit(w.band)) >= 2)) {
@@ -122,7 +122,7 @@ StatWbLabel <-
                      if (!is.list(w.band) || is.waveband(w.band)) {
                        w.band <- list(w.band)
                      }
-                     w.band <- trim_wl(w.band, data$x)
+                     w.band <- trim_wl(w.band, data[["x"]])
                      integ.df <- data.frame()
                      for (wb in w.band) {
                        if (is.numeric(wb)) { # user supplied a list of numeric vectors
@@ -131,26 +131,26 @@ StatWbLabel <-
                        range <- range(wb)
                        integ.df <- rbind(integ.df,
                                          data.frame(x = midpoint(wb),
-                                                    xmin = min(wb),
-                                                    xmax = max(wb),
+                                                    wb.xmin = min(wb),
+                                                    wb.xmax = max(wb),
                                                     wb.color = color_of(wb),
                                                     wb.name = labels(wb)$label,
                                                     BW.color = black_or_white(color_of(wb)))
                                          )
                      }
                      if (is.null(ypos.fixed)) {
-                       integ.df$y <- 0
+                       integ.df[["y"]] <- 0
                      } else {
-                       integ.df$y <- ypos.fixed
+                       integ.df[["y"]] <- ypos.fixed
                      }
                      integ.df$wb.label <- sprintf(label.fmt, integ.df$wb.name)
 #                     print(integ.df)
                      integ.df
                    },
                    default_aes = ggplot2::aes(label = ..wb.label..,
-                                              x = ..x..,
-                                              xmin = ..xmin..,
-                                              xmax = ..xmax..,
+                                              y = ..y..,
+                                              xmin = ..wb.xmin..,
+                                              xmax = ..wb.xmax..,
                                               fill = ..wb.color..,
                                               color = ..BW.color..),
                    required_aes = c("x")
