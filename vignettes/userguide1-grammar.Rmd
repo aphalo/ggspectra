@@ -482,8 +482,7 @@ ggplot(sun.spct) + geom_line() +
 
 To avoid overlap between labels we can use the repulsive geoms from package 'ggrepel'. In this case we need to use `stat_label_peaks()`. Repulsion allows the use of larger labels. We also need to expand the $y$ limits to make space for the labels.
 
-```{r, eval=TRUE}
-# not run for the time being
+```{r}
 ggplot(sun.spct) + geom_line() + 
   stat_peaks(shape = 21, span = 25, size = 2) + 
   stat_label_peaks(geom = "label_repel", span = 41,
@@ -515,8 +514,7 @@ ggplot(sun.spct) + geom_line() +
 
 By default the `label` aesthetic is mapped to a calculated label `..x.label..` giving the wavelength in nanometres. This mapping can be changed to give to a label giving the _y_-value at the peak.
 
-```{r, eval=TRUE}
-# not run for the time being
+```{r}
 ggplot(sun.spct) + geom_line() + 
   stat_label_peaks(span = 31, geom = "label_repel", 
              label.fmt = "y = %1.2f", segment.colour = "red",

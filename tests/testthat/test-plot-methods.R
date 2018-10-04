@@ -18,7 +18,7 @@ test_that("raw_spct", {
   # skip_on_cran()
   vdiffr::expect_doppelganger("raw-default",
                       plot(white_led.raw_spct))
-  vdiffr::expect_doppelganger("raw-ylim2",
+  vdiffr::expect_doppelganger("raw-ylim1",
                               plot(white_led.raw_spct, ylim = c(NA, 9e4)))
   vdiffr::expect_doppelganger("raw-ylim2",
                               plot(white_led.raw_spct, ylim = c(-5e3, 9e4)))
@@ -425,7 +425,7 @@ test_that("object_spct", {
 test_that("response_spct", {
   vdiffr::expect_doppelganger("response-default",
                               plot(ccd.spct))
-  vdiffr::expect_doppelganger("response-ylim",
+  vdiffr::expect_doppelganger("response-default-ylim",
                               plot(ccd.spct, ylim = c(-0.1, 1.2)))
   vdiffr::expect_doppelganger("response-text-size",
                               plot(ccd.spct, text.size = 3.5))
@@ -456,7 +456,7 @@ test_that("response_spct", {
 
   vdiffr::expect_doppelganger("response-default-q",
                               plot(ccd.spct, unit.out = "photon"))
-  vdiffr::expect_doppelganger("response-ylim-q",
+  vdiffr::expect_doppelganger("response-default-ylim-q",
                               plot(ccd.spct, unit.out = "photon", ylim = c(-0.2, 1.2)))
   vdiffr::expect_doppelganger("response-text-size-q",
                               plot(ccd.spct, unit.out = "photon", text.size = 3.5))
@@ -510,7 +510,7 @@ test_that("waveband", {
                               plot(CIE(), range = c(230, 430)))
   vdiffr::expect_doppelganger("waveband-default-red",
                               plot(Red()))
-  vdiffr::expect_doppelganger("waveband-ylim",
+  vdiffr::expect_doppelganger("waveband-default-ylim",
                               plot(Red(), ylim = c(-0.2, 1.2)))
   vdiffr::expect_doppelganger("waveband-text-size",
                               plot(Red(), text.size = 3.5))

@@ -5,9 +5,15 @@ ggspectra 0.3.0 (2018-10-04)
 'ggspectra' to avoid confussion with the names of 'ggplot2' aesthetics.
 ** This is a code breaking change!
 
-Revise to track changes in 'photobiology' version 0.9.24.
+Revise to track changes in 'photobiology' version 0.9.24 and 'ggplot2' 3.0.0,
+which are now required.
+* stat_label_peaks() and stat_label_valleys() now return NA_character_ for
+empty labels instead of "", as apparently changes in some geoms defined
+elsewhere or their dependencies were making R intermitently crash when such data
+were passed as argument.
 * Add stat_find_wls() and stat_find_qtys(), two new statistics useful for
 highlighting features in spectra.
+* Add parameter ylim to all plot() methods.
 * Revise plot() methods to support objects with multiple spectra in long form.
 * Revise plot() methods to NOT display by default calculated summaries in
 annotations when a plot contains multiple spectra.
@@ -15,9 +21,6 @@ annotations when a plot contains multiple spectra.
 to identify multiple spectra, using as default the value stored in the attribute
 "idfactor" implemented in 'photobiology' 0.9.21 and later.
 * Add autoplot() as an alias of plot() for spectra and collections of spectra.
-* Tested compatible with 'ggplot2' 3.0.0, which is now required.
-* Three examples in the vignettes which use ggrepel::geom_label_repel() are
-provisionally disabled because of intermitent R crashes.
 
 ggspectra 0.2.4 (2018-05-05)
 ============================
