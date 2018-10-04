@@ -30,6 +30,7 @@
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
 #' @param na.rm logical.
+#' @param ylim numeric y axis limits,
 #' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
@@ -46,10 +47,14 @@ cal_plot <- function(spct,
                      norm,
                      text.size,
                      idfactor,
+                     ylim,
                      na.rm,
                      ...) {
   if (!is.calibration_spct(spct)) {
     stop("cal_plot() can only plot calibration_spct objects.")
+  }
+  if (is.null(ylim) || !is.numeric(ylim)) {
+    ylim <- rep(NA_real_, 2L)
   }
   if (!is.null(range)) {
     spct <- trim_wl(spct, range = range)
@@ -117,9 +122,14 @@ cal_plot <- function(spct,
                           key = "scan",
                           value = "irrad.mult")
     setCalibrationSpct(spct, multiple.wl = length(mult.cols))
-    y.max <- max(spct[["irrad.mult"]], 0, na.rm = TRUE)
-    y.min <- min(spct[["irrad.mult"]], 0, na.rm = TRUE)
   }
+
+  y.min <- ifelse(!is.na(ylim[1]),
+                  ylim[1],
+                  min(spct[["irrad.mult"]], 0, na.rm = TRUE))
+  y.max <- ifelse(!is.na(ylim[2]),
+                  ylim[2],
+                  max(spct[["irrad.mult"]], 0, na.rm = TRUE))
 
   plot <- ggplot(spct, aes_(x = ~w.length, y = ~irrad.mult))
   temp <- find_idfactor(spct = spct,
@@ -211,6 +221,7 @@ cal_plot <- function(spct,
 #'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
+#' @param ylim numeric y axis limits,
 #' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
@@ -236,6 +247,7 @@ plot.calibration_spct <-
            norm = NULL,
            text.size = 2.5,
            idfactor = NULL,
+           ylim = c(NA, NA),
            na.rm = TRUE) {
     annotations.default <-
       getOption("photobiology.plot.annotations",
@@ -263,6 +275,7 @@ plot.calibration_spct <-
              text.size = text.size,
              idfactor = idfactor,
              na.rm = na.rm,
+             ylim = ylim,
              ...) +
       ggtitle_spct(x = x,
                    time.format = time.format,

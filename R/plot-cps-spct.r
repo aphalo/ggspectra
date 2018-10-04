@@ -27,6 +27,7 @@
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
 #'   the factor is retrieved from metadata or if no metadata found, the
 #'   default "spct.idx" is tried.
+#' @param ylim numeric y axis limits,
 #' @param na.rm logical.
 #' @param ... currently ignored.
 #'
@@ -44,10 +45,14 @@ cps_plot <- function(spct,
                      norm,
                      text.size,
                      idfactor,
+                     ylim,
                      na.rm,
                      ...) {
   if (!is.cps_spct(spct)) {
     stop("cps_plot() can only plot response_spct objects.")
+  }
+  if (is.null(ylim) || !is.numeric(ylim)) {
+    ylim <- rep(NA_real_, 2L)
   }
   if (!is.null(range)) {
     spct <- trim_wl(spct, range = range)
@@ -122,8 +127,12 @@ cps_plot <- function(spct,
     annotations <- temp$annotations
   }
 
-  y.max <- max(c(spct[["cps"]], 0), na.rm = TRUE)
-  y.min <- min(c(spct[["cps"]], 0), na.rm = TRUE)
+  y.min <- ifelse(!is.na(ylim[1]),
+                  ylim[1],
+                  min(c(spct[["cps"]], 0), na.rm = TRUE))
+  y.max <- ifelse(!is.na(ylim[2]),
+                  ylim[2],
+                  max(c(spct[["cps"]], 0), na.rm = TRUE))
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
@@ -201,6 +210,7 @@ cps_plot <- function(spct,
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
 #'   the factor is retrieved from metadata or if no metadata found, the
 #'   default "spct.idx" is tried.
+#' @param ylim numeric y axis limits,
 #' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
@@ -226,6 +236,7 @@ plot.cps_spct <-
            norm = NULL,
            text.size = 2.5,
            idfactor = NULL,
+           ylim = c(NA, NA),
            na.rm = TRUE) {
     annotations.default <-
       getOption("photobiology.plot.annotations",
@@ -249,6 +260,7 @@ plot.cps_spct <-
              annotations = annotations, norm = norm,
              text.size = text.size,
              idfactor = idfactor,
+             ylim = ylim,
              na.rm = na.rm,
              ...) +
       ggtitle_spct(x = x,

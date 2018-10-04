@@ -26,6 +26,7 @@
 #'   the factor is retrieved from metadata or if no metadata found, the
 #'   default "spct.idx" is tried.
 #' @param na.rm logical.
+#' @param ylim numeric y axis limits,
 #' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
@@ -42,10 +43,14 @@ e_rsp_plot <- function(spct,
                        norm,
                        text.size,
                        idfactor,
+                       ylim,
                        na.rm,
                        ...) {
   if (!is.response_spct(spct)) {
     stop("e_Rsp_plot() can only plot response_spct objects.")
+  }
+  if (is.null(ylim) || !is.numeric(ylim)) {
+    ylim <- rep(NA_real_, 2L)
   }
   q2e(spct, action="replace", byref=TRUE)
   if (!is.null(range)) {
@@ -148,8 +153,13 @@ e_rsp_plot <- function(spct,
     rsp.label.avg  <- bquote(atop(bar(R[E](lambda)/R[E](lambda = norm)), (.(multiplier.label))))
   }
   spct[["s.e.response"]] <- spct[["s.e.response"]] * scale.factor
-  y.max <- max(c(spct[["s.e.response"]], 0), na.rm = TRUE)
-  y.min <- min(c(spct[["s.e.response"]], 0), na.rm = TRUE)
+
+  y.min <- ifelse(!is.na(ylim[1]),
+                  ylim[1],
+                  min(c(spct[["s.e.response"]], 0), na.rm = TRUE))
+  y.max <- ifelse(!is.na(ylim[2]),
+                  ylim[2],
+                  max(c(spct[["s.e.response"]], 0), na.rm = TRUE))
 
   if (label.qty == "total") {
     rsp.label <- "integral(R[E](lambda))"
@@ -258,6 +268,7 @@ e_rsp_plot <- function(spct,
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
 #'   the factor is retrieved from metadata or if no metadata found, the
 #'   default "spct.idx" is tried.
+#' @param ylim numeric y axis limits,
 #' @param na.rm logical.
 #' @param ... currently ignored.
 #'
@@ -275,10 +286,14 @@ q_rsp_plot <- function(spct,
                        norm,
                        text.size,
                        idfactor,
+                       ylim,
                        na.rm,
                        ...) {
   if (!is.response_spct(spct)) {
     stop("q_Rsp_plot() can only plot response_spct objects.")
+  }
+  if (is.null(ylim) || !is.numeric(ylim)) {
+    ylim <- rep(NA_real_, 2L)
   }
   e2q(spct, action="replace", byref=TRUE)
   if (!is.null(range)) {
@@ -381,8 +396,13 @@ q_rsp_plot <- function(spct,
     rsp.label.avg  <- bquote(atop(bar(R[Q](lambda)/R[Q](lambda = norm)), (.(multiplier.label))))
   }
   spct[["s.q.response"]] <- spct[["s.q.response"]] * scale.factor
-  y.max <- max(c(spct[["s.q.response"]], 0), na.rm = TRUE)
-  y.min <- min(c(spct[["s.q.response"]], 0), na.rm = TRUE)
+
+  y.min <- ifelse(!is.na(ylim[1]),
+                  ylim[1],
+                  min(c(spct[["s.q.response"]], 0), na.rm = TRUE))
+  y.max <- ifelse(!is.na(ylim[2]),
+                  ylim[2],
+                  max(c(spct[["s.q.response"]], 0), na.rm = TRUE))
 
   if (label.qty == "total") {
     rsp.label <- "integral(R[Q](lambda))"
@@ -499,6 +519,7 @@ q_rsp_plot <- function(spct,
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
 #'   the factor is retrieved from metadata or if no metadata found, the
 #'   default "spct.idx" is tried.
+#' @param ylim numeric y axis limits,
 #' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
@@ -530,6 +551,7 @@ plot.response_spct <-
            norm = "max",
            text.size = 2.5,
            idfactor = NULL,
+           ylim = c(NA, NA),
            na.rm = TRUE) {
     annotations.default <-
       getOption("photobiology.plot.annotations",
@@ -564,6 +586,7 @@ plot.response_spct <-
                                norm = norm,
                                text.size = text.size,
                                idfactor = idfactor,
+                               ylim = ylim,
                                na.rm = na.rm,
                                ...)
     } else if (unit.out=="energy") {
@@ -576,6 +599,7 @@ plot.response_spct <-
                                annotations = annotations, norm = norm,
                                text.size = text.size,
                                idfactor = idfactor,
+                               ylim = ylim,
                                na.rm = na.rm,
                                ...)
     } else {

@@ -24,6 +24,7 @@
 #'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
+#' @param ylim numeric y axis limits,
 #' @param na.rm logical.
 #' @param ... currently ignored.
 #'
@@ -39,10 +40,14 @@ e_plot <- function(spct,
                    annotations,
                    text.size,
                    idfactor,
+                   ylim,
                    na.rm,
                    ...) {
   if (!is.source_spct(spct)) {
     stop("e_plot() can only plot source_spct objects.")
+  }
+  if (is.null(ylim) || !is.numeric(ylim)) {
+    ylim <- rep(NA_real_, 2L)
   }
   q2e(spct, byref=TRUE)
   if (!is.null(range)) {
@@ -115,8 +120,13 @@ e_plot <- function(spct,
   }
   s.irrad.label <- parse(text = s.irrad.label)
   spct[["s.e.irrad"]] <- spct[["s.e.irrad"]] * scale.factor
-  y.max <- max(c(spct[["s.e.irrad"]], 0), na.rm = TRUE)
-  y.min <- min(c(spct[["s.e.irrad"]], 0), na.rm = TRUE)
+
+  y.min <- ifelse(!is.na(ylim[1]),
+                  ylim[1],
+                  min(c(spct[["s.e.irrad"]], 0), na.rm = TRUE))
+  y.max <- ifelse(!is.na(ylim[2]),
+                  ylim[2],
+                  max(c(spct[["s.e.irrad"]], 0), na.rm = TRUE))
 
   plot <- ggplot(spct, aes_(x = ~w.length, y = ~s.e.irrad))
   temp <- find_idfactor(spct = spct,
@@ -229,6 +239,7 @@ e_plot <- function(spct,
 #'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
+#' @param ylim numeric y axis limits,
 #' @param na.rm logical.
 #' @param ... currently ignored.
 #'
@@ -244,10 +255,14 @@ q_plot <- function(spct,
                    annotations,
                    text.size,
                    idfactor,
+                   ylim,
                    na.rm,
                    ...) {
   if (!is.source_spct(spct)) {
     stop("q_plot() can only plot source_spct objects.")
+  }
+  if (is.null(ylim) || !is.numeric(ylim)) {
+    ylim <- rep(NA_real_, 2L)
   }
   e2q(spct, byref = TRUE)
   if (!is.null(range)) {
@@ -321,8 +336,13 @@ q_plot <- function(spct,
   }
   s.irrad.label <- parse(text = s.irrad.label)
   spct[["s.q.irrad"]] <- spct[["s.q.irrad"]] * scale.factor
-  y.max <- max(c(spct[["s.q.irrad"]], 0), na.rm = TRUE)
-  y.min <- min(c(spct[["s.q.irrad"]], 0), na.rm = TRUE)
+
+  y.min <- ifelse(!is.na(ylim[1]),
+                  ylim[1],
+                  min(c(spct[["s.q.irrad"]], 0), na.rm = TRUE))
+  y.max <- ifelse(!is.na(ylim[2]),
+                  ylim[2],
+                  max(c(spct[["s.q.irrad"]], 0), na.rm = TRUE))
 
   plot <- ggplot(spct, aes_(x = ~w.length, y = ~s.q.irrad))
   temp <- find_idfactor(spct = spct,
@@ -440,6 +460,7 @@ q_plot <- function(spct,
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
 #'   the factor is retrieved from metadata or if no metadata found, the default
 #'   "spct.idx" is tried.
+#' @param ylim numeric y axis limits,
 #' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
@@ -469,6 +490,7 @@ plot.source_spct <-
            tz = "UTC",
            text.size = 2.5,
            idfactor = NULL,
+           ylim = c(NA, NA),
            na.rm = TRUE) {
     annotations.default <-
       getOption("photobiology.plot.annotations",
@@ -499,6 +521,7 @@ plot.source_spct <-
                            annotations = annotations,
                            text.size = text.size,
                            idfactor = idfactor,
+                           ylim = ylim,
                            na.rm = na.rm,
                            ...)
     } else if (unit.out == "energy") {
@@ -508,6 +531,7 @@ plot.source_spct <-
                            annotations = annotations,
                            text.size = text.size,
                            idfactor = idfactor,
+                           ylim = ylim,
                            na.rm = na.rm,
                            ...)
     } else {

@@ -1,4 +1,5 @@
 context("plot")
+library(ggplot2)
 library(photobiology)
 library(photobiologyWavebands)
 
@@ -17,6 +18,10 @@ test_that("raw_spct", {
   # skip_on_cran()
   vdiffr::expect_doppelganger("raw-default",
                       plot(white_led.raw_spct))
+  vdiffr::expect_doppelganger("raw-ylim2",
+                              plot(white_led.raw_spct, ylim = c(NA, 9e4)))
+  vdiffr::expect_doppelganger("raw-ylim2",
+                              plot(white_led.raw_spct, ylim = c(-5e3, 9e4)))
   vdiffr::expect_doppelganger("raw-range-num",
                               plot(white_led.raw_spct, range = c(500, 700)))
   vdiffr::expect_doppelganger("raw-range-wb",
@@ -32,6 +37,10 @@ test_that("raw_spct", {
 test_that("cps_spct", {
   vdiffr::expect_doppelganger("cps-default",
                               plot(white_led.cps_spct))
+  vdiffr::expect_doppelganger("cps-ylim1",
+                              plot(white_led.cps_spct, ylim = c(NA, 5e5)))
+  vdiffr::expect_doppelganger("cps-ylim2",
+                              plot(white_led.cps_spct, ylim = c(-1e5, 5e5)))
   vdiffr::expect_doppelganger("cps-range-num",
                               plot(white_led.cps_spct, range = c(500, 700)))
   vdiffr::expect_doppelganger("cps-range-wb",
@@ -47,6 +56,10 @@ test_that("cps_spct", {
 test_that("source_spct", {
   vdiffr::expect_doppelganger("source-default",
                               plot(white_led.source_spct))
+  vdiffr::expect_doppelganger("source-ylim1",
+                              plot(white_led.source_spct, ylim = c(NA, 1)))
+  vdiffr::expect_doppelganger("source-ylim2",
+                              plot(white_led.source_spct, ylim = c(-0.1, 1)))
   vdiffr::expect_doppelganger("source-text-size",
                               plot(white_led.source_spct, text.size = 3.5))
   vdiffr::expect_doppelganger("source-span-31",
@@ -76,6 +89,10 @@ test_that("source_spct", {
 
   vdiffr::expect_doppelganger("source-default-q",
                               plot(white_led.source_spct, unit.out = "photon"))
+  vdiffr::expect_doppelganger("source-ylim1-q",
+                              plot(white_led.source_spct, unit.out = "photon", ylim = c(NA, 6)))
+  vdiffr::expect_doppelganger("source-ylim2-q",
+                              plot(white_led.source_spct, unit.out = "photon", ylim = c(-0.5, 6)))
   vdiffr::expect_doppelganger("source-text-size-q",
                               plot(white_led.source_spct, unit.out = "photon", text.size = 3.5))
   vdiffr::expect_doppelganger("source-span-31-q",
@@ -105,6 +122,8 @@ test_that("source_spct", {
                               plot(normalize(white_led.source_spct)))
   vdiffr::expect_doppelganger("source-normalized-wl",
                               plot(normalize(white_led.source_spct, norm = 550)))
+  vdiffr::expect_doppelganger("source-normalized-ylim",
+                              plot(normalize(white_led.source_spct), ylim = c(-0.2, 1.2)))
   vdiffr::expect_doppelganger("source-scaled",
                               plot(fscale(white_led.source_spct)))
   vdiffr::expect_doppelganger("source-scaled-total",
@@ -130,6 +149,8 @@ test_that("source_mspct", {
                                       half = white_led.source_spct / 2))
   vdiffr::expect_doppelganger("source-mspct-default",
                               plot(two_leds.mspct))
+  vdiffr::expect_doppelganger("source-mspct-ylim",
+                              plot(two_leds.mspct, ylim = c(-0.1, 1.2)))
   vdiffr::expect_doppelganger("source-mspct-default-range",
                               plot(two_leds.mspct, range = c(500, 700)))
   vdiffr::expect_doppelganger("source-mspct-default-e",
@@ -143,6 +164,8 @@ test_that("source_mspct", {
 test_that("filter_spct", {
   vdiffr::expect_doppelganger("filter-default-tot",
                               plot(Ler_leaf_trns.spct))
+  vdiffr::expect_doppelganger("filter-default-tot-ylim",
+                              plot(Ler_leaf_trns.spct, ylim = c(-0.05, 0.5)))
   vdiffr::expect_doppelganger("filter-default-pc-out-tot",
                               plot(Ler_leaf_trns.spct, pc.out = TRUE))
   vdiffr::expect_doppelganger("filter-text-size-tot",
@@ -168,6 +191,8 @@ test_that("filter_spct", {
 
   vdiffr::expect_doppelganger("filter-default",
                               plot(Ler_leaf_trns_i.spct))
+  vdiffr::expect_doppelganger("filter-default-ylim",
+                              plot(Ler_leaf_trns_i.spct, ylim = c(NA, 1.2)))
   vdiffr::expect_doppelganger("filter-default-pc-out",
                               plot(Ler_leaf_trns_i.spct, pc.out = TRUE))
   vdiffr::expect_doppelganger("filter-text-size",
@@ -197,6 +222,8 @@ test_that("filter_spct", {
 
   vdiffr::expect_doppelganger("filter-default-apt",
                               plot(Ler_leaf_trns_i.spct, plot.qty = "absorptance"))
+  vdiffr::expect_doppelganger("filter-default-apt-ylim",
+                              plot(Ler_leaf_trns_i.spct, plot.qty = "absorptance", ylim = c(-0.1, 1.2)))
   vdiffr::expect_doppelganger("filter-default-pc-out-apt",
                               plot(Ler_leaf_trns_i.spct, plot.qty = "absorptance", pc.out = TRUE))
   vdiffr::expect_doppelganger("filter-text-size-apt",
@@ -226,6 +253,8 @@ test_that("filter_spct", {
 
   vdiffr::expect_doppelganger("filter-default-a",
                               plot(Ler_leaf_trns_i.spct, plot.qty = "absorbance", range = c(300, NA)))
+  vdiffr::expect_doppelganger("filter-default-a-ylim",
+                              plot(Ler_leaf_trns_i.spct, plot.qty = "absorbance", range = c(300, NA), ylim = c(-0.2, 4)))
   vdiffr::expect_doppelganger("filter-text-size-a",
                               plot(Ler_leaf_trns_i.spct, plot.qty = "absorbance", range = c(300, NA), text.size = 3.5))
   vdiffr::expect_doppelganger("filter-span-31-a",
@@ -251,6 +280,8 @@ test_that("filter_spct", {
 
   vdiffr::expect_doppelganger("filter-default-tfr",
                               plot(Ler_leaf_trns_i.spct, plot.qty = "transmittance"))
+  vdiffr::expect_doppelganger("filter-default-tfr-ylim",
+                              plot(Ler_leaf_trns_i.spct, plot.qty = "transmittance", ylim = c(-0.2, 1.2)))
   vdiffr::expect_doppelganger("filter-default-pc-out-tfr",
                               plot(Ler_leaf_trns_i.spct, plot.qty = "transmittance", pc.out = TRUE))
   vdiffr::expect_doppelganger("filter-text-size-tfr",
@@ -284,6 +315,8 @@ test_that("filter_mspct", {
                                       half = Ler_leaf_trns_i.spct / 2))
   vdiffr::expect_doppelganger("filter-mspct-default",
                               plot(two_leaves.mspct))
+  vdiffr::expect_doppelganger("filter-mspct-default-ylim",
+                              plot(two_leaves.mspct, ylim = c(-0.2, 1.2)))
   vdiffr::expect_doppelganger("filter-mspct-default-range",
                               plot(two_leaves.mspct, range = c(500, 700)))
   # use range to avoid Tfr == 0 values.
@@ -304,6 +337,8 @@ test_that("filter_mspct", {
 test_that("reflector_spct", {
   vdiffr::expect_doppelganger("reflector-default-tot",
                               plot(Ler_leaf_rflt.spct))
+  vdiffr::expect_doppelganger("reflector-default-tot-ylim",
+                              plot(Ler_leaf_rflt.spct, ylim = c(-0.1, 0.65)))
   vdiffr::expect_doppelganger("reflector-default-pc-out-tot",
                               plot(Ler_leaf_rflt.spct, pc.out = TRUE))
   vdiffr::expect_doppelganger("reflector-text-size-tot",
@@ -361,6 +396,8 @@ test_that("object_spct", {
 
   vdiffr::expect_doppelganger("object-default-stk",
                               plot(Ler_leaf.spct, stacked = FALSE))
+  vdiffr::expect_doppelganger("object-default-stk-ylim",
+                              plot(Ler_leaf.spct, stacked = FALSE, ylim = c(-0.2, 1.2)))
   vdiffr::expect_doppelganger("object-default-pc-out-stk",
                               plot(Ler_leaf.spct, stacked = FALSE, pc.out = TRUE))
   vdiffr::expect_doppelganger("object-text-size-stk",
@@ -388,6 +425,8 @@ test_that("object_spct", {
 test_that("response_spct", {
   vdiffr::expect_doppelganger("response-default",
                               plot(ccd.spct))
+  vdiffr::expect_doppelganger("response-ylim",
+                              plot(ccd.spct, ylim = c(-0.1, 1.2)))
   vdiffr::expect_doppelganger("response-text-size",
                               plot(ccd.spct, text.size = 3.5))
   vdiffr::expect_doppelganger("response-span-31",
@@ -417,6 +456,8 @@ test_that("response_spct", {
 
   vdiffr::expect_doppelganger("response-default-q",
                               plot(ccd.spct, unit.out = "photon"))
+  vdiffr::expect_doppelganger("response-ylim-q",
+                              plot(ccd.spct, unit.out = "photon", ylim = c(-0.2, 1.2)))
   vdiffr::expect_doppelganger("response-text-size-q",
                               plot(ccd.spct, unit.out = "photon", text.size = 3.5))
   vdiffr::expect_doppelganger("response-span-31-q",
@@ -469,6 +510,8 @@ test_that("waveband", {
                               plot(CIE(), range = c(230, 430)))
   vdiffr::expect_doppelganger("waveband-default-red",
                               plot(Red()))
+  vdiffr::expect_doppelganger("waveband-ylim",
+                              plot(Red(), ylim = c(-0.2, 1.2)))
   vdiffr::expect_doppelganger("waveband-text-size",
                               plot(Red(), text.size = 3.5))
   vdiffr::expect_doppelganger("waveband-plus-segments",

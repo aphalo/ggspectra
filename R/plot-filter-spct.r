@@ -22,6 +22,7 @@
 #'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
+#' @param ylim numeric y axis limits,
 #' @param na.rm logical.
 #' @param ... currently ignored.
 #'
@@ -38,10 +39,14 @@ Afr_plot <- function(spct,
                      annotations,
                      text.size,
                      idfactor,
+                     ylim,
                      na.rm,
                      ...) {
   if (!is.filter_spct(spct)) {
     stop("Afr_plot() can only plot filter_spct objects.")
+  }
+  if (is.null(ylim) || !is.numeric(ylim)) {
+    ylim <- rep(NA_real_, 2L)
   }
   if (!is.null(range)) {
     spct <- trim_wl(spct, range = range)
@@ -122,8 +127,12 @@ Afr_plot <- function(spct,
     Afr.label <- ""
   }
 
-  y.max <- max(1, spct[["Afr"]], na.rm = TRUE)
-  y.min <- min(0, spct[["Afr"]], na.rm = TRUE)
+  y.min <- ifelse(!is.na(ylim[1]),
+                  ylim[1],
+                  min(0, spct[["Afr"]], na.rm = TRUE))
+  y.max <- ifelse(!is.na(ylim[2]),
+                  ylim[2],
+                  max(1, spct[["Afr"]], na.rm = TRUE))
 
   plot <- ggplot(spct, aes_(x = ~w.length, y = ~Afr))
   temp <- find_idfactor(spct = spct,
@@ -216,6 +225,7 @@ Afr_plot <- function(spct,
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
 #' @param na.rm logical.
+#' @param ylim numeric y axis limits,
 #' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
@@ -232,9 +242,13 @@ T_plot <- function(spct,
                    text.size,
                    idfactor,
                    na.rm,
+                   ylim,
                    ...) {
   if (!is.filter_spct(spct)) {
     stop("T_plot() can only plot filter_spct objects.")
+  }
+  if (is.null(ylim) || !is.numeric(ylim)) {
+    ylim <- rep(NA_real_, 2L)
   }
   if (!is.null(range)) {
     spct <- trim_wl(spct, range = range)
@@ -294,8 +308,12 @@ T_plot <- function(spct,
     Tfr.label <- ""
   }
 
-  y.max <- max(1, spct[["Tfr"]], na.rm = TRUE)
-  y.min <- min(0, spct[["Tfr"]], na.rm = TRUE)
+  y.min <- ifelse(!is.na(ylim[1]),
+                  ylim[1],
+                  min(0, spct[["Tfr"]], na.rm = TRUE))
+  y.max <- ifelse(!is.na(ylim[2]),
+                  ylim[2],
+                  max(1, spct[["Tfr"]], na.rm = TRUE))
 
   plot <- ggplot(spct, aes_(x = ~w.length, y = ~Tfr))
   temp <- find_idfactor(spct = spct,
@@ -387,6 +405,7 @@ T_plot <- function(spct,
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
 #' @param na.rm logical.
+#' @param ylim numeric y axis limits,
 #' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
@@ -402,9 +421,13 @@ A_plot <- function(spct,
                    text.size,
                    idfactor,
                    na.rm,
+                   ylim,
                    ...) {
   if (!is.filter_spct(spct)) {
     stop("A_plot() can only plot filter_spct objects.")
+  }
+  if (is.null(ylim) || !is.numeric(ylim)) {
+    ylim <- rep(NA_real_, 2L)
   }
   if (!is.null(range)) {
     spct <- trim_wl(spct, range = range)
@@ -446,8 +469,12 @@ A_plot <- function(spct,
     A.label <- ""
   }
 
-  y.max <- max(spct[["A"]], na.rm = TRUE)
-  y.min <- min(0, spct[["A"]], na.rm = TRUE)
+  y.min <- ifelse(!is.na(ylim[1]),
+                  ylim[1],
+                  min(0, spct[["A"]], na.rm = TRUE))
+  y.max <- ifelse(!is.na(ylim[2]),
+                  ylim[2],
+                  max(spct[["A"]], na.rm = TRUE))
 
   plot <- ggplot(spct, aes_(x = ~w.length, y = ~A))
   temp <- find_idfactor(spct = spct,
@@ -530,6 +557,7 @@ A_plot <- function(spct,
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
 #' @param na.rm logical.
+#' @param ylim numeric y axis limits,
 #' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
@@ -545,10 +573,14 @@ R_plot <- function(spct,
                    annotations,
                    text.size,
                    idfactor,
+                   ylim,
                    na.rm,
                    ...) {
   if (!is.reflector_spct(spct)) {
     stop("R_plot() can only plot reflector_spct objects.")
+  }
+  if (is.null(ylim) || !is.numeric(ylim)) {
+    ylim <- rep(NA_real_, 2L)
   }
   if (!is.null(range)) {
     spct <- trim_wl(spct, range = range)
@@ -606,8 +638,13 @@ R_plot <- function(spct,
   } else {
     Rfr.label <- ""
   }
-  y.max <- max(1, spct[["Rfr"]], na.rm = TRUE)
-  y.min <- min(0, spct[["Rfr"]], na.rm = TRUE)
+
+  y.min <- ifelse(!is.na(ylim[1]),
+                  ylim[1],
+                  min(0, spct[["Rfr"]], na.rm = TRUE))
+  y.max <- ifelse(!is.na(ylim[2]),
+                  ylim[2],
+                  max(1, spct[["Rfr"]], na.rm = TRUE))
 
   plot <- ggplot(spct, aes_(x = ~w.length, y = ~Rfr))
   temp <- find_idfactor(spct = spct,
@@ -692,6 +729,7 @@ R_plot <- function(spct,
 #' @param stacked logical.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param na.rm logical.
+#' @param ylim numeric y axis limits,
 #' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
@@ -708,12 +746,19 @@ O_plot <- function(spct,
                    stacked,
                    text.size,
                    na.rm,
+                   ylim,
                    ...) {
   if (getMultipleWl(spct) > 1L) {
     stop("Only one object spectrum per plot supported")
   }
   if (!is.object_spct(spct)) {
     stop("O_plot() can only plot object_spct objects.")
+  }
+  if (is.null(ylim) || !is.numeric(ylim)) {
+    ylim <- rep(NA_real_, 2L)
+  }
+  if (stacked && !all(is.na(ylim))) {
+    warning("'ylim' not supported for stacked plots!")
   }
   if (!is.null(range)) {
     spct <- trim_wl(spct, range = range)
@@ -744,13 +789,22 @@ O_plot <- function(spct,
       stacked <- FALSE
     }
   }
+
   if (stacked) {
     y.max <- 1.01 # take care of rounding off
     y.min <- -0.01 # take care of rounding off
   } else {
+    y.min <- ifelse(!is.na(ylim[1]),
+                    ylim[1],
+                    min(0, spct[["Rfr"]], spct[["Tfr"]], spct[["Afr"]], na.rm = TRUE))
+    y.max <- ifelse(!is.na(ylim[2]),
+                    ylim[2],
+                    max(1, spct[["Rfr"]], spct[["Tfr"]], spct[["Afr"]], na.rm = TRUE))
+
     y.max <- max(1, spct[["Rfr"]], spct[["Tfr"]], spct[["Afr"]], na.rm = TRUE)
     y.min <- min(0, spct[["Rfr"]], spct[["Tfr"]], spct[["Afr"]], na.rm = TRUE)
   }
+
   molten.spct <-
     tidyr::gather_(dplyr::select_(spct, "w.length", "Tfr", "Afr", "Rfr"),
                    "variable", "value", c("Tfr", "Afr", "Rfr"))
@@ -865,6 +919,7 @@ O_plot <- function(spct,
 #'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
+#' @param ylim numeric y axis limits,
 #' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
@@ -894,6 +949,7 @@ plot.filter_spct <-
            tz = "UTC",
            text.size = 2.5,
            idfactor = NULL,
+           ylim = c(NA, NA),
            na.rm = TRUE) {
     annotations.default <-
       getOption("photobiology.plot.annotations",
@@ -927,6 +983,7 @@ plot.filter_spct <-
                            annotations = annotations,
                            text.size = text.size,
                            idfactor = idfactor,
+                           ylim = ylim,
                            na.rm = na.rm,
                            ...)
     } else if (plot.qty == "absorbance") {
@@ -938,6 +995,7 @@ plot.filter_spct <-
                            annotations = annotations,
                            text.size = text.size,
                            idfactor = idfactor,
+                           ylim = ylim,
                            na.rm = na.rm,
                            ...)
     } else if (plot.qty == "absorptance") {
@@ -950,6 +1008,7 @@ plot.filter_spct <-
                              annotations = annotations,
                              text.size = text.size,
                              idfactor = idfactor,
+                             ylim = ylim,
                              na.rm = na.rm,
                              ...)
     } else {
@@ -1013,6 +1072,7 @@ plot.filter_mspct <-
 #'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
+#' @param ylim numeric y axis limits,
 #' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
@@ -1042,6 +1102,7 @@ plot.reflector_spct <-
            tz = "UTC",
            text.size = 2.5,
            idfactor = NULL,
+           ylim = c(NA, NA),
            na.rm = TRUE) {
     annotations.default <-
       getOption("photobiology.plot.annotations",
@@ -1074,6 +1135,7 @@ plot.reflector_spct <-
                            annotations = annotations,
                            text.size = text.size,
                            idfactor = idfactor,
+                           ylim = ylim,
                            na.rm = na.rm,
                            ...)
     } else {
@@ -1138,6 +1200,7 @@ plot.reflector_mspct <-
 #'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
+#' @param ylim numeric y axis limits,
 #' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
@@ -1168,6 +1231,7 @@ plot.object_spct <-
            stacked = TRUE,
            text.size = 2.5,
            idfactor = NULL,
+           ylim = c(NA, NA),
            na.rm = TRUE) {
     annotations.default <-
       getOption("photobiology.plot.annotations",
@@ -1200,6 +1264,7 @@ plot.object_spct <-
                          annotations = annotations,
                          stacked = stacked,
                          text.size = text.size,
+                         ylim = ylim,
                          na.rm = na.rm,
                          ...)
     } else if (plot.qty == "transmittance") {
@@ -1213,6 +1278,7 @@ plot.object_spct <-
                            annotations = annotations,
                            text.size = text.size,
                            idfactor = idfactor,
+                           ylim = ylim,
                            na.rm = na.rm,
                            ...)
     } else if (plot.qty == "absorbance") {
@@ -1225,6 +1291,7 @@ plot.object_spct <-
                            annotations = annotations,
                            text.size = text.size,
                            idfactor = idfactor,
+                           ylim = ylim,
                            na.rm = na.rm,
                            ...)
     } else if (plot.qty == "absorptance") {
@@ -1238,6 +1305,7 @@ plot.object_spct <-
                              annotations = annotations,
                              text.size = text.size,
                              idfactor = idfactor,
+                             ylim = ylim,
                              na.rm = na.rm,
                              ...)
     } else if (plot.qty == "reflectance") {
@@ -1251,6 +1319,7 @@ plot.object_spct <-
                            annotations = annotations,
                            text.size = text.size,
                            idfactor = idfactor,
+                           ylim = ylim,
                            na.rm = na.rm,
                            ...)
     } else {

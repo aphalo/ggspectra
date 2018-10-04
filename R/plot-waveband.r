@@ -23,6 +23,7 @@
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
 #' @param text.size numeric size of text in the plot decorations.
+#' @param ylim numeric y axis limits,
 #' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
@@ -62,6 +63,7 @@ plot.waveband <-
            wb.trim = TRUE,
            norm = NULL,
            text.size = 2.5,
+           ylim = c(NA, NA),
            na.rm = TRUE) {
     annotations.default <-
       getOption("photobiology.plot.annotations",
@@ -125,6 +127,7 @@ plot.waveband <-
          span = span,
          norm = norm,
          text.size = text.size,
+         ylim = ylim,
          na.rm = na.rm,
          ...) +
       ggtitle_spct(x = x,
