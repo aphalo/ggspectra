@@ -475,7 +475,7 @@ q_rsp_plot <- function(spct,
     x.limits <- range(spct)
   }
 
-  if (abs(y.min) < 5e-2 && (abs(y.max - 1) < 5.e-2)) {
+  if ((abs(y.min) < 5e-2) && (abs(y.max - 1) < 5.e-2)) {
     plot <- plot +
       scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
   } else {

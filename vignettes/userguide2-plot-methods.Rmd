@@ -50,7 +50,7 @@ theme_set(theme_bw(10))
 
 The most automatic way of plotting spectral data stored in one of the classes defined in package `photobiology` is to use the `plot()`methods. These go much further than the `plot()` method defined in base-R for numeric data, as these classes store metadata that allows the automatic construction of axis labels as quantities and units are well defined.
 
-Here we use the same example `source_spct` object from package `photobiology` used in the User Guide. In contrast to the examples in the User Guide 1, here we obtain with a very simple statement a complete annotated plot of the solar spectrum at ground level.
+Here we use the same example `source_spct` object from package `photobiology` used in the User Guide 1. In contrast to the examples in the User Guide 1, here we obtain with a very simple statement a complete annotated plot of the solar spectrum at ground level.
 
 ```{r}
 plot(sun.spct)
@@ -189,6 +189,11 @@ plot(sun.spct, annotations = c("=", "segments", "labels", "color.guide"),
      text.size = 3.5)
 ```
 
+Argument `ylim` allows to mannually set the limits of the $y$ axis using the same syntax as in package 'ggplot2'. The annotations are still automatically possitioned, and the range extended to make space for them. In other words the values passed to `ylim` still give the "space" available for plotting data.
+
+```{r}
+plot(sun.spct, ylim = c(NA, 1))
+```
 Arguments `range` and `w.band` play very different roles. The first one determines the `range` of wavelengths to include in the data plotted, which is slightly different to the effect of `ggplot2::xlim()` as `range` is used to _trim_ the spectral data __before__ passing it to `ggplot`, using interpolation when needed (see `photobiology::trim_wl()`). The second one, `w.band` is only used for the _annotations_ and decorations. It should be however noted, that a `waveband` object is a valid argument for both `range` and `w.band`.
 
 ```{r}

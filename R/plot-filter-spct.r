@@ -134,6 +134,12 @@ Afr_plot <- function(spct,
                   ylim[2],
                   max(1, spct[["Afr"]], na.rm = TRUE))
 
+  if (any(!is.na(ylim))) {
+    y.breaks <- scales::pretty_breaks(n = 6)
+  } else {
+    y.breaks <- c(0, 0.25, 0.5, 0.75, 1)
+  }
+
   plot <- ggplot(spct, aes_(x = ~w.length, y = ~Afr))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
@@ -185,11 +191,12 @@ Afr_plot <- function(spct,
     y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
   }
+
   if (pc.out) {
-    plot <- plot + scale_y_continuous(labels = scales::percent, breaks = c(0, 0.25, 0.5, 0.75, 1),
+    plot <- plot + scale_y_continuous(labels = scales::percent, breaks = y.breaks,
                                       limits = y.limits)
   } else {
-    plot <- plot + scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1),
+    plot <- plot + scale_y_continuous(breaks = y.breaks,
                                       limits = y.limits)
   }
 
@@ -315,6 +322,12 @@ T_plot <- function(spct,
                   ylim[2],
                   max(1, spct[["Tfr"]], na.rm = TRUE))
 
+  if (any(!is.na(ylim))) {
+    y.breaks <- scales::pretty_breaks(n = 6)
+  } else {
+    y.breaks <- c(0, 0.25, 0.5, 0.75, 1)
+  }
+
   plot <- ggplot(spct, aes_(x = ~w.length, y = ~Tfr))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
@@ -367,10 +380,10 @@ T_plot <- function(spct,
     x.limits <- range(spct)
   }
   if (pc.out) {
-    plot <- plot + scale_y_continuous(labels = scales::percent, breaks = c(0, 0.25, 0.5, 0.75, 1),
+    plot <- plot + scale_y_continuous(labels = scales::percent, breaks = y.breaks,
                                       limits = y.limits)
   } else {
-    plot <- plot + scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1),
+    plot <- plot + scale_y_continuous(breaks = y.breaks,
                                       limits = y.limits)
   }
 
@@ -475,6 +488,12 @@ A_plot <- function(spct,
   y.max <- ifelse(!is.na(ylim[2]),
                   ylim[2],
                   max(spct[["A"]], na.rm = TRUE))
+
+  if (any(!is.na(ylim))) {
+    y.breaks <- scales::pretty_breaks(n = 6)
+  } else {
+    y.breaks <- c(0, 0.25, 0.5, 0.75, 1)
+  }
 
   plot <- ggplot(spct, aes_(x = ~w.length, y = ~A))
   temp <- find_idfactor(spct = spct,
@@ -646,6 +665,12 @@ R_plot <- function(spct,
                   ylim[2],
                   max(1, spct[["Rfr"]], na.rm = TRUE))
 
+  if (any(!is.na(ylim))) {
+    y.breaks <- scales::pretty_breaks(n = 6)
+  } else {
+    y.breaks <- c(0, 0.25, 0.5, 0.75, 1)
+  }
+
   plot <- ggplot(spct, aes_(x = ~w.length, y = ~Rfr))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
@@ -697,10 +722,10 @@ R_plot <- function(spct,
     x.limits <- range(spct)
   }
   if (pc.out) {
-    plot <- plot + scale_y_continuous(labels = scales::percent, breaks = c(0, 0.25, 0.5, 0.75, 1),
+    plot <- plot + scale_y_continuous(labels = scales::percent, breaks = y.breaks,
                                       limits = y.limits)
   } else {
-    plot <- plot + scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1),
+    plot <- plot + scale_y_continuous(breaks = y.breaks,
                                       limits = y.limits)
   }
 
@@ -793,6 +818,7 @@ O_plot <- function(spct,
   if (stacked) {
     y.max <- 1.01 # take care of rounding off
     y.min <- -0.01 # take care of rounding off
+    y.breaks <- c(0, 0.25, 0.5, 0.75, 1)
   } else {
     y.min <- ifelse(!is.na(ylim[1]),
                     ylim[1],
@@ -801,8 +827,12 @@ O_plot <- function(spct,
                     ylim[2],
                     max(1, spct[["Rfr"]], spct[["Tfr"]], spct[["Afr"]], na.rm = TRUE))
 
-    y.max <- max(1, spct[["Rfr"]], spct[["Tfr"]], spct[["Afr"]], na.rm = TRUE)
-    y.min <- min(0, spct[["Rfr"]], spct[["Tfr"]], spct[["Afr"]], na.rm = TRUE)
+    if (any(!is.na(ylim))) {
+      y.breaks <- scales::pretty_breaks(n = 6)
+    } else {
+      y.breaks <- c(0, 0.25, 0.5, 0.75, 1)
+    }
+
   }
 
   molten.spct <-
@@ -869,9 +899,9 @@ O_plot <- function(spct,
     x.limits <- range(spct)
   }
   if (pc.out) {
-    plot <- plot + scale_y_continuous(labels = scales::percent, breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
+    plot <- plot + scale_y_continuous(labels = scales::percent, breaks = y.breaks, limits = y.limits)
   } else {
-    plot <- plot + scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
+    plot <- plot + scale_y_continuous(breaks = y.breaks, limits = y.limits)
   }
 
  plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
