@@ -1,18 +1,19 @@
-ggspectra 0.3.0 (2018-10-04)
-==============================
+ggspectra 0.3.0 (2018-10-06)
+============================
 
 ** Change the names of some the values calculated by the stats defined in
-'ggspectra' to avoid confussion with the names of 'ggplot2' aesthetics.
+'ggspectra' to avoid confusion with the names of 'ggplot2' aesthetics.
 ** This is a code breaking change!
 
 Revise to track changes in 'photobiology' version 0.9.24 and 'ggplot2' 3.0.0,
 which are now required.
-* stat_label_peaks() and stat_label_valleys() now return NA_character_ for
-empty labels instead of "", as apparently changes in some geoms defined
-elsewhere or their dependencies were making R intermitently crash when such data
-were passed as argument.
+
+* stat_label_peaks() and stat_label_valleys() now have a new parameter,
+label.fill which can be used to set the content of ..x.label.. and ..y.label..
+for labels not labelled as peaks or valleys. The earlier use of "" is
+retained as default.
 * Add stat_find_wls() and stat_find_qtys(), two new statistics useful for
-highlighting features in spectra.
+highlighting and labelling features in spectra.
 * Add parameter ylim to all plot() methods.
 * Revise plot() methods to support objects with multiple spectra in long form.
 * Revise plot() methods to NOT display by default calculated summaries in

@@ -24,6 +24,8 @@ library(dplyr)
 library(photobiology)
 library(photobiologyWavebands)
 library(ggspectra)
+
+good_label_repel <- packageVersion('ggrepel') != "0.8.0"
 ```
 
 
@@ -166,7 +168,7 @@ plot(sun.spct, annotations = c("+", "valleys"), span = 41)
 
 The annotations `"peak.labels"` and `"valley.labels"` override `"peaks"` and `"valleys"`. They use the _repulsive_ geometry `geom_label_repel` from package 'ggrepel'.
 
-```{r}
+```{r, eval=good_label_repel}
 plot(sun.spct, annotations = c("+", "peak.labels", "valley.labels"), span = 71)
 ```
 
