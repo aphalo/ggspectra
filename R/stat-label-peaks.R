@@ -166,6 +166,9 @@ StatLabelPeaks <-
                                             x.label.fmt,
                                             y.label.fmt,
                                             label.fill) {
+                     if (!is.character(label.fill)) {
+                       as.character(label.fill)
+                     }
                      out.df <- tibble::as.tibble(data)
                      if (is.null(span)) {
                        peaks.idx <- which.max(data[["y"]])
@@ -245,6 +248,9 @@ StatLabelValleys <-
                                             x.label.fmt,
                                             y.label.fmt,
                                             label.fill) {
+                     if (!is.character(label.fill)) {
+                       as.character(label.fill)
+                     }
                      out.df <- data
                      if (is.null(span)) {
                        valleys.idx <- which.min(data[["y"]])
