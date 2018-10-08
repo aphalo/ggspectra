@@ -117,6 +117,16 @@ s.q.irrad_label <- function(unit.exponent = -6,
 #'   scale_y_s.q.irrad_continuous() +
 #'   scale_x_wl_continuous()
 #'
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   scale_y_s.e.irrad_log10() +
+#'   scale_x_wl_continuous()
+#'
+#' ggplot(sun.spct, unit.out = "photon") +
+#'   geom_line() +
+#'   scale_y_s.q.irrad_log10() +
+#'   scale_x_wl_continuous()
+#'
 scale_y_s.e.irrad_continuous <-
   function(unit.exponent = 0,
            name = s.e.irrad_label(unit.exponent),
@@ -140,3 +150,32 @@ scale_y_s.q.irrad_continuous <-
                        labels = labels,
                        ...)
   }
+
+#' @rdname scale_y_s.e.irrad_continuous
+#'
+#' @export
+#'
+scale_y_s.q.irrad_log10 <-
+  function(unit.exponent = -6,
+           name = s.q.irrad_label(unit.exponent = unit.exponent),
+           labels = SI_pl_format(exponent = unit.exponent),
+           ...) {
+    scale_y_log10(name = name,
+                  labels = labels,
+                  ...)
+  }
+
+#' @rdname scale_y_s.e.irrad_continuous
+#'
+#' @export
+#'
+scale_y_s.e.irrad_log10 <-
+  function(unit.exponent = 0,
+           name = s.e.irrad_label(unit.exponent),
+           labels = SI_pl_format(exponent = unit.exponent),
+           ...) {
+    scale_y_log10(name = name,
+                  labels = labels,
+                  ...)
+  }
+
