@@ -104,6 +104,7 @@ library(ggspectra)
 library(ggrepel)
 
 good_label_repel <- packageVersion('ggrepel') != "0.8.0"
+# good_label_repel <- TRUE
 
 ```
 
