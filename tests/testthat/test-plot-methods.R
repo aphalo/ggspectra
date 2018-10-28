@@ -142,7 +142,46 @@ test_that("source_spct", {
                               plot(sun.spct * CIE()))
   vdiffr::expect_doppelganger("source-product-BSWF-wl",
                               plot(sun.spct * CIE(300)))
-})
+  # time units
+  vdiffr::expect_doppelganger("source-second",
+                              plot(setTimeUnit(white_led.source_spct, "second", TRUE)))
+  vdiffr::expect_doppelganger("source-hour",
+                              plot(setTimeUnit(white_led.source_spct, "hour", TRUE)))
+  vdiffr::expect_doppelganger("source-day",
+                              plot(setTimeUnit(white_led.source_spct, "day", TRUE)))
+  vdiffr::expect_doppelganger("source-exposure",
+                              plot(setTimeUnit(white_led.source_spct, "exposure", TRUE)))
+  vdiffr::expect_doppelganger("source-duration",
+                              plot(setTimeUnit(white_led.source_spct, lubridate::duration(4.5, "minutes"), TRUE)))
+  vdiffr::expect_doppelganger("source-none",
+                              plot(setTimeUnit(white_led.source_spct, "unknown", TRUE)))
+  vdiffr::expect_doppelganger("source-seconds",
+                              plot(setTimeUnit(white_led.source_spct, lubridate::duration(1, "seconds"), TRUE)))
+  vdiffr::expect_doppelganger("source-hours",
+                              plot(setTimeUnit(white_led.source_spct, lubridate::duration(1, "hours"), TRUE)))
+  vdiffr::expect_doppelganger("source-days",
+                              plot(setTimeUnit(white_led.source_spct, lubridate::duration(1, "days"), TRUE)))
+
+  vdiffr::expect_doppelganger("source-second-q",
+                              plot(setTimeUnit(white_led.source_spct, "second", TRUE), unit.out = "photon"))
+  vdiffr::expect_doppelganger("source-hour-q",
+                              plot(setTimeUnit(white_led.source_spct, "hour", TRUE), unit.out = "photon"))
+  vdiffr::expect_doppelganger("source-day-q",
+                              plot(setTimeUnit(white_led.source_spct, "day", TRUE), unit.out = "photon"))
+  vdiffr::expect_doppelganger("source-exposure-q",
+                              plot(setTimeUnit(white_led.source_spct, "exposure", TRUE), unit.out = "photon"))
+  vdiffr::expect_doppelganger("source-duration-q",
+                              plot(setTimeUnit(white_led.source_spct, lubridate::duration(4.5, "minutes"), TRUE), unit.out = "photon"))
+  vdiffr::expect_doppelganger("source-none-q",
+                              plot(setTimeUnit(white_led.source_spct, "unknown", TRUE), unit.out = "photon"))
+  vdiffr::expect_doppelganger("source-seconds-q",
+                              plot(setTimeUnit(white_led.source_spct, lubridate::duration(1, "seconds"), TRUE), unit.out = "photon"))
+  vdiffr::expect_doppelganger("source-hours-q",
+                              plot(setTimeUnit(white_led.source_spct, lubridate::duration(1, "hours"), TRUE), unit.out = "photon"))
+  vdiffr::expect_doppelganger("source-days-q",
+                              plot(setTimeUnit(white_led.source_spct, lubridate::duration(1, "days"), TRUE), unit.out = "photon"))
+
+  })
 
 test_that("source_mspct", {
   two_leds.mspct <- source_mspct(list(one = white_led.source_spct,
@@ -488,7 +527,47 @@ test_that("response_spct", {
                               plot(ccd.spct, unit.out = "photon", annotations = c("+", "boundaries")))
   vdiffr::expect_doppelganger("response-plus-segments-q",
                               plot(ccd.spct, unit.out = "photon", annotations = c("+", "segments")))
-})
+
+  # time units
+  vdiffr::expect_doppelganger("response-second",
+                              plot(setTimeUnit(ccd.spct, "second", TRUE), norm = NULL))
+  vdiffr::expect_doppelganger("response-hour",
+                              plot(setTimeUnit(ccd.spct, "hour", TRUE), norm = NULL))
+  vdiffr::expect_doppelganger("response-day",
+                              plot(setTimeUnit(ccd.spct, "day", TRUE), norm = NULL))
+  vdiffr::expect_doppelganger("response-exposure",
+                              plot(setTimeUnit(ccd.spct, "exposure", TRUE), norm = NULL))
+  vdiffr::expect_doppelganger("response-duration",
+                              plot(setTimeUnit(ccd.spct, lubridate::duration(4.5, "minutes"), TRUE), norm = NULL))
+  vdiffr::expect_doppelganger("response-none",
+                              plot(setTimeUnit(ccd.spct, "unknown", TRUE), norm = NULL))
+  vdiffr::expect_doppelganger("response-seconds",
+                              plot(setTimeUnit(ccd.spct, lubridate::duration(1, "seconds"), TRUE), norm = NULL))
+  vdiffr::expect_doppelganger("response-hours",
+                              plot(setTimeUnit(ccd.spct, lubridate::duration(1, "hours"), TRUE), norm = NULL))
+  vdiffr::expect_doppelganger("response-days",
+                              plot(setTimeUnit(ccd.spct, lubridate::duration(1, "days"), TRUE), norm = NULL))
+
+  vdiffr::expect_doppelganger("response-second-q",
+                              plot(setTimeUnit(ccd.spct, "second", TRUE), norm = NULL, unit.out = "photon"))
+  vdiffr::expect_doppelganger("response-hour-q",
+                              plot(setTimeUnit(ccd.spct, "hour", TRUE), norm = NULL, unit.out = "photon"))
+  vdiffr::expect_doppelganger("response-day-q",
+                              plot(setTimeUnit(ccd.spct, "day", TRUE), norm = NULL, unit.out = "photon"))
+  vdiffr::expect_doppelganger("response-exposure-q",
+                              plot(setTimeUnit(ccd.spct, "exposure", TRUE), norm = NULL, unit.out = "photon"))
+  vdiffr::expect_doppelganger("response-duration-q",
+                              plot(setTimeUnit(ccd.spct, lubridate::duration(4.5, "minutes"), TRUE), norm = NULL, unit.out = "photon"))
+  vdiffr::expect_doppelganger("response-none-q",
+                              plot(setTimeUnit(ccd.spct, "unknown", TRUE), norm = NULL, unit.out = "photon"))
+  vdiffr::expect_doppelganger("response-seconds-q",
+                              plot(setTimeUnit(ccd.spct, lubridate::duration(1, "seconds"), TRUE), norm = NULL, unit.out = "photon"))
+  vdiffr::expect_doppelganger("response-hours-q",
+                              plot(setTimeUnit(ccd.spct, lubridate::duration(1, "hours"), TRUE), norm = NULL, unit.out = "photon"))
+  vdiffr::expect_doppelganger("response-days-q",
+                              plot(setTimeUnit(ccd.spct, lubridate::duration(1, "days"), TRUE), norm = NULL, unit.out = "photon"))
+
+  })
 
 test_that("response_mspct", {
   two_ccds.mspct <- response_mspct(list(one = ccd.spct,
