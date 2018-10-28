@@ -73,28 +73,34 @@ e_rsp_plot <- function(spct,
       if (!length(time.unit)) {
         time.unit <- "unkonwn"
       }
-      if (time.unit=="second" || time.unit == lubridate::duration(1, "seconds")) {
+      time.unit.char <- duration2character(time.unit)
+      if (time.unit.char=="second") {
         s.rsp.label <- expression(Spectral~~energy~~response~~R[E](lambda)~~(resp.~~unit~~s^{-1}~nm^{-1}))
         rsp.label.total  <- "atop(R[E], (resp.~~unit~~s^{-1}))"
         rsp.label.avg  <- "atop(bar(R[E](lambda)), (resp.~~unit~~s^{-1}~nm^{-1}))"
         scale.factor <- 1
-      } else if (time.unit=="day" || time.unit == lubridate::duration(1, "days")) {
+      } else if (time.unit.char=="day") {
         s.rsp.label <- expression(Spectral~~energy~~response~~R[E](lambda)~~(resp.~~unit~~d^{-1}~nm^{-1}))
         rsp.label.total  <- "atop(R[E], (resp.~~unit~~d^{-1}))"
         rsp.label.avg  <- "atop(bar(R[E](lambda)), (resp.~~unit~~d^{-1}~nm^{-1}))"
         scale.factor <- 1
-      } else if (time.unit=="hour" || time.unit == lubridate::duration(1, "hours")) {
+      } else if (time.unit.char=="hour") {
         s.rsp.label <- expression(Spectral~~energy~~response~~R[E](lambda)~~(resp.~~unit~~h^{-1}~nm^{-1}))
         rsp.label.total  <- "atop(R[E], (resp.~~unit~~h^{-1}))"
         rsp.label.avg  <- "atop(bar(R[E](lambda)), (resp.~~unit~~h^{-1}~nm^{-1}))"
         scale.factor <- 1
-      } else if (time.unit=="exposure" || lubridate::is.duration(time.unit)) {
+      } else if (time.unit.char=="duration") {
         s.rsp.label <- expression(Spectral~~energy~~response~~R[E](lambda)~~(resp.~~unit~nm^{-1}))
         rsp.label.total  <- "atop(R[E], (resp.~~unit))"
         rsp.label.avg  <- "atop(bar(R[E](lambda)), (resp.~~unit~nm^{-1}))"
         exposure.label <- paste("Length of time:",
                                 ifelse(lubridate::is.duration(time.unit),
                                        as.character(time.unit), "unknown"))
+        scale.factor <- 1
+      } else if (time.unit.char=="exposure") {
+        s.rsp.label <- expression(Spectral~~energy~~response~~R[E](lambda)~~(resp.~~unit~nm^{-1}))
+        rsp.label.total  <- "atop(R[E], (resp.~~unit))"
+        rsp.label.avg  <- "atop(bar(R[E](lambda)), (resp.~~unit~nm^{-1}))"
         scale.factor <- 1
       } else {
         s.rsp.label <- expression(Spectral~~energy~~response~~R[E](lambda)~~(arbitrary~~units))
@@ -316,22 +322,31 @@ q_rsp_plot <- function(spct,
       if (!length(time.unit)) {
         time.unit <- "unkonwn"
       }
-      if (time.unit=="second" || time.unit == lubridate::duration(1, "seconds")) {
+      time.unit.char <- duration2character(time.unit)
+      if (time.unit.char=="second") {
         s.rsp.label <- expression(Spectral~~photon~~response~~R[Q](lambda)~~(resp.~~unit~~s^{-1}~nm^{-1}))
         rsp.label.total  <- "atop(R[Q], (resp.~~unit~~s^{-1}))"
         rsp.label.avg  <- "atop(bar(R[Q](lambda)), (resp.~~unit~~s^{-1}~nm^{-1}))"
         scale.factor <- 1
-      } else if (time.unit=="day" || time.unit == lubridate::duration(1, "days")) {
+      } else if (time.unit.char=="day") {
         s.rsp.label <- expression(Spectral~~photon~~response~~R[Q](lambda)~~(resp.~~unit~~d^{-1}~nm^{-1}))
         rsp.label.total  <- "atop(R[Q], (resp.~~unit~~d^{-1}))"
         rsp.label.avg  <- "atop(bar(R[Q](lambda)), (resp.~~unit~~d^{-1}~nm^{-1}))"
         scale.factor <- 1
-      } else if (time.unit=="hour" || time.unit == lubridate::duration(1, "hours")) {
+      } else if (time.unit.char=="hour") {
         s.rsp.label <- expression(Spectral~~photon~~response~~R[Q](lambda)~~(resp.~~unit~~h^{-1}~nm^{-1}))
         rsp.label.total  <- "atop(R[Q], (resp.~~unit~~h^{-1}))"
         rsp.label.avg  <- "atop(bar(R[Q](lambda)), (resp.~~unit~~h^{-1}~nm^{-1}))"
         scale.factor <- 1
-      } else if (time.unit=="exposure" || lubridate::is.duration(time.unit)) {
+      } else if (time.unit.char=="duration") {
+        s.rsp.label <- expression(Spectral~~photon~~response~~R[Q](lambda)~~(resp.~~unit~nm^{-1}))
+        rsp.label.total  <- "atop(R[Q], (resp.~~unit))"
+        rsp.label.avg  <- "atop(bar(R[Q](lambda)), (resp.~~unit~nm^{-1}))"
+        exposure.label <- paste("Length of time:",
+                                ifelse(lubridate::is.duration(time.unit),
+                                       as.character(time.unit), "unknown"))
+        scale.factor <- 1
+      } else if (time.unit.char=="exposure") {
         s.rsp.label <- expression(Spectral~~photon~~response~~R[Q](lambda)~~(resp.~~unit~nm^{-1}))
         rsp.label.total  <- "atop(R[Q], (resp.~~unit))"
         rsp.label.avg  <- "atop(bar(R[Q](lambda)), (resp.~~unit~nm^{-1}))"
@@ -511,8 +526,9 @@ q_rsp_plot <- function(spct,
 #' @param time.format character Format as accepted by
 #'   \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
-#' @param norm numeric normalization wavelength (nm) or character string "max"
-#'   for normalization at the wavelength of highest peak.
+#' @param norm numeric normalization wavelength (nm) or character string \code{"max"}
+#'   for normalization at the wavelength of highest peak, or \code{NULL} for
+#'   plotting the spectrum as is.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object

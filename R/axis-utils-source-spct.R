@@ -179,3 +179,20 @@ scale_y_s.e.irrad_log10 <-
                   ...)
   }
 
+## internal
+
+#' Convert lubridate duration objects to a string if possible
+#'
+#' @param time.unit lubridate::duration object or character
+#'
+#' @keywords internal
+#'
+duration2character <- function(time.unit) {
+  if (is.character(time.unit)) return(time.unit)
+  if (!lubridate::is.duration(time.unit)) return("unknown")
+  if (time.unit == lubridate::duration(1, "seconds")) return("second")
+  if (time.unit == lubridate::duration(1, "hours")) return("hour")
+  if (time.unit == lubridate::duration(1, "days")) return("day")
+  "duration"
+}
+

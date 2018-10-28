@@ -56,7 +56,7 @@ e_plot <- function(spct,
   if (!is.null(w.band)) {
     w.band <- trim_wl(w.band, range = range(spct))
   }
-  exposure.label <- NA
+  duration.label <- NA
   if (is_normalized(spct) || is_scaled(spct)) {
     s.irrad.label <- "Spectral~~energy~~exposure~~E(lambda)~~(relative~~units)"
     irrad.label.total <- "atop(E, (relative~~units))"
@@ -67,29 +67,35 @@ e_plot <- function(spct,
     if (!length(time.unit)) {
       time.unit <- "unkonwn"
     }
-    if (time.unit == "second" || time.unit == lubridate::duration(1, "seconds"))  {
+    time.unit.char <- duration2character(time.unit)
+    if (time.unit.char == "second")  {
       s.irrad.label <- "Spectral~~energy~~irradiance~~E(lambda)~~(W~m^{-2}~nm^{-1})"
       irrad.label.total  <- "atop(E, (W~m^{-2}))"
       irrad.label.avg  <- "atop(bar(E(lambda)), (W~m^{-2}~nm^{-1}))"
       scale.factor <- 1
-    } else if (time.unit == "day" || time.unit == lubridate::duration(1, "days")) {
+    } else if (time.unit.char == "day") {
       s.irrad.label <- "Spectral~~energy~~exposure~~E(lambda)~~(MJ~d^{-1}~m^{-2}~nm^{-1})"
       irrad.label.total <- "atop(E, (MJ~d^{-1}~m^{-2}))"
       irrad.label.avg <- "atop(bar(E(lambda)), (MJ~d^{-1}~m^{-2}~nm^{-1}))"
       scale.factor <- 1e-6
-    } else if (time.unit == "hour" || time.unit == lubridate::duration(1, "hours")) {
+    } else if (time.unit.char == "hour") {
       s.irrad.label <- "Spectral~~energy~~exposure~~E(lambda)~~(kJ~h^{-1}~m^{-2}~nm^{-1})"
       irrad.label.total <- "atop(E, (kJ~h^{-1}~m^{-2}))"
       irrad.label.avg <- "atop(bar(E(lambda)), (kJ~h^{-1}~m^{-2}~nm^{-1}))"
       scale.factor <- 1e-3
-    } else if (time.unit == "exposure" || lubridate::is.duration(time.unit)) {
+    } else if (time.unit.char == "duration") {
       s.irrad.label <- "Spectral~~energy~~fluence~~E(lambda)~~(kJ~m^{-2}~nm^{-1})"
       irrad.label.total <- "atop(E, (kJ~m^{-2}))"
       irrad.label.avg <- "atop(bar(E(lambda)), (kJ~m^{-2}~nm^{-1}))"
-      exposure.label <- paste("Length of exposure:",
+      duration.label <- paste("Length of exposure:",
                               ifelse(lubridate::is.duration(time.unit),
                               as.character(time.unit), "unknown"))
       scale.factor <- 1e-3
+    } else if (time.unit.char == "exposure") {
+      s.irrad.label <- "Spectral~~energy~~fluence~~E(lambda)~~(J~m^{-2}~nm^{-1})"
+      irrad.label.total <- "atop(E, (J~m^{-2}))"
+      irrad.label.avg <- "atop(bar(E(lambda)), (J~m^{-2}~nm^{-1}))"
+      scale.factor <- 1
     } else {
       s.irrad.label <- "Spectral~~energy~~exposure~~E(lambda)~~(arbitrary~~units)"
       irrad.label.total <- "atop(E, (arbitrary~~units))"
@@ -182,11 +188,11 @@ e_plot <- function(spct,
                              na.rm = TRUE)
   }
 
-  if (!is.na(exposure.label)) {
+  if (!is.na(duration.label)) {
     plot <- plot +  annotate("text",
                              x = min(spct),
                              y = y.max,
-                             label = exposure.label,
+                             label = duration.label,
                              vjust = -0.5,
                              hjust = 0,
                              size = rel(3),
@@ -272,7 +278,7 @@ q_plot <- function(spct,
     w.band <- trim_wl(w.band, range = range(spct))
   }
 
-  exposure.label <- NA
+  duration.label <- NA
   if (is_normalized(spct) || is_scaled(spct)) {
     s.irrad.label <- "Spectral~~photon~~exposure~~Q(lambda)~~(relative~~units)"
     irrad.label.total <- "atop(Q, (relative~~units))"
@@ -283,28 +289,34 @@ q_plot <- function(spct,
     if (!length(time.unit)) {
       time.unit <- "unkonwn"
     }
-    if (time.unit=="second" || time.unit == lubridate::duration(1, "seconds")) {
+    time.unit.char <- duration2character(time.unit)
+    if (time.unit.char=="second") {
       s.irrad.label <- "Spectral~~photon~~irradiance~~Q(lambda)~~(mu*mol~s^{-1}~m^{-2}~nm^{-1})"
       irrad.label.total  <- "atop(Q, (mu*mol~s^{-1}~m^{-2}))"
       irrad.label.avg  <- "atop(bar(Q(lambda)), (mu*mol~s^{-1}~m^{-2}~nm^{-1}))"
       scale.factor <- 1e6
-    } else if (time.unit=="day" || time.unit == lubridate::duration(1, "days")) {
+    } else if (time.unit.char=="day") {
       s.irrad.label <- "Spectral~~photon~~exposure~~Q(lambda)~~(mol~d^{-1}~m^{-2}~nm^{-1})"
       irrad.label.total <- "atop(Q, (mol~d^{-1}~m^{-2}))"
       irrad.label.avg <- "atop(bar(Q(lambda)), (mol~d^{-1}~m^{-2}~nm^{-1}))"
       scale.factor <- 1
-    } else if (time.unit=="hour" || time.unit == lubridate::duration(1, "hours")) {
+    } else if (time.unit.char=="hour") {
       s.irrad.label <- "Spectral~~photon~~exposure~~Q(lambda)~~(mmol~h^{-1}~m^{-2}~nm^{-1})"
       irrad.label.total <- "atop(Q, (mmol~h^{-1}~m^{-2}))"
       irrad.label.avg <- "atop(bar(Q(lambda)), (mmol~h^{-1}~m^{-2}~nm^{-1}))"
       scale.factor <- 1e3
-    } else if (time.unit=="exposure" || lubridate::is.duration(time.unit)) {
+    } else if (time.unit.char=="duration" || lubridate::is.duration(time.unit)) {
       s.irrad.label <- "Spectral~~photon~~fluence~~Q(lambda)~~(mol~m^{-2}~nm^{-1})"
       irrad.label.total <- "atop(Q, (mol~m^{-2}))"
       irrad.label.avg <- "atop(bar(Q(lambda)), (mol~m^{-2}~nm^{-1}))"
-      exposure.label <- paste("Length of exposure:",
+      duration.label <- paste("Length of exposure:",
                               ifelse(lubridate::is.duration(time.unit),
                                      as.character(time.unit), "unknown"))
+      scale.factor <- 1
+    } else if (time.unit.char=="exposure" || lubridate::is.duration(time.unit)) {
+      s.irrad.label <- "Spectral~~photon~~fluence~~Q(lambda)~~(mol~m^{-2}~nm^{-1})"
+      irrad.label.total <- "atop(Q, (mol~m^{-2}))"
+      irrad.label.avg <- "atop(bar(Q(lambda)), (mol~m^{-2}~nm^{-1}))"
       scale.factor <- 1
     } else {
       s.irrad.label <- "Spectral~~photon~~exposure~~Q(lambda)~~(arbitrary~~units)"
@@ -397,11 +409,11 @@ q_plot <- function(spct,
                              na.rm = TRUE)
   }
 
-  if (!is.na(exposure.label)) {
+  if (!is.na(duration.label)) {
     plot <- plot +  annotate("text",
                              x = min(spct),
                              y = y.max,
-                             label = exposure.label,
+                             label = duration.label,
                              vjust = -0.5,
                              hjust = 0,
                              size = rel(3),
@@ -557,3 +569,20 @@ plot.source_mspct <-
     z <- rbindspct(x)
     plot(x = z, range = NULL, ...)
   }
+
+## internal
+
+#' Convert lubridate duration objects to a string if possible
+#'
+#' @param time.unit lubridate::duration object or character
+#'
+#' @keywords internal
+#'
+duration2character <- function(time.unit) {
+  if (is.character(time.unit)) return(time.unit)
+  if (!lubridate::is.duration(time.unit)) return("unknown")
+  if (time.unit == lubridate::duration(1, "seconds")) return("second")
+  if (time.unit == lubridate::duration(1, "hours")) return("hour")
+  if (time.unit == lubridate::duration(1, "days")) return("day")
+  "duration"
+}
