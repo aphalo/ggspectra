@@ -4,6 +4,7 @@ ggspectra 0.3.1 (2018-10-28)
 * Fix major bug in plot() methods for source_spct and response_spct classes,
 that triggered errors in all cases when time.unit was not "second".
 * Add scale_y_s.e.irrad_log10() and scale_y_s.q.irrad_log10().
+* Test with 'ggplot2' version 3.1.0.
 
 ggspectra 0.3.0 (2018-10-06)
 ============================

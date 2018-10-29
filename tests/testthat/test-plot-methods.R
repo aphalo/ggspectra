@@ -4,15 +4,15 @@ library(photobiology)
 library(photobiologyWavebands)
 
 # We prepare shorter data objects for spectra to improve tests' runtime
-sun.spct <- interpolate_spct(sun.spct, length.out = 50)
-white_led.raw_spct <- interpolate_spct(white_led.raw_spct, length.out = 50)
-white_led.cps_spct <- interpolate_spct(white_led.cps_spct, length.out = 50)
-white_led.source_spct <- interpolate_spct(white_led.source_spct, length.out = 50)
-Ler_leaf_trns.spct <- interpolate_spct(Ler_leaf_trns.spct, length.out = 50)
-Ler_leaf_trns_i.spct <- interpolate_spct(Ler_leaf_trns_i.spct, length.out = 50)
-Ler_leaf_rflt.spct <- interpolate_spct(Ler_leaf_rflt.spct, length.out = 50)
-Ler_leaf.spct <- interpolate_spct(Ler_leaf.spct, length.out = 50)
-ccd.spct <- interpolate_spct(ccd.spct, length.out = 50)
+sun.spct <- interpolate_spct(photobiology::sun.spct, length.out = 50)
+white_led.raw_spct <- interpolate_spct(photobiology::white_led.raw_spct, length.out = 50)
+white_led.cps_spct <- interpolate_spct(photobiology::white_led.cps_spct, length.out = 50)
+white_led.source_spct <- interpolate_spct(photobiology::white_led.source_spct, length.out = 50)
+Ler_leaf_trns.spct <- interpolate_spct(photobiology::Ler_leaf_trns.spct, length.out = 50)
+Ler_leaf_trns_i.spct <- interpolate_spct(photobiology::Ler_leaf_trns_i.spct, length.out = 50)
+Ler_leaf_rflt.spct <- interpolate_spct(photobiology::Ler_leaf_rflt.spct, length.out = 50)
+Ler_leaf.spct <- interpolate_spct(photobiology::Ler_leaf.spct, length.out = 50)
+ccd.spct <- interpolate_spct(photobiology::ccd.spct, length.out = 50)
 
 test_that("raw_spct", {
   # skip_on_cran()
@@ -184,8 +184,9 @@ test_that("source_spct", {
   })
 
 test_that("source_mspct", {
-  two_leds.mspct <- source_mspct(list(one = white_led.source_spct,
-                                      half = white_led.source_spct / 2))
+  two_leds.mspct <- source_mspct(list(one = photobiology::white_led.source_spct,
+                                      half = photobiology::white_led.source_spct / 2))
+
   vdiffr::expect_doppelganger("source-mspct-default",
                               plot(two_leds.mspct))
   vdiffr::expect_doppelganger("source-mspct-ylim",
@@ -350,8 +351,8 @@ test_that("filter_spct", {
 })
 
 test_that("filter_mspct", {
-  two_leaves.mspct <- filter_mspct(list(one = Ler_leaf_trns_i.spct,
-                                      half = Ler_leaf_trns_i.spct / 2))
+  two_leaves.mspct <- filter_mspct(list(one = photobiology::Ler_leaf_trns_i.spct,
+                                      half = photobiology::Ler_leaf_trns_i.spct / 2))
   vdiffr::expect_doppelganger("filter-mspct-default",
                               plot(two_leaves.mspct))
   vdiffr::expect_doppelganger("filter-mspct-default-ylim",
@@ -403,8 +404,8 @@ test_that("reflector_spct", {
 })
 
 test_that("reflector_mspct", {
-  two_leaves_Rfr.mspct <- reflector_mspct(list(one = Ler_leaf_rflt.spct,
-                                        half = Ler_leaf_rflt.spct / 2))
+  two_leaves_Rfr.mspct <- reflector_mspct(list(one = photobiology::Ler_leaf_rflt.spct,
+                                        half = photobiology::Ler_leaf_rflt.spct / 2))
   vdiffr::expect_doppelganger("reflector-mspct-default",
                               plot(two_leaves_Rfr.mspct))
   vdiffr::expect_doppelganger("reflector-mspct-default-range",
@@ -570,8 +571,9 @@ test_that("response_spct", {
   })
 
 test_that("response_mspct", {
-  two_ccds.mspct <- response_mspct(list(one = ccd.spct,
-                                      half = ccd.spct / 2))
+  two_ccds.mspct <- response_mspct(list(one = photobiology::ccd.spct,
+                                      half = photobiology::ccd.spct / 2))
+
   vdiffr::expect_doppelganger("response-mspct-default",
                               plot(two_ccds.mspct))
   vdiffr::expect_doppelganger("response-mspct-default-range",
@@ -597,39 +599,37 @@ test_that("waveband", {
                               plot(Red(), annotations = c("+", "segments")))
 })
 
-## autoplot tests use same names as equivalent plot tests
-## consequently testing that output from both methods is identical
 
 test_that("autoplot_spct", {
   # skip_on_cran()
-  vdiffr::expect_doppelganger("raw-default",
+  vdiffr::expect_doppelganger("raw-default-autop",
                               autoplot(white_led.raw_spct))
-  vdiffr::expect_doppelganger("cps-default",
+  vdiffr::expect_doppelganger("cps-default-autop",
                               autoplot(white_led.cps_spct))
-  vdiffr::expect_doppelganger("source-default",
+  vdiffr::expect_doppelganger("source-default-autop",
                               autoplot(white_led.source_spct))
-  vdiffr::expect_doppelganger("source-product-BSWF",
+  vdiffr::expect_doppelganger("source-product-BSWF-autop",
                               autoplot(sun.spct * CIE()))
-  vdiffr::expect_doppelganger("filter-default-tot",
+  vdiffr::expect_doppelganger("filter-default-tot-autop",
                               autoplot(Ler_leaf_trns.spct))
-  vdiffr::expect_doppelganger("reflector-default-tot",
+  vdiffr::expect_doppelganger("reflector-default-tot-autop",
                               autoplot(Ler_leaf_rflt.spct))
-  vdiffr::expect_doppelganger("object-default-tot",
+  vdiffr::expect_doppelganger("object-default-tot-autop",
                               autoplot(Ler_leaf.spct))
-  vdiffr::expect_doppelganger("object-default-stk",
+  vdiffr::expect_doppelganger("object-default-stk-autop",
                               autoplot(Ler_leaf.spct, stacked = FALSE))
-  vdiffr::expect_doppelganger("response-default",
+  vdiffr::expect_doppelganger("response-default-autop",
                               autoplot(ccd.spct))
 })
 
 test_that("autoplot_mspct", {
-  two_ccds.mspct <- response_mspct(list(one = ccd.spct,
-                                        half = ccd.spct / 2))
-  vdiffr::expect_doppelganger("response-mspct-default",
+  two_ccds.mspct <- response_mspct(list(one = photobiology::ccd.spct,
+                                        half = photobiology::ccd.spct / 2))
+  vdiffr::expect_doppelganger("response-mspct-default-autop",
                               autoplot(two_ccds.mspct))
 })
 
 test_that("autoplot_waveband", {
-  vdiffr::expect_doppelganger("waveband-default-cie",
+  vdiffr::expect_doppelganger("waveband-default-cie-autop",
                               autoplot(CIE(), range = c(230, 430)))
 })
