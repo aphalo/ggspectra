@@ -1,12 +1,12 @@
-#' Plot method for waveband objects.
+#' Create a complete ggplot for a waveband descriptor.
 #'
 #' This function returns a ggplot object with an annotated plot of a
-#' waveband object.
+#' \code{waveband} object.
 #'
 #' @note Note that scales are expanded so as to make space for the annotations.
 #'   The object returned is a ggplot object, and can be further manipulated.
 #'
-#' @param x a waveband object.
+#' @param object a waveband object.
 #' @param ... currently ignored.
 #' @param w.length numeric vector of wavelengths (nm)
 #' @param range an R object on which range() returns a vector of length 2, with
@@ -24,6 +24,7 @@
 #'   for normalization at the wavelength of highest peak.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param ylim numeric y axis limits,
+#' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
@@ -45,14 +46,14 @@
 #'
 #' @export
 #'
-#' @family plot functions
+#' @family autoplot methods
 #'
 #' @examples
-#' library(photobiology)
-#' plot(waveband(c(400, 500)))
 #'
-plot.waveband <-
-  function(x,
+#' autoplot(waveband(c(400, 500)))
+#'
+autoplot.waveband <-
+  function(object,
            ...,
            w.length = NULL,
            range = c(280, 800),
@@ -64,13 +65,14 @@ plot.waveband <-
            norm = NULL,
            text.size = 2.5,
            ylim = c(NA, NA),
+           object.label = deparse(substitute(object)),
            na.rm = TRUE) {
     annotations.default <-
       getOption("photobiology.plot.annotations",
                 default = c("boxes", "labels", "colour.guide"))
     annotations <- c("=", decode_annotations(annotations,
                                              annotations.default))
-    w.band <- x
+    w.band <- object
     if (!is.waveband(w.band)) {
       return(ggplot())
     }
@@ -130,7 +132,7 @@ plot.waveband <-
          ylim = ylim,
          na.rm = na.rm,
          ...) +
-      ggtitle_spct(x = x,
-                   x.name = deparse(substitute(x)),
+      ggtitle_spct(object = object,
+                   object.label = object.label,
                    annotations = annotations)
   }

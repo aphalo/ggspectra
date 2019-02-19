@@ -1,6 +1,6 @@
-#' Plot a filter spectrum.
+#' Create a complete ggplot for a filter spectrum.
 #'
-#' This function returns a ggplot object with an annotated plot of a source_spct
+#' This function returns a ggplot object with an annotated plot of a filter_spct
 #' object showing absorptance.
 #'
 #' @param spct a filter_spct object.
@@ -204,9 +204,9 @@ Afr_plot <- function(spct,
 
 }
 
-#' Plot a filter spectrum.
+#' Create a complete ggplot for a filter spectrum.
 #'
-#' This function returns a ggplot object with an annotated plot of a source_spct
+#' This function returns a ggplot object with an annotated plot of a filter_spct
 #' object showing transmittance.
 #'
 #' @note Note that scales are expanded so as to make space for the annotations.
@@ -391,9 +391,9 @@ T_plot <- function(spct,
 
 }
 
-#' Plot a filter spectrum.
+#' Create a complete ggplot for a filter spectrum.
 #'
-#' This function returns a ggplot object with an annotated plot of a source_spct
+#' This function returns a ggplot object with an annotated plot of a filter_spct
 #' object showing spectral absorbance.
 #'
 #' @note Note that scales are expanded so as to make space for the annotations.
@@ -548,9 +548,9 @@ A_plot <- function(spct,
 
 }
 
-#' Plot a reflector spectrum
+#' Create a complete ggplot for a reflector spectrum.
 #'
-#' This function returns a ggplot object with an annotated plot of spectral
+#' This function returns a ggplot object with an annotated plot of a reflector_spct
 #' reflectance.
 #'
 #' @note Note that scales are expanded so as to make space for the annotations.
@@ -732,10 +732,10 @@ R_plot <- function(spct,
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 }
 
-#' Plot an object spectrum
+#' Create a complete ggplot for a object spectrum.
 #'
-#' This function returns a ggplot object with an annotated plot of spectral
-#' transmittance, absorptance and reflectance.
+#' This function returns a ggplot object with an annotated plot of an object_spct
+#' displaying spectral transmittance, absorptance and reflectance.
 #'
 #' @note Note that scales are expanded so as to make space for the annotations.
 #'   The object returned is a ggplot object, and can be further manipulated.
@@ -908,7 +908,7 @@ O_plot <- function(spct,
 
 }
 
-#' Plot methods for filter spectra.
+#' Create a complete ggplot for a filter spectrum.
 #'
 #' These methods return a ggplot object with an annotated plot of a
 #' filter_spct object or of the spectra contained in a filter_mspct
@@ -925,7 +925,7 @@ O_plot <- function(spct,
 #'   values Inf a.u. result, disrupting the plot. Scales are further expanded so
 #'   as to make space for the annotations.
 #'
-#' @param x a filter_spct object or a filter_mspct object.
+#' @param object a filter_spct object or a filter_mspct object.
 #' @param ... in the case of collections of spectra, additional arguments passed
 #'   to the plot methods for individual spectra, otherwise currently ignored.
 #' @param w.band a single waveband object or a list of waveband objects.
@@ -950,6 +950,7 @@ O_plot <- function(spct,
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
 #' @param ylim numeric y axis limits,
+#' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
@@ -959,14 +960,14 @@ O_plot <- function(spct,
 #' @keywords hplot
 #'
 #' @examples
-#' library(photobiology)
-#' plot(yellow_gel.spct)
-#' plot(yellow_gel.spct, pc.out = TRUE)
 #'
-#' @family plot functions
+#' autoplot(yellow_gel.spct)
+#' autoplot(yellow_gel.spct, pc.out = TRUE)
 #'
-plot.filter_spct <-
-  function(x, ...,
+#' @family autoplot methods
+#'
+autoplot.filter_spct <-
+  function(object, ...,
            w.band = getOption("photobiology.plot.bands",
                             default = list(UVC(), UVB(), UVA(), PAR())),
            range = NULL,
@@ -980,6 +981,7 @@ plot.filter_spct <-
            text.size = 2.5,
            idfactor = NULL,
            ylim = c(NA, NA),
+           object.label = deparse(substitute(object)),
            na.rm = TRUE) {
     annotations.default <-
       getOption("photobiology.plot.annotations",
@@ -987,7 +989,7 @@ plot.filter_spct <-
     annotations <- decode_annotations(annotations,
                                       annotations.default)
     if (is.null(label.qty)) {
-      if (is_normalized(x) || is_scaled(x)) {
+      if (is_normalized(object) || is_scaled(object)) {
         label.qty = "contribution"
       } else {
         label.qty = "average"
@@ -995,7 +997,7 @@ plot.filter_spct <-
     }
     if (length(w.band) == 0) {
       if (is.null(range)) {
-        w.band <- waveband(x)
+        w.band <- waveband(object)
       } else if (is.waveband(range)) {
         w.band <- range
       } else {
@@ -1004,7 +1006,7 @@ plot.filter_spct <-
     }
 
     if (plot.qty == "transmittance") {
-      out.ggplot <- T_plot(spct = x,
+      out.ggplot <- T_plot(spct = object,
                            w.band = w.band,
                            range = range,
                            pc.out = pc.out,
@@ -1017,7 +1019,7 @@ plot.filter_spct <-
                            na.rm = na.rm,
                            ...)
     } else if (plot.qty == "absorbance") {
-      out.ggplot <- A_plot(spct = x,
+      out.ggplot <- A_plot(spct = object,
                            w.band = w.band,
                            range = range,
                            label.qty = label.qty,
@@ -1029,7 +1031,7 @@ plot.filter_spct <-
                            na.rm = na.rm,
                            ...)
     } else if (plot.qty == "absorptance") {
-      out.ggplot <- Afr_plot(spct = x,
+      out.ggplot <- Afr_plot(spct = object,
                              w.band = w.band,
                              range = range,
                              pc.out = pc.out,
@@ -1045,27 +1047,38 @@ plot.filter_spct <-
       stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
     }
     out.ggplot +
-      ggtitle_spct(x = x,
+      ggtitle_spct(object = object,
                    time.format = time.format,
                    tz = tz,
-                   x.name = deparse(substitute(x)),
+                   object.label = object.label,
                    annotations = annotations)
   }
 
-#' @rdname plot.filter_spct
+#' @rdname autoplot.filter_spct
+#'
+#' @param plot.data character Data to plot. Default is "as.is" plotting
+#'   one line per spectrum. When passing "mean" or "median" as
+#'   argument all the spectra must contain data at the same wavelength values.
 #'
 #' @export
 #'
-plot.filter_mspct <-
-  function(x, ..., range = NULL) {
+autoplot.filter_mspct <-
+  function(object, ..., range = NULL, plot.data = "as.is") {
+    # We trim the spectra to avoid unnecesary computaions later
     if (!is.null(range)) {
-      x <- trim_wl(x, range = range, use.hinges = TRUE, fill = NULL)
+      object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
     }
-    z <- rbindspct(x)
-    plot(x = z, range = NULL, ...)
+    # we convert the collection of spectra into a single spectrum object
+    # containing a summary spectrum or multiple spectra in long form.
+    z <- switch(plot.data,
+                mean = photobiology::s_mean(object),
+                median = photobiology::s_median(object),
+                as.is = photobiology::rbindspct(object)
+    )
+    autoplot(object = z, range = NULL, ...)
   }
 
-#' Plot methods for reflector spectra.
+#' Create a complete ggplot for a reflector spectrum.
 #'
 #' These methods return a ggplot object with an annotated plot of a
 #' reflector_spct object or of the spectra contained in a reflector_mspct
@@ -1077,7 +1090,7 @@ plot.filter_mspct <-
 #'   least to the range of expected values. Scales are further expanded so as to
 #'   make space for the annotations.
 #'
-#' @param x a reflector_spct object or a reflector_mspct object.
+#' @param object a reflector_spct object or a reflector_mspct object.
 #' @param ... in the case of collections of spectra, additional arguments passed
 #'   to the plot methods for individual spectra, otherwise currently ignored.
 #' @param w.band a single waveband object or a list of waveband objects.
@@ -1103,6 +1116,7 @@ plot.filter_mspct <-
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
 #' @param ylim numeric y axis limits,
+#' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
@@ -1113,13 +1127,12 @@ plot.filter_mspct <-
 #'
 #' @examples
 #'
-#' library(photobiology)
-#' plot(Ler_leaf_rflt.spct)
+#' autoplot(Ler_leaf_rflt.spct)
 #'
-#' @family plot functions
+#' @family autoplot methods
 #'
-plot.reflector_spct <-
-  function(x, ...,
+autoplot.reflector_spct <-
+  function(object, ...,
            w.band=getOption("photobiology.plot.bands",
                             default = list(UVC(), UVB(), UVA(), PAR())),
            range = NULL,
@@ -1133,6 +1146,7 @@ plot.reflector_spct <-
            text.size = 2.5,
            idfactor = NULL,
            ylim = c(NA, NA),
+           object.label = deparse(substitute(object)),
            na.rm = TRUE) {
     annotations.default <-
       getOption("photobiology.plot.annotations",
@@ -1140,7 +1154,7 @@ plot.reflector_spct <-
     annotations <- decode_annotations(annotations,
                                       annotations.default)
     if (is.null(label.qty)) {
-      if (is_normalized(x) || is_scaled(x)) {
+      if (is_normalized(object) || is_scaled(object)) {
         label.qty = "contribution"
       } else {
         label.qty = "average"
@@ -1148,7 +1162,7 @@ plot.reflector_spct <-
     }
     if (length(w.band) == 0) {
       if (is.null(range)) {
-        w.band <- waveband(x)
+        w.band <- waveband(object)
       } else if (is.waveband(range)) {
         w.band <- range
       } else {
@@ -1156,7 +1170,7 @@ plot.reflector_spct <-
       }
     }
     if (plot.qty == "reflectance") {
-      out.ggplot <- R_plot(spct = x,
+      out.ggplot <- R_plot(spct = object,
                            w.band = w.band,
                            range = range,
                            pc.out = pc.out,
@@ -1172,27 +1186,38 @@ plot.reflector_spct <-
       stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
     }
     out.ggplot +
-      ggtitle_spct(x = x,
+      ggtitle_spct(object = object,
                    time.format = time.format,
                    tz = tz,
-                   x.name = deparse(substitute(x)),
+                   object.label = object.label,
                    annotations = annotations)
   }
 
-#' @rdname plot.reflector_spct
+#' @rdname autoplot.reflector_spct
+#'
+#' @param plot.data character Data to plot. Default is "as.is" plotting
+#'   one line per spectrum. When passing "mean" or "median" as
+#'   argument all the spectra must contain data at the same wavelength values.
 #'
 #' @export
 #'
-plot.reflector_mspct <-
-  function(x, ..., range = NULL) {
+autoplot.reflector_mspct <-
+  function(object, ..., range = NULL, plot.data = "as.is") {
+    # We trim the spectra to avoid unnecesary computaions later
     if (!is.null(range)) {
-      x <- trim_wl(x, range = range, use.hinges = TRUE, fill = NULL)
+      object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
     }
-    z <- rbindspct(x)
-    plot(x = z, range = NULL, ...)
+    # we convert the collection of spectra into a single spectrum object
+    # containing a summary spectrum or multiple spectra in long form.
+    z <- switch(plot.data,
+                mean = photobiology::s_mean(object),
+                median = photobiology::s_median(object),
+                as.is = photobiology::rbindspct(object)
+    )
+    autoplot(object = z, range = NULL, ...)
   }
 
-#' Plot method for object spectra.
+#' Create a complete ggplot for a object spectrum.
 #'
 #' This function returns a ggplot object with an annotated plot of an
 #' object_spct object.
@@ -1204,7 +1229,7 @@ plot.reflector_mspct <-
 #'   as to make space for the annotations. When all \code{"all"} quantities are
 #'   plotted, a single set of spectra is accepted as input.
 #'
-#' @param x an object_spct object
+#' @param object an object_spct object
 #' @param ... in the case of collections of spectra, additional arguments passed
 #'   to the plot methods for individual spectra, otherwise currently ignored.
 #' @param w.band a single waveband object or a list of waveband objects
@@ -1231,6 +1256,7 @@ plot.reflector_mspct <-
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
 #' @param ylim numeric y axis limits,
+#' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
@@ -1241,13 +1267,12 @@ plot.reflector_mspct <-
 #'
 #' @examples
 #'
-#' library(photobiology)
-#' plot(Ler_leaf.spct)
+#' autoplot(Ler_leaf.spct)
 #'
-#' @family plot functions
+#' @family autoplot methods
 #'
-plot.object_spct <-
-  function(x, ...,
+autoplot.object_spct <-
+  function(object, ...,
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PAR())),
            range = NULL,
@@ -1262,6 +1287,7 @@ plot.object_spct <-
            text.size = 2.5,
            idfactor = NULL,
            ylim = c(NA, NA),
+           object.label = deparse(substitute(object)),
            na.rm = TRUE) {
     annotations.default <-
       getOption("photobiology.plot.annotations",
@@ -1269,7 +1295,7 @@ plot.object_spct <-
     annotations <- decode_annotations(annotations,
                                       annotations.default)
     if (is.null(label.qty)) {
-      if (is_normalized(x) || is_scaled(x)) {
+      if (is_normalized(object) || is_scaled(object)) {
         label.qty = "contribution"
       } else {
         label.qty = "average"
@@ -1277,7 +1303,7 @@ plot.object_spct <-
     }
     if (length(w.band) == 0) {
       if (is.null(range)) {
-        w.band <- waveband(x)
+        w.band <- waveband(object)
       } else if (is.waveband(range)) {
         w.band <- range
       } else {
@@ -1285,7 +1311,7 @@ plot.object_spct <-
       }
     }
     if (is.null(plot.qty) || plot.qty == "all") {
-    out.ggplot <- O_plot(spct = x,
+    out.ggplot <- O_plot(spct = object,
                          w.band = w.band,
                          range = range,
                          pc.out = pc.out,
@@ -1298,8 +1324,8 @@ plot.object_spct <-
                          na.rm = na.rm,
                          ...)
     } else if (plot.qty == "transmittance") {
-      x <- as.filter_spct(x)
-      out.ggplot <- T_plot(spct = x,
+      object <- as.filter_spct(object)
+      out.ggplot <- T_plot(spct = object,
                            w.band = w.band,
                            range = range,
                            pc.out = pc.out,
@@ -1312,8 +1338,8 @@ plot.object_spct <-
                            na.rm = na.rm,
                            ...)
     } else if (plot.qty == "absorbance") {
-      x <- as.filter_spct(x)
-      out.ggplot <- A_plot(spct = x,
+      object <- as.filter_spct(object)
+      out.ggplot <- A_plot(spct = object,
                            w.band = w.band,
                            range = range,
                            label.qty = label.qty,
@@ -1325,8 +1351,8 @@ plot.object_spct <-
                            na.rm = na.rm,
                            ...)
     } else if (plot.qty == "absorptance") {
-      x <- as.filter_spct(x)
-      out.ggplot <- Afr_plot(spct = x,
+      object <- as.filter_spct(object)
+      out.ggplot <- Afr_plot(spct = object,
                              w.band = w.band,
                              range = range,
                              pc.out = pc.out,
@@ -1339,8 +1365,8 @@ plot.object_spct <-
                              na.rm = na.rm,
                              ...)
     } else if (plot.qty == "reflectance") {
-      x <- as.reflector_spct(x)
-      out.ggplot <- R_plot(spct = x,
+      object <- as.reflector_spct(object)
+      out.ggplot <- R_plot(spct = object,
                            w.band = w.band,
                            range = range,
                            pc.out = pc.out,
@@ -1356,19 +1382,19 @@ plot.object_spct <-
       stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
     }
     out.ggplot +
-      ggtitle_spct(x = x,
+      ggtitle_spct(object = object,
                    time.format = time.format,
                    tz = tz,
-                   x.name = deparse(substitute(x)),
+                   object.label = object.label,
                    annotations = annotations)
   }
 
-#' @rdname plot.object_spct
+#' @rdname autoplot.object_spct
 #'
 #' @export
 #'
-plot.object_mspct <-
-  function(x, ..., range = NULL) {
+autoplot.object_mspct <-
+  function(object, ..., range = NULL) {
     stop("plot() not implemented for 'object_mspct'")
     # z <- rbindspct(x)
     # plot(x = z, ...)

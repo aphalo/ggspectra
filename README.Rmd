@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 
 # ggspectra
 
-[![cran version](http://www.r-pkg.org/badges/version/ggspectra)](https://cran.r-project.org/package=ggspectra) 
+[![cran version](https://www.r-pkg.org/badges/version/ggspectra)](https://cran.r-project.org/package=ggspectra) 
 [![cran checks](https://cranchecks.info/badges/worst/ggspectra)](https://cran.r-project.org/web/checks/check_results_ggspectra.html)
 
 The goal of 'ggspectra' is to make it easy to plot radiation spectra and similar data, such and transmittance, absorbance and reflectance spectra, producing fully annotated publication- and presentation-ready plots. It is an extension to packages 'ggplot2' and 'photobiology', and part of the 'r4phototbiology' suite.
@@ -26,18 +26,22 @@ Please, see the web site [r4photobiology](https://www.r4photobiology.info) for d
 
 ## Example
 
-This is a basic example which shows plotting using the most automatic approach.
+Plotting spectra with an specialization of the `autoplot()` method provides the most automatic approach.
 
 ```{r example, message=FALSE}
-library(photobiology)
 library(ggspectra)
-plot(sun.spct)
+autoplot(sun.spct)
 ```
 
-This second example uses the grammar of graphics approach, as implemented in 'ggplot2'.
+Some degree of flexibility can be obtained by passing arguments.
+
+```{r}
+autoplot(sun.spct, annotations = c("+", "title:where:when"), unit.out = "photon")
+```
+
+Maximum flexibilty is achieved when building a plot layer by layer using the grammar of graphics approach, as implemented in 'ggplot2', but taking advantage of the specialized `ggplot()` methods, _geometries_, _statistics_ and _scales_ specialized for the plotting of spectra, defined in this package .
 
 ```{r example2, message=FALSE}
-library(ggplot2)
 photon_as_default()
 ggplot(sun.spct) +
   geom_spct() +

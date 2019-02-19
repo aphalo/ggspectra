@@ -1,5 +1,5 @@
 ---
-title: "User Guide: 2 Plot Methods"
+title: "User Guide: 2 Autoplot Methods"
 subtitle: "'ggspectra' `r packageVersion('ggspectra')`"
 author: "Pedro J. Aphalo"
 date: "`r Sys.Date()`"
@@ -7,21 +7,23 @@ output:
   rmarkdown::html_vignette:
     toc: yes
 vignette: >
-  %\VignetteIndexEntry{User Guide: 2 Plot Methods}
+  %\VignetteIndexEntry{User Guide: 2 Autoplot Methods}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ## Introduction
 
-Package `ggspectra` extends `ggplot2` with stats, geoms and annotations suitable for light spectra. It also defines `ggplot()` and  `plot()` methods specialized for the classes defined in package `photobiology` for storing different types of spectral data. This vignette describes the use of these plot methods.
+Package `ggspectra` extends `ggplot2` with stats, geoms and annotations suitable for light spectra. It also defines `ggplot()` and  `autoplot()` methods specialized for the classes defined in package `photobiology` for storing different types of spectral data. This vignette describes the use of these `autoplot()` methods.
 
-Although the package uses internally `ggplot2`, `photobiology` and `photobiologyWavebands` it does not re-export these packages, which need to loaded if used.
+The package uses 'ggplot2', 'photobiology' and 'photobiologyWavebands'. More importantly it defines specializations of methods defined in 'ggplot2' and
+exports methods epecialized for classes defined in package 'photobiology',
+consequently both 'ggplot2' and 'photobiology' are loaded automatically when
+package 'ggspectra' is loaded. This is the behaviour from version 0.9.26 
+onwards, when using earlier versions these packages needed to be loaded explicitly.
 
 ```{r}
-library(ggplot2)
 library(dplyr)
-library(photobiology)
 library(photobiologyWavebands)
 library(ggspectra)
 
@@ -51,45 +53,46 @@ theme_set(theme_bw(10))
 
 ## Plotting spectra
 
-The most automatic way of plotting spectral data stored in one of the classes defined in package `photobiology` is to use the `plot()`methods. These go much further than the `plot()` method defined in base-R for numeric data, as these classes store metadata that allows the automatic construction of axis labels as quantities and units are well defined.
+The most automatic way of plotting spectral data stored in one of the classes defined in package `photobiology` is to use the `autoplot()` methods (for compatibility
+with versions < 0.9.25 `plot()` remains as an additional name for the same methods). As `autoplot()` methods defined by 'ggplot2' they take advantage of all the data and metadata stored in objects of the special classes used to store spectra. This allows the automatic construction of axis labels as quantities and units are well defined.
 
-Here we use the same example `source_spct` object from package `photobiology` used in the User Guide 1. In contrast to the examples in the User Guide 1, here we obtain with a very simple statement a complete annotated plot of the solar spectrum at ground level.
+Here we use the same example `source_spct` object from package 'photobiology' used in the User Guide 1. In contrast to the examples in the User Guide 1, here we obtain with a very simple statement a complete annotated plot of the solar spectrum at ground level.
 
 ```{r}
-plot(sun.spct)
+autoplot(sun.spct)
 ```
 
 We can change the basis of expression of spectral irradiance and irradiance from `"energy"` to `"photon"`. Be aware that by design, all values, summaries and spectral data will always use the same base of expression.
 
 
 ```{r}
-plot(sun.spct, unit.out = "photon")
+autoplot(sun.spct, unit.out = "photon")
 ```
 
 If a single object contains multiple spectra in long form, they are all plotted. In addition no summary values are displayed as they would overlap.
 
 ```{r}
-plot(two_suns.spct)
+autoplot(two_suns.spct)
 ```
 
-Although the defaults provide a useful plot, the `plot()` methods accepts arguments for several parameters that allow to tweak the looks and contents of the plots without explicit manipulation of the spectral data.
+Although the defaults provide a useful plot, the `autoplot()` methods accepts arguments for several parameters that allow to tweak the looks and contents of the plots without explicit manipulation of the spectral data.
 
 ### Summary quantities in labels
 
 In this first example we pass `"mean"` as argument to `label.qty`, to print means instead of integrals in the labels. Note that the units and quantity labels for the waveband summaries have also changed.
 
 ```{r}
-plot(sun.spct, label.qty = "mean")
+autoplot(sun.spct, label.qty = "mean")
 ```
 
 Two `label.qty` values need explanation. The first one, `"relative"` displays in labels the relative contribution of the integral of each waveband, to the sum of the integrals of all wavebands. The second one, `"contribution"` displays in labels the integral of each waveband divided by the integral of the whole spectrum. Consequently, this second option should be interpreted with caution, as the spectral data is unlikely in many cases to include the whole emission or absorption spectrum of a source. Using `"relative.pc"` or `"contribution.pc"` results in the corresponding values being expressed as percentages.
 
 ```{r}
-plot(sun.spct, label.qty = "contribution")
+autoplot(sun.spct, label.qty = "contribution")
 ```
 
 ```{r}
-plot(sun.spct, label.qty = "relative")
+autoplot(sun.spct, label.qty = "relative")
 ```
 
 ### Automatic annotations
@@ -113,7 +116,7 @@ Which _annotations_ are included can be controlled through parameter `annotation
 | "title:_type_:_type_" |   none | |
 
 Titles come in different flavours. Package 'ggplot2' now supports both titles
-and subtitles. The `"title"` as argument to parameter `annotation` of `plot()` methods and of function `ggtitle_spct()` takes optional modifiers that can be used to specify the contents of the _automatic_ title and subtitle. Currently supported modifiers are shown in the table below. If the metadata item is not stored in the plotted spectral object, the title or subtitle will show `NA`. See the documentation of packages 'photobiology' and 'ooacquire' for information on how to set and unset attributes of spectral objects. To add an arbitrary title and/or subtitle to a plot, use either function `ggtitle()` or function `labs()` from package 'ggplot2'.
+and subtitles. The `"title"` as argument to parameter `annotation` of `autoplot()` methods and of function `ggtitle_spct()` takes optional modifiers that can be used to specify the contents of the _automatic_ title and subtitle. Currently supported modifiers are shown in the table below. If the metadata item is not stored in the plotted spectral object, the title or subtitle will show `NA`. See the documentation of packages 'photobiology' and 'ooacquire' for information on how to set and unset attributes of spectral objects. To add an arbitrary title and/or subtitle to a plot, use either function `ggtitle()` or function `labs()` from package 'ggplot2'.
 
 | Modifier | text source used |
 | -------- | ------------- |
@@ -130,120 +133,120 @@ For example `"title:objt"`, the default for `"title"`, adds a title with the nam
 
 We can add an annotation to the defaults. 
 ```{r}
-plot(sun.spct, 
+autoplot(sun.spct, 
      annotations = c("+", "title:when:where"))
 ```
 
 In this case `"boundaries"`, an annotation that adds a horizontal dashed line and does not override any other annotation.
 
 ```{r}
-plot(sun.spct, 
+autoplot(sun.spct, 
      annotations = c("+", "boundaries"))
 ```
 
 We can list all the annotations to be included in a plot, in which case `"="` is optional so as to maintain compatibility with earlier versions.
 
 ```{r}
-plot(sun.spct, 
+autoplot(sun.spct, 
      annotations = c("=", "labels", "summaries", "color.guide", "peaks", "boundaries"))
 ```
 
 As indicated in the table above, some annotations override other annotations which fulfil a similar role. Here `"segments"` overrides `"boxes"`, in the default.
 
 ```{r}
-plot(sun.spct, 
+autoplot(sun.spct, 
      annotations = c("+", "segments"))
 ```
 
 We can also _remove_ some of the default annotations on a case by case basis.
 
 ```{r}
-plot(sun.spct, annotations = c("-", "summaries", "peaks"))
+autoplot(sun.spct, annotations = c("-", "summaries", "peaks"))
 ```
 
 The behaviour of some annotations can be tweaked. below we add `"valleys"` as annotations, and control with `span` how close to each other are the peaks and valleys found.
 
 ```{r}
-plot(sun.spct, annotations = c("+", "valleys"), span = 41)
+autoplot(sun.spct, annotations = c("+", "valleys"), span = 41)
 ```
 
 The annotations `"peak.labels"` and `"valley.labels"` override `"peaks"` and `"valleys"`. They use the _repulsive_ geometry `geom_label_repel` from package 'ggrepel'.
 
 ```{r, eval=good_label_repel}
-plot(sun.spct, annotations = c("+", "peak.labels", "valley.labels"), span = 71)
+autoplot(sun.spct, annotations = c("+", "peak.labels", "valley.labels"), span = 71)
 ```
 
 Passing `""` as argument to `annotations` results in a plot with no annotations, and no _scales_ set. 
 
 ```{r}
-plot(sun.spct, annotations = "")
+autoplot(sun.spct, annotations = "")
 ```
 
 Passing `"reserve.space"` as argument to `annotations` results in a plot with no annotations, but _scales_ set and expanded so as to receive annotations.
 
 ```{r}
-plot(sun.spct, annotations = "reserve.space")
+autoplot(sun.spct, annotations = "reserve.space")
 ```
 
 The size of the font used for the annotations is controlled by argument `text.size`.
 
 ```{r}
-plot(sun.spct, annotations = c("=", "segments", "labels", "color.guide"), 
+autoplot(sun.spct, annotations = c("=", "segments", "labels", "color.guide"), 
      text.size = 3.5)
 ```
 
 Argument `ylim` allows to mannually set the limits of the $y$ axis using the same syntax as in package 'ggplot2'. The annotations are still automatically possitioned, and the range extended to make space for them. In other words the values passed to `ylim` still give the "space" available for plotting data.
 
 ```{r}
-plot(sun.spct, ylim = c(NA, 1))
+autoplot(sun.spct, ylim = c(NA, 1))
 ```
 Arguments `range` and `w.band` play very different roles. The first one determines the `range` of wavelengths to include in the data plotted, which is slightly different to the effect of `ggplot2::xlim()` as `range` is used to _trim_ the spectral data __before__ passing it to `ggplot`, using interpolation when needed (see `photobiology::trim_wl()`). The second one, `w.band` is only used for the _annotations_ and decorations. It should be however noted, that a `waveband` object is a valid argument for both `range` and `w.band`.
 
 ```{r}
-plot(sun.spct, range = VIS())
+autoplot(sun.spct, range = VIS())
 ```
 
 ```{r}
-plot(sun.spct, w.band = PAR())
+autoplot(sun.spct, w.band = PAR())
 ```
 
 ```{r}
-plot(sun.spct, w.band = CIE())
+autoplot(sun.spct, w.band = CIE())
 ```
 
 `NULL` as argument for `w.band` is replaced by a waveband covering the full range of the spectral data.
 
 ```{r}
-plot(sun.spct, w.band = NULL)
+autoplot(sun.spct, w.band = NULL)
 ```
 The _whole range_ is the range plotted, which is controlled by the argument passed to `range`. 
 ```{r}
-plot(sun.spct, w.band = NULL, range = c(400,700))
+autoplot(sun.spct, w.band = NULL, range = c(400,700))
 ```
 The argument passed to `range` can be a `waveband` or and spectrum, in which case their wavelength range is used.
 ```{r}
-plot(sun.spct, w.band = NULL, range = PAR())
+autoplot(sun.spct, w.band = NULL, range = PAR())
 ```
 
 ```{r}
-plot(sun.spct, w.band = PAR(), range = PAR())
+autoplot(sun.spct, w.band = PAR(), range = PAR())
 ```
 
 ```{r}
-plot(sun.spct, w.band = VIS_bands(), range = VIS())
+autoplot(sun.spct, w.band = VIS_bands(), range = VIS())
 ```
 
 The time unit is also stored in the metadata, as demonstrated here. The units in axis labels have changed to the units used in the spectral data.
 
 ```{r}
 getTimeUnit(sun.daily.spct)
-plot(sun.daily.spct)
+autoplot(sun.daily.spct)
 ```
 
-Even though the `plot()` methods can return a finished plot, the returned object is a `ggplot` object and can be built upon by adding additional elements like _facets_, _aesthetics_ and even additional _layers_. We pass `idfactor = NA` to suppress the mapping of the spectra to `linetype`.
+Even though the `autoplot()` methods can return a finished plot, the returned object is a `ggplot` object and can be built upon by adding additional elements like _facets_, _aesthetics_ and even additional _layers_. We pass `idfactor = NA` to suppress the mapping of the spectra to `linetype`.
 
 ```{r}
-plot(two_suns.spct, idfactor = NA) + facet_wrap(~spct.idx)
+autoplot(two_suns.spct, idfactor = NA) + facet_wrap(~spct.idx)
 ```
 
 
@@ -254,38 +257,38 @@ It is possible to construct and bind the spectra on-the-fly, and to use arbitrar
 filter_no_yes.spct <- 
   rbindspct(list(sun = sun.spct, filtered = yellow_gel.spct * sun.spct), 
             idfactor = "Source")
-plot(filter_no_yes.spct)
+autoplot(filter_no_yes.spct)
 ```
 
-In the examples above the `source_spct` object `sun.spct` was used. The `plot()` methods for other spectral classes have slight differences. We show some examples for `filter_spct` objects.
+In the examples above the `source_spct` object `sun.spct` was used. The `autoplot()` methods for other spectral classes have slight differences. We show some examples for `filter_spct` objects.
 
 ```{r}
-plot(yellow_gel.spct, annotations = c("-", "peaks"))
+autoplot(yellow_gel.spct, annotations = c("-", "peaks"))
 ```
 
 By default transmittance, reflectance and absorptance are expressed as fractions of one, as in the plot above, but optionally percents can be plotted.
 
 ```{r}
-plot(yellow_gel.spct, pc.out = TRUE, annotations = c("-", "peaks"))
+autoplot(yellow_gel.spct, pc.out = TRUE, annotations = c("-", "peaks"))
 ```
 
 In many cases it is possible to convert on-the-fly the quantity plotted.
 
 ```{r}
-plot(yellow_gel.spct, plot.qty = "absorbance", annotations = c("-", "peaks"))
+autoplot(yellow_gel.spct, plot.qty = "absorbance", annotations = c("-", "peaks"))
 ```
 
 We add a _guessed_ spectral reflectance to the data object to allow the estimation of internal absorptance.
 
 ```{r}
 yellow_gel.spct$Rfr <- 1 - max(yellow_gel.spct$Tfr)
-plot(yellow_gel.spct, plot.qty = "absorptance", annotations = c("-", "peaks"))
+autoplot(yellow_gel.spct, plot.qty = "absorptance", annotations = c("-", "peaks"))
 ```
 
 If one really needs to, one can add a suitable _stat_ using 'local' data. A peak annotation could be added manually.
 
 ```{r}
-plot(sun.spct) + geom_spct(fill = color_of(sun.spct)) + 
+autoplot(sun.spct) + geom_spct(fill = color_of(sun.spct)) + 
   geom_spct(data = yellow_gel.spct * sun.spct, color = "black", 
             fill = color_of(yellow_gel.spct * sun.spct))
 ```
@@ -295,24 +298,24 @@ The examples above use an emission spectrum. All the spectral classes defined in
 In the case of quantities like transmittance which have a certain range of valid values, both upper and lower boundaries are highlighted, but in other cases only one, or even none depending on the possible valid ranges for the spectral quantities.
 
 ```{r}
-plot(yellow_gel.spct, annotations = c("+", "boundaries"))
+autoplot(yellow_gel.spct, annotations = c("+", "boundaries"))
 ```
 
 In the case of raw instrument counts data, if the spectral object contains an instrument descriptor as metadata, the upper boundary is set to the maximum counts of the detector.
 
 ```{r}
-plot(white_led.raw_spct, annotations = c("+", "boundaries"))
+autoplot(white_led.raw_spct, annotations = c("+", "boundaries"))
 ```
 
 Both `raw_spct` and `cps_spct` objects contain multiple data columns when integration time bracketing has been used during data acquisition. In such cases, if one wants to plot only one of the raw spectra, method `select()` from package 'dplyr' should be used instead of subscripting (`[ ]`) so as to preserve the metadata. In addition renaming of the variable is needed as shown below when a single column is extracted.
 
 ```{r}
-plot(dplyr::select(white_led.raw_spct, w.length, counts = counts_1),
+autoplot(dplyr::select(white_led.raw_spct, w.length, counts = counts_1),
      annotations = c("+", "boundaries"))
 ```
 
 ```{r}
-plot(dplyr::select(white_led.raw_spct, w.length, counts_1, counts_3),
+autoplot(dplyr::select(white_led.raw_spct, w.length, counts_1, counts_3),
      annotations = c("+", "boundaries"))
 ```
 
@@ -323,13 +326,13 @@ If the supplied data include off-range values such as negative irradiance or fra
 ```{r,purl=FALSE}
 # We disable range check to avoid warning during CRAN checks!!
 options(photobiology.strict.range = NA)
-plot(yellow_gel.spct - 0.01, annotations = c("+", "boundaries"))
+autoplot(yellow_gel.spct - 0.01, annotations = c("+", "boundaries"))
 options(photobiology.strict.range = FALSE)
 ```
 
 ## Ploting collections of spectra
 
-`plot()` methods are available for collections of spectra. We use in the examples a simple collection of two spectra. The output and acceptable arguments are the same as those in the `plot()` methods for multiple spectra in long form described above.
+`autoplot()` methods are available for collections of spectra. We use in the examples a simple collection of two spectra. The output and acceptable arguments are the same as those in the `autoplot()` methods for multiple spectra in long form described above.
 
 ```{r}
 two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct / 2))
@@ -339,40 +342,40 @@ mixed.mspct <- generic_mspct(list(sun = sun.spct, filter = polyester.spct))
 Plot accepting all defaults.
 
 ```{r}
-plot(two_suns.mspct)
+autoplot(two_suns.mspct)
 ```
 
 Plot using one panel per spectrum. Setting `idfactor = NA` suppresses the default mapping to `linetype`.
 
 ```{r, fig.width = 7, fig.height = 8}
-plot(two_suns.mspct, idfactor = NA) + 
+autoplot(two_suns.mspct, idfactor = NA) + 
   facet_wrap(~spct.idx, ncol = 1)
 ```
 
 Plot as separate plots. This approach is specially useful with heterogeneous generic_mspct objects, although it works with any collection of spectra.
 
 ```{r, fig.width = 7, fig.height = 8}
-multiplot(plotlist = mslply(mixed.mspct, plot))
+multiplot(plotlist = mslply(mixed.mspct, autoplot))
 ```
 
 
 Using colors is slightly more involved as the identity scale is in use for color in annotations. For this same reason no color key in generated automatically. (In the case of more than two spectra it is easier to use `plyr::mapvalues` instead of several nested `ifelse` calls.)
 
 ```{r}
-plot(two_suns.mspct) + 
+autoplot(two_suns.mspct) + 
   aes(color = ifelse(spct.idx == "sun1", "darkgreen", "darkred"))
 ```
 
-Plots created with `plot()` method are `ggplot` objects and can be customized, bearing in mind that any added layers will be plotted on top or existing layers.
+Plots created with `autoplot()` method are `ggplot` objects and can be customized, bearing in mind that any added layers will be plotted on top or existing layers.
 
 ```{r}
-plot(two_suns.mspct, annotations = c("color.guide", "valleys", "peaks"), span = 51)
+autoplot(two_suns.mspct, annotations = c("color.guide", "valleys", "peaks"), span = 51)
 ```
 
 Here we replace the default peaks annotations with a custom one, but still take advantage of other defaults like nice axis labels and other annotations.
 
 ```{r}
-plot(two_suns.mspct, annotations = c("-", "peaks")) +
+autoplot(two_suns.mspct, annotations = c("-", "peaks")) +
   stat_peaks(span = NULL, color = "red") +
   stat_peaks(span = NULL, geom = "text", 
              label.fmt = "max at %3.1f nm",
@@ -381,16 +384,16 @@ plot(two_suns.mspct, annotations = c("-", "peaks")) +
 
 ## Ploting wavebands
 
-A `plot()` method for `waveband` objects is also provided.
+A `autoplot()` method for `waveband` objects is also provided.
 
 ```{r}
-plot(VIS())
+autoplot(VIS())
 ```
 
 ```{r}
-plot(CIE(), range = CIE(), annotations = c("-", "color.guide"))
+autoplot(CIE(), range = CIE(), annotations = c("-", "color.guide"))
 ```
 
 ```{r}
-plot(DNA_N(), range = c(270, 420), annotations = c("-", "color.guide"))
+autoplot(DNA_N(), range = c(270, 420), annotations = c("-", "color.guide"))
 ```

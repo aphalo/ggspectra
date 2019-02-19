@@ -1,3 +1,3 @@
 cd ..
-R CMD INSTALL --build ggspectra_0.3.0.9000.tar.gz
+R CMD INSTALL --build ggspectra_0.3.2.tar.gz
 cd ./ggspectra

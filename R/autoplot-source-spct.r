@@ -1,4 +1,4 @@
-#' Plot a source spectrum.
+#' Create a complete ggplot for light-source spectra.
 #'
 #' This function returns a ggplot object with an annotated plot of a source_spct
 #' object.
@@ -219,7 +219,7 @@ e_plot <- function(spct,
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 }
 
-#' Plot a source spectrum.
+#' Create a complete ggplot for light-source spectra.
 #'
 #' This function returns a ggplot object with an annotated plot of a source_spct
 #' object.
@@ -440,7 +440,7 @@ q_plot <- function(spct,
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 }
 
-#' Plot methods for light-source spectra.
+#' Create a complete ggplot for a light-source spectrum.
 #'
 #' These methods return a ggplot object with an annotated plot of a source_spct
 #' object or of the spectra contained in a source_mspct object.
@@ -449,7 +449,7 @@ q_plot <- function(spct,
 #'   The object returned is a ggplot object, and can be further manipulated and
 #'   added to.
 #'
-#' @param x a source_spct or a source_mspct object.
+#' @param object a source_spct or a source_mspct object.
 #' @param ... in the case of collections of spectra, additional arguments passed
 #'   to the plot methods for individual spectra, otherwise currently ignored.
 #' @param w.band a single waveband object or a list of waveband objects.
@@ -473,24 +473,24 @@ q_plot <- function(spct,
 #'   the factor is retrieved from metadata or if no metadata found, the default
 #'   "spct.idx" is tried.
 #' @param ylim numeric y axis limits,
+#' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
 #'
-#' @method plot source_spct
 #' @export
 #'
 #' @keywords hplot
 #'
 #' @examples
-#' library(photobiology)
-#' plot(sun.spct)
-#' plot(sun.spct, unit.out = "photon")
 #'
-#' @family plot functions
+#' autoplot(sun.spct)
+#' autoplot(sun.spct, unit.out = "photon")
 #'
-plot.source_spct <-
-  function(x, ...,
+#' @family autoplot methods
+#'
+autoplot.source_spct <-
+  function(object, ...,
            w.band=getOption("photobiology.plot.bands",
                             default = list(UVC(), UVB(), UVA(), PAR())),
            range=NULL,
@@ -503,6 +503,7 @@ plot.source_spct <-
            text.size = 2.5,
            idfactor = NULL,
            ylim = c(NA, NA),
+           object.label = deparse(substitute(object)),
            na.rm = TRUE) {
     annotations.default <-
       getOption("photobiology.plot.annotations",
@@ -510,7 +511,7 @@ plot.source_spct <-
     annotations <- decode_annotations(annotations,
                                       annotations.default)
     if (is.null(label.qty)) {
-      if (is_normalized(x) || is_scaled(x)) {
+      if (is_normalized(object) || is_scaled(object)) {
         label.qty = "contribution"
       } else {
         label.qty = "total"
@@ -518,7 +519,7 @@ plot.source_spct <-
     }
     if (length(w.band) == 0) {
       if (is.null(range)) {
-        w.band <- waveband(x)
+        w.band <- waveband(object)
       } else if (is.waveband(range)) {
         w.band <- range
       } else {
@@ -527,7 +528,7 @@ plot.source_spct <-
     }
 
     if (unit.out %in% c("photon", "quantum")) {
-      out.ggplot <- q_plot(spct = x, w.band = w.band, range = range,
+      out.ggplot <- q_plot(spct = object, w.band = w.band, range = range,
                            label.qty = label.qty,
                            span = span,
                            annotations = annotations,
@@ -537,7 +538,7 @@ plot.source_spct <-
                            na.rm = na.rm,
                            ...)
     } else if (unit.out == "energy") {
-      out.ggplot <- e_plot(spct = x, w.band = w.band, range = range,
+      out.ggplot <- e_plot(spct = object, w.band = w.band, range = range,
                            label.qty = label.qty,
                            span = span,
                            annotations = annotations,
@@ -550,24 +551,35 @@ plot.source_spct <-
       stop("Invalid 'radiation.unit' argument value: '", unit.out, "'")
     }
     out.ggplot +
-      ggtitle_spct(x = x,
-                   x.name = deparse(substitute(x)),
+      ggtitle_spct(object = object,
+                   object.label = object.label,
                    time.format = time.format,
                    tz = tz,
                    annotations = annotations)
   }
 
-#' @rdname plot.source_spct
+#' @rdname autoplot.source_spct
+#'
+#' @param plot.data character Data to plot. Default is "as.is" plotting
+#'   one line per spectrum. When passing "mean" or "median" as
+#'   argument all the spectra must contain data at the same wavelength values.
 #'
 #' @export
 #'
-plot.source_mspct <-
-  function(x, ..., range = NULL) {
+autoplot.source_mspct <-
+  function(object, ..., range = NULL, plot.data = "as.is") {
+    # We trim the spectra to avoid unnecesary computaions later
     if (!is.null(range)) {
-      x <- trim_wl(x, range = range, use.hinges = TRUE, fill = NULL)
+      object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
     }
-    z <- rbindspct(x)
-    plot(x = z, range = NULL, ...)
+    # we convert the collection of spectra into a single spectrum object
+    # containing a summary spectrum or multiple spectra in long form.
+    z <- switch(plot.data,
+                mean = photobiology::s_mean(object),
+                median = photobiology::s_median(object),
+                as.is = photobiology::rbindspct(object)
+    )
+    autoplot(object = z, range = NULL, ...)
   }
 
 ## internal

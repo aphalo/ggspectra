@@ -1,3 +1,18 @@
+ggspectra 0.3.2 (2019-02-19)
+============================
+
+* Move 'ggplot2' from Imports: to Depends: as the objects returned belong to
+classes defined in this package.
+* Move 'photobiology' from Imports: to Depends: as the objects accepted as input
+belong to classes defined in this package and is natural for users to want to
+use specialized methods to operate on them.
+* Define autoplot() methods as replacements for plot() methods, which are now
+deprecated. All documentation now uses autoplot().
+- As 'ggplot2' exports a generic for autoplot() and the expected returned value
+is a ggplot which matches the returned value of the methods defined here, we
+have renamed them to autoplot(). For backwards compatibility plot() methods
+remain available, but their use in new code is deprecated.
+
 ggspectra 0.3.1 (2018-10-28)
 ============================
 

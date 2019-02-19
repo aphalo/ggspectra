@@ -1,4 +1,4 @@
-#' Plot method for response spectra.
+#' Create a complete ggplot for response spectra.
 #'
 #' This function returns a ggplot object with an annotated plot of a
 #' response_spct object.
@@ -247,7 +247,7 @@ e_rsp_plot <- function(spct,
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 }
 
-#' Plot a response spectrum.
+#' Create a complete ggplot for response spectra.
 #'
 #' This function returns a ggplot object with an annotated plot of a
 #' response_spct object.
@@ -499,7 +499,7 @@ q_rsp_plot <- function(spct,
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 }
 
-#' Plot methods for response spectra.
+#' Create a complete ggplot for a response spectrum.
 #'
 #' These methods return a ggplot object with an annotated plot of a
 #' response_spct object or of the spectra contained in a response_mspct object.
@@ -508,7 +508,7 @@ q_rsp_plot <- function(spct,
 #'   The object returned is a ggplot object, and can be further manipulated and
 #'   added to.
 #'
-#' @param x a response_spct object or a response_mspct object.
+#' @param object a response_spct object or a response_mspct object.
 #' @param ... in the case of collections of spectra, additional arguments passed
 #'   to the plot methods for individual spectra, otherwise currently ignored.
 #' @param w.band a single waveband object or a list of waveband objects.
@@ -536,6 +536,7 @@ q_rsp_plot <- function(spct,
 #'   the factor is retrieved from metadata or if no metadata found, the
 #'   default "spct.idx" is tried.
 #' @param ylim numeric y axis limits,
+#' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
@@ -545,15 +546,14 @@ q_rsp_plot <- function(spct,
 #' @keywords hplot
 #'
 #' @examples
-#' library(photobiology)
-#' plot(photodiode.spct)
-#' plot(photodiode.spct, unit.out = "photon")
 #'
+#' autoplot(photodiode.spct)
+#' autoplot(photodiode.spct, unit.out = "photon")
 #'
-#' @family plot functions
+#' @family autoplot methods
 #'
-plot.response_spct <-
-  function(x, ...,
+autoplot.response_spct <-
+  function(object, ...,
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PAR())),
            range = NULL,
@@ -568,6 +568,7 @@ plot.response_spct <-
            text.size = 2.5,
            idfactor = NULL,
            ylim = c(NA, NA),
+           object.label = deparse(substitute(object)),
            na.rm = TRUE) {
     annotations.default <-
       getOption("photobiology.plot.annotations",
@@ -575,7 +576,7 @@ plot.response_spct <-
     annotations <- decode_annotations(annotations,
                                       annotations.default)
     if (is.null(label.qty)) {
-      if (is_normalized(x) || is_scaled(x)) {
+      if (is_normalized(object) || is_scaled(object)) {
         label.qty = "contribution"
       } else {
         label.qty = "total"
@@ -583,7 +584,7 @@ plot.response_spct <-
     }
     if (length(w.band) == 0) {
       if (is.null(range)) {
-        w.band <- waveband(x)
+        w.band <- waveband(object)
       } else if (is.waveband(range)) {
         w.band <- range
       } else {
@@ -592,7 +593,7 @@ plot.response_spct <-
     }
 
     if (unit.out=="photon" || unit.out == "quantum") {
-      out.ggplot <- q_rsp_plot(spct = x,
+      out.ggplot <- q_rsp_plot(spct = object,
                                w.band = w.band,
                                range = range,
                                pc.out = pc.out,
@@ -606,7 +607,7 @@ plot.response_spct <-
                                na.rm = na.rm,
                                ...)
     } else if (unit.out=="energy") {
-      out.ggplot <- e_rsp_plot(spct = x,
+      out.ggplot <- e_rsp_plot(spct = object,
                                w.band = w.band,
                                range = range,
                                pc.out = pc.out,
@@ -622,23 +623,34 @@ plot.response_spct <-
       stop("Invalid 'unit.out' argument value: '", unit.out, "'")
     }
     out.ggplot +
-      ggtitle_spct(x = x,
+      ggtitle_spct(object = object,
                    time.format = time.format,
                    tz = tz,
-                   x.name = deparse(substitute(x)),
+                   object.label = object.label,
                    annotations = annotations)
   }
 
-#' @rdname plot.response_spct
+#' @rdname autoplot.response_spct
+#'
+#' @param plot.data character Data to plot. Default is "as.is" plotting
+#'   one line per spectrum. When passing "mean" or "median" as
+#'   argument all the spectra must contain data at the same wavelength values.
 #'
 #' @export
 #'
-plot.response_mspct <-
-  function(x, ..., range = NULL) {
+autoplot.response_mspct <-
+  function(object, ..., range = NULL, plot.data = "as.is") {
+    # We trim the spectra to avoid unnecesary computaions later
     if (!is.null(range)) {
-      x <- trim_wl(x, range = range, use.hinges = TRUE, fill = NULL)
+      object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
     }
-    z <- rbindspct(x)
-    plot(x = z, range = NULL, ...)
+    # we convert the collection of spectra into a single spectrum object
+    # containing a summary spectrum or multiple spectra in long form.
+    z <- switch(plot.data,
+                mean = photobiology::s_mean(object),
+                median = photobiology::s_median(object),
+                as.is = photobiology::rbindspct(object)
+    )
+    autoplot(object = z, range = NULL, ...)
   }
 

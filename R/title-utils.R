@@ -3,8 +3,8 @@
 #' Add a title to a spectral plot based on metadata stored in an spectral
 #' object.
 #'
-#' @param x generic_spct The spectral object plotted.
-#' @param x.name character The name of the object being plotted.
+#' @param object generic_spct The spectral object plotted.
+#' @param object.label character The name of the object being plotted.
 #' @param annotations character vector Annotations as described for
 #'   \code{plot()} methods, values unrelated to title are ignored.
 #' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
@@ -12,7 +12,7 @@
 #' @param default.title character vector The default used for \code{annotations
 #'   = "title"}.
 #'
-#' @details \code{ggtitle_spct()} retrieves from object \code{x} metadata and
+#' @details \code{ggtitle_spct()} retrieves from object \code{object} metadata and
 #' passes it to \code{ggplot2::ggtitle()} as arguments for \code{title} and
 #' \code{subtitle}. The specification for the tittle is passed as argument
 #' to \code{annotations}, and consists in the keyword \code{title} with optional
@@ -34,24 +34,24 @@
 #'
 #' @export
 #'
-ggtitle_spct <- function(x,
-                         x.name = deparse(substitute(x)),
+ggtitle_spct <- function(object,
+                         object.label = deparse(substitute(object)),
                          annotations = "title",
                          time.format = "",
-                         tz = lubridate::tz(getWhenMeasured(x)),
+                         tz = lubridate::tz(getWhenMeasured(object)),
                          default.title  = "title:objt") {
 
   get_title_text <- function(key) {
     switch(key,
-           objt = x.name,
-           class = class(x)[1],
-           what = getWhatMeasured(x)[[1]],
-           when = strftime(x = getWhenMeasured(x),
+           objt = object.label,
+           class = class(object)[1],
+           what = getWhatMeasured(object)[[1]],
+           when = strftime(x = getWhenMeasured(object),
                            format = time.format,
                            tz = tz,
                            usetz = TRUE),
            where =
-           {where <- getWhereMeasured(x)
+           {where <- getWhereMeasured(object)
            if (!is.na(where[[1]])) {
              where[["lon"]] <- ifelse(where[["lon"]] < 0,
                                       paste(abs(where[["lon"]]), " W"),
@@ -68,8 +68,8 @@ ggtitle_spct <- function(x,
            # the order of columns in the data frame can vary
            paste(where[["lat"]], where[["lon"]], where[["address"]], sep = ", ")
            },
-           inst.name = getInstrDesc(x)[["spectrometer.name"]],
-           inst.sn = getInstrDesc(x)[["spectrometer.sn"]],
+           inst.name = getInstrDesc(object)[["spectrometer.name"]],
+           inst.sn = getInstrDesc(object)[["spectrometer.sn"]],
            none = NULL,
            {warning("Title key '", key, "' not recognized"); NULL}
     )

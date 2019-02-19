@@ -56,18 +56,19 @@ reference:
     - scale_y_counts_continuous
     - sec_axis_w_number
   - title: Automatic plot creation
-    desc: Plot methods for spectra and a function for color-patch charts. They all return `gg` objects.
+    desc: Autoplot methods for spectra and a function for color-patch charts. They all return `gg` objects.
     contents:
-    - plot.raw_spct
-    - plot.calibration_spct
-    - plot.cps_spct
-    - plot.source_spct
-    - plot.response_spct
-    - plot.filter_spct
-    - plot.reflector_spct
-    - plot.object_spct
-    - plot.waveband
+    - autoplot.raw_spct
+    - autoplot.calibration_spct
+    - autoplot.cps_spct
+    - autoplot.source_spct
+    - autoplot.response_spct
+    - autoplot.filter_spct
+    - autoplot.reflector_spct
+    - autoplot.object_spct
+    - autoplot.waveband
     - color_chart
+    - plot
   - title: Helper functions
     desc: Formatters, International System of units, unit conversions.
     contents:
