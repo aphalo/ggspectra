@@ -50,8 +50,7 @@
 #' @seealso \code{\link[photobiology]{color_of}}, which is used internally.
 #'
 #' @examples
-#' library(photobiology)
-#' library(ggplot2)
+#'
 #' ggplot(sun.spct) + geom_line() +
 #'   stat_color() + scale_color_identity()
 #'

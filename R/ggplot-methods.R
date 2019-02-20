@@ -56,8 +56,7 @@
 #'
 #' @export
 #' @examples
-#' library(photobiology)
-#' library(ggplot2)
+#'
 #' ggplot(sun.spct) + geom_line()
 #' ggplot(sun.spct, unit.out = "photon") + geom_line()
 #'

@@ -13,6 +13,7 @@
 #' @export
 #'
 #' @examples
+#'
 #' counts_label()
 #' counts_label("R.expression")
 #' counts_label("LaTeX")
@@ -99,8 +100,6 @@ s.q.irrad_label <- function(unit.exponent = -6,
 #' @export
 #'
 #' @examples
-#' library(ggplot2)
-#' library(photobiology)
 #'
 #' ggplot(sun.spct) +
 #'   geom_line() +
@@ -117,13 +116,14 @@ s.q.irrad_label <- function(unit.exponent = -6,
 #'   scale_y_s.q.irrad_continuous() +
 #'   scale_x_wl_continuous()
 #'
-#' ggplot(sun.spct) +
+#' ggplot(clip_wl(sun.spct, c(295, NA))) +
 #'   geom_line() +
 #'   scale_y_s.e.irrad_log10() +
 #'   scale_x_wl_continuous()
 #'
-#' ggplot(sun.spct, unit.out = "photon") +
-#'   geom_line() +
+#' ggplot(clip_wl(sun.spct, c(295, NA)),
+#'   unit.out = "photon") +
+#'   geom_line(na.rm = TRUE) +
 #'   scale_y_s.q.irrad_log10() +
 #'   scale_x_wl_continuous()
 #'

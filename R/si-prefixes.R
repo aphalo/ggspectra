@@ -164,8 +164,11 @@ nearest_SI_exponent <- function(exponent) {
 #' @param digits number of significant digits to show
 #' @param ... other arguments passed on to \code{\link{format}}
 #' @param x a numeric vector to format
+#'
 #' @export
+#'
 #' @examples
+#'
 #' SI_pl_format()(1:10)
 #' SI_pl_format()(runif(10))
 #' SI_pl_format(exponent = 2)(runif(10))
@@ -199,8 +202,11 @@ SI_plain <- function(x, exponent = 0, digits = 3, ...) {
 #' @param digits number of significant digits to show
 #' @param ... other arguments passed on to \code{\link{format}}
 #' @param x a numeric vector to format
+#'
 #' @export
+#'
 #' @examples
+#'
 #' SI_tg_format()(1:10)
 #' SI_tg_format()(runif(10))
 #' SI_tg_format(exponent = 2)(runif(10))

@@ -41,6 +41,7 @@ w_frequency <- function(w.length,
 #' @export
 #'
 #' @examples
+#'
 #' w_length_label()
 #' w_length_label("R.expression")
 #' w_length_label("LaTeX")
@@ -162,8 +163,6 @@ w_frequency_label <- function(unit.exponent = 9,
 #' @export
 #'
 #' @examples
-#' library(ggplot2)
-#' library(photobiology)
 #'
 #' ggplot(sun.spct) +
 #'   geom_line() +
@@ -224,8 +223,6 @@ sec_axis_w_frequency <- function(unit.exponent = 12) {
 #' @export
 #'
 #' @examples
-#' library(ggplot2)
-#' library(photobiology)
 #'
 #' ggplot(sun.spct) +
 #'   geom_line() +

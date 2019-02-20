@@ -12,6 +12,7 @@
 #' @export
 #'
 #' @examples
+#'
 #' cps_label()
 #' cps_label(3)
 #' cps_label(format = "R.expression")
@@ -60,8 +61,6 @@ cps_label <- function(unit.exponent = 0,
 #' @export
 #'
 #' @examples
-#' library(ggplot2)
-#' library(photobiology)
 #'
 #' ggplot(white_led.cps_spct) +
 #'   geom_line() +

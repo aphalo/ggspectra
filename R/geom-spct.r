@@ -36,8 +36,7 @@
 #' \code{\link[ggplot2]{geom_point}} for scatter plots.
 #'
 #' @examples
-#' library(ggplot2)
-#' library(photobiology)
+#'
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
 #' ggplot(sun.spct) + geom_spct()
 #'

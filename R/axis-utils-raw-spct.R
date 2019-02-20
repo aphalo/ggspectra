@@ -12,6 +12,7 @@
 #' @export
 #'
 #' @examples
+#'
 #' counts_label()
 #' counts_label("R.expression")
 #' counts_label("LaTeX")
@@ -57,8 +58,6 @@ counts_label <- function(unit.exponent = 3,
 #' @export
 #'
 #' @examples
-#' library(ggplot2)
-#' library(photobiology)
 #'
 #' ggplot(white_led.raw_spct) +
 #'   geom_line() +

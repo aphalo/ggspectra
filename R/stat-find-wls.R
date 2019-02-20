@@ -77,8 +77,7 @@
 #'   super or subscripts) can be also easily obtained.
 #'
 #' @examples
-#' library(photobiology)
-#' library(ggplot2)
+#'
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
 #' ggplot(yellow_gel.spct) + geom_line() +
 #'   stat_find_wls(target = c(0.25, 0.5, 0.75))
@@ -257,8 +256,7 @@ StatFindWls <-
 #'   super or subscripts) can be also easily obtained.
 #'
 #' @examples
-#' library(photobiology)
-#' library(ggplot2)
+#'
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
 #' ggplot(yellow_gel.spct) + geom_line() +
 #'   stat_find_qtys(target = "half.range")

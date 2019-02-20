@@ -89,8 +89,7 @@
 #'   super or subscripts) can be also easily obtained.
 #'
 #' @examples
-#' library(photobiology)
-#' library(ggplot2)
+#'
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
 #' ggplot(sun.spct) + geom_line() +
 #'   stat_label_peaks(hjust = "left", span = 31, angle = 90, color = "red")
@@ -101,7 +100,7 @@
 #' # too slow for CRAN checks
 #' \dontrun{
 #' library(ggrepel)
-#' library(photobiology)
+#'
 #' ggplot(sun.spct) + geom_line() +
 #'   stat_peaks(span = 41, shape = 21, size = 3) +
 #'   stat_label_peaks(span = 41, geom = "label_repel", segment.colour = "red",

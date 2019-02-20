@@ -13,6 +13,7 @@
 #' @export
 #'
 #' @examples
+#'
 #' counts_label()
 #' counts_label("R.expression")
 #' counts_label("LaTeX")
@@ -99,8 +100,6 @@ s.q.response_label <- function(unit.exponent = -6,
 #' @export
 #'
 #' @examples
-#' library(ggplot2)
-#' library(photobiology)
 #'
 #' ggplot(ccd.spct) +
 #'   geom_line() +

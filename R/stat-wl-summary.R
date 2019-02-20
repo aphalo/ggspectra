@@ -61,8 +61,7 @@
 #' }
 #'
 #' @examples
-#' library(photobiology)
-#' library(ggplot2)
+#'
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
 #' ggplot(sun.spct) + geom_line() +
 #'   stat_wl_summary(geom = "hline")

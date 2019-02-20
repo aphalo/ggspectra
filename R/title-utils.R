@@ -23,8 +23,6 @@
 #' @return The return value of \code{ggplot2::ggtitle()}.
 #'
 #' @examples
-#' library(ggplot2)
-#' library(photobiology)
 #'
 #' p <- ggplot(sun.spct) +
 #'   geom_line()

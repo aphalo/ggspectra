@@ -73,8 +73,7 @@ Required by the statistic and need to be set with \code{aes()}.
 }
 
 \examples{
-library(photobiology)
-library(ggplot2)
+
 ggplot(sun.spct) + geom_line() +
   stat_color() + scale_color_identity()
 

@@ -14,6 +14,7 @@
 #' @export
 #'
 #' @examples
+#'
 #' A_internal_label()
 #' A_internal_label(-3)
 #' A_internal_label(format = "R.expression")
@@ -56,6 +57,7 @@ A_internal_label <- function(unit.exponent = 0,
 #' @export
 #'
 #' @examples
+#'
 #' A_total_label()
 #' A_total_label(-3)
 #' A_total_label(format = "R.expression")
@@ -108,8 +110,6 @@ A_total_label <- function(unit.exponent = 0,
 #' @export
 #'
 #' @examples
-#' library(ggplot2)
-#' library(photobiology)
 #'
 #' ggplot(yellow_gel.spct, plot.qty = "absorbance") +
 #'   geom_line() +
@@ -160,11 +160,12 @@ scale_y_A_total_continuous <- function(unit.exponent = 0,
 #' @export
 #'
 #' @examples
+#'
 #' Tfr_internal_label()
-#' Tfr_internal_label(3)
+#' Tfr_internal_label(-3)
 #' Tfr_internal_label(format = "R.expression")
 #' Tfr_internal_label(format = "LaTeX")
-#' Tfr_internal_label(3, format = "LaTeX")
+#' Tfr_internal_label(-3, format = "LaTeX")
 #'
 Tfr_internal_label <- function(unit.exponent = 0,
                                format = getOption("photobiology.math",
@@ -198,6 +199,7 @@ Tfr_internal_label <- function(unit.exponent = 0,
 #' @export
 #'
 #' @examples
+#'
 #' Tfr_total_label()
 #' Tfr_total_label(-2)
 #' Tfr_total_label(-3)
@@ -248,8 +250,6 @@ Tfr_total_label <- function(unit.exponent = 0,
 #' @export
 #'
 #' @examples
-#' library(ggplot2)
-#' library(photobiology)
 #'
 #' ggplot(yellow_gel.spct) +
 #'   geom_line() +
@@ -309,11 +309,12 @@ scale_y_Tfr_total_continuous <- function(unit.exponent = 0,
 #' @export
 #'
 #' @examples
+#'
 #' Rfr_specular_label()
-#' Rfr_specular_label(3)
+#' Rfr_specular_label(-3)
 #' Rfr_specular_label(format = "R.expression")
 #' Rfr_specular_label(format = "LaTeX")
-#' Rfr_specular_label(3, format = "LaTeX")
+#' Rfr_specular_label(-3, format = "LaTeX")
 #'
 Rfr_specular_label <- function(unit.exponent = 0,
                                format = getOption("photobiology.math",
@@ -347,6 +348,7 @@ Rfr_specular_label <- function(unit.exponent = 0,
 #' @export
 #'
 #' @examples
+#'
 #' Rfr_total_label()
 #' Rfr_total_label(-2)
 #' Rfr_total_label(-3)
@@ -397,8 +399,6 @@ Rfr_total_label <- function(unit.exponent = 0,
 #' @export
 #'
 #' @examples
-#' library(ggplot2)
-#' library(photobiology)
 #'
 #' ggplot(yellow_gel.spct) +
 #'   geom_line() +
