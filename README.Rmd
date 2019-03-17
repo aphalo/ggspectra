@@ -24,18 +24,18 @@ Package 'ggspectra' provides stats, geoms, scales and functions to be used for p
 
 Please, see the web site [r4photobiology](https://www.r4photobiology.info) for details on other packages available as part of the suite, and on how to install them.
 
-## Example
+## Examples
 
 Plotting spectra with an specialization of the `autoplot()` method provides the most automatic approach.
 
-```{r example, message=FALSE}
+```{r example0, message=FALSE}
 library(ggspectra)
 autoplot(sun.spct)
 ```
 
 Some degree of flexibility can be obtained by passing arguments.
 
-```{r}
+```{r example1}
 autoplot(sun.spct, annotations = c("+", "title:where:when"), unit.out = "photon")
 ```
 

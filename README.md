@@ -21,7 +21,7 @@ library(ggspectra)
 autoplot(sun.spct)
 ```
 
-![](man/figures/README-example-1.png)
+![](man/figures/README-example0-1.png)
 
 Some degree of flexibility can be obtained by passing arguments.
 
@@ -29,7 +29,7 @@ Some degree of flexibility can be obtained by passing arguments.
 autoplot(sun.spct, annotations = c("+", "title:where:when"), unit.out = "photon")
 ```
 
-![](man/figures/README-unnamed-chunk-2-1.png)
+![](man/figures/README-example1-1.png)
 
 Maximum flexibilty is achieved when building a plot layer by layer using the grammar of graphics approach, as implemented in 'ggplot2', but taking advantage of the specialized `ggplot()` methods, *geometries*, *statistics* and *scales* specialized for the plotting of spectra, defined in this package .
 
