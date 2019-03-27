@@ -57,6 +57,9 @@
 #'   \item{x}{numeric, wavelength in nanometres}
 #' }
 #'
+#' @note This stat uses a panel function and ignores grouping as it is meant to
+#'   be used for annotations.
+#'
 #' @seealso \code{\link[photobiology]{color_of}}, which is used internally.
 #'
 #' @examples
@@ -94,7 +97,7 @@ stat_wl_strip <- function(mapping = NULL, data = NULL, geom = "rect",
 #' @seealso \code{\link[ggplot2]{ggplot2-ggproto}}
 StatColorGuide <-
   ggplot2::ggproto("StatColorGuide", ggplot2::Stat,
-                   compute_group = function(data,
+                   compute_panel = function(data,
                                             scales,
                                             type,
                                             w.band,

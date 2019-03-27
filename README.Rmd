@@ -67,7 +67,7 @@ devtools::install_bitbucket("aphalo/ggspectra")
 
 ## Documentation 
 
-HTML documentation is available at (http://docs.r4photobiology.info/ggspectra/), including a _User Guide_.
+HTML documentation is available at (https://docs.r4photobiology.info/ggspectra/), including a _User Guide_.
 
 News on updates to the different packages of the 'r4photobiology' suite are regularly posted at (https://www.r4photobiology.info/).
 
@@ -77,7 +77,7 @@ Aphalo P. J. (2015) (https://doi.org/10.19232/uv4pb.2015.1.14) and Aphalo P. J. 
 A book is under preparation, and the draft is currently available at (https://leanpub.com/r4photobiology/). The book conatins many examples of plots created with 'ggspectra'.
 
 A handbook written before the suite was developed contains useful information on the quantification and manipulation of ultraviolet and visible radiation:
-Aphalo, P. J., Albert, A., Björn, L. O., McLeod, A. R., Robson, T. M., & Rosenqvist, E. (Eds.) (2012) Beyond the Visible: A handbook of best practice in plant UV photobiology (1st ed., p. xxx + 174). Helsinki: University of Helsinki, Department of Biosciences, Division of Plant Biology. ISBN 978-952-10-8363-1 (PDF), 978-952-10-8362-4 (paperback). PDF file available from (http://hdl.handle.net/10138/37558).
+Aphalo, P. J., Albert, A., Björn, L. O., McLeod, A. R., Robson, T. M., & Rosenqvist, E. (Eds.) (2012) Beyond the Visible: A handbook of best practice in plant UV photobiology (1st ed., p. xxx + 174). Helsinki: University of Helsinki, Department of Biosciences, Division of Plant Biology. ISBN 978-952-10-8363-1 (PDF), 978-952-10-8362-4 (paperback). PDF file available from (https://hdl.handle.net/10138/37558).
 
 ## Contributing
 
@@ -93,6 +93,6 @@ citation("ggspectra")
 
 ## License
 
-© 2015-2018 Pedro J. Aphalo (pedro.aphalo@helsinki.fi). Released under the GPL, version 2 or greater. This software carries no warranty of any kind.
+© 2015-2019 Pedro J. Aphalo (pedro.aphalo@helsinki.fi). Released under the GPL, version 2 or greater. This software carries no warranty of any kind.
 
 

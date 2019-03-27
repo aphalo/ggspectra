@@ -80,8 +80,9 @@
 #'   geom_line() +
 #'   scale_fill_identity()
 #'
-#' @note The value returned as default value for \code{y} is based on the
-#'   y-range of spectral values for the whole data set.
+#' @note This stat uses a panel function and ignores grouping as it is meant to
+#'   be used for annotations.The value returned as default value for \code{y} is
+#'   based on the y-range of spectral values for the whole data set.
 #'
 #' @export
 #' @family stats functions
@@ -113,7 +114,7 @@ stat_wb_box <- function(mapping = NULL,
 #' @export
 StatWbBox <-
   ggplot2::ggproto("StatWbBox", ggplot2::Stat,
-                   compute_group = function(data,
+                   compute_panel = function(data,
                                             scales,
                                             w.band,
                                             ypos.mult,

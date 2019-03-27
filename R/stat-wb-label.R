@@ -63,6 +63,9 @@
 #'   \item{x}{numeric, wavelength in nanometres}
 #' }
 #'
+#' @note This stat uses a panel function and ignores grouping as it is meant to
+#'   be used for annotations.
+#'
 #' @examples
 #'
 #' library(photobiologyWavebands)
@@ -106,13 +109,14 @@ stat_wb_label <- function(mapping = NULL, data = NULL, geom = "text",
 #' @export
 StatWbLabel <-
   ggplot2::ggproto("StatWbLabel", ggplot2::Stat,
-                   compute_group = function(data,
+                   compute_panel = function(data,
                                             scales,
                                             w.band,
                                             label.fmt,
                                             ypos.fixed) {
+                     x.range <- range(data[["x"]])
                      if (length(w.band) == 0) {
-                       w.band <- waveband(data[["x"]])
+                       w.band <- waveband(x.range)
                      }
                      if (is.any_spct(w.band) ||
                          (is.numeric(w.band) && length(na.omit(w.band)) >= 2)) {
@@ -121,7 +125,7 @@ StatWbLabel <-
                      if (!is.list(w.band) || is.waveband(w.band)) {
                        w.band <- list(w.band)
                      }
-                     w.band <- trim_wl(w.band, data[["x"]])
+                     w.band <- trim_wl(w.band, x.range)
                      integ.df <- data.frame()
                      for (wb in w.band) {
                        if (is.numeric(wb)) { # user supplied a list of numeric vectors

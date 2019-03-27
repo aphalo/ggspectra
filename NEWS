@@ -1,3 +1,10 @@
+ggspectra 0.3.3 (2019-03-xx)
+============================
+
+* Use a compute panel function instead compute group function in
+stat_wb_label(), stat_wb_box() and stat_wl_strip(), solving a bug affecting
+autoplot() methods when called with multiple spectra.
+
 ggspectra 0.3.2 (2019-02-19)
 ============================
 
