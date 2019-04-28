@@ -1009,19 +1009,21 @@ ggplot(data.frame(w.length = 100:400), aes(w.length)) +
   stat_wb_label(w.band = UV_bands("ISO"), ypos.fixed = 2, size = 3) +
   stat_wl_strip(w.band = UV_bands("CIE"), ymax = 4, ymin = 6, color = "white") +
   stat_wb_label(w.band = UV_bands("CIE"), ypos.fixed = 5, size = 3) +
-  stat_wl_strip(w.band = UV_bands("none"), ymax = 7, ymin = 9, color = "white") +
-  stat_wb_label(w.band = UV_bands("none"), ypos.fixed = 8, size = 3) +  
-  stat_wl_strip(w.band = UV_bands("medical"), ymax = 10, ymin = 12, color = "white") +
-  stat_wb_label(w.band = UV_bands("medical"), ypos.fixed = 11, size = 3) +
+  stat_wl_strip(w.band = UV_bands("plants"), ymax = 7, ymin = 9, color = "white") +
+  stat_wb_label(w.band = UV_bands("plants"), ypos.fixed = 8, size = 3) +  
+  stat_wl_strip(w.band = UV_bands("none"), ymax = 10, ymin = 12, color = "white") +
+  stat_wb_label(w.band = UV_bands("none"), ypos.fixed = 11, size = 3) +
+  stat_wl_strip(w.band = UV_bands("medical"), ymax = 13, ymin = 15, color = "white") +
+  stat_wb_label(w.band = UV_bands("medical"), ypos.fixed = 14, size = 3) +  
 
   scale_fill_identity() + 
   scale_color_identity() + 
-  scale_y_continuous(labels = c("ISO", "CIE", "none", "medical"), 
-                     breaks = c(2,5,8,11),
-                     limits = c(0, 13),
-                     name = "Standard",
+  scale_y_continuous(labels = c("ISO", "CIE", "plants", "none", "medical"), 
+                     breaks = c(2,5,8,11,14),
+                     limits = c(0, 16),
+                     name = "Definition",
                      sec.axis = dup_axis(labels = 
-                      c("use", "use", "avoid!", "avoid!"), name = "Recommendation")) +
+                      c("use", "use", "use?", "avoid!", "avoid!"), name = "Recommendation")) +
   scale_x_continuous(breaks = c(seq(from = 100, to = 400, by = 50), 280, 315),
                      limits = c(100, 400),
                      sec.axis = 
