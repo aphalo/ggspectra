@@ -168,7 +168,7 @@ StatLabelPeaks <-
                      if (!is.character(label.fill)) {
                        as.character(label.fill)
                      }
-                     out.df <- tibble::as.tibble(data)
+                     out.df <- tibble::as_tibble(data)
                      if (is.null(span)) {
                        peaks.idx <- which.max(data[["y"]])
                      } else {
