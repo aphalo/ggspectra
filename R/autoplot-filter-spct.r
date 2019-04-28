@@ -836,8 +836,8 @@ O_plot <- function(spct,
   }
 
   molten.spct <-
-    tidyr::gather_(dplyr::select_(spct, "w.length", "Tfr", "Afr", "Rfr"),
-                   "variable", "value", c("Tfr", "Afr", "Rfr"))
+    tidyr::gather(dplyr::select(spct, c("w.length", "Tfr", "Afr", "Rfr")),
+                   key = "variable", value = "value", c("Tfr", "Afr", "Rfr"))
   stack.levels <- c("Tfr", "Afr", "Rfr")
   if (utils::compareVersion(
     asNamespace("ggplot2")$`.__NAMESPACE__.`$spec[["version"]],

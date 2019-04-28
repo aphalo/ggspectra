@@ -273,8 +273,8 @@ ggplot.object_spct <-
     }
     # melt data into long form
     molten.data <-
-      tidyr::gather_(dplyr::select_(data, "w.length", "Tfr", "Afr", "Rfr"),
-                     "variable", "value", c("Tfr", "Afr", "Rfr"))
+      tidyr::gather(dplyr::select(data, c("w.length", "Tfr", "Afr", "Rfr")),
+                    key = "variable", value = "value", c("Tfr", "Afr", "Rfr"))
     # if not supplied create a mapping
     if (is.null(mapping)) {
       mapping <- aes_(~w.length, ~value)
