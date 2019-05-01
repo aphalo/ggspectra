@@ -73,6 +73,7 @@ decoration <- function(w.band,
                          segment.colour = "red",
                          min.segment.length = unit(0.02, "lines"),
                          geom = "label_repel", size = text.size,
+                         nudge_y = 0.5,
                          na.rm = na.rm),
            stat_peaks(color = "red",
                       span = span,
@@ -95,6 +96,7 @@ decoration <- function(w.band,
                                  segment.colour = "blue",
                                  min.segment.length = unit(0.02, "lines"),
                                  geom = "label_repel", size = text.size,
+                                 nudge_y = -0.5,
                                  na.rm = na.rm),
            stat_valleys(color = "blue",
                         span = span,
@@ -230,22 +232,124 @@ decode_annotations <- function(annotations,
   if (is.null(annotations)) {
     z <- annotations.default
   } else if (annotations[1] == "-") {
+    # remove any member of a "family" of annotations
+    if (any(grepl("^title[*]$", annotations))) {
+      annotations.default <- annotations.default[!grepl("^title.*", annotations.default)]
+    }
+    if (any(grepl("^peaks[*]", annotations))) {
+      annotations.default <- annotations.default[!grepl("^peak.*", annotations.default)]
+    }
+    if (any(grepl("^valleys[*]$", annotations))) {
+      annotations.default <- annotations.default[!grepl("^valley.*", annotations.default)]
+    }
     z <- setdiff(annotations.default, annotations[-1])
   } else if (annotations[1] == "+") {
-    z <- union(annotations.default, annotations[-1])
+    annotations <- annotations[-1]
+    # remove from default items to be replaced
+    if (any(grepl("^title.*", annotations))) {
+      annotations.default <- annotations.default[!grepl("^title.*", annotations.default)]
+    }
+    if (any(grepl("^peak.*", annotations))) {
+      annotations.default <- annotations.default[!grepl("^peak.*", annotations.default)]
+    }
+    if (any(grepl("^valley.*$", annotations))) {
+      annotations.default <- annotations.default[!grepl("^valley.*", annotations.default)]
+    }
+    if (any(grepl("^boxes$|^segments$", annotations))) {
+      annotations.default <- annotations.default[!grepl("^boxes$|^segments$", annotations.default)]
+    }
+    # merge default with addition
+    z <- union(annotations.default, annotations)
   } else if (annotations[1] == "=") {
     z <- annotations[-1]
   } else {
     z <- annotations
   }
-  if ("boxes" %in% z && "segments" %in% z) {
-    z <- setdiff(z, "boxes")
-  }
-  if ("peaks" %in% z && "peak.labels" %in% z) {
-    z <- setdiff(z, "peaks")
-  }
-  if ("valleys" %in% z && "valley.labels" %in% z) {
-    z <- setdiff(z, "valleys")
-  }
   z
+}
+
+# photobiology.plot.annotations -----------------------------------------------------
+
+#' Set default plot annotations
+#'
+#' Edit option "photobiology.plot.annotations" easily. These convenience
+#' functions make it easier to edit this option defined by a vector
+#' of characters strings.
+#'
+#' @details Vectors of character strings passed as argument to
+#'   \code{annotations} are parsed so that if the first member string is
+#'   \code{"+"}, the remaining members are added to the current default
+#'   annotations; if it is \code{"-"} the remaining members are removed from the
+#'   current default annotations; and if it is \code{"="} the remaining members
+#'   become the new default. If the first member is none of these three strings,
+#'   the whole vector becomes the new default. If \code{annotations} is
+#'   \code{NULL} the annotations are reset to the package defaults. When
+#'   removing annotations \code{"title*"}, \code{"peaks*"} and \code{"valleys*"}
+#'   will remove any variation of these annotations.
+#'
+#' @param annotations character vector Annotations to add or remove from
+#'   defaults used by \code{autoplot()} methods.
+#'
+#' @note The syntax used and behaviour are the same as for the
+#' \code{annotations} parameter of the \code{autoplot()} methods for spectra,
+#' but instead of affecting a single plot, \code{set_annotations_default()}
+#' changes the default used for subsequent calls to \code{autoplot()}.
+#'
+#' @return Previous value of option "photobiology.plot.annotations".
+#'
+#' @name autoplot_options
+#'
+#' @export
+#'
+set_annotations_default <- function(annotations = NULL) {
+  if (!is.null(annotations)) {
+    annotations.default <-
+      getOption("photobiology.plot.annotations",
+                default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
+    annotations <- decode_annotations(annotations = annotations,
+                                      annotations.default = annotations.default)
+  }
+  options(photobiology.plot.annotations = annotations)
+}
+
+#' @rdname autoplot_options
+#'
+#' @export
+#'
+title_as_default <- function() {
+  add_to_annotations_default("title")
+}
+
+#' @rdname autoplot_options
+#'
+#' @export
+#'
+no_title_as_default <- function() {
+  remove_from_annotations_default("title")
+}
+
+#' @rdname autoplot_options
+#'
+#' @export
+#'
+repel_labels_as_default <- function() {
+  annotations.default <-
+    getOption("photobiology.plot.annotations",
+              default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
+  annotations.default <- gsub("^peaks$", "peak.labels", annotations.default)
+  annotations.default <- gsub("^valleys$", "valley.labels", annotations.default)
+  options(photobiology.plot.annotations = annotations.default)
+}
+
+#' @rdname autoplot_options
+#'
+#' @export
+#'
+overlap_text_as_default <- function() {
+  annotations.default <-
+    getOption("photobiology.plot.annotations",
+              default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
+  annotations.default <- gsub("^peak.labels$", "peaks", annotations.default)
+  annotations.default <- gsub("^valley.labels$", "valleys", annotations.default)
+  options(photobiology.plot.annotations = annotations.default)
 }

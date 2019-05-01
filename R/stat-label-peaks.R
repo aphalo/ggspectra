@@ -202,7 +202,8 @@ StatLabelPeaks <-
                                               xintercept = ..x..,
                                               yintercept = ..y..,
                                               hjust = ..lab.hjust..,
-                                              vjust = ..lab.vjust..),
+                                              vjust = ..lab.vjust..,
+                                              y_nudge = 1),
                    required_aes = c("x", "y")
   )
 
@@ -284,7 +285,8 @@ StatLabelValleys <-
                                               xintercept = ..x..,
                                               yintercept = ..y..,
                                               hjust = ..lab.hjust..,
-                                              vjust = ..lab.vjust..),
+                                              vjust = ..lab.vjust..,
+                                              y_nudge = -1),
                    required_aes = c("x", "y")
 )
 
