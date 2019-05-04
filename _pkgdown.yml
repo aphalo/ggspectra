@@ -67,6 +67,7 @@ reference:
     - autoplot.reflector_spct
     - autoplot.object_spct
     - autoplot.waveband
+    - autoplot_options
     - color_chart
   - title: Helper functions
     desc: Formatters, International System of units, unit conversions.

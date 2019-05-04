@@ -1,10 +1,8 @@
 ggspectra 0.3.4 (2019-04-xx)
 ============================
 
-* Add convenience functions to make easier to modify option
-"photobiology.plot.annotations": set_annotations_default(),
-title_as_default(), no_title_as_default(), repel_labels_as_default(),
-overlap_text_as_default().
+* Add convenience function to make easier to modify option
+"photobiology.plot.annotations": set_annotations_default().
 
 ggspectra 0.3.3 (2019-03-28)
 ============================

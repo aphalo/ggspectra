@@ -229,10 +229,16 @@ decode_annotations <- function(annotations,
   if ("color.guide" %in% annotations.default) {
     annotations.default <- c(setdiff(annotations.default, "color.guide"), "colour.guide")
   }
-  if (is.null(annotations)) {
+  if (length(annotations) == 0L) { # handle character(0)
     z <- annotations.default
+  } else if ("" %in% annotations) {
+    # no annotations and do not not expand y scale
+    z <- ""
+  } else if ("reserve.space" %in% annotations) {
+    # no annotations but expand y scale to accomodate them
+    z <- "reserve.space"
   } else if (annotations[1] == "-") {
-    # remove any member of a "family" of annotations
+    # remove any member of a "family" of annotations if '*' wildcard is present
     if (any(grepl("^title[*]$", annotations))) {
       annotations.default <- annotations.default[!grepl("^title.*", annotations.default)]
     }
@@ -242,6 +248,7 @@ decode_annotations <- function(annotations,
     if (any(grepl("^valleys[*]$", annotations))) {
       annotations.default <- annotations.default[!grepl("^valley.*", annotations.default)]
     }
+    # remove exact matches
     z <- setdiff(annotations.default, annotations[-1])
   } else if (annotations[1] == "+") {
     annotations <- annotations[-1]
@@ -261,43 +268,57 @@ decode_annotations <- function(annotations,
     # merge default with addition
     z <- union(annotations.default, annotations)
   } else if (annotations[1] == "=") {
+    # replace
     z <- annotations[-1]
+    # handle character(0), using "" is a kludge but produces intuitive behaviour
+    if (length(z) == 0L) {
+      z <- ""
+    }
   } else {
     z <- annotations
   }
-  z
+  unique(z) # remove duplicates for tidyness
 }
 
 # photobiology.plot.annotations -----------------------------------------------------
 
-#' Set default plot annotations
+#' Set default for autoplot annotations
 #'
-#' Edit option "photobiology.plot.annotations" easily. These convenience
-#' functions make it easier to edit this option defined by a vector
-#' of characters strings.
+#' Sets R option "photobiology.plot.annotations" which is used as default
+#' argument to formal parameter \code{annotations} in all the \code{autoplot()}
+#' methods exported from package 'ggspectra'. This convenience function makes it
+#' easier to edit this option which is stored as a vector of characters strings.
 #'
 #' @details Vectors of character strings passed as argument to
 #'   \code{annotations} are parsed so that if the first member string is
-#'   \code{"+"}, the remaining members are added to the current default
+#'   \code{"+"}, the remaining members are added to the current default for
 #'   annotations; if it is \code{"-"} the remaining members are removed from the
-#'   current default annotations; and if it is \code{"="} the remaining members
-#'   become the new default. If the first member is none of these three strings,
-#'   the whole vector becomes the new default. If \code{annotations} is
+#'   current default for annotations; and if it is \code{"="} the remaining
+#'   members become the new default. If the first member is none of these three
+#'   strings, the whole vector becomes the new default. If \code{annotations} is
 #'   \code{NULL} the annotations are reset to the package defaults. When
 #'   removing annotations \code{"title*"}, \code{"peaks*"} and \code{"valleys*"}
-#'   will remove any variation of these annotations.
+#'   will remove any variation of these annotations. The string \code{""} means
+#'   no annotations while \code{"reserve.space"} means no annotations but expand
+#'   y scale to reserve space for annotations. These two values take precedence
+#'   over any other values in the character vector. The order of the names of
+#'   annotations has no meaning: the vector is interpreted as a set except for
+#'   the three possible "operators" at position 1.
 #'
 #' @param annotations character vector Annotations to add or remove from
-#'   defaults used by \code{autoplot()} methods.
+#'   defaults used by the \code{autoplot()} methods defined in this package..
 #'
 #' @note The syntax used and behaviour are the same as for the
-#' \code{annotations} parameter of the \code{autoplot()} methods for spectra,
-#' but instead of affecting a single plot, \code{set_annotations_default()}
-#' changes the default used for subsequent calls to \code{autoplot()}.
+#'   \code{annotations} parameter of the \code{autoplot()} methods for spectra,
+#'   but instead of affecting a single plot, \code{set_annotations_default()}
+#'   changes the default used for subsequent calls to \code{autoplot()}.
 #'
-#' @return Previous value of option "photobiology.plot.annotations".
+#' @return Previous value of option "photobiology.plot.annotations" returned
+#'   invisibly.
 #'
 #' @name autoplot_options
+#'
+#' @family autoplot methods
 #'
 #' @export
 #'
@@ -310,46 +331,4 @@ set_annotations_default <- function(annotations = NULL) {
                                       annotations.default = annotations.default)
   }
   options(photobiology.plot.annotations = annotations)
-}
-
-#' @rdname autoplot_options
-#'
-#' @export
-#'
-title_as_default <- function() {
-  add_to_annotations_default("title")
-}
-
-#' @rdname autoplot_options
-#'
-#' @export
-#'
-no_title_as_default <- function() {
-  remove_from_annotations_default("title")
-}
-
-#' @rdname autoplot_options
-#'
-#' @export
-#'
-repel_labels_as_default <- function() {
-  annotations.default <-
-    getOption("photobiology.plot.annotations",
-              default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
-  annotations.default <- gsub("^peaks$", "peak.labels", annotations.default)
-  annotations.default <- gsub("^valleys$", "valley.labels", annotations.default)
-  options(photobiology.plot.annotations = annotations.default)
-}
-
-#' @rdname autoplot_options
-#'
-#' @export
-#'
-overlap_text_as_default <- function() {
-  annotations.default <-
-    getOption("photobiology.plot.annotations",
-              default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
-  annotations.default <- gsub("^peak.labels$", "peaks", annotations.default)
-  annotations.default <- gsub("^valley.labels$", "valleys", annotations.default)
-  options(photobiology.plot.annotations = annotations.default)
 }

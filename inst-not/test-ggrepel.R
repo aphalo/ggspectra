@@ -71,6 +71,23 @@ ggplot(data = dat, aes(x = x, y = value, color = var)) +
   geom_text_repel(aes(label = if_else(x == max(x), comma(value), NA_character_)),
                   nudge_y = ifelse(dat$var == "y2", 1, -1), na.rm = TRUE)
 
+### ggspectra
+
+library(ggspectra)
+library(ggrepel)
+
+ggplot(sun.spct) +
+  geom_line() +
+  stat_peaks()
+
+ggplot(sun.spct) +
+  geom_line() +
+  stat_peaks(geom = "text", vjust = -0.5, span = 31)
+
+ggplot(sun.spct) +
+  geom_line() +
+  stat_peaks(geom = "text_repel", vjust = -0.5, span = 31)
+
 devtools::session_info()
 
 # library(ggspectra)

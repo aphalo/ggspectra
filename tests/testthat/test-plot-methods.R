@@ -15,7 +15,8 @@ Ler_leaf.spct <- interpolate_spct(photobiology::Ler_leaf.spct, length.out = 50)
 ccd.spct <- interpolate_spct(photobiology::ccd.spct, length.out = 50)
 
 test_that("raw_spct", {
-  # skip_on_cran()
+  set_annotations_default()
+    # skip_on_cran()
   vdiffr::expect_doppelganger("raw-default",
                       autoplot(white_led.raw_spct))
   vdiffr::expect_doppelganger("raw-ylim1",
@@ -35,6 +36,7 @@ test_that("raw_spct", {
 })
 
 test_that("cps_spct", {
+  set_annotations_default()
   vdiffr::expect_doppelganger("cps-default",
                               autoplot(white_led.cps_spct))
   vdiffr::expect_doppelganger("cps-ylim1",
@@ -54,6 +56,7 @@ test_that("cps_spct", {
 })
 
 test_that("source_spct", {
+  set_annotations_default()
   vdiffr::expect_doppelganger("source-default",
                               autoplot(white_led.source_spct))
   vdiffr::expect_doppelganger("source-ylim1",
@@ -184,6 +187,7 @@ test_that("source_spct", {
   })
 
 test_that("source_mspct", {
+  set_annotations_default()
   two_leds.mspct <- source_mspct(list(one = photobiology::white_led.source_spct,
                                       half = photobiology::white_led.source_spct / 2))
 
@@ -202,6 +206,7 @@ test_that("source_mspct", {
 })
 
 test_that("filter_spct", {
+  set_annotations_default()
   vdiffr::expect_doppelganger("filter-default-tot",
                               autoplot(Ler_leaf_trns.spct))
   vdiffr::expect_doppelganger("filter-default-tot-ylim",
@@ -351,6 +356,7 @@ test_that("filter_spct", {
 })
 
 test_that("filter_mspct", {
+  set_annotations_default()
   two_leaves.mspct <- filter_mspct(list(one = photobiology::Ler_leaf_trns_i.spct,
                                       half = photobiology::Ler_leaf_trns_i.spct / 2))
   vdiffr::expect_doppelganger("filter-mspct-default",
@@ -375,6 +381,7 @@ test_that("filter_mspct", {
 })
 
 test_that("reflector_spct", {
+  set_annotations_default()
   vdiffr::expect_doppelganger("reflector-default-tot",
                               autoplot(Ler_leaf_rflt.spct))
   vdiffr::expect_doppelganger("reflector-default-tot-ylim",
@@ -404,6 +411,7 @@ test_that("reflector_spct", {
 })
 
 test_that("reflector_mspct", {
+  set_annotations_default()
   two_leaves_Rfr.mspct <- reflector_mspct(list(one = photobiology::Ler_leaf_rflt.spct,
                                         half = photobiology::Ler_leaf_rflt.spct / 2))
   vdiffr::expect_doppelganger("reflector-mspct-default",
@@ -415,6 +423,7 @@ test_that("reflector_mspct", {
 })
 
 test_that("object_spct", {
+  set_annotations_default()
   vdiffr::expect_doppelganger("object-default-tot",
                               autoplot(Ler_leaf.spct))
   vdiffr::expect_doppelganger("object-default-pc-out-tot",
@@ -463,6 +472,7 @@ test_that("object_spct", {
 })
 
 test_that("response_spct", {
+  set_annotations_default()
   vdiffr::expect_doppelganger("response-default",
                               autoplot(ccd.spct))
   vdiffr::expect_doppelganger("response-default-ylim",
@@ -571,6 +581,7 @@ test_that("response_spct", {
   })
 
 test_that("response_mspct", {
+  set_annotations_default()
   two_ccds.mspct <- response_mspct(list(one = photobiology::ccd.spct,
                                       half = photobiology::ccd.spct / 2))
 
@@ -587,6 +598,7 @@ test_that("response_mspct", {
 })
 
 test_that("waveband", {
+  set_annotations_default()
   vdiffr::expect_doppelganger("waveband-default-cie",
                               autoplot(CIE(), range = c(230, 430)))
   vdiffr::expect_doppelganger("waveband-default-red",
@@ -601,6 +613,7 @@ test_that("waveband", {
 
 
 test_that("plot_spct", {
+  set_annotations_default()
   # skip_on_cran()
   vdiffr::expect_doppelganger("raw-default-autop",
                                plot(white_led.raw_spct))
@@ -623,6 +636,7 @@ test_that("plot_spct", {
 })
 
 test_that("plot_mspct", {
+  set_annotations_default()
   two_ccds.mspct <- response_mspct(list(one = photobiology::ccd.spct,
                                         half = photobiology::ccd.spct / 2))
   vdiffr::expect_doppelganger("response-mspct-default-autop",
@@ -632,4 +646,61 @@ test_that("plot_mspct", {
 test_that("plot_waveband", {
   vdiffr::expect_doppelganger("waveband-default-cie-autop",
                                plot(CIE(), range = c(230, 430)))
+})
+
+test_that("set_annotations_default", {
+  set_annotations_default()
+  expect_null(getOption("photobiology.plot.annotations"))
+  set_annotations_default("")
+  expect_setequal(getOption("photobiology.plot.annotations"), "")
+  set_annotations_default("reserve.space")
+  expect_setequal(getOption("photobiology.plot.annotations"), "reserve.space")
+  set_annotations_default()
+  set_annotations_default(c("+", "title:what:where"))
+  expect_setequal(getOption("photobiology.plot.annotations"),
+                 c("boxes", "labels", "summaries", "colour.guide", "peaks", "title:what:where"))
+  set_annotations_default("+")
+  expect_setequal(getOption("photobiology.plot.annotations"),
+                  c("boxes", "labels", "summaries", "colour.guide", "peaks", "title:what:where"))
+  set_annotations_default("-")
+  expect_setequal(getOption("photobiology.plot.annotations"),
+                  c("boxes", "labels", "summaries", "colour.guide", "peaks", "title:what:where"))
+  set_annotations_default(c("-", "title"))
+  expect_setequal(getOption("photobiology.plot.annotations"),
+                  c("boxes", "labels", "summaries", "colour.guide", "peaks", "title:what:where"))
+  set_annotations_default(c("-", "title*"))
+  expect_setequal(getOption("photobiology.plot.annotations"),
+                  c("boxes", "labels", "summaries", "colour.guide", "peaks"))
+  set_annotations_default(c("-", "peaks*"))
+  expect_setequal(getOption("photobiology.plot.annotations"),
+                  c("boxes", "labels", "summaries", "colour.guide"))
+  set_annotations_default(c("+", "peaks"))
+  expect_setequal(getOption("photobiology.plot.annotations"),
+                  c("boxes", "labels", "summaries", "colour.guide", "peaks"))
+  set_annotations_default(c("+", "peak.labels"))
+  expect_setequal(getOption("photobiology.plot.annotations"),
+                  c("boxes", "labels", "summaries", "colour.guide", "peak.labels"))
+  set_annotations_default(c("+", "peaks"))
+  expect_setequal(getOption("photobiology.plot.annotations"),
+                  c("boxes", "labels", "summaries", "colour.guide", "peaks"))
+  set_annotations_default(c("+", "peaks"))
+  expect_setequal(getOption("photobiology.plot.annotations"),
+                  c("boxes", "labels", "summaries", "colour.guide", "peaks"))
+  set_annotations_default(c("+", "segments"))
+  expect_setequal(getOption("photobiology.plot.annotations"),
+                  c("segments", "labels", "summaries", "colour.guide", "peaks"))
+  set_annotations_default(c("+", "boxes"))
+  expect_setequal(getOption("photobiology.plot.annotations"),
+                  c("boxes", "labels", "summaries", "colour.guide", "peaks"))
+  set_annotations_default(c("=", "segments", "summaries"))
+  expect_setequal(getOption("photobiology.plot.annotations"),
+                  c("segments", "summaries"))
+  set_annotations_default(c("=", ""))
+  expect_setequal(getOption("photobiology.plot.annotations"), "")
+  set_annotations_default(c("segments", "summaries"))
+  expect_setequal(getOption("photobiology.plot.annotations"),
+                  c("segments", "summaries"))
+  set_annotations_default(c("color.guide", "colour.guide"))
+  expect_setequal(getOption("photobiology.plot.annotations"), "colour.guide")
+  set_annotations_default()
 })

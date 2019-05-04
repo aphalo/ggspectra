@@ -101,12 +101,14 @@
 #' @export
 #' @family stats functions
 #'
-stat_peaks <- function(mapping = NULL, data = NULL, geom = "point",
+stat_peaks <- function(mapping = NULL, data = NULL,
+                       geom = "point", position = "identity",
+                       ...,
                        span = 5, ignore_threshold = 0.01, strict = FALSE,
                        label.fmt = "%.3g",
                        x.label.fmt = label.fmt, y.label.fmt = label.fmt,
-                       position = "identity", na.rm = FALSE, show.legend = FALSE,
-                       inherit.aes = TRUE, ...) {
+                       na.rm = FALSE, show.legend = FALSE,
+                       inherit.aes = TRUE) {
   ggplot2::layer(
     stat = StatPeaks, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -167,9 +169,7 @@ StatPeaks <-
                                               fill = ..wl.color..,
 #                                              color = ..BW.color..,
                                               xintercept = ..x..,
-                                              yintercept = ..y..,
-                                              hjust = 0.5,
-                                              vjust = 0.5),
+                                              yintercept = ..y..),
                    required_aes = c("x", "y")
   )
 
@@ -225,11 +225,11 @@ StatValleys <-
                                    wl.color = photobiology::color_of(x, type = "CMF"),
                                    BW.color = black_or_white(photobiology::color_of(x, type = "CMF")))
                    },
-                   default_aes = ggplot2::aes(label = ..x.label..,
-                                              fill = ..wl.color..,
+                   default_aes = ggplot2::aes(label = stat(x.label),
+                                              fill = stat(wl.color),
 #                                              color = ..BW.color..,
-                                              xintercept = ..x..,
-                                              yintercept = ..y..,
+                                              xintercept = stat(x),
+                                              yintercept = stat(y),
                                               hjust = 0.5,
                                               vjust = 0.5),
                    required_aes = c("x", "y")

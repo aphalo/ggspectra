@@ -97,16 +97,16 @@ autoplot(sun.spct, label.qty = "relative")
 
 ### Automatic annotations
 
-Which _annotations_ are included can be controlled through parameter `annotations`. These are passed as a vector of character strings, with three values with special meaning for the first element (with index = 1): `"="` means use only the annotations that follow in the vector, `"+"` means add to the default the annotations that follow, and `"-"` means remove the annotations that follow from the defaults. A `NULL` value means use defaults as is, `""` means no annotations, and `"reserve.space"` means no annotations, but expand axis limits and set identity scales ready for manually adding annotations. Which annotations are added by default can be changed by setting R option `"photobiology.plot.annotations"` to a character vector with the names of the desired default annotations.
+Which _annotations_ are included can be controlled through parameter `annotations` of the `autoplot()` methods, taking a vector of character strings as argument. Three values have special meaning if at the head of the vector (with index = 1): `"="` means override the current defaults with the annotations that follow in the vector, `"+"` means add to the current default the annotations that follow, and `"-"` means remove from the current default the annotations that follow. A `NULL` value means use package-defined defaults as is, `""` means no annotations, and `"reserve.space"` means no annotations, but expand axis limits and set identity scales ready for manually adding annotations. Used together with `"-"`, `"title*"`, `"peaks*"` and `"valleys*"` are _wildcards_ that remove all flavours of each of these annotations. Which annotations are included by default can be changed by setting R option `"photobiology.plot.annotations"` to a character vector with the names of the desired default annotations. Function `set_annotations_default()` allows to set this option using the same syntax as described for parameter `annotations`. 
 
 | annotation | default for classes                       | overrides    |
 |:-----------|:------------------------------------------|:-------------|
-| "boxes"    | all                  |              |
+| "boxes"    | all                  | "segments"   |
 | "segments" | none                 | "boxes"      |
 | "color.guide" | all               |              |
-| "peaks"    | all                  |              |
+| "peaks"    | all                  | "peak.labels"|
 | "peak.labels" | none              | "peaks"      |
-| "valleys"  | none                 |              |
+| "valleys"  | none                 | "valley.labels" |
 | "valley.labels" | none            | "valleys"    |
 | "labels"   | all                  |              |
 | "summaries" | `source_spct`, `response_spct`, `filter_spct`, `reflector_spct` |              |
