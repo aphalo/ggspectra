@@ -169,7 +169,9 @@ StatPeaks <-
                                               fill = ..wl.color..,
 #                                              color = ..BW.color..,
                                               xintercept = ..x..,
-                                              yintercept = ..y..),
+                                              yintercept = ..y..,
+                                              hjust = 0.5,
+                                              vjust = 0.5),
                    required_aes = c("x", "y")
   )
 
