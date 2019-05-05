@@ -5,11 +5,11 @@
 \alias{stat_valleys}
 \title{Find peaks and valleys.}
 \usage{
-stat_peaks(mapping = NULL, data = NULL, geom = "point", span = 5,
-  ignore_threshold = 0.01, strict = FALSE, label.fmt = "\%.3g",
-  x.label.fmt = label.fmt, y.label.fmt = label.fmt,
-  position = "identity", na.rm = FALSE, show.legend = FALSE,
-  inherit.aes = TRUE, ...)
+stat_peaks(mapping = NULL, data = NULL, geom = "point",
+  position = "identity", ..., span = 5, ignore_threshold = 0.01,
+  strict = FALSE, label.fmt = "\%.3g", x.label.fmt = label.fmt,
+  y.label.fmt = label.fmt, na.rm = FALSE, show.legend = FALSE,
+  inherit.aes = TRUE)
 
 stat_valleys(mapping = NULL, data = NULL, geom = "point", span = 5,
   ignore_threshold = -0.01, strict = FALSE, label.fmt = "\%.3g",
@@ -26,6 +26,13 @@ at the layer level if you are overriding the plot defaults.}
 the plot defaults.}
 
 \item{geom}{The geometric object to use display the data}
+
+\item{position}{The position adjustment to use for overlapping points
+on this layer}
+
+\item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This can
+include aesthetics whose values you want to set, not map. See
+\code{\link[ggplot2]{layer}} for more details.}
 
 \item{span}{a peak is defined as an element in a sequence which is greater
 than all other elements within a window of width span centered at that
@@ -47,9 +54,6 @@ $x$-values into character strings by means of function \code{\link{sprintf}}.}
 \item{y.label.fmt}{character  string giving a format definition for converting
 $y$-values into character strings by means of function \code{\link{sprintf}}.}
 
-\item{position}{The position adjustment to use for overlapping points
-on this layer}
-
 \item{na.rm}{a logical value indicating whether NA values should be
 stripped before the computation proceeds.}
 
@@ -61,10 +65,6 @@ stripped before the computation proceeds.}
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
-
-\item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This can
-include aesthetics whose values you want to set, not map. See
-\code{\link[ggplot2]{layer}} for more details.}
 }
 \value{
 A data frame with one row for each peak (or valley) found in the

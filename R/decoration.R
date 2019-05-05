@@ -282,12 +282,16 @@ decode_annotations <- function(annotations,
 
 # photobiology.plot.annotations -----------------------------------------------------
 
-#' Set default for autoplot annotations
+#' @title Set defaults for autoplot annotations
 #'
-#' Sets R option "photobiology.plot.annotations" which is used as default
-#' argument to formal parameter \code{annotations} in all the \code{autoplot()}
-#' methods exported from package 'ggspectra'. This convenience function makes it
-#' easier to edit this option which is stored as a vector of characters strings.
+#' @description Set R options used when plotting spectra. Option
+#'   "photobiology.plot.annotations" is used as default argument to formal
+#'   parameter \code{annotations} and option "photobiology.plot.bands" is used
+#'   as default argument to formal parameter \code{w.band} in all the
+#'   \code{autoplot()} methods exported from package 'ggspectra'. These
+#'   convenience functions makes it easier to edit these two option which are
+#'   stored as a vector of characters strings and a list of waveband objects,
+#'   respectively.
 #'
 #' @details Vectors of character strings passed as argument to
 #'   \code{annotations} are parsed so that if the first member string is
@@ -316,8 +320,6 @@ decode_annotations <- function(annotations,
 #' @return Previous value of option "photobiology.plot.annotations" returned
 #'   invisibly.
 #'
-#' @name autoplot_options
-#'
 #' @family autoplot methods
 #'
 #' @export
@@ -331,4 +333,22 @@ set_annotations_default <- function(annotations = NULL) {
                                       annotations.default = annotations.default)
   }
   options(photobiology.plot.annotations = annotations)
+}
+
+#' @rdname set_annotations_default
+#'
+#' @param w.band a single waveband object or a list of waveband objects.
+#'
+set_w.band_default <- function(w.band = NULL) {
+  if (!is.null(w.band)) {
+    # validation to avoid delayed errors
+    if (photobiology::is.waveband(w.band)) {
+      w.band <- list(w.band) # optimization: avoid repeating this step
+    }
+    if (!all(sapply(w.band, is.waveband))) {
+      warning("Bad 'w.band' argument, default not changed.")
+      return(getOption("photobiology.plot.bands"))
+    }
+  }
+  options(photobiology.plot.bands = w.band)
 }

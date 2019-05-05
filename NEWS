@@ -1,8 +1,8 @@
-ggspectra 0.3.4 (2019-04-xx)
+ggspectra 0.3.4 (2019-05-xx)
 ============================
 
-* Add convenience function to make easier to modify option
-"photobiology.plot.annotations": set_annotations_default().
+* Add convenience functions to make easier to modify plotting options:
+set_annotations_default() and set_w.band_default().
 
 ggspectra 0.3.3 (2019-03-28)
 ============================
