@@ -3,6 +3,9 @@ ggspectra 0.3.4 (2019-05-xx)
 
 * Add convenience functions to make easier to modify plotting options:
 set_annotations_default() and set_w.band_default().
+* Add support for adding and removing annotations from the current default
+by accepting lists of character vectors as argument for parameter annotations
+in autoplot() methods.
 
 ggspectra 0.3.3 (2019-03-28)
 ============================
