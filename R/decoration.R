@@ -217,66 +217,81 @@ decoration <- function(w.band,
 #' Allow users to add and subract from default annotations in addition
 #' to providing a given set of annotations.
 #'
-#' @param annotations,annotations.default character vector
+#' @param annotations,annotations.default character vector or a list of
+#'   character vectors.
 #'
 #' @keywords internal
 #'
 decode_annotations <- function(annotations,
                                annotations.default = "colour.guide") {
-  if ("color.guide" %in% annotations) {
-    annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
+  if (length(annotations) == 0L) { # handle character(0) and NULL without delay
+    return(annotations.default)
+  } else if (is.list(annotations)) {
+    annotations.ls <- annotations
+  } else if (is.character(annotations)) {
+    annotations.ls <- list(annotations)
   }
-  if ("color.guide" %in% annotations.default) {
-    annotations.default <- c(setdiff(annotations.default, "color.guide"), "colour.guide")
-  }
-  if (length(annotations) == 0L) { # handle character(0)
-    z <- annotations.default
-  } else if ("" %in% annotations) {
-    # no annotations and do not not expand y scale
-    z <- ""
-  } else if ("reserve.space" %in% annotations) {
-    # no annotations but expand y scale to accomodate them
-    z <- "reserve.space"
-  } else if (annotations[1] == "-") {
-    # remove any member of a "family" of annotations if '*' wildcard is present
-    if (any(grepl("^title[*]$", annotations))) {
-      annotations.default <- annotations.default[!grepl("^title.*", annotations.default)]
+  annotations <- NULL
+
+  for (annotations in annotations.ls) {
+    stopifnot(is.character(annotations))
+    if ("color.guide" %in% annotations) {
+      annotations <- c(setdiff(annotations, "color.guide"), "colour.guide")
     }
-    if (any(grepl("^peaks[*]", annotations))) {
-      annotations.default <- annotations.default[!grepl("^peak.*", annotations.default)]
+    if ("color.guide" %in% annotations.default) {
+      annotations.default <- c(setdiff(annotations.default, "color.guide"), "colour.guide")
     }
-    if (any(grepl("^valleys[*]$", annotations))) {
-      annotations.default <- annotations.default[!grepl("^valley.*", annotations.default)]
-    }
-    # remove exact matches
-    z <- setdiff(annotations.default, annotations[-1])
-  } else if (annotations[1] == "+") {
-    annotations <- annotations[-1]
-    # remove from default items to be replaced
-    if (any(grepl("^title.*", annotations))) {
-      annotations.default <- annotations.default[!grepl("^title.*", annotations.default)]
-    }
-    if (any(grepl("^peak.*", annotations))) {
-      annotations.default <- annotations.default[!grepl("^peak.*", annotations.default)]
-    }
-    if (any(grepl("^valley.*$", annotations))) {
-      annotations.default <- annotations.default[!grepl("^valley.*", annotations.default)]
-    }
-    if (any(grepl("^boxes$|^segments$", annotations))) {
-      annotations.default <- annotations.default[!grepl("^boxes$|^segments$", annotations.default)]
-    }
-    # merge default with addition
-    z <- union(annotations.default, annotations)
-  } else if (annotations[1] == "=") {
-    # replace
-    z <- annotations[-1]
-    # handle character(0), using "" is a kludge but produces intuitive behaviour
-    if (length(z) == 0L) {
+    if (length(annotations) == 0L) { # we can receive character(0) from preceeding iteration
+      z <- annotations.default
+    } else if ("" %in% annotations) {
+      # no annotations and do not not expand y scale
       z <- ""
+    } else if ("reserve.space" %in% annotations) {
+      # no annotations but expand y scale to accomodate them
+      z <- "reserve.space"
+    } else if (annotations[1] == "-") {
+      # remove any member of a "family" of annotations if '*' wildcard is present
+      if (any(grepl("^title[*]$", annotations))) {
+        annotations.default <- annotations.default[!grepl("^title.*", annotations.default)]
+      }
+      if (any(grepl("^peaks[*]", annotations))) {
+        annotations.default <- annotations.default[!grepl("^peak.*", annotations.default)]
+      }
+      if (any(grepl("^valleys[*]$", annotations))) {
+        annotations.default <- annotations.default[!grepl("^valley.*", annotations.default)]
+      }
+      # remove exact matches
+      z <- setdiff(annotations.default, annotations[-1])
+    } else if (annotations[1] == "+") {
+      annotations <- annotations[-1]
+      # remove from default items to be replaced
+      if (any(grepl("^title.*", annotations))) {
+        annotations.default <- annotations.default[!grepl("^title.*", annotations.default)]
+      }
+      if (any(grepl("^peak.*", annotations))) {
+        annotations.default <- annotations.default[!grepl("^peak.*", annotations.default)]
+      }
+      if (any(grepl("^valley.*$", annotations))) {
+        annotations.default <- annotations.default[!grepl("^valley.*", annotations.default)]
+      }
+      if (any(grepl("^boxes$|^segments$", annotations))) {
+        annotations.default <- annotations.default[!grepl("^boxes$|^segments$", annotations.default)]
+      }
+      # merge default with addition
+      z <- union(annotations.default, annotations)
+    } else if (annotations[1] == "=") {
+      # replace
+      z <- annotations[-1]
+      # handle character(0), using "" is a kludge but produces intuitive behaviour
+      if (length(z) == 0L) {
+        z <- ""
+      }
+    } else {
+      z <- annotations
     }
-  } else {
-    z <- annotations
+    annotations.default <- z
   }
+
   unique(z) # remove duplicates for tidyness
 }
 
@@ -338,6 +353,8 @@ set_annotations_default <- function(annotations = NULL) {
 #' @rdname set_annotations_default
 #'
 #' @param w.band a single waveband object or a list of waveband objects.
+#'
+#' @export
 #'
 set_w.band_default <- function(w.band = NULL) {
   if (!is.null(w.band)) {
