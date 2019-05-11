@@ -6,6 +6,8 @@ set_annotations_default() and set_w.band_default().
 * Add support for adding and removing annotations from the current default
 by accepting lists of character vectors as argument for parameter annotations
 in autoplot() methods.
+* Add support in multiplot() for adding a title for the composite figure as a
+whole.
 
 ggspectra 0.3.3 (2019-03-28)
 ============================
