@@ -97,7 +97,9 @@ autoplot(sun.spct, label.qty = "relative")
 
 ### Automatic annotations
 
-Which _annotations_ are included can be controlled through parameter `annotations` of the `autoplot()` methods, taking a vector of character strings as argument. Three values have special meaning if at the head of the vector (with index = 1): `"="` means override the current defaults with the annotations that follow in the vector, `"+"` means add to the current default the annotations that follow, and `"-"` means remove from the current default the annotations that follow. A `NULL` value means use package-defined defaults as is, `""` means no annotations, and `"reserve.space"` means no annotations, but expand axis limits and set identity scales ready for manually adding annotations. Used together with `"-"`, `"title*"`, `"peaks*"` and `"valleys*"` are _wildcards_ that remove all flavours of each of these annotations. Which annotations are included by default can be changed by setting R option `"photobiology.plot.annotations"` to a character vector with the names of the desired default annotations. Function `set_annotations_default()` allows to set this option using the same syntax as described for parameter `annotations`. 
+Which _annotations_ are included can be controlled through parameter `annotations` of the `autoplot()` methods, taking a vector of character strings as argument. Three values have special meaning if at the head of the vector (with index = 1): `"="` means override the current defaults with the annotations that follow in the vector, `"+"` means add to the current default the annotations that follow, and `"-"` means remove from the current default the annotations that follow. A `NULL` value means use package-defined defaults as is, `""` means no annotations, and `"reserve.space"` means no annotations, but expand axis limits and set identity scales ready for manually adding annotations. Used together with `"-"`, `"title*"`, `"peaks*"` and `"valleys*"` are _wildcards_ that remove all flavours of each of these annotations. In cases when the intention is to both add and remove annotations from the default, the argument to parameter `annotations` can be a list of character vectors, which are interpreted as above but operated upon sequentially.
+
+Which annotations are included by default can be changed by setting R option `"photobiology.plot.annotations"` to a character vector with the names of the desired default annotations. Function `set_annotations_default()` allows to set this option using the same syntax as described for parameter `annotations`. 
 
 | annotation | default for classes                       | overrides    |
 |:-----------|:------------------------------------------|:-------------|
@@ -200,7 +202,10 @@ Argument `ylim` allows to mannually set the limits of the $y$ axis using the sam
 ```{r}
 autoplot(sun.spct, ylim = c(NA, 1))
 ```
-Arguments `range` and `w.band` play very different roles. The first one determines the `range` of wavelengths to include in the data plotted, which is slightly different to the effect of `ggplot2::xlim()` as `range` is used to _trim_ the spectral data __before__ passing it to `ggplot`, using interpolation when needed (see `photobiology::trim_wl()`). The second one, `w.band` is only used for the _annotations_ and decorations. It should be however noted, that a `waveband` object is a valid argument for both `range` and `w.band`.
+Arguments `range` and `w.band` play very different roles. The first one determines the `range` of wavelengths to include in the data plotted, which is slightly different to the effect of `ggplot2::xlim()` as `range` is used to _trim_ the spectral data __before__ passing it to `ggplot`, using interpolation when needed (see `photobiology::trim_wl()`). The second one, `w.band` is only used for the _annotations_ and decorations. The default for `range` is always the range of the spectrum being plotted. 
+
+Which wavebands are used by default can be changed by setting R option `"photobiology.plot.bands"` to a single waveband object or to a list waveband
+objects. Function `set_w.band_default()` allows to set this option using the same syntax as described for parameter `w.band`.
 
 ```{r}
 autoplot(sun.spct, range = VIS())
@@ -223,7 +228,8 @@ The _whole range_ is the range plotted, which is controlled by the argument pass
 ```{r}
 autoplot(sun.spct, w.band = NULL, range = c(400,700))
 ```
-The argument passed to `range` can be a `waveband` or and spectrum, in which case their wavelength range is used.
+The argument passed to `range` can also be a `waveband` or and spectrum, in which case their wavelength range is used.
+
 ```{r}
 autoplot(sun.spct, w.band = NULL, range = PAR())
 ```
