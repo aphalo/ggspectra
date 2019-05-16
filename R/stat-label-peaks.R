@@ -96,6 +96,13 @@
 #' ggplot(sun.spct) + geom_line() +
 #'   stat_label_valleys(hjust = "right", span = 21, angle = 90, color = "blue")
 #'
+#' ggplot(sun.spct) + geom_line() +
+#'   stat_peaks(span = 41, shape = 21, size = 3) +
+#'   stat_label_peaks(span = 41, geom = "label", label.fmt = "%3.0f nm") +
+#'   scale_fill_identity() +
+#'   scale_color_identity() +
+#'   expand_limits(y = c(NA, 1))
+#'
 #' # using 'ggrepel' to avoid overlaps
 #' # too slow for CRAN checks
 #' \dontrun{
@@ -104,7 +111,7 @@
 #' ggplot(sun.spct) + geom_line() +
 #'   stat_peaks(span = 41, shape = 21, size = 3) +
 #'   stat_label_peaks(span = 41, geom = "label_repel", segment.colour = "red",
-#'                    nudge_y = 0.12, label.fmt = "%3.0f nm") +
+#'                    nudge_y = 0.12, label.fmt = "%3.0f nm", vjust = 1) +
 #'   scale_fill_identity() +
 #'   scale_color_identity() +
 #'   expand_limits(y = c(NA, 1))
@@ -193,17 +200,17 @@ StatLabelPeaks <-
                                                     black_or_white(out.df[["wl.color"]]),
                                                     rgb(0, 0, 0, 0))
                      out.df[["lab.hjust"]] <- 0.5
-                     out.df[["lab.vjust"]] <- 0.0
+                     out.df[["lab.vjust"]] <- -0.2
                      out.df
                    },
                    default_aes = ggplot2::aes(label = ..x.label..,
                                               fill = ..wl.color..,
                                               color = ..BW.color..,
+                                              segment.color = "black",
                                               xintercept = ..x..,
                                               yintercept = ..y..,
                                               hjust = ..lab.hjust..,
-                                              vjust = ..lab.vjust..,
-                                              y_nudge = 1),
+                                              vjust = ..lab.vjust..),
                    required_aes = c("x", "y")
   )
 
@@ -276,17 +283,17 @@ StatLabelValleys <-
                                                   black_or_white(out.df[["wl.color"]]),
                                                   rgb(0, 0, 0, 0))
                      out.df[["lab.hjust"]] <- 0.5
-                     out.df[["lab.vjust"]] <- 1.0
+                     out.df[["lab.vjust"]] <- 1.2
                      out.df
                    },
                    default_aes = ggplot2::aes(label = ..x.label..,
                                               fill = ..wl.color..,
                                               color = ..BW.color..,
+                                              segment.color = "black",
                                               xintercept = ..x..,
                                               yintercept = ..y..,
                                               hjust = ..lab.hjust..,
-                                              vjust = ..lab.vjust..,
-                                              y_nudge = -1),
+                                              vjust = ..lab.vjust..),
                    required_aes = c("x", "y")
 )
 
