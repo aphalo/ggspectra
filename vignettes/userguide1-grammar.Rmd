@@ -14,7 +14,7 @@ vignette: >
 
 ## Introduction
 
-Package `ggspectra` extends `ggplot2` with stats, geoms, scales and annotations suitable for light spectra. It also defines `ggplot()` and  `plot()` methods specialized for the classes defined in package `photobiology` for storing different types of spectral data. The `plot()` methods are described separately in vignette 'Plot Methods'.
+Package `ggspectra` extends `ggplot2` with stats, geoms, scales and annotations suitable for light spectra. It also defines `ggplot()` and  `autoplot()` methods specialized for the classes defined in package `photobiology` for storing different types of spectral data. The `autoplot()` methods are described separately in vignette 'Autoplot Methods'.
 
 The new elements can be freely combined with methods and functions defined in packages `ggplot2`, `scales`, `ggrepel` and `cowplot`.
 
@@ -89,9 +89,9 @@ In addition secondary axis definitions, `sec_axis_w_number()` and `sec_axis_w_fr
 
 Function `color_chart()` makes a color chart of rectangular tiles from a vector R color definitions. The chart returned is a `ggplot` object. Function `black_or_white()` accepts a vector of color definitions and returns a vector with colors `"white"` or `"black"` depending on the approximate luminosity of each color in the input. The main use is to automatically achieve suitable contrast between text plotted on top of a color background.
 
-### What is function `ggtitle_spct()` for?
+### What is function `autotitle()` for?
 
-Function `ggtitle_spct()` adds a title and/or subtitle to a plot. The difference with `ggtitle()` from package 'ggplot2' is that this function can automatically retrieve metadata from the plotted object and display it in the title. It used internally by all `plot()` methods defined in package 'ggspectra' and its use is described in _User Guide 2: Plot Methods_ together with plot annotations.
+Function `autotitle()` adds a title, subtitle and/or a caption to a plot. The difference with `ggtitle()` from package 'ggplot2' is that `autotitle()` automatically retrieves metadata from an spectral object based on _keys_. It is used internally by all `autoplot()` methods defined in package 'ggspectra' and allowed syntax and key values are described in _User Guide 2: Plot Methods_ together with plot annotations.
 
 ## Set up 
 
@@ -199,7 +199,7 @@ ggplot(polyester.spct) + geom_line()
 unset_user_defaults()
 ```
 
-The names of the additional parameters are consistent with those used in the `plot()` methods defined in this package.
+The names of the additional parameters are consistent with those used in the `autoplot()` methods defined in this package.
 
 ## ggplot() methods for collections fof spectra
 

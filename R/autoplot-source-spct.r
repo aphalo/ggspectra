@@ -551,7 +551,7 @@ autoplot.source_spct <-
       stop("Invalid 'radiation.unit' argument value: '", unit.out, "'")
     }
     out.ggplot +
-      ggtitle_spct(object = object,
+      autotitle(object = object,
                    object.label = object.label,
                    time.format = time.format,
                    tz = tz,

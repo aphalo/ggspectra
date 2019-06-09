@@ -117,8 +117,7 @@ Which annotations are included by default can be changed by setting R option `"p
 | "title:_type_" |   none | |
 | "title:_type_:_type_" |   none | |
 
-Titles come in different flavours. Package 'ggplot2' now supports both titles
-and subtitles. The `"title"` as argument to parameter `annotation` of `autoplot()` methods and of function `ggtitle_spct()` takes optional modifiers that can be used to specify the contents of the _automatic_ title and subtitle. Currently supported modifiers are shown in the table below. If the metadata item is not stored in the plotted spectral object, the title or subtitle will show `NA`. See the documentation of packages 'photobiology' and 'ooacquire' for information on how to set and unset attributes of spectral objects. To add an arbitrary title and/or subtitle to a plot, use either function `ggtitle()` or function `labs()` from package 'ggplot2'.
+Titles come in different flavours. Package 'ggplot2' supports titles, subtitles and captions. The `"title"` as argument to parameter `annotation` of `autoplot()` methods and of function `autotitle()` takes up to three optional modifiers separated by colons that can be used to specify the contents of the _automatic_ title, subtitle and caption. Currently supported modifiers are shown in the table below. If the metadata item is not stored in the plotted spectral object, the title or subtitle will show `NA`. See the documentation of packages 'photobiology' and 'ooacquire' for information on how to set and unset attributes of spectral objects. To add an arbitrary title and/or subtitle to a plot, use either function `ggtitle()` or function `labs()` from package 'ggplot2'.
 
 | Modifier | text source used |
 | -------- | ------------- |
@@ -127,16 +126,25 @@ and subtitles. The `"title"` as argument to parameter `annotation` of `autoplot(
 | `what`   | what.measured attribute |
 | `when`   | when.measured attribute |
 | `where`  | where.measured attribute |
+| `how`    | how.measured attribute |
 | `inst.name` | spectrometer name |
 | `inst.sn` | spectrometer serial number |
-| `none` | _no title_ or _no subtitle_ |
+| `comment`| comment attribute |
+| `none`   | _no title_, _no subtitle_ or _no caption_ |
 
-For example `"title:objt"`, the default for `"title"`, adds a title with the name of the object being plotted. `what`, `when` and `where` use these three attributes if available. For example `"title:what:when" will use the `what.measured` attribute for the title and the `when.measured` attribute for the subtitle. 
+For example `"title:objt"`, the default for `"title"`, adds a title with the name of the object being plotted. `what`, `when`, `where` and `how` use these attributes if available. For example `"title:what:when" will use the `what.measured` attribute for the title and the `when.measured` attribute for the subtitle. 
 
 We can add an annotation to the defaults. 
 ```{r}
 autoplot(sun.spct, 
      annotations = c("+", "title:when:where"))
+```
+
+We use "none" as a _filler_.
+
+```{r}
+autoplot(sun.spct, 
+     annotations = c("+", "title:none:what:where"))
 ```
 
 In this case `"boundaries"`, an annotation that adds a horizontal dashed line and does not override any other annotation.
@@ -166,7 +174,7 @@ We can also _remove_ some of the default annotations on a case by case basis.
 autoplot(sun.spct, annotations = c("-", "summaries", "peaks"))
 ```
 
-The behaviour of some annotations can be tweaked. below we add `"valleys"` as annotations, and control with `span` how close to each other are the peaks and valleys found.
+The behaviour of some annotations can be tweaked. Below we add `"valleys"` as annotations, and control with `span` how close to each other are the peaks and valleys found.
 
 ```{r}
 autoplot(sun.spct, annotations = c("+", "valleys"), span = 41)
@@ -255,8 +263,6 @@ Even though the `autoplot()` methods can return a finished plot, the returned ob
 autoplot(two_suns.spct, idfactor = NA) + facet_wrap(~spct.idx)
 ```
 
-
-
 It is possible to construct and bind the spectra on-the-fly, and to use arbitrary variable names for the index factor. This works automatically as long as row binding is done with function `rbindspct()` which saves the name of the factor.
 
 ```{r}
@@ -284,14 +290,14 @@ In many cases it is possible to convert on-the-fly the quantity plotted.
 autoplot(yellow_gel.spct, plot.qty = "absorbance", annotations = c("-", "peaks"))
 ```
 
-We add a _guessed_ spectral reflectance to the data object to allow the estimation of internal absorptance.
+<!-- We add a _guessed_ spectral reflectance to the data object to allow the estimation of internal absorptance. -->
 
-```{r}
+```{r, eval=FALSE, echo=FALSE}
 yellow_gel.spct$Rfr <- 1 - max(yellow_gel.spct$Tfr)
 autoplot(yellow_gel.spct, plot.qty = "absorptance", annotations = c("-", "peaks"))
 ```
 
-If one really needs to, one can add a suitable _stat_ using 'local' data. A peak annotation could be added manually.
+If one needs to, one can add a suitable _stat_ using 'local' data. A peak annotation could be added manually.
 
 ```{r}
 autoplot(sun.spct) + geom_spct(fill = color_of(sun.spct)) + 

@@ -279,7 +279,7 @@ autoplot.calibration_spct <-
              na.rm = na.rm,
              ylim = ylim,
              ...) +
-      ggtitle_spct(object = object,
+      autotitle(object = object,
                    time.format = time.format,
                    tz = tz,
                    object.label = object.label,

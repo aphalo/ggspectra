@@ -132,7 +132,7 @@ autoplot.waveband <-
          ylim = ylim,
          na.rm = na.rm,
          ...) +
-      ggtitle_spct(object = object,
+      autotitle(object = object,
                    object.label = object.label,
                    annotations = annotations)
   }

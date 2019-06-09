@@ -263,7 +263,7 @@ autoplot.cps_spct <-
              ylim = ylim,
              na.rm = na.rm,
              ...) +
-      ggtitle_spct(object = object,
+      autotitle(object = object,
                    time.format = time.format,
                    tz = tz,
                    object.label = object.label,

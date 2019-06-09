@@ -1047,7 +1047,7 @@ autoplot.filter_spct <-
       stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
     }
     out.ggplot +
-      ggtitle_spct(object = object,
+      autotitle(object = object,
                    time.format = time.format,
                    tz = tz,
                    object.label = object.label,
@@ -1186,7 +1186,7 @@ autoplot.reflector_spct <-
       stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
     }
     out.ggplot +
-      ggtitle_spct(object = object,
+      autotitle(object = object,
                    time.format = time.format,
                    tz = tz,
                    object.label = object.label,
@@ -1382,7 +1382,7 @@ autoplot.object_spct <-
       stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
     }
     out.ggplot +
-      ggtitle_spct(object = object,
+      autotitle(object = object,
                    time.format = time.format,
                    tz = tz,
                    object.label = object.label,

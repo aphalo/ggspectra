@@ -623,7 +623,7 @@ autoplot.response_spct <-
       stop("Invalid 'unit.out' argument value: '", unit.out, "'")
     }
     out.ggplot +
-      ggtitle_spct(object = object,
+      autotitle(object = object,
                    time.format = time.format,
                    tz = tz,
                    object.label = object.label,
