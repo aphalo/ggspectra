@@ -12,13 +12,13 @@
 #' @param default.title character vector The default used for \code{annotations
 #'   = "title"}.
 #'
-#' @details \code{ggtitle_spct()} retrieves from object \code{object} metadata and
-#' passes it to \code{ggplot2::ggtitle()} as arguments for \code{title} and
-#' \code{subtitle}. The specification for the tittle is passed as argument
-#' to \code{annotations}, and consists in the keyword \code{title} with optional
-#' modifiers selecting the kind of metatdata to use, separated by colons.
-#' "objt", "class", "what", "when", "where", "inst.name", "inst.sn" and "none"
-#' are recognized as modifiers to "title".
+#' @details \code{ggtitle_spct()} retrieves from object \code{object} metadata
+#'   and passes it to \code{ggplot2::ggtitle()} as arguments for \code{title}
+#'   and \code{subtitle}. The specification for the tittle is passed as argument
+#'   to \code{annotations}, and consists in the keyword \code{title} with
+#'   optional modifiers selecting the kind of metatdata to use, separated by
+#'   colons. "objt", "class", "what", "when", "where", "how", "inst.name",
+#'   "inst.sn" and "none" are recognized as modifiers to "title".
 #'
 #' @return The return value of \code{ggplot2::ggtitle()}.
 #'
@@ -44,6 +44,7 @@ ggtitle_spct <- function(object,
            objt = object.label,
            class = class(object)[1],
            what = getWhatMeasured(object)[[1]],
+           how = getHowMeasured(object)[[1]],
            when = strftime(x = getWhenMeasured(object),
                            format = time.format,
                            tz = tz,
