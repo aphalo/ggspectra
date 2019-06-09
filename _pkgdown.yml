@@ -45,7 +45,6 @@ reference:
   - title: Scales
     desc: Scales control the mapping between data and aesthetics. The scales defined in package 'ggspectra' are continuous scales with defaults suitable for spectral data.
     contents:
-    - ggtitle_spct
     - scale_x_wl_continuous
     - scale_y_s.e.response_continuous
     - scale_y_s.e.irrad_continuous
@@ -67,7 +66,8 @@ reference:
     - autoplot.reflector_spct
     - autoplot.object_spct
     - autoplot.waveband
-    - autoplot_options
+    - autotitle
+    - set_annotations_default
     - color_chart
   - title: Helper functions
     desc: Formatters, International System of units, unit conversions.
