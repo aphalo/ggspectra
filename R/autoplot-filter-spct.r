@@ -779,6 +779,10 @@ O_plot <- function(spct,
   if (!is.object_spct(spct)) {
     stop("O_plot() can only plot object_spct objects.")
   }
+  if (stacked) {
+    # we need to ensure that none of Tfr, Rfr and Afr are negative
+    spct <- photobiology::clean(spct)
+  }
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
   }
@@ -836,8 +840,8 @@ O_plot <- function(spct,
   }
 
   molten.spct <-
-    tidyr::gather(dplyr::select(spct, c("w.length", "Tfr", "Afr", "Rfr")),
-                   key = "variable", value = "value", c("Tfr", "Afr", "Rfr"))
+    tidyr::gather_(data = dplyr::select(spct, c("w.length", "Tfr", "Afr", "Rfr")),
+                   key_col = "variable", value_col = "value", gather_cols = c("Tfr", "Afr", "Rfr"))
   stack.levels <- c("Tfr", "Afr", "Rfr")
   if (utils::compareVersion(
     asNamespace("ggplot2")$`.__NAMESPACE__.`$spec[["version"]],

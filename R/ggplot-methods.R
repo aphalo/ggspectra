@@ -83,19 +83,22 @@ ggplot.source_spct <-
       data <- trim_wl(data, range = range, use.hinges = TRUE, fill = NULL)
     }
     if (is.null(mapping)) {
-    if (unit.out == "energy") {
-      data <- q2e(data)
-      mapping <- aes_(~w.length, ~s.e.irrad)
-    } else if (unit.out %in% c("photon", "quantum")) {
-      data <- e2q(data)
-      mapping <- aes_(~w.length, ~s.q.irrad)
-    } else {
-      stop("Invalid 'unit.out' argument value: '", unit.out, "'")
+      if (unit.out == "energy") {
+        data <- q2e(data)
+        mapping <- aes_(~w.length, ~s.e.irrad)
+      } else if (unit.out %in% c("photon", "quantum")) {
+        data <- e2q(data)
+        mapping <- aes_(~w.length, ~s.q.irrad)
+      } else {
+        stop("Invalid 'unit.out' argument value: '", unit.out, "'")
+      }
     }
-  }
-  rmDerivedSpct(data)
-  ggplot(data = data, mapping = mapping, ...,
-                    environment = environment)
+    spct.attr <- photobiology::get_attributes(data)
+    rmDerivedSpct(data)
+    p <- ggplot(data = data, mapping = mapping, ...,
+                environment = environment)
+    attr(p[["data"]], "spct.attr") <- spct.attr
+    p
   }
 
 #' @rdname ggplot
@@ -120,9 +123,12 @@ ggplot.response_spct <-
         stop("Invalid 'unit.out' argument value: '", unit.out, "'")
       }
     }
+    spct.attr <- photobiology::get_attributes(data)
     rmDerivedSpct(data)
-    ggplot(data = data, mapping = mapping, ...,
-           environment = environment)
+    p <- ggplot(data = data, mapping = mapping, ...,
+                environment = environment)
+    attr(p[["data"]], "spct.attr") <- spct.attr
+    p
   }
 
 #' @rdname ggplot
@@ -155,9 +161,12 @@ ggplot.filter_spct <-
       stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
     }
   }
-  rmDerivedSpct(data)
-  ggplot(data = data, mapping = mapping, ...,
-         environment = environment)
+    spct.attr <- photobiology::get_attributes(data)
+    rmDerivedSpct(data)
+    p <- ggplot(data = data, mapping = mapping, ...,
+                environment = environment)
+    attr(p[["data"]], "spct.attr") <- spct.attr
+    p
   }
 
 #' @rdname ggplot
@@ -176,9 +185,12 @@ ggplot.reflector_spct <-
     if (is.null(mapping)) {
       mapping <- aes_(~w.length, ~Rfr)
     }
+    spct.attr <- photobiology::get_attributes(data)
     rmDerivedSpct(data)
-    ggplot(data = data, mapping = mapping, ...,
-           environment = environment)
+    p <- ggplot(data = data, mapping = mapping, ...,
+                environment = environment)
+    attr(p[["data"]], "spct.attr") <- spct.attr
+    p
   }
 
 #' @rdname ggplot
@@ -198,9 +210,12 @@ ggplot.cps_spct <-
         mapping <- aes_(~w.length, ~cps_1)
       }
     }
+    spct.attr <- photobiology::get_attributes(data)
     rmDerivedSpct(data)
-    ggplot(data = data, mapping = mapping, ...,
-           environment = environment)
+    p <- ggplot(data = data, mapping = mapping, ...,
+                environment = environment)
+    attr(p[["data"]], "spct.attr") <- spct.attr
+    p
   }
 
 #' @rdname ggplot
@@ -220,9 +235,12 @@ ggplot.calibration_spct <-
         mapping <- aes_(~w.length, ~irrad.mult_1)
       }
     }
+    spct.attr <- photobiology::get_attributes(data)
     rmDerivedSpct(data)
-    ggplot(data = data, mapping = mapping, ...,
-           environment = environment)
+    p <- ggplot(data = data, mapping = mapping, ...,
+                environment = environment)
+    attr(p[["data"]], "spct.attr") <- spct.attr
+    p
   }
 
 #' @rdname ggplot
@@ -242,9 +260,12 @@ ggplot.raw_spct <-
         mapping <- aes_(~w.length, ~counts_1)
       }
     }
+    spct.attr <- photobiology::get_attributes(data)
     rmDerivedSpct(data)
-    ggplot(data = data, mapping = mapping, ...,
-           environment = environment)
+    p <- ggplot(data = data, mapping = mapping, ...,
+                environment = environment)
+    attr(p[["data"]], "spct.attr") <- spct.attr
+    p
   }
 
 #' @rdname ggplot
@@ -271,18 +292,21 @@ ggplot.object_spct <-
     if (any((data[["Afr"]]) < -0.01)) {
       message("Bad data or fluorescence.")
     }
+    spct.attr <- photobiology::get_attributes(data)
     # melt data into long form
     molten.data <-
-      tidyr::gather(dplyr::select(data, c("w.length", "Tfr", "Afr", "Rfr")),
-                    key = "variable", value = "value", c("Tfr", "Afr", "Rfr"))
+      tidyr::gather_(data = dplyr::select(data, c("w.length", "Tfr", "Afr", "Rfr")),
+                     key_col = "variable", value_col = "value", gather_cols = c("Tfr", "Afr", "Rfr"))
     # if not supplied create a mapping
     if (is.null(mapping)) {
       mapping <- aes_(~w.length, ~value)
     }
     # convert to a tibble so that dispatch goes to ggplot2::ggplot.data.frame()
     rmDerivedSpct(molten.data)
-    ggplot(data = molten.data, mapping = mapping, ...,
+    p <- ggplot(data = molten.data, mapping = mapping, ...,
            environment = environment)
+    attr(p[["data"]], "spct.attr") <- spct.attr
+    p
   }
 
 # collections of spectra --------------------------------------------------

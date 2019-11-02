@@ -117,10 +117,10 @@ cal_plot <- function(spct,
   }
 
   if (num.mult.cols > 1L) {
-    spct <- tidyr::gather(spct,
-                          .dots = mult.cols,
-                          key = "scan",
-                          value = "irrad.mult")
+    spct <- tidyr::gather_(spct,
+                           key_col = "scan",
+                           value_col = "irrad.mult",
+                           gather_cols = mult.cols)
     setCalibrationSpct(spct, multiple.wl = length(mult.cols))
   }
 

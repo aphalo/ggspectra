@@ -126,10 +126,10 @@ raw_plot <- function(spct,
   }
 
   if (num.counts.cols > 1L) {
-    spct <- tidyr::gather(spct,
-                          .dots = counts.cols,
-                          key = "scan",
-                          value = "counts")
+    spct <- tidyr::gather_(data = spct,
+                           key_col = "scan",
+                           value_col = "counts",
+                           gather_cols = counts.cols)
     setRawSpct(spct, multiple.wl = length(counts.cols))
     plot <- ggplot(spct) + aes_(x = ~w.length, y = ~counts, linetype = ~scan)
   } else {

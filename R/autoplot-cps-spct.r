@@ -112,10 +112,10 @@ cps_plot <- function(spct,
   }
 
   if (num.cps.cols > 1L) {
-    spct <- tidyr::gather(spct,
-                          .dots = cps.cols,
-                          key = "scan",
-                          value = "cps")
+    spct <- tidyr::gather_(data = spct,
+                           key_col = "scan",
+                           value_col = "cps",
+                           gather_cols = cps.cols)
     setCpsSpct(spct, multiple.wl = length(cps.cols))
     plot <- ggplot(spct, aes_(x = ~w.length, y = ~cps, linetype = ~scan))
   } else {
