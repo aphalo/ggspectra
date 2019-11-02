@@ -97,7 +97,7 @@ ggplot.source_spct <-
     rmDerivedSpct(data)
     p <- ggplot(data = data, mapping = mapping, ...,
                 environment = environment)
-    attr(p[["data"]], "spct.attr") <- spct.attr
+    p[["spct.attr"]] <- spct.attr
     p
   }
 
@@ -127,7 +127,7 @@ ggplot.response_spct <-
     rmDerivedSpct(data)
     p <- ggplot(data = data, mapping = mapping, ...,
                 environment = environment)
-    attr(p[["data"]], "spct.attr") <- spct.attr
+    p[["spct.attr"]] <- spct.attr
     p
   }
 
@@ -148,24 +148,24 @@ ggplot.filter_spct <-
       data <- trim_wl(data, range = range, use.hinges = TRUE, fill = NULL)
     }
     if (is.null(mapping)) {
-    if (plot.qty == "transmittance") {
-      data <- A2T(data)
-      mapping <- aes_(~w.length, ~Tfr)
-    } else if (plot.qty == "absorptance") {
-      data <- T2Afr(data)
-      mapping <- aes_(~w.length, ~Afr)
-    } else if (plot.qty == "absorbance") {
-      data <- T2A(data)
-      mapping <- aes_(~w.length, ~A)
-    } else {
-      stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
+      if (plot.qty == "transmittance") {
+        data <- A2T(data)
+        mapping <- aes_(~w.length, ~Tfr)
+      } else if (plot.qty == "absorptance") {
+        data <- T2Afr(data)
+        mapping <- aes_(~w.length, ~Afr)
+      } else if (plot.qty == "absorbance") {
+        data <- T2A(data)
+        mapping <- aes_(~w.length, ~A)
+      } else {
+        stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
+      }
     }
-  }
     spct.attr <- photobiology::get_attributes(data)
     rmDerivedSpct(data)
     p <- ggplot(data = data, mapping = mapping, ...,
                 environment = environment)
-    attr(p[["data"]], "spct.attr") <- spct.attr
+    p[["spct.attr"]] <- spct.attr
     p
   }
 
@@ -189,7 +189,7 @@ ggplot.reflector_spct <-
     rmDerivedSpct(data)
     p <- ggplot(data = data, mapping = mapping, ...,
                 environment = environment)
-    attr(p[["data"]], "spct.attr") <- spct.attr
+    p[["spct.attr"]] <- spct.attr
     p
   }
 
@@ -214,7 +214,7 @@ ggplot.cps_spct <-
     rmDerivedSpct(data)
     p <- ggplot(data = data, mapping = mapping, ...,
                 environment = environment)
-    attr(p[["data"]], "spct.attr") <- spct.attr
+    p[["spct.attr"]] <- spct.attr
     p
   }
 
@@ -239,7 +239,7 @@ ggplot.calibration_spct <-
     rmDerivedSpct(data)
     p <- ggplot(data = data, mapping = mapping, ...,
                 environment = environment)
-    attr(p[["data"]], "spct.attr") <- spct.attr
+    p[["spct.attr"]] <- spct.attr
     p
   }
 
@@ -264,7 +264,7 @@ ggplot.raw_spct <-
     rmDerivedSpct(data)
     p <- ggplot(data = data, mapping = mapping, ...,
                 environment = environment)
-    attr(p[["data"]], "spct.attr") <- spct.attr
+    p[["spct.attr"]] <- spct.attr
     p
   }
 
@@ -304,8 +304,8 @@ ggplot.object_spct <-
     # convert to a tibble so that dispatch goes to ggplot2::ggplot.data.frame()
     rmDerivedSpct(molten.data)
     p <- ggplot(data = molten.data, mapping = mapping, ...,
-           environment = environment)
-    attr(p[["data"]], "spct.attr") <- spct.attr
+                environment = environment)
+    p[["spct.attr"]] <- spct.attr
     p
   }
 
@@ -324,3 +324,12 @@ ggplot.generic_mspct <-
     spct <- rbindspct(data)
     ggplot(data = spct, mapping = mapping, ...)
   }
+
+# #' @export
+# #'
+# ggplot_add.generic_spct <- function(object, plot, object_name)
+# {
+#   plot$data <- object
+#   plot$spct_attr <- get_attributes(object)
+#   plot
+# }

@@ -5,7 +5,7 @@
 #' the range is fixed to 0, but stacking is not enabled.
 #'
 #' An spectrum plot is the analog of a line plot (see \code{\link[ggplot2]{geom_path}}),
-#' and can be used to show y varies over the range of x. The difference is that
+#' and can be used to show how y varies over the range of x. The difference is that
 #' the area under the line is filled.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
