@@ -93,12 +93,9 @@ ggplot.source_spct <-
         stop("Invalid 'unit.out' argument value: '", unit.out, "'")
       }
     }
-    spct.attr <- photobiology::get_attributes(data)
     rmDerivedSpct(data)
-    p <- ggplot(data = data, mapping = mapping, ...,
-                environment = environment)
-    p[["spct.attr"]] <- spct.attr
-    p
+    ggplot(data = data, mapping = mapping, ...,
+           environment = environment)
   }
 
 #' @rdname ggplot
@@ -123,12 +120,9 @@ ggplot.response_spct <-
         stop("Invalid 'unit.out' argument value: '", unit.out, "'")
       }
     }
-    spct.attr <- photobiology::get_attributes(data)
     rmDerivedSpct(data)
-    p <- ggplot(data = data, mapping = mapping, ...,
-                environment = environment)
-    p[["spct.attr"]] <- spct.attr
-    p
+    ggplot(data = data, mapping = mapping, ...,
+           environment = environment)
   }
 
 #' @rdname ggplot
@@ -161,12 +155,9 @@ ggplot.filter_spct <-
         stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
       }
     }
-    spct.attr <- photobiology::get_attributes(data)
     rmDerivedSpct(data)
-    p <- ggplot(data = data, mapping = mapping, ...,
-                environment = environment)
-    p[["spct.attr"]] <- spct.attr
-    p
+    ggplot(data = data, mapping = mapping, ...,
+           environment = environment)
   }
 
 #' @rdname ggplot
@@ -185,12 +176,9 @@ ggplot.reflector_spct <-
     if (is.null(mapping)) {
       mapping <- aes_(~w.length, ~Rfr)
     }
-    spct.attr <- photobiology::get_attributes(data)
     rmDerivedSpct(data)
-    p <- ggplot(data = data, mapping = mapping, ...,
-                environment = environment)
-    p[["spct.attr"]] <- spct.attr
-    p
+    ggplot(data = data, mapping = mapping, ...,
+           environment = environment)
   }
 
 #' @rdname ggplot
@@ -210,12 +198,9 @@ ggplot.cps_spct <-
         mapping <- aes_(~w.length, ~cps_1)
       }
     }
-    spct.attr <- photobiology::get_attributes(data)
     rmDerivedSpct(data)
-    p <- ggplot(data = data, mapping = mapping, ...,
-                environment = environment)
-    p[["spct.attr"]] <- spct.attr
-    p
+    ggplot(data = data, mapping = mapping, ...,
+           environment = environment)
   }
 
 #' @rdname ggplot
@@ -235,12 +220,9 @@ ggplot.calibration_spct <-
         mapping <- aes_(~w.length, ~irrad.mult_1)
       }
     }
-    spct.attr <- photobiology::get_attributes(data)
     rmDerivedSpct(data)
-    p <- ggplot(data = data, mapping = mapping, ...,
-                environment = environment)
-    p[["spct.attr"]] <- spct.attr
-    p
+    ggplot(data = data, mapping = mapping, ...,
+           environment = environment)
   }
 
 #' @rdname ggplot
@@ -260,12 +242,9 @@ ggplot.raw_spct <-
         mapping <- aes_(~w.length, ~counts_1)
       }
     }
-    spct.attr <- photobiology::get_attributes(data)
     rmDerivedSpct(data)
-    p <- ggplot(data = data, mapping = mapping, ...,
-                environment = environment)
-    p[["spct.attr"]] <- spct.attr
-    p
+    ggplot(data = data, mapping = mapping, ...,
+           environment = environment)
   }
 
 #' @rdname ggplot
@@ -292,7 +271,6 @@ ggplot.object_spct <-
     if (any((data[["Afr"]]) < -0.01)) {
       message("Bad data or fluorescence.")
     }
-    spct.attr <- photobiology::get_attributes(data)
     # melt data into long form
     molten.data <-
       tidyr::gather_(data = dplyr::select(data, c("w.length", "Tfr", "Afr", "Rfr")),
@@ -303,10 +281,8 @@ ggplot.object_spct <-
     }
     # convert to a tibble so that dispatch goes to ggplot2::ggplot.data.frame()
     rmDerivedSpct(molten.data)
-    p <- ggplot(data = molten.data, mapping = mapping, ...,
-                environment = environment)
-    p[["spct.attr"]] <- spct.attr
-    p
+    ggplot(data = molten.data, mapping = mapping, ...,
+           environment = environment)
   }
 
 # collections of spectra --------------------------------------------------
@@ -324,12 +300,3 @@ ggplot.generic_mspct <-
     spct <- rbindspct(data)
     ggplot(data = spct, mapping = mapping, ...)
   }
-
-# #' @export
-# #'
-# ggplot_add.generic_spct <- function(object, plot, object_name)
-# {
-#   plot$data <- object
-#   plot$spct_attr <- get_attributes(object)
-#   plot
-# }
