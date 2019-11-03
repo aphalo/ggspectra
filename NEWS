@@ -1,7 +1,9 @@
 ggspectra 0.3.5 (2019-XX-XX)
 ============================
 
-* Implement copying of attributes of spectral objects into gg objects.
+* Revise ggplot() methods so that the class and attributes of spectral objects
+are retained in the "data" member of the "gg" object. This allows use of methods
+specific to spectra in data transformations.
 
 ggspectra 0.3.4 (2019-09-11)
 ============================
