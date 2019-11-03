@@ -97,6 +97,7 @@ Function `autotitle()` adds a title, subtitle and/or a caption to a plot. The di
 
 ```{r}
 library(ggplot2)
+library(dplyr)
 library(scales)
 library(photobiology)
 library(photobiologyWavebands)
@@ -142,6 +143,18 @@ The only difference between these specializations and the base `ggplot()` method
 
 ```{r}
 ggplot(sun.spct) + geom_line()
+```
+
+As from version 0.3.5 the class of the spectral object stored by `ggplot()` is
+no longer stripped, data transformations in layers can use methods from package
+'photobiology' that expect spectral objects as input. A simple example of
+spectral data smoothing follows.
+
+```{r}
+ggplot(sun.spct) + 
+  geom_line() + 
+  geom_line(data = . %>% smooth_spct(., method = "supsmu"), 
+            colour = "red")
 ```
 
 It is possible to add to the defaults by means of `+` and `aes()` as shown below.
