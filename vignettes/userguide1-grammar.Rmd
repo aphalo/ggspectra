@@ -145,18 +145,6 @@ The only difference between these specializations and the base `ggplot()` method
 ggplot(sun.spct) + geom_line()
 ```
 
-As from version 0.3.5 the class of the spectral object stored by `ggplot()` is
-no longer stripped, data transformations in layers can use methods from package
-'photobiology' that expect spectral objects as input. A simple example of
-spectral data smoothing follows.
-
-```{r}
-ggplot(sun.spct) + 
-  geom_line() + 
-  geom_line(data = . %>% smooth_spct(., method = "supsmu"), 
-            colour = "red")
-```
-
 It is possible to add to the defaults by means of `+` and `aes()` as shown below.
 
 ```{r}
@@ -362,7 +350,7 @@ ggplot(sun.spct, unit.out = "photon") +
                                labels = SI_tg_format(exponent = -6))
 ```
 
-Transformation objects for '**scales**', or user defined, can be also passed as arguments. We replace zeros to avoid a warnings from the `log10()` call, and as the scale `limits`
+Transformation objects from package '**scales**', or user defined, can be also passed as arguments. We replace zeros to avoid a warnings from the `log10()` call, and as the scale `limits`
 discards some observations, we use `na.rm = TRUE` to silence this additional warning.
 
 ```{r}

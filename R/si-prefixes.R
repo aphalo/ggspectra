@@ -1,4 +1,4 @@
-# internal data table used by functions in this file
+# internal data used by functions in this file
 #
 exp_pfix.df <-
   tibble::tibble(exponents =
