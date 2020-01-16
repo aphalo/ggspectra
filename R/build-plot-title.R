@@ -50,7 +50,7 @@ subtitle_spct.generic_spct <- function(x,
     when <- default.when
   }
   where <- getWhereMeasured(x)
-  if (any(is.na(where))) {
+  if (anyNA(where[["lon"]]) | anyNA(where[["lat"]])) {
     where <- default.where
   } else {
     where <- paste(names(where), where, collapse = ", ", sep = ": ")

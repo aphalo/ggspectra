@@ -56,28 +56,29 @@ autotitle <- function(object,
                            tz = tz,
                            usetz = TRUE),
            where =
-             {where <- getWhereMeasured(object)
-             if (!is.na(where[[1]])) {
-               where[["lon"]] <- ifelse(where[["lon"]] < 0,
-                                        paste(abs(where[["lon"]]), " W"),
-                                        paste(where[["lon"]], " E"))
-               where[["lat"]] <- ifelse(where[["lat"]] < 0,
-                                        paste(abs(where[["lat"]]), " S"),
-                                        paste(where[["lat"]], " N"))
-               if (exists("address", where = where)) {
-                 where[["address"]] <- as.character(where[["address"]])
+             {
+               where <- getWhereMeasured(object)
+               if (!(anyNA(where[["lon"]]) | anyNA(where[["lat"]]))) {
+                 where[["lon"]] <- ifelse(where[["lon"]] < 0,
+                                          paste(abs(where[["lon"]]), " W"),
+                                          paste(where[["lon"]], " E"))
+                 where[["lat"]] <- ifelse(where[["lat"]] < 0,
+                                          paste(abs(where[["lat"]]), " S"),
+                                          paste(where[["lat"]], " N"))
+                 where[["address"]] <- ifelse(is.na(where[["address"]]),
+                                              character(),
+                                              as.character(where[["address"]]))
+                 # the order of columns in the data frame can vary
+                 paste(where[["lat"]], where[["lon"]], where[["address"]], sep = ", ")
                } else {
-                 where[["address"]] <- character()
+                 character()
                }
-             }
-             # the order of columns in the data frame can vary
-             paste(where[["lat"]], where[["lon"]], where[["address"]], sep = ", ")
              },
-           inst.name = getInstrDesc(object)[["spectrometer.name"]],
-           inst.sn = getInstrDesc(object)[["spectrometer.sn"]],
-           comment = comment(object),
-           none = NULL,
-           {warning("Title key '", key, "' not recognized"); NULL}
+             inst.name = getInstrDesc(object)[["spectrometer.name"]],
+             inst.sn = getInstrDesc(object)[["spectrometer.sn"]],
+             comment = comment(object),
+             none = NULL,
+             {warning("Title key '", key, "' not recognized"); NULL}
     )
   }
 

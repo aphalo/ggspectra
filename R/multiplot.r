@@ -23,7 +23,6 @@
 #'   right, and 3 will go all the way across the bottom.
 #'
 #' @references \url{http://www.cookbook-r.com/}
-#'   \url{http://www.guru-gis.net/multiplot-function-for-ggplot/}
 #'
 #' @note Modified from example by Winston Chang found in the Cookbook for R
 #' Licenced under CC BY-SA

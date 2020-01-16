@@ -119,8 +119,8 @@ citation("ggspectra")
 #> 
 #> To cite package 'ggspectra' in publications, please use:
 #> 
-#>   Aphalo, Pedro J. (2015) The r4photobiology suite. UV4Plants
-#>   Bulletin, 2015:1, 21-29. DOI:10.19232/uv4pb.2015.1.14
+#>   Aphalo, Pedro J. (2015) The r4photobiology suite. UV4Plants Bulletin,
+#>   2015:1, 21-29. DOI:10.19232/uv4pb.2015.1.14
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
