@@ -141,9 +141,9 @@ test_that("source_spct", {
                               autoplot(fscale(white_led.source_spct, f = "total", target = 200)))
   vdiffr::expect_doppelganger("source-scaled-total-200-PAR",
                               autoplot(fscale(white_led.source_spct, f = "total", target = 200, range = PAR())))
-  vdiffr::expect_doppelganger("source-scaled-total-200",
+  vdiffr::expect_doppelganger("source-scaled-irrad-200",
                               autoplot(fscale(white_led.source_spct, f = irrad, target = 200)))
-  vdiffr::expect_doppelganger("source-scaled-total-200-PAR",
+  vdiffr::expect_doppelganger("source-scaled-irrad-200-PAR",
                               autoplot(fscale(white_led.source_spct, f = irrad, target = 200, range = PAR())))
   vdiffr::expect_doppelganger("source-product-wb",
                               autoplot(sun.spct * Red()))

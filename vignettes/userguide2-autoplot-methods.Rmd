@@ -321,12 +321,12 @@ autoplot(white_led.raw_spct, annotations = c("+", "boundaries"))
 
 Both `raw_spct` and `cps_spct` objects contain multiple data columns when integration time bracketing has been used during data acquisition. In such cases, if one wants to plot only one of the raw spectra, method `select()` from package 'dplyr' should be used instead of subscripting (`[ ]`) so as to preserve the metadata. In addition renaming of the variable is needed as shown below when a single column is extracted.
 
-```{r}
+```{r, eval=FALSE}
 autoplot(dplyr::select(white_led.raw_spct, w.length, counts = counts_1),
      annotations = c("+", "boundaries"))
 ```
 
-```{r}
+```{r, eval=FALSE}
 autoplot(dplyr::select(white_led.raw_spct, w.length, counts_1, counts_3),
      annotations = c("+", "boundaries"))
 ```

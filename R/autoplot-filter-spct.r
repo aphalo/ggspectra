@@ -839,8 +839,11 @@ O_plot <- function(spct,
 
   }
 
+  # Once molten it will not pass checks as object_spct
+  spct.tb <- spct
+  rmDerivedSpct(spct.tb)
   molten.spct <-
-    tidyr::gather_(data = dplyr::select(spct, c("w.length", "Tfr", "Afr", "Rfr")),
+    tidyr::gather_(data = spct.tb[ , c("w.length", "Tfr", "Afr", "Rfr")],
                    key_col = "variable", value_col = "value", gather_cols = c("Tfr", "Afr", "Rfr"))
   stack.levels <- c("Tfr", "Afr", "Rfr")
   if (utils::compareVersion(
@@ -850,8 +853,10 @@ O_plot <- function(spct,
   }
   molten.spct[["variable"]] <-
     factor(molten.spct[["variable"]], levels = stack.levels)
-  setGenericSpct(molten.spct, multiple.wl = 3L * getMultipleWl(spct))
+#  setGenericSpct(molten.spct, multiple.wl = 3L * getMultipleWl(spct))
+
   plot <- ggplot(molten.spct, aes_(~w.length, ~value), na.rm = na.rm)
+  attributes(plot$data) <- c(attributes(plot$data), get_attributes(spct))
   if (stacked) {
     plot <- plot + geom_area(aes_(alpha = ~variable), fill = "black", colour = NA)
     plot <- plot + scale_alpha_manual(values = c(Tfr = 0.4,

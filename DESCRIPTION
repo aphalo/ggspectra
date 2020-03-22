@@ -2,7 +2,7 @@ Package: ggspectra
 Type: Package
 Title: Extensions to 'ggplot2' for Radiation Spectra
 Version: 0.3.5.9000
-Date: 2020-01-16
+Date: 2020-03-22
 Authors@R:
    c(
     person("Pedro J.", "Aphalo", email = "pedro.aphalo@helsinki.fi", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-3385-972X")),
@@ -21,21 +21,22 @@ ByteCompile: TRUE
 Depends:
     R (>= 3.5.0),
     photobiology (>= 0.9.30),
-    ggplot2 (>= 3.1.1)
+    ggplot2 (>= 3.3.0)
 Imports:
     photobiologyWavebands (>= 0.4.3),
-    scales (>= 1.0.0),
-    ggrepel (>= 0.8.1),
+    scales (>= 1.1.0),
+    ggrepel (>= 0.8.2),
+    ggpmisc (>= 0.3.3),
     dplyr (>= 0.8.1),
     lubridate (>= 1.7.4),
-    tidyr (>= 1.0.0)
+    tidyr (>= 1.0.2)
 Suggests:
-    rlang (>= 0.4.2),
-    knitr (>= 1.24),
-    rmarkdown (>= 1.15)
+    rlang (>= 0.4.5),
+    knitr (>= 1.28),
+    rmarkdown (>= 2.1)
 URL: https://www.r4photobiology.info,
     https://bitbucket.org/aphalo/ggspectra
 BugReports: https://bitbucket.org/aphalo/ggspectra
 Encoding: UTF-8
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 VignetteBuilder: knitr

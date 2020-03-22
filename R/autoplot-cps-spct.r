@@ -112,6 +112,8 @@ cps_plot <- function(spct,
   }
 
   if (num.cps.cols > 1L) {
+    # remove raw_spct class before melting as it invalidates expectations
+    rmDerivedSpct(spct)
     spct <- tidyr::gather_(data = spct,
                            key_col = "scan",
                            value_col = "cps",
