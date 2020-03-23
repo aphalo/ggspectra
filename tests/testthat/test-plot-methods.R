@@ -3,16 +3,23 @@ library(ggplot2)
 library(photobiology)
 library(photobiologyWavebands)
 
-# We prepare shorter data objects for spectra to improve tests' runtime
-sun.spct <- interpolate_spct(photobiology::sun.spct, length.out = 50)
-white_led.raw_spct <- interpolate_spct(photobiology::white_led.raw_spct, length.out = 50)
-white_led.cps_spct <- interpolate_spct(photobiology::white_led.cps_spct, length.out = 50)
-white_led.source_spct <- interpolate_spct(photobiology::white_led.source_spct, length.out = 50)
-Ler_leaf_trns.spct <- interpolate_spct(photobiology::Ler_leaf_trns.spct, length.out = 50)
-Ler_leaf_trns_i.spct <- interpolate_spct(photobiology::Ler_leaf_trns_i.spct, length.out = 50)
-Ler_leaf_rflt.spct <- interpolate_spct(photobiology::Ler_leaf_rflt.spct, length.out = 50)
-Ler_leaf.spct <- interpolate_spct(photobiology::Ler_leaf.spct, length.out = 50)
-ccd.spct <- interpolate_spct(photobiology::ccd.spct, length.out = 50)
+# We prepare shorter data objects for spectra to improve tests' runtime.
+# We also make sure no data are exactly at the boundary of the possible range to
+# avoid warnings. Such values are physically possible but not measurable.
+sun.spct <- interpolate_spct(photobiology::sun.spct, length.out = 100)
+white_led.raw_spct <- interpolate_spct(photobiology::white_led.raw_spct, length.out = 100)
+white_led.cps_spct <- interpolate_spct(photobiology::white_led.cps_spct, length.out = 100)
+white_led.source_spct <- interpolate_spct(photobiology::white_led.source_spct, length.out = 100)
+Ler_leaf_trns.spct <- interpolate_spct(photobiology::Ler_leaf_trns.spct, length.out = 100)
+Ler_leaf_trns.spct <- clean(Ler_leaf_trns.spct, range.s.data = c(1e-5, 1 - 1e-5))
+Ler_leaf_trns_i.spct <- interpolate_spct(photobiology::Ler_leaf_trns_i.spct, length.out = 100)
+Ler_leaf_trns_i.spct <- clean(Ler_leaf_trns_i.spct, range.s.data = c(1e-5, 1 - 1e-5))
+Ler_leaf_rflt.spct <- interpolate_spct(photobiology::Ler_leaf_rflt.spct, length.out = 100)
+Ler_leaf_rflt.spct <- clean(Ler_leaf_rflt.spct, range.s.data = c(1e-5, 1 - 1e-5))
+Ler_leaf.spct <- clean(Ler_leaf.spct, min.Afr = 1e-5, range.s.data = c(1e-5, 1 - 1e-5))
+Ler_leaf.spct <- interpolate_spct(photobiology::Ler_leaf.spct, length.out = 100)
+Ler_leaf.spct <- clean(Ler_leaf.spct, min.Afr = 1e-5, range.s.data = c(1e-5, 1 - 1e-5))
+ccd.spct <- interpolate_spct(photobiology::ccd.spct, length.out = 100)
 
 test_that("raw_spct", {
   set_annotations_default()
@@ -29,6 +36,8 @@ test_that("raw_spct", {
                               autoplot(white_led.raw_spct, range = waveband(c(500, 700))))
   vdiffr::expect_doppelganger("raw-no-annotations",
                       autoplot(white_led.raw_spct, annotations = ""))
+  vdiffr::expect_doppelganger("raw-reserve-space",
+                              autoplot(white_led.raw_spct, annotations = "reserve.space"))
   vdiffr::expect_doppelganger("raw-minus-annotations",
                       autoplot(white_led.raw_spct, annotations = c("-", "summaries")))
   vdiffr::expect_doppelganger("raw-plus-annotations",
@@ -49,6 +58,8 @@ test_that("cps_spct", {
                               autoplot(white_led.cps_spct, range = waveband(c(500, 700))))
   vdiffr::expect_doppelganger("cps-no-annotations",
                               autoplot(white_led.cps_spct, annotations = ""))
+  vdiffr::expect_doppelganger("cps-reserve-space",
+                              autoplot(white_led.cps_spct, annotations = "reserve.space"))
   vdiffr::expect_doppelganger("cps-minus-annotations",
                               autoplot(white_led.cps_spct, annotations = c("-", "summaries")))
   vdiffr::expect_doppelganger("cps-plus-annotations",
@@ -85,6 +96,8 @@ test_that("source_spct", {
                               autoplot(white_led.source_spct, range = waveband(c(500, 700))))
   vdiffr::expect_doppelganger("source-no-annotations",
                               autoplot(white_led.source_spct, annotations = ""))
+  vdiffr::expect_doppelganger("source-reserve-space",
+                              autoplot(white_led.source_spct, annotations = "reserve.space"))
   vdiffr::expect_doppelganger("source-minus-annotations",
                               autoplot(white_led.source_spct, annotations = c("-", "summaries")))
   vdiffr::expect_doppelganger("source-plus-annotations",
@@ -194,8 +207,8 @@ test_that("source_spct", {
 
 test_that("source_mspct", {
   set_annotations_default()
-  two_leds.mspct <- source_mspct(list(one = photobiology::white_led.source_spct,
-                                      half = photobiology::white_led.source_spct / 2))
+  two_leds.mspct <- source_mspct(list(one = white_led.source_spct,
+                                      half = white_led.source_spct / 2))
 
   vdiffr::expect_doppelganger("source-mspct-default",
                               autoplot(two_leds.mspct))
@@ -209,6 +222,8 @@ test_that("source_mspct", {
                               autoplot(two_leds.mspct, unit.out = "photon"))
   vdiffr::expect_doppelganger("source-mspct-no-annotations",
                               autoplot(two_leds.mspct, annotations = ""))
+  vdiffr::expect_doppelganger("source-mspct-reserve-space",
+                              autoplot(two_leds.mspct, annotations = "reserve.space"))
 })
 
 test_that("filter_spct", {
@@ -262,6 +277,8 @@ test_that("filter_spct", {
                               autoplot(Ler_leaf_trns_i.spct, range = waveband(c(500, 700))))
   vdiffr::expect_doppelganger("filter-no-annotations",
                               autoplot(Ler_leaf_trns_i.spct, annotations = ""))
+  vdiffr::expect_doppelganger("filter-reserve-space",
+                              autoplot(Ler_leaf_trns_i.spct, annotations = "reserve.space"))
   vdiffr::expect_doppelganger("filter-minus-summaries",
                               autoplot(Ler_leaf_trns_i.spct, annotations = c("-", "summaries")))
   vdiffr::expect_doppelganger("filter-minus-boxes",
@@ -363,8 +380,8 @@ test_that("filter_spct", {
 
 test_that("filter_mspct", {
   set_annotations_default()
-  two_leaves.mspct <- filter_mspct(list(one = photobiology::Ler_leaf_trns_i.spct,
-                                      half = photobiology::Ler_leaf_trns_i.spct / 2))
+  two_leaves.mspct <- filter_mspct(list(one = Ler_leaf_trns_i.spct,
+                                      half = Ler_leaf_trns_i.spct / 2))
   vdiffr::expect_doppelganger("filter-mspct-default",
                               autoplot(two_leaves.mspct))
   vdiffr::expect_doppelganger("filter-mspct-default-ylim",
@@ -384,6 +401,8 @@ test_that("filter_mspct", {
                               autoplot(two_leaves.mspct, plot.qty = "transmittance"))
   vdiffr::expect_doppelganger("filter-mspct-no-annotations",
                               autoplot(two_leaves.mspct, annotations = ""))
+  vdiffr::expect_doppelganger("filter-mspct-reserve-space",
+                              autoplot(two_leaves.mspct, annotations = "reserve.space"))
 })
 
 test_that("reflector_spct", {
@@ -418,14 +437,16 @@ test_that("reflector_spct", {
 
 test_that("reflector_mspct", {
   set_annotations_default()
-  two_leaves_Rfr.mspct <- reflector_mspct(list(one = photobiology::Ler_leaf_rflt.spct,
-                                        half = photobiology::Ler_leaf_rflt.spct / 2))
+  two_leaves_Rfr.mspct <- reflector_mspct(list(one = Ler_leaf_rflt.spct,
+                                        half = Ler_leaf_rflt.spct / 2))
   vdiffr::expect_doppelganger("reflector-mspct-default",
                               autoplot(two_leaves_Rfr.mspct))
   vdiffr::expect_doppelganger("reflector-mspct-default-range",
                               autoplot(two_leaves_Rfr.mspct, range = c(500, 700)))
   vdiffr::expect_doppelganger("reflector-mspct-no-annotations",
                               autoplot(two_leaves_Rfr.mspct, annotations = ""))
+  vdiffr::expect_doppelganger("reflector-mspct-reserve-space",
+                              autoplot(two_leaves_Rfr.mspct, annotations = "reserve.space"))
 })
 
 test_that("object_spct", {
@@ -444,8 +465,10 @@ test_that("object_spct", {
                               autoplot(Ler_leaf.spct, range = waveband(c(500, 700))))
   vdiffr::expect_doppelganger("object-no-annotations-tot",
                               autoplot(Ler_leaf.spct, annotations = ""))
+  vdiffr::expect_doppelganger("object-reserve-space-tot",
+                              autoplot(Ler_leaf.spct, annotations = "reserve.space"))
   vdiffr::expect_doppelganger("object-minus-guide-tot",
-                              autoplot(Ler_leaf.spct, annotations = c("-", "clour.guide")))
+                              autoplot(Ler_leaf.spct, annotations = c("-", "colour.guide")))
   vdiffr::expect_doppelganger("object-plus-segments-tot",
                               autoplot(Ler_leaf.spct, annotations = c("+", "segments")))
 
@@ -477,6 +500,96 @@ test_that("object_spct", {
                               autoplot(Ler_leaf.spct, stacked = FALSE, annotations = c("+", "segments")))
 })
 
+test_that("object_spct_as_reflector", {
+  set_annotations_default()
+  vdiffr::expect_doppelganger("object-as-reflector-default-tot",
+                              autoplot(Ler_leaf.spct, plot.qty = "reflectance"))
+  vdiffr::expect_doppelganger("object-as-reflector-default-pc-out-tot",
+                              autoplot(Ler_leaf.spct, pc.out = TRUE, plot.qty = "reflectance"))
+  vdiffr::expect_doppelganger("object-as-reflector-text-size-tot",
+                              autoplot(Ler_leaf.spct, text.size = 3.5, plot.qty = "reflectance"))
+  vdiffr::expect_doppelganger("object-as-reflector-wb-vis-tot",
+                              autoplot(Ler_leaf.spct, w.band = VIS_bands(), plot.qty = "reflectance"))
+  vdiffr::expect_doppelganger("object-as-reflector-range-num-tot",
+                              autoplot(Ler_leaf.spct, range = c(500, 700), plot.qty = "reflectance"))
+  vdiffr::expect_doppelganger("object-as-reflector-range-wb-tot",
+                              autoplot(Ler_leaf.spct, range = waveband(c(500, 700)), plot.qty = "reflectance"))
+  vdiffr::expect_doppelganger("object-as-reflector-no-annotations-tot",
+                              autoplot(Ler_leaf.spct, annotations = "", plot.qty = "reflectance"))
+  vdiffr::expect_doppelganger("object-as-reflector-reserve-space-tot",
+                              autoplot(Ler_leaf.spct, annotations = "reserve.space", plot.qty = "reflectance"))
+  vdiffr::expect_doppelganger("object-as-reflector-minus-guide-tot",
+                              autoplot(Ler_leaf.spct, annotations = c("-", "colour.guide"), plot.qty = "reflectance"))
+  vdiffr::expect_doppelganger("object-as-reflector-plus-segments-tot",
+                              autoplot(Ler_leaf.spct, annotations = c("+", "segments"), plot.qty = "reflectance"))
+})
+
+test_that("object_spct_as_filter", {
+  set_annotations_default()
+  vdiffr::expect_doppelganger("object-filter-tfr-default-tot",
+                              autoplot(Ler_leaf.spct, plot.qty = "transmittance"))
+  vdiffr::expect_doppelganger("object-as-filter-tfr-default-pc-out-tot",
+                              autoplot(Ler_leaf.spct, pc.out = TRUE, plot.qty = "transmittance"))
+  vdiffr::expect_doppelganger("object-as-filter-tfr-text-size-tot",
+                              autoplot(Ler_leaf.spct, text.size = 3.5, plot.qty = "transmittance"))
+  vdiffr::expect_doppelganger("object-as-filter-tfr-wb-vis-tot",
+                              autoplot(Ler_leaf.spct, w.band = VIS_bands(), plot.qty = "transmittance"))
+  vdiffr::expect_doppelganger("object-as-filter-tfr-range-num-tot",
+                              autoplot(Ler_leaf.spct, range = c(500, 700), plot.qty = "transmittance"))
+  vdiffr::expect_doppelganger("object-as-filter-tfr-range-wb-tot",
+                              autoplot(Ler_leaf.spct, range = waveband(c(500, 700)), plot.qty = "transmittance"))
+  vdiffr::expect_doppelganger("object-as-filter-tfr-no-annotations-tot",
+                              autoplot(Ler_leaf.spct, annotations = "", plot.qty = "transmittance"))
+  vdiffr::expect_doppelganger("object-as-filter-tfr-reserve-space-tot",
+                              autoplot(Ler_leaf.spct, annotations = "reserve.space", plot.qty = "transmittance"))
+  vdiffr::expect_doppelganger("object-as-filter-tfr-minus-guide-tot",
+                              autoplot(Ler_leaf.spct, annotations = c("-", "colour.guide"), plot.qty = "transmittance"))
+  vdiffr::expect_doppelganger("object-as-filter-tfr-plus-segments-tot",
+                              autoplot(Ler_leaf.spct, annotations = c("+", "segments"), plot.qty = "transmittance"))
+
+  vdiffr::expect_doppelganger("object-as-filter-afr-default-tot",
+                              autoplot(Ler_leaf.spct, plot.qty = "absorptance"))
+  vdiffr::expect_doppelganger("object-as-filter-afr-default-pc-out-tot",
+                              autoplot(Ler_leaf.spct, pc.out = TRUE, plot.qty = "absorptance"))
+  vdiffr::expect_doppelganger("object-as-filter-afr-text-size-tot",
+                              autoplot(Ler_leaf.spct, text.size = 3.5, plot.qty = "absorptance"))
+  vdiffr::expect_doppelganger("object-as-filter-afr-wb-vis-tot",
+                              autoplot(Ler_leaf.spct, w.band = VIS_bands(), plot.qty = "absorptance"))
+  vdiffr::expect_doppelganger("object-as-filter-afr-range-num-tot",
+                              autoplot(Ler_leaf.spct, range = c(500, 700), plot.qty = "absorptance"))
+  vdiffr::expect_doppelganger("object-as-filter-afr-range-wb-tot",
+                              autoplot(Ler_leaf.spct, range = waveband(c(500, 700)), plot.qty = "absorptance"))
+  vdiffr::expect_doppelganger("object-as-filter-afr-no-annotations-tot",
+                              autoplot(Ler_leaf.spct, annotations = "", plot.qty = "absorptance"))
+  vdiffr::expect_doppelganger("object-as-filter-afr-reserve-space-tot",
+                              autoplot(Ler_leaf.spct, annotations = "reserve.space", plot.qty = "absorptance"))
+  vdiffr::expect_doppelganger("object-as-filter-afr-minus-guide-tot",
+                              autoplot(Ler_leaf.spct, annotations = c("-", "colour.guide"), plot.qty = "absorptance"))
+  vdiffr::expect_doppelganger("object-as-filter-afr-plus-segments-tot",
+                              autoplot(Ler_leaf.spct, annotations = c("+", "segments"), plot.qty = "absorptance"))
+
+  vdiffr::expect_doppelganger("object-as-filter-a-default-tot",
+                              autoplot(Ler_leaf.spct, plot.qty = "absorbance"))
+  vdiffr::expect_doppelganger("object-as-filter-a-default-pc-out-tot",
+                              autoplot(Ler_leaf.spct, pc.out = TRUE, plot.qty = "absorbance"))
+  vdiffr::expect_doppelganger("object-as-filter-a-text-size-tot",
+                              autoplot(Ler_leaf.spct, text.size = 3.5, plot.qty = "absorbance"))
+  vdiffr::expect_doppelganger("object-as-filter-a-wb-vis-tot",
+                              autoplot(Ler_leaf.spct, w.band = VIS_bands(), plot.qty = "absorbance"))
+  vdiffr::expect_doppelganger("object-as-filter-a-range-num-tot",
+                              autoplot(Ler_leaf.spct, range = c(500, 700), plot.qty = "absorbance"))
+  vdiffr::expect_doppelganger("object-as-filter-a-range-wb-tot",
+                              autoplot(Ler_leaf.spct, range = waveband(c(500, 700)), plot.qty = "absorbance"))
+  vdiffr::expect_doppelganger("object-as-filter-a-no-annotations-tot",
+                              autoplot(Ler_leaf.spct, annotations = "", plot.qty = "absorbance"))
+  vdiffr::expect_doppelganger("object-as-filter-a-reserve-space-tot",
+                              autoplot(Ler_leaf.spct, annotations = "reserve.space", plot.qty = "absorbance"))
+  vdiffr::expect_doppelganger("object-as-filter-a-minus-guide-tot",
+                              autoplot(Ler_leaf.spct, annotations = c("-", "colour.guide"), plot.qty = "absorbance"))
+  vdiffr::expect_doppelganger("object-as-filter-a-plus-segments-tot",
+                              autoplot(Ler_leaf.spct, annotations = c("+", "segments"), plot.qty = "absorbance"))
+})
+
 test_that("response_spct", {
   set_annotations_default()
   vdiffr::expect_doppelganger("response-default",
@@ -505,6 +618,8 @@ test_that("response_spct", {
                               autoplot(ccd.spct, range = waveband(c(300, 700))))
   vdiffr::expect_doppelganger("response-no-annotations",
                               autoplot(ccd.spct, annotations = ""))
+  vdiffr::expect_doppelganger("response-reserve-space",
+                              autoplot(ccd.spct, annotations = "reserve.space"))
   vdiffr::expect_doppelganger("response-minus-annotations",
                               autoplot(ccd.spct, annotations = c("-", "summaries")))
   vdiffr::expect_doppelganger("response-plus-annotations",
@@ -588,8 +703,8 @@ test_that("response_spct", {
 
 test_that("response_mspct", {
   set_annotations_default()
-  two_ccds.mspct <- response_mspct(list(one = photobiology::ccd.spct,
-                                      half = photobiology::ccd.spct / 2))
+  two_ccds.mspct <- response_mspct(list(one = ccd.spct,
+                                      half = ccd.spct / 2))
 
   vdiffr::expect_doppelganger("response-mspct-default",
                               autoplot(two_ccds.mspct))
@@ -601,6 +716,8 @@ test_that("response_mspct", {
                               autoplot(two_ccds.mspct, unit.out = "photon"))
   vdiffr::expect_doppelganger("response-mspct-no-annotations",
                               autoplot(two_ccds.mspct, annotations = ""))
+  vdiffr::expect_doppelganger("response-mspct-reserve-space",
+                              autoplot(two_ccds.mspct, annotations = "reserve.space"))
 })
 
 test_that("waveband", {
@@ -615,6 +732,12 @@ test_that("waveband", {
                               autoplot(Red(), text.size = 3.5))
   vdiffr::expect_doppelganger("waveband-plus-segments",
                               autoplot(Red(), annotations = c("+", "segments")))
+  vdiffr::expect_doppelganger("waveband-minus-boxes",
+                              autoplot(Red(), annotations = c("-", "boxes")))
+  vdiffr::expect_doppelganger("waveband-no-annotations",
+                              autoplot(Red(), annotations = ""))
+  vdiffr::expect_doppelganger("waveband-reserve-space",
+                              autoplot(Red(), annotations = "reserve.space"))
 })
 
 
@@ -643,8 +766,8 @@ test_that("plot_spct", {
 
 test_that("plot_mspct", {
   set_annotations_default()
-  two_ccds.mspct <- response_mspct(list(one = photobiology::ccd.spct,
-                                        half = photobiology::ccd.spct / 2))
+  two_ccds.mspct <- response_mspct(list(one = ccd.spct,
+                                        half = ccd.spct / 2))
   vdiffr::expect_doppelganger("response-mspct-default-autop",
                                plot(two_ccds.mspct))
 })

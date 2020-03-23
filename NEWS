@@ -1,8 +1,11 @@
-ggspectra 0.3.6 (2020-03-22)
+ggspectra 0.3.6 (2020-03-xx)
 ============================
 
 * Revise for compatibility with 'dplyr' (>= 1.0.0).
 * Fix two bugs in ggplot() method for class object_spct.
+* TODO Add summaries as inset tables.
+* TODO Add support for fitted peaks and valleys.
+* TODO Add support for highlighting spikes.
 
 ggspectra 0.3.5 (2020-01-15)
 ============================
