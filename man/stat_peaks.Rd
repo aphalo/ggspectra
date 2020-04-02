@@ -168,6 +168,7 @@ Other stats functions:
 \code{\link{stat_find_qtys}()},
 \code{\link{stat_find_wls}()},
 \code{\link{stat_label_peaks}()},
+\code{\link{stat_spikes}()},
 \code{\link{stat_wb_box}()},
 \code{\link{stat_wb_column}()},
 \code{\link{stat_wb_contribution}()},
