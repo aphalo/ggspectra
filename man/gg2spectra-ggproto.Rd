@@ -16,6 +16,7 @@
 \alias{StatLabelValleys}
 \alias{StatPeaks}
 \alias{StatValleys}
+\alias{StatWlsAt}
 \alias{StatSpikes}
 \alias{StatWbBox}
 \alias{StatWbColumn}
@@ -34,11 +35,15 @@
 An object of class \code{StatLabelValleys} (inherits from \code{Stat}, \code{ggproto}, \code{gg}) of length 4.
 
 An object of class \code{StatValleys} (inherits from \code{Stat}, \code{ggproto}, \code{gg}) of length 4.
+
+An object of class \code{StatWlsAt} (inherits from \code{Stat}, \code{ggproto}, \code{gg}) of length 4.
 }
 \usage{
 StatLabelValleys
 
 StatValleys
+
+StatWlsAt
 }
 \description{
 All \code{stat_*} functions (like \code{stat_bin}) return a layer that

@@ -3,6 +3,7 @@
 \name{stat_peaks}
 \alias{stat_peaks}
 \alias{stat_valleys}
+\alias{stat_wls_at}
 \title{Find peaks and valleys.}
 \usage{
 stat_peaks(
@@ -33,6 +34,22 @@ stat_valleys(
   strict = is.null(span),
   refine.wl = FALSE,
   method = "spline",
+  label.fmt = "\%.3g",
+  x.label.fmt = label.fmt,
+  y.label.fmt = label.fmt,
+  position = "identity",
+  na.rm = FALSE,
+  show.legend = FALSE,
+  inherit.aes = TRUE,
+  ...
+)
+
+stat_wls_at(
+  mapping = NULL,
+  data = NULL,
+  geom = "point",
+  target = "half.maximum",
+  interpolate = FALSE,
   label.fmt = "\%.3g",
   x.label.fmt = label.fmt,
   y.label.fmt = label.fmt,
@@ -103,6 +120,14 @@ stripped before the computation proceeds.}
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
+
+\item{target}{numeric value indicating the spectral quantity value for which
+wavelengths are to be searched and interpolated if need. The character
+string "half.maximum" is also accepted as argument.}
+
+\item{interpolate}{logical Indicating whether the nearest wavelength value
+in \code{x} should be returned or a value calculated by linear
+interpolation between wavelength values straddling the target.}
 }
 \value{
 A data frame with one row for each peak (or valley) found in the
@@ -177,6 +202,10 @@ ggplot(sun.spct) +
   geom_line() +
   stat_valleys()
 
+ggplot(white_led.source_spct) +
+  geom_line() +
+  stat_wls_at()
+
 ggplot(sun.spct) +
   geom_line() +
   stat_peaks(span = 51, geom = "point", colour = "red") +
@@ -203,6 +232,17 @@ ggplot(sun.spct) +
              vjust = 1.3, hjust = 2/3, label.fmt = "\%.6g nm",
              refine.wl = TRUE) +
   expand_limits(y = 1) +
+  scale_fill_identity() +
+  scale_color_identity()
+
+ggplot(white_led.source_spct) +
+  geom_line() +
+  stat_wls_at(geom = "vline", linetype = "dotted") +
+  stat_wls_at(geom = "label", mapping = aes(color = stat(BW.colour)),
+              hjust = "outward") +
+  stat_peaks(geom = "vline", linetype = "dotted", span = NULL) +
+  stat_peaks(geom = "label", mapping = aes(color = stat(BW.colour)),
+             span = NULL, vjust = "outward") +
   scale_fill_identity() +
   scale_color_identity()
 
