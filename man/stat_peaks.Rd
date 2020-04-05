@@ -13,7 +13,9 @@ stat_peaks(
   ...,
   span = 5,
   ignore_threshold = 0.01,
-  strict = FALSE,
+  strict = is.null(span),
+  refine.wl = FALSE,
+  method = "spline",
   label.fmt = "\%.3g",
   x.label.fmt = label.fmt,
   y.label.fmt = label.fmt,
@@ -28,7 +30,9 @@ stat_valleys(
   geom = "point",
   span = 5,
   ignore_threshold = -0.01,
-  strict = FALSE,
+  strict = is.null(span),
+  refine.wl = FALSE,
+  method = "spline",
   label.fmt = "\%.3g",
   x.label.fmt = label.fmt,
   y.label.fmt = label.fmt,
@@ -56,16 +60,28 @@ on this layer}
 include aesthetics whose values you want to set, not map. See
 \code{\link[ggplot2]{layer}} for more details.}
 
-\item{span}{a peak is defined as an element in a sequence which is greater
-than all other elements within a window of width span centered at that
-element. The default value is 5, meaning that a peak is bigger than two
-consequtive neighbors on each side. Default: 5.}
+\item{span}{integer A peak is defined as an element in a sequence which is
+greater than all other elements within a window of width \code{span}
+centered at that element. Use \code{NULL} for the global peak. Valleys are
+the reverse.}
 
-\item{ignore_threshold}{numeric value between 0.0 and 1.0 indicating the size
-threshold below which peaks will be ignored.}
+\item{ignore_threshold}{numeric For peaks, value between 0.0 and 1.0
+indicating the relative size of peaks compared to tallest peak threshold
+below which peaks will be ignored, while negative values between 0.0 and
+-1.0 set a threshold so that the tallest peaks are ignored, instead of the
+shortest. For valleys, value between 0.0 and 1.0 indicating the relative
+depth of valleys below which valleys will be ignored, while negative values
+between 0.0 and -1.0 set a threshold so that the deeper valleys are
+ignored, instead of the shallower ones.}
 
-\item{strict}{logical flag: if TRUE, an element must be strictly greater than
-all other values in its window to be considered a peak. Default: FALSE.}
+\item{strict}{logical If \code{TRUE}, an element must be strictly greater
+than all other values in its window to be considered a peak.}
+
+\item{refine.wl}{logical Flag indicating if peak or valleys locations should
+be refined by fitting a function.}
+
+\item{method}{character String with the name of a method used for peak
+fitting. Currently only spline interpolation is implemented.}
 
 \item{label.fmt}{character  string giving a format definition for converting
 values into character strings by means of function \code{\link{sprintf}}.}
@@ -125,6 +141,8 @@ These stats work nicely together with geoms
   \item{y.label}{y-value at the peak (or valley) formatted as character}
   \item{wl.color}{color definition calculated by assuming that x-values are
   wavelengths expressed in nanometres.}
+  \item{BW.color}{color definition, either "black" or "white", as needed to
+  ensure high contrast to \code{wl.color}.}
 }
 }
 
@@ -132,10 +150,10 @@ These stats work nicely together with geoms
 
 Set by the statistic and available to geoms.
 \describe{
-  \item{label}{..x.label..}
-  \item{xintercept}{..x..}
-  \item{yintercept}{..y..}
-  \item{fill}{..wl.color..}
+  \item{label}{stat(x.label)}
+  \item{xintercept}{stat(x)}
+  \item{yintercept}{stat(y)}
+  \item{fill}{stat(wl.color)}
 }
 }
 
@@ -151,14 +169,43 @@ Required by the statistic and need to be set with \code{aes()}.
 \examples{
 
 # ggplot() methods for spectral objects set a default mapping for x and y.
-ggplot(sun.spct) + geom_line() + stat_peaks()
-ggplot(sun.spct) + geom_line() + stat_valleys()
-ggplot(sun.spct) + geom_line() +
-  stat_peaks(span = 21, geom = "point", colour = "red") +
+ggplot(sun.spct) +
+  geom_line() +
+  stat_peaks()
+
+ggplot(sun.spct) +
+  geom_line() +
+  stat_valleys()
+
+ggplot(sun.spct) +
+  geom_line() +
+  stat_peaks(span = 51, geom = "point", colour = "red") +
   stat_peaks(span = 51, geom = "text", colour = "red",
-             vjust = -0.3, label.fmt = "\%3.0f nm")
-ggplot(sun.spct, unit.out = "photon") + geom_point() +
-  stat_peaks(span = 5, geom = "line", colour = "red")
+             vjust = -0.4, label.fmt = "\%3.2f nm")
+
+ggplot(sun.spct) +
+  geom_line() +
+  stat_peaks(span = 51, geom = "point", colour = "red", refine.wl = TRUE) +
+  stat_peaks(span = 51, geom = "text", colour = "red",
+             vjust = -0.4, label.fmt = "\%3.2f nm",
+             refine.wl = TRUE)
+
+ggplot(sun.spct) +
+  geom_line() +
+  stat_peaks(span = 51, geom = "point", colour = "red", refine.wl = TRUE) +
+  stat_peaks(mapping = aes(fill = stat(wl.colour), color = stat(BW.colour)),
+             span = 51, geom = "label",
+             vjust = -0.3, hjust = c(1, 0, 0.5), label.fmt = "\%.6g nm",
+             refine.wl = TRUE) +
+  stat_valleys(span = 71, geom = "point", colour = "blue", refine.wl = TRUE) +
+  stat_valleys(mapping = aes(fill = stat(wl.colour), color = stat(BW.colour)),
+             span = 71, geom = "label",
+             vjust = 1.3, hjust = 2/3, label.fmt = "\%.6g nm",
+             refine.wl = TRUE) +
+  expand_limits(y = 1) +
+  scale_fill_identity() +
+  scale_color_identity()
+
 }
 \seealso{
 \code{\link[photobiology]{find_peaks}}, which is used internally.

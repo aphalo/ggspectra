@@ -23,14 +23,24 @@
 #'   \code{\link[ggplot2]{layer}} for more details.
 #' @param na.rm	a logical value indicating whether NA values should be
 #'   stripped before the computation proceeds.
-#' @param ignore_threshold numeric value between 0.0 and 1.0 indicating the size
-#'   threshold below which peaks will be ignored.
-#' @param span a peak is defined as an element in a sequence which is greater
-#'   than all other elements within a window of width span centered at that
-#'   element. The default value is 5, meaning that a peak is bigger than two
-#'   consequtive neighbors on each side. Default: 5.
-#' @param strict logical flag: if TRUE, an element must be strictly greater than
-#'   all other values in its window to be considered a peak. Default: FALSE.
+#' @param ignore_threshold numeric For peaks, value between 0.0 and 1.0
+#'   indicating the relative size of peaks compared to tallest peak threshold
+#'   below which peaks will be ignored, while negative values between 0.0 and
+#'   -1.0 set a threshold so that the tallest peaks are ignored, instead of the
+#'   shortest. For valleys, value between 0.0 and 1.0 indicating the relative
+#'   depth of valleys below which valleys will be ignored, while negative values
+#'   between 0.0 and -1.0 set a threshold so that the deeper valleys are
+#'   ignored, instead of the shallower ones.
+#' @param span integer A peak is defined as an element in a sequence which is
+#'   greater than all other elements within a window of width \code{span}
+#'   centered at that element. Use \code{NULL} for the global peak. Valleys are
+#'   the reverse.
+#' @param strict logical If \code{TRUE}, an element must be strictly greater
+#'   than all other values in its window to be considered a peak.
+#' @param refine.wl logical Flag indicating if peak or valleys locations should
+#'   be refined by fitting a function.
+#' @param method character String with the name of a method used for peak
+#'   fitting. Currently only spline interpolation is implemented.
 #' @param label.fmt character  string giving a format definition for converting
 #'   values into character strings by means of function \code{\link{sprintf}}.
 #' @param x.label.fmt character  string giving a format definition for converting
@@ -49,15 +59,17 @@
 #'   \item{y.label}{y-value at the peak (or valley) formatted as character}
 #'   \item{wl.color}{color definition calculated by assuming that x-values are
 #'   wavelengths expressed in nanometres.}
+#'   \item{BW.color}{color definition, either "black" or "white", as needed to
+#'   ensure high contrast to \code{wl.color}.}
 #' }
 #'
 #' @section Default aesthetics:
 #' Set by the statistic and available to geoms.
 #' \describe{
-#'   \item{label}{..x.label..}
-#'   \item{xintercept}{..x..}
-#'   \item{yintercept}{..y..}
-#'   \item{fill}{..wl.color..}
+#'   \item{label}{stat(x.label)}
+#'   \item{xintercept}{stat(x)}
+#'   \item{yintercept}{stat(y)}
+#'   \item{fill}{stat(wl.color)}
 #' }
 #'
 #' @section Required aesthetics:
@@ -90,24 +102,61 @@
 #' @examples
 #'
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
-#' ggplot(sun.spct) + geom_line() + stat_peaks()
-#' ggplot(sun.spct) + geom_line() + stat_valleys()
-#' ggplot(sun.spct) + geom_line() +
-#'   stat_peaks(span = 21, geom = "point", colour = "red") +
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_peaks()
+#'
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_valleys()
+#'
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_peaks(span = 51, geom = "point", colour = "red") +
 #'   stat_peaks(span = 51, geom = "text", colour = "red",
-#'              vjust = -0.3, label.fmt = "%3.0f nm")
-#' ggplot(sun.spct, unit.out = "photon") + geom_point() +
-#'   stat_peaks(span = 5, geom = "line", colour = "red")
+#'              vjust = -0.4, label.fmt = "%3.2f nm")
+#'
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_peaks(span = 51, geom = "point", colour = "red", refine.wl = TRUE) +
+#'   stat_peaks(span = 51, geom = "text", colour = "red",
+#'              vjust = -0.4, label.fmt = "%3.2f nm",
+#'              refine.wl = TRUE)
+#'
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_peaks(span = 51, geom = "point", colour = "red", refine.wl = TRUE) +
+#'   stat_peaks(mapping = aes(fill = stat(wl.colour), color = stat(BW.colour)),
+#'              span = 51, geom = "label",
+#'              vjust = -0.3, hjust = c(1, 0, 0.5), label.fmt = "%.6g nm",
+#'              refine.wl = TRUE) +
+#'   stat_valleys(span = 71, geom = "point", colour = "blue", refine.wl = TRUE) +
+#'   stat_valleys(mapping = aes(fill = stat(wl.colour), color = stat(BW.colour)),
+#'              span = 71, geom = "label",
+#'              vjust = 1.3, hjust = 2/3, label.fmt = "%.6g nm",
+#'              refine.wl = TRUE) +
+#'   expand_limits(y = 1) +
+#'   scale_fill_identity() +
+#'   scale_color_identity()
+#'
 #' @export
 #' @family stats functions
 #'
-stat_peaks <- function(mapping = NULL, data = NULL,
-                       geom = "point", position = "identity",
+stat_peaks <- function(mapping = NULL,
+                       data = NULL,
+                       geom = "point",
+                       position = "identity",
                        ...,
-                       span = 5, ignore_threshold = 0.01, strict = FALSE,
+                       span = 5,
+                       ignore_threshold = 0.01,
+                       strict = is.null(span),
+                       refine.wl = FALSE,
+                       method = "spline",
                        label.fmt = "%.3g",
-                       x.label.fmt = label.fmt, y.label.fmt = label.fmt,
-                       na.rm = FALSE, show.legend = FALSE,
+                       x.label.fmt = label.fmt,
+                       y.label.fmt = label.fmt,
+                       na.rm = FALSE,
+                       show.legend = FALSE,
                        inherit.aes = TRUE) {
   ggplot2::layer(
     stat = StatPeaks, data = data, mapping = mapping, geom = geom,
@@ -115,6 +164,8 @@ stat_peaks <- function(mapping = NULL, data = NULL,
     params = list(span = span,
                   ignore_threshold = ignore_threshold,
                   strict = strict,
+                  refine.wl = refine.wl,
+                  method = method,
                   label.fmt = label.fmt,
                   x.label.fmt = x.label.fmt,
                   y.label.fmt = y.label.fmt,
@@ -148,28 +199,31 @@ StatPeaks <-
                                             span,
                                             ignore_threshold,
                                             strict,
+                                            refine.wl,
+                                            method,
                                             label.fmt,
                                             x.label.fmt,
                                             y.label.fmt) {
-                     if (is.null(span)) {
-                       peaks.df <- data[which.max(data$y), , drop = FALSE]
-                     } else {
-                       peaks.df <- data[photobiology::find_peaks(data$y,
-                                                                 span = span,
-                                                                 ignore_threshold = ignore_threshold,
-                                                                 strict = strict), , drop = FALSE]
-                     }
+                     peaks.df <- photobiology::peaks(data,
+                                                     x.var.name = "x",
+                                                     y.var.name = "y",
+                                                     span = span,
+                                                     ignore_threshold = ignore_threshold,
+                                                     strict = strict,
+                                                     refine.wl = refine.wl,
+                                                     method = method,
+                                                     na.rm = FALSE)
                      dplyr::mutate(peaks.df,
                                    x.label = sprintf(x.label.fmt, x),
                                    y.label = sprintf(y.label.fmt, y),
                                    wl.color = photobiology::color_of(x, type = "CMF"),
                                    BW.color = black_or_white(photobiology::color_of(x, type = "CMF")))
                    },
-                   default_aes = ggplot2::aes(label = ..x.label..,
-                                              fill = ..wl.color..,
+                   default_aes = ggplot2::aes(label = stat(x.label),
+                                              fill = stat(wl.color),
 #                                              color = ..BW.color..,
-                                              xintercept = ..x..,
-                                              yintercept = ..y..,
+                                              xintercept = stat(x),
+                                              yintercept = stat(y),
                                               hjust = 0.5,
                                               vjust = 0.5),
                    required_aes = c("x", "y")
@@ -179,18 +233,30 @@ StatPeaks <-
 #'
 #' @export
 #'
-stat_valleys <- function(mapping = NULL, data = NULL, geom = "point",
-                         span = 5, ignore_threshold = -0.01, strict = FALSE,
+stat_valleys <- function(mapping = NULL,
+                         data = NULL,
+                         geom = "point",
+                         span = 5,
+                         ignore_threshold = -0.01,
+                         strict = is.null(span),
+                         refine.wl = FALSE,
+                         method = "spline",
                          label.fmt = "%.3g",
-                         x.label.fmt = label.fmt, y.label.fmt = label.fmt,
-                         position = "identity", na.rm = FALSE, show.legend = FALSE,
-                         inherit.aes = TRUE, ...) {
+                         x.label.fmt = label.fmt,
+                         y.label.fmt = label.fmt,
+                         position = "identity",
+                         na.rm = FALSE,
+                         show.legend = FALSE,
+                         inherit.aes = TRUE,
+                         ...) {
   ggplot2::layer(
     stat = StatValleys, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(span = span,
                   ignore_threshold = ignore_threshold,
                   strict = strict,
+                  refine.wl = refine.wl,
+                  method = method,
                   label.fmt = label.fmt,
                   x.label.fmt = x.label.fmt,
                   y.label.fmt = y.label.fmt,
@@ -210,17 +276,20 @@ StatValleys <-
                                             span,
                                             ignore_threshold,
                                             strict,
+                                            refine.wl,
+                                            method,
                                             label.fmt,
                                             x.label.fmt,
                                             y.label.fmt) {
-                     if (is.null(span)) {
-                       valleys.df <- data[which.min(data$y), , drop = FALSE]
-                     } else {
-                       valleys.df <- data[photobiology::find_peaks(-data$y,
-                                                                   span = span,
-                                                                   ignore_threshold = ignore_threshold,
-                                                                   strict = strict), , drop = FALSE]
-                     }
+                     valleys.df <- photobiology::valleys(data,
+                                                         x.var.name = "x",
+                                                         y.var.name = "y",
+                                                         span = span,
+                                                         ignore_threshold = ignore_threshold,
+                                                         strict = strict,
+                                                         refine.wl = refine.wl,
+                                                         method = method,
+                                                         na.rm = FALSE)
                      dplyr::mutate(valleys.df,
                                    x.label = sprintf(x.label.fmt, x),
                                    y.label = sprintf(y.label.fmt, y),
@@ -229,7 +298,7 @@ StatValleys <-
                    },
                    default_aes = ggplot2::aes(label = stat(x.label),
                                               fill = stat(wl.color),
-#                                              color = ..BW.color..,
+#                                              color = stat(BW.color),
                                               xintercept = stat(x),
                                               yintercept = stat(y),
                                               hjust = 0.5,

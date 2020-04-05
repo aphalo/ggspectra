@@ -3,6 +3,13 @@ library(ggplot2)
 library(photobiology)
 library(photobiologyWavebands)
 
+# We prepare shorter data objects for spectra to improve tests' runtime.
+# We also make sure no data are exactly at the boundary of the possible range to
+# avoid warnings. Such values are physically possible but not measurable.
+length.out.spct <- 100L
+sun.spct <- interpolate_spct(photobiology::sun.spct, length.out = length.out.spct)
+ccd.spct <- interpolate_spct(photobiology::ccd.spct, length.out = length.out.spct)
+
 test_that("stat_label_peaks", {
   vdiffr::expect_doppelganger("stat-label-peaks-sun",
                               ggplot(sun.spct)+

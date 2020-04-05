@@ -6,20 +6,21 @@ library(photobiologyWavebands)
 # We prepare shorter data objects for spectra to improve tests' runtime.
 # We also make sure no data are exactly at the boundary of the possible range to
 # avoid warnings. Such values are physically possible but not measurable.
-sun.spct <- interpolate_spct(photobiology::sun.spct, length.out = 100)
-white_led.raw_spct <- interpolate_spct(photobiology::white_led.raw_spct, length.out = 100)
-white_led.cps_spct <- interpolate_spct(photobiology::white_led.cps_spct, length.out = 100)
-white_led.source_spct <- interpolate_spct(photobiology::white_led.source_spct, length.out = 100)
-Ler_leaf_trns.spct <- interpolate_spct(photobiology::Ler_leaf_trns.spct, length.out = 100)
+length.out.spct <- 100L
+sun.spct <- interpolate_spct(photobiology::sun.spct, length.out = length.out.spct)
+white_led.raw_spct <- interpolate_spct(photobiology::white_led.raw_spct, length.out = length.out.spct)
+white_led.cps_spct <- interpolate_spct(photobiology::white_led.cps_spct, length.out = length.out.spct)
+white_led.source_spct <- interpolate_spct(photobiology::white_led.source_spct, length.out = length.out.spct)
+Ler_leaf_trns.spct <- interpolate_spct(photobiology::Ler_leaf_trns.spct, length.out = length.out.spct)
 Ler_leaf_trns.spct <- clean(Ler_leaf_trns.spct, range.s.data = c(1e-5, 1 - 1e-5))
-Ler_leaf_trns_i.spct <- interpolate_spct(photobiology::Ler_leaf_trns_i.spct, length.out = 100)
+Ler_leaf_trns_i.spct <- interpolate_spct(photobiology::Ler_leaf_trns_i.spct, length.out = length.out.spct)
 Ler_leaf_trns_i.spct <- clean(Ler_leaf_trns_i.spct, range.s.data = c(1e-5, 1 - 1e-5))
-Ler_leaf_rflt.spct <- interpolate_spct(photobiology::Ler_leaf_rflt.spct, length.out = 100)
+Ler_leaf_rflt.spct <- interpolate_spct(photobiology::Ler_leaf_rflt.spct, length.out = length.out.spct)
 Ler_leaf_rflt.spct <- clean(Ler_leaf_rflt.spct, range.s.data = c(1e-5, 1 - 1e-5))
 Ler_leaf.spct <- clean(Ler_leaf.spct, min.Afr = 1e-5, range.s.data = c(1e-5, 1 - 1e-5))
-Ler_leaf.spct <- interpolate_spct(photobiology::Ler_leaf.spct, length.out = 100)
+Ler_leaf.spct <- interpolate_spct(photobiology::Ler_leaf.spct, length.out = length.out.spct)
 Ler_leaf.spct <- clean(Ler_leaf.spct, min.Afr = 1e-5, range.s.data = c(1e-5, 1 - 1e-5))
-ccd.spct <- interpolate_spct(photobiology::ccd.spct, length.out = 100)
+ccd.spct <- interpolate_spct(photobiology::ccd.spct, length.out = length.out.spct)
 
 test_that("raw_spct", {
   set_annotations_default()

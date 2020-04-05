@@ -3,41 +3,45 @@ library(ggplot2)
 library(photobiology)
 
 test_that("stat_spikes", {
-  my_test.spct <- clip_wl(white_led.raw_spct, range = c(260, 900))[ , c(1, 4)]
+  my_test.spct <- clip_wl(photobiology::white_led.raw_spct,
+                          range = c(200, 470))[ , c(1, 3)]
   names(my_test.spct)[2] <- "counts"
   my_test_despiked.spct <- despike(my_test.spct,
-                                   max.spike.width = 5,
-                                   z.threshold = 4)
+                                   max.spike.width = 7,
+                                   z.threshold = 9)
 
-  vdiffr::expect_doppelganger("stat-spikes-sun",
-                              ggplot(sun.spct) +
-                                geom_line() +
-                                stat_spikes())
-
-  vdiffr::expect_doppelganger("stat-spikes-sun-width",
-                              ggplot(sun.spct) +
-                                geom_line() +
-                                stat_spikes(max.spike.width = 1))
-
-  vdiffr::expect_doppelganger("stat-spikes-led",
+  vdiffr::expect_doppelganger("stat-spikes-led-default",
                               ggplot(my_test.spct) +
                                 geom_line() +
                                 stat_spikes())
 
-  vdiffr::expect_doppelganger("stat-spikes-none-led",
+  vdiffr::expect_doppelganger("stat-spikes-led-width",
+                              ggplot(my_test.spct) +
+                                geom_line() +
+                                stat_spikes(max.spike.width = 7))
+
+  vdiffr::expect_doppelganger("stat-spikes-led-wd-thr",
                               ggplot(my_test_despiked.spct) +
                                 geom_line() +
-                                stat_spikes())
+                                stat_spikes(max.spike.width = 7,
+                                            z.threshold = 9))
 
-  vdiffr::expect_doppelganger("stat-spikes",
+  vdiffr::expect_doppelganger("stat-spikes-led-despike",
+                              ggplot(clip_wl(my_test_despiked.spct, range = c(NA, 430))) +
+                                geom_line() +
+                                stat_spikes(max.spike.width = 7,
+                                            z.threshold = 9))
+
+  vdiffr::expect_doppelganger("stat-spikes-led-thr",
                               ggplot(my_test.spct) +
                                 geom_line() +
                                 stat_spikes(z.threshold = 4))
 
-  vdiffr::expect_doppelganger("stat-spikes-width",
+  vdiffr::expect_doppelganger("stat-spikes-width-thr-a",
                               ggplot(my_test.spct) +
                                 geom_line() +
-                                stat_spikes(z.threshold = 4, max.spike.width = 2))
+                                stat_spikes(z.threshold = 4,
+                                            max.spike.width = 2))
 
   vdiffr::expect_doppelganger("stat-spikes-width-colour",
                               ggplot(my_test.spct) +

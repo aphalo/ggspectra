@@ -1,6 +1,15 @@
 context("autotitle")
 library(photobiology)
 
+# We prepare shorter data objects for spectra to improve tests' runtime.
+# We also make sure no data are exactly at the boundary of the possible range to
+# avoid warnings. Such values are physically possible but not measurable.
+length.out.spct <- 100L
+sun.spct <- interpolate_spct(photobiology::sun.spct, length.out = length.out.spct)
+white_led.raw_spct <- interpolate_spct(photobiology::white_led.raw_spct, length.out = length.out.spct)
+white_led.cps_spct <- interpolate_spct(photobiology::white_led.cps_spct, length.out = length.out.spct)
+white_led.source_spct <- interpolate_spct(photobiology::white_led.source_spct, length.out = length.out.spct)
+
 test_that("title", {
   vdiffr::expect_doppelganger("cps-title",
                               autoplot(white_led.cps_spct, annotations = c("+", "title")))

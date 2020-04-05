@@ -123,15 +123,19 @@
 #'
 #' @family stats functions
 #'
-stat_spikes <- function(mapping = NULL, data = NULL,
-                       geom = "point", position = "identity",
-                       ...,
-                       z.threshold = 9,
-                       max.spike.width = 8,
-                       label.fmt = "%.3g",
-                       x.label.fmt = label.fmt, y.label.fmt = label.fmt,
-                       na.rm = FALSE, show.legend = FALSE,
-                       inherit.aes = TRUE) {
+stat_spikes <- function(mapping = NULL,
+                        data = NULL,
+                        geom = "point",
+                        position = "identity",
+                        ...,
+                        z.threshold = 9,
+                        max.spike.width = 8,
+                        label.fmt = "%.3g",
+                        x.label.fmt = label.fmt,
+                        y.label.fmt = label.fmt,
+                        na.rm = FALSE,
+                        show.legend = FALSE,
+                        inherit.aes = TRUE) {
   ggplot2::layer(
     stat = StatSpikes, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,

@@ -132,7 +132,7 @@ raw_plot <- function(spct,
                            key_col = "scan",
                            value_col = "counts",
                            gather_cols = counts.cols)
-    setRawSpct(spct, multiple.wl = length(counts.cols))
+    setRawSpct(spct, multiple.wl = num.counts.cols)
     plot <- ggplot(spct) + aes_(x = ~w.length, y = ~counts, linetype = ~scan)
   } else {
     plot <- ggplot(spct) + aes_(x = ~w.length, y = ~counts)
@@ -284,7 +284,7 @@ autoplot.raw_spct <-
       } else if (is.waveband(range)) {
         w.band <- range
       } else {
-        w.band <-  waveband(range, wb.name = "Total")
+        w.band <- waveband(range, wb.name = "Total")
       }
     }
 
@@ -302,10 +302,10 @@ autoplot.raw_spct <-
              na.rm = na.rm,
              ...) +
       autotitle(object = object,
-                   time.format = time.format,
-                   tz = tz,
-                   object.label = object.label,
-                   annotations = annotations)
+                time.format = time.format,
+                tz = tz,
+                object.label = object.label,
+                annotations = annotations)
   }
 
 
