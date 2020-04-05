@@ -1,4 +1,5 @@
 destination: ../ggspectra-docs
+url: https://docs.r4photobiology.info/ggspectra/
 
 home:
   strip_header: true
@@ -6,7 +7,7 @@ home:
   - text: Photobiology packages
     href: https://www.r4photobiology.info/
   - text: More on 'ggplot2'
-    href: https://r4ds.had.co.nz/data-visualisation.html
+    href: https://ggplot2.tidyverse.org/
   - text: Other extensions
     href: https://www.ggplot2-exts.org/gallery/
 
@@ -30,6 +31,7 @@ reference:
     - stat_find_wls
     - stat_peaks
     - stat_label_peaks
+    - stat_spikes
     - stat_wb_box
     - stat_wb_hbar
     - stat_wb_column

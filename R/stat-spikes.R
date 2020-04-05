@@ -45,15 +45,17 @@
 #'   \item{y.label}{y-value at the peak (or valley) formatted as character}
 #'   \item{wl.color}{color definition calculated by assuming that x-values are
 #'   wavelengths expressed in nanometres.}
+#'   \item{BW.color}{color definition that either "black" or "white", to ensure
+#'   high contrast to \code{wl.color}.}
 #' }
 #'
 #' @section Default aesthetics:
 #' Set by the statistic and available to geoms.
 #' \describe{
-#'   \item{label}{..x.label..}
-#'   \item{xintercept}{..x..}
-#'   \item{yintercept}{..y..}
-#'   \item{fill}{..wl.color..}
+#'   \item{label}{stat(x.label)}
+#'   \item{xintercept}{stat(x)}
+#'   \item{yintercept}{stat(y)}
+#'   \item{fill}{stat(wl.color)}
 #' }
 #'
 #' @section Required aesthetics:
@@ -88,6 +90,19 @@
 #'
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
 #'
+#' # two spurious(?) spikes
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_spikes(colour = "red", alpha = 0.3)
+#'
+#' # no spikes detected
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_spikes(colour = "red", alpha = 0.3,
+#'               max.spike.width = 3,
+#'               z.threshold = 12)
+#'
+#' # small noise spikes detected
 #' ggplot(white_led.raw_spct) +
 #'   geom_line() +
 #'   stat_spikes(colour = "red", alpha = 0.3)
@@ -143,6 +158,8 @@ StatSpikes <-
                                             label.fmt,
                                             x.label.fmt,
                                             y.label.fmt) {
+                     force(z.threshold)
+                     force(max.spike.width)
                      spikes.df <-
                        data[photobiology::find_spikes(data$y,
                                                       x.is.delta = FALSE,
