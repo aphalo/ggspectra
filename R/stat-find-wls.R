@@ -88,12 +88,18 @@
 #' @export
 #' @family stats functions
 #'
-stat_find_wls <- function(mapping = NULL, data = NULL, geom = "point",
-                       target = "half.maximum", interpolate = TRUE,
-                       label.fmt = "%.3g",
-                       x.label.fmt = label.fmt, y.label.fmt = label.fmt,
-                       position = "identity", na.rm = FALSE, show.legend = FALSE,
-                       inherit.aes = TRUE, ...) {
+stat_find_wls <- function(mapping = NULL,
+                          data = NULL,
+                          geom = "point",
+                          target = "half.maximum",
+                          interpolate = TRUE,
+                          label.fmt = "%.3g",
+                          x.label.fmt = label.fmt,
+                          y.label.fmt = label.fmt,
+                          position = "identity",
+                          na.rm = FALSE,
+                          show.legend = FALSE,
+                          inherit.aes = TRUE, ...) {
   ggplot2::layer(
     stat = StatFindWls, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -107,24 +113,10 @@ stat_find_wls <- function(mapping = NULL, data = NULL, geom = "point",
   )
 }
 
-#' \code{Stat*} Objects
-#'
-#' All \code{stat_*} functions (like \code{stat_bin}) return a layer that
-#' contains a \code{Stat*} object (like \code{StatBin}). The \code{Stat*}
-#' object is responsible for rendering the data in the plot.
-#'
-#' Each of the \code{Stat*} objects is a \code{\link[ggplot2]{ggproto}} object, descended
-#' from the top-level \code{Stat}, and each implements various methods and
-#' fields. To create a new type of Stat object, you typically will want to
-#' implement one or more of the following:
-#'
-#' @name Stats
 #' @rdname gg2spectra-ggproto
-#' @format NULL
-#' @usage NULL
+#'
 #' @export
-#' @keywords internal
-#' @seealso \code{\link[ggplot2]{ggplot2-ggproto}}
+#'
 StatFindWls <-
   ggplot2::ggproto("StatFindWls", ggplot2::Stat,
                    compute_group = function(data,
@@ -134,47 +126,27 @@ StatFindWls <-
                                             label.fmt,
                                             x.label.fmt,
                                             y.label.fmt) {
-                     if (is.numeric(target)) {
-                       target <- target[target >= min(data[["y"]], na.rm = TRUE) &
-                                          target <= max(data[["y"]], na.rm = TRUE)]
-                     }
-                     if (length(target) == 0L) {
-                       # if target is NULL or an out-of-range then return an empty tibble
-                       rows.df <-
-                         tibble::tibble(x = numeric(), y = numeric(),
-                                        x.label = character(),
-                                        y.label = character(),
-                                        color = character(),
-                                        BW.color = character())
-                     } else {
-                       rows.df <- NULL
-                       for (t in target) {
-                         rows.df <-
-                           dplyr::bind_rows(rows.df,
-                                            photobiology::find_wls(data,
-                                                                   .fun = `<=`,
-                                                                   target = t,
-                                                                   interpolate = interpolate,
-                                                                   col.name.x = "x",
-                                                                   col.name = "y"))
-                       }
-                       rows.df <-
-                         dplyr::mutate(rows.df,
-                                       x.label = sprintf(x.label.fmt, x),
-                                       y.label = sprintf(y.label.fmt, y),
-                                       wl.color = photobiology::color_of(x, type = "CMF"),
-                                       BW.color = black_or_white(photobiology::color_of(x, type = "CMF")))
-                     }
-                     rows.df
+                     wls.df <- photobiology::wls_at_target(data,
+                                                           x.var.name = "x",
+                                                           y.var.name = "y",
+                                                           target = target,
+                                                           interpolate = interpolate,
+                                                           na.rm = FALSE)
+                     dplyr::mutate(wls.df,
+                                   x.label = sprintf(x.label.fmt, x),
+                                   y.label = sprintf(y.label.fmt, y),
+                                   wl.color = photobiology::color_of(x, type = "CMF"),
+                                   BW.color = black_or_white(photobiology::color_of(x, type = "CMF")))
                    },
-                   default_aes = ggplot2::aes(label = ..x.label..,
-                                              fill = ..wl.color..,
-                                              xintercept = ..x..,
-                                              yintercept = ..y..,
+                   default_aes = ggplot2::aes(label = stat(x.label),
+                                              fill = stat(wl.color),
+                                              xintercept = stat(x),
+                                              yintercept = stat(y),
                                               hjust = 0.5,
                                               vjust = 0.5),
                    required_aes = c("x", "y")
   )
+
 
 #' Find quantity value for target wavelength value.
 #'
@@ -201,14 +173,12 @@ StatFindWls <-
 #'   \code{\link[ggplot2]{layer}} for more details.
 #' @param na.rm	a logical value indicating whether NA values should be stripped
 #'   before the computation proceeds.
-#' @param target numeric vector indicating the spectral quantity values for
-#'   which wavelengths are to be searched and interpolated if need. The
-#'   \code{character} strings "half.maximum" and "half.range" are also accepted
-#'   as arguments. A list with \code{numeric} and/or \code{character} values is
-#'   also accepted.
-#' @param interpolate logical Indicating whether the nearest wavelength value in
-#'   \code{x} should be returned or a value calculated by linear interpolation
-#'   between wavelength values stradling the target.
+#' @param target numeric value indicating the spectral quantity value for which
+#'   wavelengths are to be searched and interpolated if need. The character
+#'   string "half.maximum" is also accepted as argument.
+#' @param interpolate logical Indicating whether the nearest wavelength value
+#'   in \code{x} should be returned or a value calculated by linear
+#'   interpolation between wavelength values straddling the target.
 #' @param label.fmt character  string giving a format definition for converting
 #'   values into character strings by means of function \code{\link{sprintf}}.
 #' @param x.label.fmt character  string giving a format definition for
@@ -269,12 +239,18 @@ StatFindWls <-
 #' @export
 #' @family stats functions
 #'
-stat_find_qtys <- function(mapping = NULL, data = NULL, geom = "point",
-                          target = "half.maximum", interpolate = TRUE,
-                          label.fmt = "%.3g",
-                          x.label.fmt = label.fmt, y.label.fmt = label.fmt,
-                          position = "identity", na.rm = FALSE, show.legend = FALSE,
-                          inherit.aes = TRUE, ...) {
+stat_find_qtys <- function(mapping = NULL,
+                           data = NULL,
+                           geom = "point",
+                           target = "half.maximum",
+                           interpolate = TRUE,
+                           label.fmt = "%.3g",
+                           x.label.fmt = label.fmt,
+                           y.label.fmt = label.fmt,
+                           position = "identity",
+                           na.rm = FALSE,
+                           show.legend = FALSE,
+                           inherit.aes = TRUE, ...) {
   ggplot2::layer(
     stat = StatFindQty, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -288,24 +264,10 @@ stat_find_qtys <- function(mapping = NULL, data = NULL, geom = "point",
   )
 }
 
-#' \code{Stat*} Objects
-#'
-#' All \code{stat_*} functions (like \code{stat_bin}) return a layer that
-#' contains a \code{Stat} object (like \code{StatBin}). The \code{Stat*}
-#' object is responsible for rendering the data in the plot.
-#'
-#' Each of the \code{Stat*} objects is a \code{\link[ggplot2]{ggproto}} object, descended
-#' from the top-level \code{Stat}, and each implements various methods and
-#' fields. To create a new type of Stat object, you typically will want to
-#' implement one or more of the following:
-#'
-#' @name Stats
 #' @rdname gg2spectra-ggproto
-#' @format NULL
-#' @usage NULL
+#'
 #' @export
-#' @keywords internal
-#' @seealso \code{\link[ggplot2]{ggplot2-ggproto}}
+#'
 StatFindQty <-
   ggplot2::ggproto("StatFindQty", ggplot2::Stat,
                    compute_group = function(data,
@@ -357,3 +319,4 @@ StatFindQty <-
                                               vjust = 0.5),
                    required_aes = c("x", "y")
   )
+

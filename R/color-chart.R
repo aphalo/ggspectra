@@ -105,6 +105,8 @@ color_chart <- function(colors = grDevices::colors(),
 #' black_or_white(colors()[1:10])
 #'
 black_or_white <- function(colors, threshold = 0.45){
+  # make sure return value is of expected mode
+  if (!length(colors)) return(character())
 
   threshold <- trunc(threshold * 255)
 

@@ -16,6 +16,11 @@
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
+#' @param wls.target numeric vector indicating the spectral quantity values for
+#'   which wavelengths are to be searched and interpolated if need. The
+#'   \code{character} strings "half.maximum" and "half.range" are also accepted
+#'   as arguments. A list with \code{numeric} and/or \code{character} values is
+#'   also accepted.
 #' @param unit.in the type of unit we assume as reference "energy" or "photon"
 #'   based.
 #' @param annotations a character vector.
@@ -59,6 +64,7 @@ autoplot.waveband <-
            range = c(280, 800),
            fill = 0,
            span = NULL,
+           wls.target = "HM",
            unit.in = getOption("photobiology.radiation.unit", default = "energy"),
            annotations = NULL,
            wb.trim = TRUE,
@@ -100,8 +106,8 @@ autoplot.waveband <-
     w.length <- unique(sort(w.length))
     s.response <-
       calc_multipliers(w.length, w.band,
-                       unit.out=unit.in, unit.in=unit.in,
-                       use.cached.mult=getOption("photobiology.use.cached.mult",
+                       unit.out = unit.in, unit.in = unit.in,
+                       use.cached.mult = getOption("photobiology.use.cached.mult",
                                                  default = FALSE), fill = fill)
     if (is.null(norm)) {
       if (!is.null(w.band$norm)) {
@@ -122,17 +128,18 @@ autoplot.waveband <-
     } else {
       w.band.range <- w.band
     }
-    plot(spct,
-         w.band=w.band.range,
-         annotations = annotations,
-         wb.trim = wb.trim,
-         span = span,
-         norm = norm,
-         text.size = text.size,
-         ylim = ylim,
-         na.rm = na.rm,
-         ...) +
+    autoplot(spct,
+             w.band = w.band.range,
+             annotations = annotations,
+             wb.trim = wb.trim,
+             span = span,
+             wls.target = wls.target,
+             norm = norm,
+             text.size = text.size,
+             ylim = ylim,
+             na.rm = na.rm,
+             ...) +
       autotitle(object = object,
-                   object.label = object.label,
-                   annotations = annotations)
+                object.label = object.label,
+                annotations = annotations)
   }

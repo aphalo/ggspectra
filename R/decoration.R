@@ -9,6 +9,7 @@
 #' @param annotations character vector
 #' @param span numeric
 #' @param strict logical
+#' @param wls.target numeric or character vector
 #' @param label.qty character
 #' @param summary.label character
 #' @param text.size numeric
@@ -30,6 +31,7 @@ decoration <- function(w.band,
                        annotations,
                        span = NULL,
                        strict = is.null(span),
+                       wls.target = "HM",
                        label.qty,
                        label.mult = 1,
                        summary.label,
@@ -88,7 +90,7 @@ decoration <- function(w.band,
                             size = text.size,
                             box.padding = unit(0.02, "lines"),
                             direction = "y",
-                            vjust = 1,
+                            nudge_y = 0,
                             na.rm = na.rm),
            stat_peaks(color = "red",
                       span = span,
@@ -115,8 +117,9 @@ decoration <- function(w.band,
   }
   if ("valley.labels" %in% annotations) {
     z <- c(z,
-           stat_label_valleys(span = span,
-                              ignore_threshold = 0.02,
+           stat_label_valleys(aes_(color = ~..BW.color..),
+                              span = span,
+                              ignore_threshold = -0.02,
                               strict = strict,
                               label.fmt = "%.4g",
                               geom = "label_repel",
@@ -125,13 +128,46 @@ decoration <- function(w.band,
                               size = text.size,
                               box.padding = unit(0.02, "lines"),
                               direction = "y",
-                              vjust = 0,
+                              nudge_y = 0,
                               na.rm = na.rm),
            stat_valleys(span = span,
-                        ignore_threshold = 0.02,
+                        ignore_threshold = -0.02,
                         strict = strict,
                         color = "blue",
                         shape = 16))
+  }
+  if ("wls" %in% annotations) {
+    z <- c(z,
+           stat_find_wls(target = wls.target,
+                         interpolate = TRUE,
+                         color = "black",
+                         geom = "text",
+                         hjust = 1.3,
+                         size = text.size,
+                         na.rm = na.rm),
+           stat_find_wls(target = wls.target,
+                         interpolate = TRUE,
+                         color = "black",
+                         shape = 16))
+  }
+  if ("wls.labels" %in% annotations) {
+    z <- c(z,
+           stat_find_wls(aes_(color = ~..BW.color..),
+                         target = wls.target,
+                         interpolate = TRUE,
+                         label.fmt = "%.4g",
+                         geom = "label_repel",
+                         segment.colour = "black",
+                         min.segment.length = unit(0.02, "lines"),
+                         size = text.size,
+                         box.padding = unit(0.02, "lines"),
+                         direction = "x",
+                         nudge_x = 10,
+                         na.rm = na.rm),
+           stat_find_wls(target = wls.target,
+                         interpolate = TRUE,
+                         color = "black",
+                         shape = 16))
   }
   if ("colour.guide" %in% annotations) {
     z <- c(z,
@@ -278,7 +314,7 @@ decode_annotations <- function(annotations,
     if ("color.guide" %in% annotations.default) {
       annotations.default <- c(setdiff(annotations.default, "color.guide"), "colour.guide")
     }
-    if (length(annotations) == 0L) { # we can receive character(0) from preceeding iteration
+    if (length(annotations) == 0L) { # we can receive character(0) from preceding iteration
       z <- annotations.default
     } else if ("" %in% annotations) {
       # no annotations and do not not expand y scale
@@ -287,7 +323,7 @@ decode_annotations <- function(annotations,
       # no annotations but expand y scale to accomodate them
       z <- "reserve.space"
     } else if (annotations[1] == "-") {
-      # remove any member of a "family" of annotations if '*' wildcard is present
+      # remove any member of a "family" of annotations if '*' wild card is present
       if (any(grepl("^title[*]$", annotations))) {
         annotations.default <- annotations.default[!grepl("^title.*", annotations.default)]
       }
@@ -296,6 +332,9 @@ decode_annotations <- function(annotations,
       }
       if (any(grepl("^valleys[*]$", annotations))) {
         annotations.default <- annotations.default[!grepl("^valley.*", annotations.default)]
+      }
+      if (any(grepl("^wls[*]$", annotations))) {
+        annotations.default <- annotations.default[!grepl("^wls.*", annotations.default)]
       }
       # remove exact matches
       z <- setdiff(annotations.default, annotations[-1])
@@ -310,6 +349,9 @@ decode_annotations <- function(annotations,
       }
       if (any(grepl("^valley.*$", annotations))) {
         annotations.default <- annotations.default[!grepl("^valley.*", annotations.default)]
+      }
+      if (any(grepl("^wls.*$", annotations))) {
+        annotations.default <- annotations.default[!grepl("^wls.*", annotations.default)]
       }
       if (any(grepl("^boxes$|^segments$", annotations))) {
         annotations.default <- annotations.default[!grepl("^boxes$|^segments$", annotations.default)]
@@ -329,7 +371,7 @@ decode_annotations <- function(annotations,
     annotations.default <- z
   }
 
-  unique(z) # remove duplicates for tidyness
+  unique(z) # remove duplicates for tidiness
 }
 
 # photobiology.plot.annotations -----------------------------------------------------

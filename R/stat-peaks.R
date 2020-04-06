@@ -110,10 +110,6 @@
 #'   geom_line() +
 #'   stat_valleys()
 #'
-#' ggplot(white_led.source_spct) +
-#'   geom_line() +
-#'   stat_wls_at()
-#'
 #' ggplot(sun.spct) +
 #'   geom_line() +
 #'   stat_peaks(span = 51, geom = "point", colour = "red") +
@@ -140,17 +136,6 @@
 #'              vjust = 1.3, hjust = 2/3, label.fmt = "%.6g nm",
 #'              refine.wl = TRUE) +
 #'   expand_limits(y = 1) +
-#'   scale_fill_identity() +
-#'   scale_color_identity()
-#'
-#' ggplot(white_led.source_spct) +
-#'   geom_line() +
-#'   stat_wls_at(geom = "vline", linetype = "dotted") +
-#'   stat_wls_at(geom = "label", mapping = aes(color = stat(BW.colour)),
-#'               hjust = "outward") +
-#'   stat_peaks(geom = "vline", linetype = "dotted", span = NULL) +
-#'   stat_peaks(geom = "label", mapping = aes(color = stat(BW.colour)),
-#'              span = NULL, vjust = "outward") +
 #'   scale_fill_identity() +
 #'   scale_color_identity()
 #'
@@ -320,75 +305,3 @@ StatValleys <-
                                               vjust = 0.5),
                    required_aes = c("x", "y")
   )
-
-#' @rdname stat_peaks
-#'
-#' @param target numeric value indicating the spectral quantity value for which
-#'   wavelengths are to be searched and interpolated if need. The character
-#'   string "half.maximum" is also accepted as argument.
-#' @param interpolate logical Indicating whether the nearest wavelength value
-#'   in \code{x} should be returned or a value calculated by linear
-#'   interpolation between wavelength values straddling the target.
-#'
-#' @export
-#'
-stat_wls_at <- function(mapping = NULL,
-                        data = NULL,
-                        geom = "point",
-                        target = "half.maximum",
-                        interpolate = FALSE,
-                        label.fmt = "%.3g",
-                        x.label.fmt = label.fmt,
-                        y.label.fmt = label.fmt,
-                        position = "identity",
-                        na.rm = FALSE,
-                        show.legend = FALSE,
-                        inherit.aes = TRUE,
-                        ...) {
-  ggplot2::layer(
-    stat = StatWlsAt, data = data, mapping = mapping, geom = geom,
-    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(target = target,
-                  interpolate = interpolate,
-                  label.fmt = label.fmt,
-                  x.label.fmt = x.label.fmt,
-                  y.label.fmt = y.label.fmt,
-                  na.rm = na.rm,
-                  ...)
-  )
-}
-
-#' @rdname gg2spectra-ggproto
-#'
-#' @export
-#'
-StatWlsAt <-
-  ggplot2::ggproto("StatWlsAt", ggplot2::Stat,
-                   compute_group = function(data,
-                                            scales,
-                                            target,
-                                            interpolate,
-                                            label.fmt,
-                                            x.label.fmt,
-                                            y.label.fmt) {
-                     wls.df <- photobiology::wls_at_target(data,
-                                                           x.var.name = "x",
-                                                           y.var.name = "y",
-                                                           target = target,
-                                                           interpolate = interpolate,
-                                                           na.rm = FALSE)
-                     dplyr::mutate(wls.df,
-                                   x.label = sprintf(x.label.fmt, x),
-                                   y.label = sprintf(y.label.fmt, y),
-                                   wl.color = photobiology::color_of(x, type = "CMF"),
-                                   BW.color = black_or_white(photobiology::color_of(x, type = "CMF")))
-                   },
-                   default_aes = ggplot2::aes(label = stat(x.label),
-                                              fill = stat(wl.color),
-                                              xintercept = stat(x),
-                                              yintercept = stat(y),
-                                              hjust = 0.5,
-                                              vjust = 0.5),
-                   required_aes = c("x", "y")
-  )
-

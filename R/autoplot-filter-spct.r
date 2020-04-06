@@ -13,6 +13,11 @@
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
+#' @param wls.target numeric vector indicating the spectral quantity values for
+#'   which wavelengths are to be searched and interpolated if need. The
+#'   \code{character} strings "half.maximum" and "half.range" are also accepted
+#'   as arguments. A list with \code{numeric} and/or \code{character} values is
+#'   also accepted.
 #' @param annotations a character vector.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param idfactor character Name of an index column in data holding a
@@ -36,6 +41,7 @@ Afr_plot <- function(spct,
                      pc.out,
                      label.qty,
                      span,
+                     wls.target,
                      annotations,
                      text.size,
                      idfactor,
@@ -51,32 +57,19 @@ Afr_plot <- function(spct,
   if (!is.null(range)) {
     spct <- trim_wl(spct, range = range)
   }
-  A2T(spct, byref = TRUE)
-  Tfr.type <- getTfrType(spct)
+  if (! "Afr" %in% names(spct)) {
+    if (!"Tfr" %in% names(spct)) {
+      # no A2Afr function defined yet
+      A2T(spct, byref = TRUE)
+    }
+    T2Afr(spct, byref = TRUE)
+  }
+  Afr.type <- getAfrType(spct)
   if (!is.null(w.band)) {
     w.band <- trim_wl(w.band, range = range(spct))
   }
-  setGenericSpct(spct, multiple.wl = getMultipleWl(spct)) # so that we can assign variable Afr
-  if (! "Afr" %in% names(spct)) {
-    if (Tfr.type == "internal" &&
-        "Rfr" %in% names(spct)) {
-      spct$Afr <- (1 - spct[["Rfr"]]) * (1 - spct[["Tfr"]])
-      Afr.type <- "total"
-    } else if (Tfr.type == "internal" &&
-      !("Rfr" %in% names(spct))) {
-      spct$Afr <- 1 - spct[["Tfr"]]
-      Afr.type <- "internal"
-    } else if (Tfr.type == "total" &&
-               "Rfr" %in% names(spct)) {
-      spct$Afr <- 1 - spct[["Tfr"]] - spct[["Rfr"]]
-      Afr.type <- "total"
-    } else {
-      warning("Absorptance data unavailable")
-      return(ggplot())
-    }
-  } else {
-    Afr.type <- Tfr.type
-  }
+#  setGenericSpct(spct, multiple.wl = getMultipleWl(spct)) # so that we can assign variable Afr
+
   if (!length(Afr.type)) {
     Afr.type <- "unknown"
   }
@@ -179,6 +172,7 @@ Afr_plot <- function(spct,
                             annotations = annotations,
                             label.qty = label.qty,
                             span = span,
+                            wls.target = wls.target,
                             summary.label = Afr.label,
                             text.size = text.size,
                             na.rm = TRUE)
@@ -222,6 +216,11 @@ Afr_plot <- function(spct,
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
+#' @param wls.target numeric vector indicating the spectral quantity values for
+#'   which wavelengths are to be searched and interpolated if need. The
+#'   \code{character} strings "half.maximum" and "half.range" are also accepted
+#'   as arguments. A list with \code{numeric} and/or \code{character} values is
+#'   also accepted.
 #' @param annotations a character vector.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param idfactor character Name of an index column in data holding a
@@ -245,6 +244,7 @@ T_plot <- function(spct,
                    pc.out,
                    label.qty,
                    span,
+                   wls.target,
                    annotations,
                    text.size,
                    idfactor,
@@ -367,6 +367,7 @@ T_plot <- function(spct,
                             annotations = annotations,
                             label.qty = label.qty,
                             span = span,
+                            wls.target = wls.target,
                             summary.label = Tfr.label,
                             text.size = text.size,
                             na.rm = TRUE)
@@ -408,6 +409,11 @@ T_plot <- function(spct,
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
+#' @param wls.target numeric vector indicating the spectral quantity values for
+#'   which wavelengths are to be searched and interpolated if need. The
+#'   \code{character} strings "half.maximum" and "half.range" are also accepted
+#'   as arguments. A list with \code{numeric} and/or \code{character} values is
+#'   also accepted.
 #' @param annotations a character vector.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param idfactor character Name of an index column in data holding a
@@ -430,6 +436,7 @@ A_plot <- function(spct,
                    range,
                    label.qty,
                    span,
+                   wls.target,
                    annotations,
                    text.size,
                    idfactor,
@@ -531,6 +538,7 @@ A_plot <- function(spct,
                             annotations = annotations,
                             label.qty = label.qty,
                             span = span,
+                            wls.target = wls.target,
                             summary.label = A.label,
                             text.size = text.size,
                             na.rm = TRUE)
@@ -566,6 +574,11 @@ A_plot <- function(spct,
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
+#' @param wls.target numeric vector indicating the spectral quantity values for
+#'   which wavelengths are to be searched and interpolated if need. The
+#'   \code{character} strings "half.maximum" and "half.range" are also accepted
+#'   as arguments. A list with \code{numeric} and/or \code{character} values is
+#'   also accepted.
 #' @param annotations a character vector.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param idfactor character Name of an index column in data holding a
@@ -589,6 +602,7 @@ R_plot <- function(spct,
                    pc.out,
                    label.qty,
                    span,
+                   wls.target,
                    annotations,
                    text.size,
                    idfactor,
@@ -709,6 +723,7 @@ R_plot <- function(spct,
                             annotations = annotations,
                             label.qty = label.qty,
                             span = span,
+                            wls.target = wls.target,
                             summary.label = Rfr.label,
                             text.size = text.size,
                             na.rm = TRUE)
@@ -750,6 +765,11 @@ R_plot <- function(spct,
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
+#' @param wls.target numeric vector indicating the spectral quantity values for
+#'   which wavelengths are to be searched and interpolated if need. The
+#'   \code{character} strings "half.maximum" and "half.range" are also accepted
+#'   as arguments. A list with \code{numeric} and/or \code{character} values is
+#'   also accepted.
 #' @param annotations a character vector.
 #' @param stacked logical.
 #' @param text.size numeric size of text in the plot decorations.
@@ -767,6 +787,7 @@ O_plot <- function(spct,
                    pc.out,
                    label.qty,
                    span,
+                   wls.target,
                    annotations,
                    stacked,
                    text.size,
@@ -896,6 +917,7 @@ O_plot <- function(spct,
                             annotations = annotations,
                             label.qty = label.qty,
                             span = span,
+                            wls.target = wls.target,
                             summary.label = "",
                             text.size = text.size,
                             na.rm = TRUE)
@@ -947,6 +969,11 @@ O_plot <- function(spct,
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
+#' @param wls.target numeric vector indicating the spectral quantity values for
+#'   which wavelengths are to be searched and interpolated if need. The
+#'   \code{character} strings "half.maximum" and "half.range" are also accepted
+#'   as arguments. A list with \code{numeric} and/or \code{character} values is
+#'   also accepted.
 #' @param annotations a character vector.
 #' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
@@ -984,6 +1011,7 @@ autoplot.filter_spct <-
            pc.out = FALSE,
            label.qty = NULL,
            span = NULL,
+           wls.target = "HM",
            annotations = NULL,
            time.format = "",
            tz = "UTC",
@@ -1021,6 +1049,7 @@ autoplot.filter_spct <-
                            pc.out = pc.out,
                            label.qty = label.qty,
                            span = span,
+                           wls.target = wls.target,
                            annotations = annotations,
                            text.size = text.size,
                            idfactor = idfactor,
@@ -1033,6 +1062,7 @@ autoplot.filter_spct <-
                            range = range,
                            label.qty = label.qty,
                            span = span,
+                           wls.target = wls.target,
                            annotations = annotations,
                            text.size = text.size,
                            idfactor = idfactor,
@@ -1046,6 +1076,7 @@ autoplot.filter_spct <-
                              pc.out = pc.out,
                              label.qty = label.qty,
                              span = span,
+                             wls.target = wls.target,
                              annotations = annotations,
                              text.size = text.size,
                              idfactor = idfactor,
@@ -1112,6 +1143,11 @@ autoplot.filter_mspct <-
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
+#' @param wls.target numeric vector indicating the spectral quantity values for
+#'   which wavelengths are to be searched and interpolated if need. The
+#'   \code{character} strings "half.maximum" and "half.range" are also accepted
+#'   as arguments. A list with \code{numeric} and/or \code{character} values is
+#'   also accepted.
 #' @param annotations a character vector.
 #' @param time.format character Format as accepted by
 #'   \code{\link[base]{strptime}}.
@@ -1149,6 +1185,7 @@ autoplot.reflector_spct <-
            pc.out = FALSE,
            label.qty = NULL,
            span = NULL,
+           wls.target = "HM",
            annotations = NULL,
            time.format = "",
            tz = "UTC",
@@ -1185,6 +1222,7 @@ autoplot.reflector_spct <-
                            pc.out = pc.out,
                            label.qty = label.qty,
                            span = span,
+                           wls.target = wls.target,
                            annotations = annotations,
                            text.size = text.size,
                            idfactor = idfactor,
@@ -1252,6 +1290,11 @@ autoplot.reflector_mspct <-
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
+#' @param wls.target numeric vector indicating the spectral quantity values for
+#'   which wavelengths are to be searched and interpolated if need. The
+#'   \code{character} strings "half.maximum" and "half.range" are also accepted
+#'   as arguments. A list with \code{numeric} and/or \code{character} values is
+#'   also accepted.
 #' @param annotations a character vector
 #' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
@@ -1289,6 +1332,7 @@ autoplot.object_spct <-
            pc.out = FALSE,
            label.qty = NULL,
            span = 61,
+           wls.target = "HM",
            annotations = NULL,
            time.format = "",
            tz = "UTC",
@@ -1326,6 +1370,7 @@ autoplot.object_spct <-
                          pc.out = pc.out,
                          label.qty = label.qty,
                          span = span,
+                         wls.target = wls.target,
                          annotations = annotations,
                          stacked = stacked,
                          text.size = text.size,
@@ -1340,6 +1385,7 @@ autoplot.object_spct <-
                            pc.out = pc.out,
                            label.qty = label.qty,
                            span = span,
+                           wls.target = wls.target,
                            annotations = annotations,
                            text.size = text.size,
                            idfactor = idfactor,
@@ -1353,6 +1399,7 @@ autoplot.object_spct <-
                            range = range,
                            label.qty = label.qty,
                            span = span,
+                           wls.target = wls.target,
                            annotations = annotations,
                            text.size = text.size,
                            idfactor = idfactor,
@@ -1367,6 +1414,7 @@ autoplot.object_spct <-
                              pc.out = pc.out,
                              label.qty = label.qty,
                              span = span,
+                             wls.target = wls.target,
                              annotations = annotations,
                              text.size = text.size,
                              idfactor = idfactor,
@@ -1381,6 +1429,7 @@ autoplot.object_spct <-
                            pc.out = pc.out,
                            label.qty = label.qty,
                            span = span,
+                           wls.target = wls.target,
                            annotations = annotations,
                            text.size = text.size,
                            idfactor = idfactor,

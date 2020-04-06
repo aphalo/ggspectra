@@ -15,6 +15,11 @@
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
+#' @param wls.target numeric vector indicating the spectral quantity values for
+#'   which wavelengths are to be searched and interpolated if need. The
+#'   \code{character} strings "half.maximum" and "half.range" are also accepted
+#'   as arguments. A list with \code{numeric} and/or \code{character} values is
+#'   also accepted.
 #' @param annotations a character vector.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param idfactor character Name of an index column in data holding a
@@ -37,6 +42,7 @@ e_plot <- function(spct,
                    range,
                    label.qty,
                    span,
+                   wls.target,
                    annotations,
                    text.size,
                    idfactor,
@@ -175,6 +181,7 @@ e_plot <- function(spct,
                             annotations = annotations,
                             label.qty = label.qty,
                             span = span,
+                            wls.target = wls.target,
                             summary.label = irrad.label,
                             text.size = text.size,
                             na.rm = TRUE)
@@ -236,6 +243,11 @@ e_plot <- function(spct,
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
+#' @param wls.target numeric vector indicating the spectral quantity values for
+#'   which wavelengths are to be searched and interpolated if need. The
+#'   \code{character} strings "half.maximum" and "half.range" are also accepted
+#'   as arguments. A list with \code{numeric} and/or \code{character} values is
+#'   also accepted.
 #' @param annotations a character vector
 #' @param text.size numeric size of text in the plot decorations.
 #' @param idfactor character Name of an index column in data holding a
@@ -258,6 +270,7 @@ q_plot <- function(spct,
                    range,
                    label.qty,
                    span,
+                   wls.target,
                    annotations,
                    text.size,
                    idfactor,
@@ -396,6 +409,7 @@ q_plot <- function(spct,
                             annotations = annotations,
                             label.qty = label.qty,
                             span = span,
+                            wls.target = wls.target,
                             summary.label = irrad.label,
                             text.size = text.size,
                             na.rm = TRUE)
@@ -462,6 +476,11 @@ q_plot <- function(spct,
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
+#' @param wls.target numeric vector indicating the spectral quantity values for
+#'   which wavelengths are to be searched and interpolated if need. The
+#'   \code{character} strings "half.maximum" and "half.range" are also accepted
+#'   as arguments. A list with \code{numeric} and/or \code{character} values is
+#'   also accepted.
 #' @param annotations a character vector.
 #' @param time.format character Format as accepted by
 #'   \code{\link[base]{strptime}}.
@@ -497,6 +516,7 @@ autoplot.source_spct <-
            unit.out=getOption("photobiology.radiation.unit", default = "energy"),
            label.qty = NULL,
            span = NULL,
+           wls.target = "HM",
            annotations = NULL,
            time.format = "",
            tz = "UTC",
@@ -531,6 +551,7 @@ autoplot.source_spct <-
       out.ggplot <- q_plot(spct = object, w.band = w.band, range = range,
                            label.qty = label.qty,
                            span = span,
+                           wls.target = wls.target,
                            annotations = annotations,
                            text.size = text.size,
                            idfactor = idfactor,
@@ -541,6 +562,7 @@ autoplot.source_spct <-
       out.ggplot <- e_plot(spct = object, w.band = w.band, range = range,
                            label.qty = label.qty,
                            span = span,
+                           wls.target = wls.target,
                            annotations = annotations,
                            text.size = text.size,
                            idfactor = idfactor,

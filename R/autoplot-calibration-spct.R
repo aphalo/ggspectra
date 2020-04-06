@@ -18,6 +18,11 @@
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
+#' @param wls.target numeric vector indicating the spectral quantity values for
+#'   which wavelengths are to be searched and interpolated if need. The
+#'   \code{character} strings "half.maximum" and "half.range" are also accepted
+#'   as arguments. A list with \code{numeric} and/or \code{character} values is
+#'   also accepted.
 #' @param annotations a character vector
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
@@ -43,6 +48,7 @@ cal_plot <- function(spct,
                      pc.out,
                      label.qty,
                      span,
+                     wls.target,
                      annotations,
                      norm,
                      text.size,
@@ -166,6 +172,7 @@ cal_plot <- function(spct,
                             annotations = annotations,
                             label.qty = label.qty,
                             span = span,
+                            wls.target = wls.target,
                             summary.label = counts.label,
                             text.size = text.size,
                             na.rm = TRUE)
@@ -208,6 +215,11 @@ cal_plot <- function(spct,
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
+#' @param wls.target numeric vector indicating the spectral quantity values for
+#'   which wavelengths are to be searched and interpolated if need. The
+#'   \code{character} strings "half.maximum" and "half.range" are also accepted
+#'   as arguments. A list with \code{numeric} and/or \code{character} values is
+#'   also accepted.
 #' @param annotations a character vector ("summaries" is ignored).
 #' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
@@ -242,6 +254,7 @@ autoplot.calibration_spct <-
            pc.out = FALSE,
            label.qty = "mean",
            span = NULL,
+           wls.target = "HM",
            annotations = NULL,
            time.format = "",
            tz = "UTC",
@@ -271,6 +284,7 @@ autoplot.calibration_spct <-
              range = range,
              label.qty = label.qty,
              span = span,
+             wls.target = wls.target,
              pc.out = pc.out,
              annotations = annotations,
              norm = norm,
@@ -296,7 +310,7 @@ autoplot.calibration_spct <-
 #'
 autoplot.calibration_mspct <-
   function(object, ..., range = NULL, plot.data = "as.is") {
-    # We trim the spectra to avoid unnecesary computaions later
+    # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
       object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
     }

@@ -9,14 +9,13 @@
 \name{GeomSpct}
 \alias{GeomSpct}
 \alias{StatColor}
-\alias{Stats}
 \alias{StatFindWls}
 \alias{StatFindQty}
+\alias{Stats}
 \alias{StatLabelPeaks}
 \alias{StatLabelValleys}
 \alias{StatPeaks}
 \alias{StatValleys}
-\alias{StatWlsAt}
 \alias{StatSpikes}
 \alias{StatWbBox}
 \alias{StatWbColumn}
@@ -32,28 +31,24 @@
 \alias{StatWlSummary}
 \title{\code{Stat*} Objects}
 \format{
+An object of class \code{StatFindWls} (inherits from \code{Stat}, \code{ggproto}, \code{gg}) of length 4.
+
+An object of class \code{StatFindQty} (inherits from \code{Stat}, \code{ggproto}, \code{gg}) of length 4.
+
 An object of class \code{StatLabelValleys} (inherits from \code{Stat}, \code{ggproto}, \code{gg}) of length 4.
 
 An object of class \code{StatValleys} (inherits from \code{Stat}, \code{ggproto}, \code{gg}) of length 4.
-
-An object of class \code{StatWlsAt} (inherits from \code{Stat}, \code{ggproto}, \code{gg}) of length 4.
 }
 \usage{
+StatFindWls
+
+StatFindQty
+
 StatLabelValleys
 
 StatValleys
-
-StatWlsAt
 }
 \description{
-All \code{stat_*} functions (like \code{stat_bin}) return a layer that
-contains a \code{Stat*} object (like \code{StatBin}). The \code{Stat*}
-object is responsible for rendering the data in the plot.
-
-All \code{stat_*} functions (like \code{stat_bin}) return a layer that
-contains a \code{Stat} object (like \code{StatBin}). The \code{Stat*}
-object is responsible for rendering the data in the plot.
-
 All \code{stat_*} functions (like \code{stat_bin}) return a layer that
 contains a \code{Stat*} object (like \code{StatBin}). The \code{Stat*}
 object is responsible for rendering the data in the plot.
@@ -63,16 +58,6 @@ contains a \code{Stat*} object (like \code{StatBin}). The \code{Stat*}
 object is responsible for rendering the data in the plot.
 }
 \details{
-Each of the \code{Stat*} objects is a \code{\link[ggplot2]{ggproto}} object, descended
-from the top-level \code{Stat}, and each implements various methods and
-fields. To create a new type of Stat object, you typically will want to
-implement one or more of the following:
-
-Each of the \code{Stat*} objects is a \code{\link[ggplot2]{ggproto}} object, descended
-from the top-level \code{Stat}, and each implements various methods and
-fields. To create a new type of Stat object, you typically will want to
-implement one or more of the following:
-
 Each of the \code{Stat*} objects is a \code{\link[ggplot2]{ggproto}} object,
 descended from the top-level \code{Stat}, and each implements various methods
 and fields. To create a new type of Stat object, you typically will want to
@@ -84,10 +69,6 @@ fields. To create a new type of Stat object, you typically will want to
 implement one or more of the following:
 }
 \seealso{
-\code{\link[ggplot2]{ggplot2-ggproto}}
-
-\code{\link[ggplot2]{ggplot2-ggproto}}
-
 \code{\link[ggplot2]{ggplot2-ggproto}}
 
 \code{\link[ggplot2]{ggplot2-ggproto}}

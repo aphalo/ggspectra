@@ -1,13 +1,15 @@
 ggspectra 0.3.6 (2020-04-xx)
 ============================
 
+TODO: update vignette, add examples!!
 * Revise for compatibility with 'dplyr' (>= 1.0.0).
-* Track changes in 'photobiology' 0.10.0.
+* Track changes in 'photobiology' 0.10.1.
 * Fix two bugs in ggplot() method for class object_spct.
 * Add stat_spikes(), useful for highlighting spikes.
-* Add stat_wl_at(), useful for highlighting wavelengths at given values of y.
 * Fitted peaks and valleys are now supported (experimental).
-* TODO Add summaries as inset tables.
+* Rewrite stat_find_wls() using photobiology::wls_at_target().
+* Support new annotations "wls" and "wls.labels" in all autoplot() methods.
+* Update decoration() for this, and also other small tweaks.
 
 ggspectra 0.3.5 (2020-01-15)
 ============================

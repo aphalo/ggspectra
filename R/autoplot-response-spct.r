@@ -16,6 +16,11 @@
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
+#' @param wls.target numeric vector indicating the spectral quantity values for
+#'   which wavelengths are to be searched and interpolated if need. The
+#'   \code{character} strings "half.maximum" and "half.range" are also accepted
+#'   as arguments. A list with \code{numeric} and/or \code{character} values is
+#'   also accepted.
 #' @param annotations a character vector.
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
@@ -39,6 +44,7 @@ e_rsp_plot <- function(spct,
                        pc.out,
                        label.qty,
                        span,
+                       wls.target,
                        annotations,
                        norm,
                        text.size,
@@ -213,6 +219,7 @@ e_rsp_plot <- function(spct,
                             annotations = annotations,
                             label.qty = label.qty,
                             span = span,
+                            wls.target = wls.target,
                             summary.label = rsp.label,
                             text.size = text.size,
                             na.rm = TRUE)
@@ -265,6 +272,11 @@ e_rsp_plot <- function(spct,
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
+#' @param wls.target numeric vector indicating the spectral quantity values for
+#'   which wavelengths are to be searched and interpolated if need. The
+#'   \code{character} strings "half.maximum" and "half.range" are also accepted
+#'   as arguments. A list with \code{numeric} and/or \code{character} values is
+#'   also accepted.
 #' @param annotations a character vector.
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
@@ -288,6 +300,7 @@ q_rsp_plot <- function(spct,
                        pc.out,
                        label.qty,
                        span,
+                       wls.target,
                        annotations,
                        norm,
                        text.size,
@@ -465,6 +478,7 @@ q_rsp_plot <- function(spct,
                             annotations = annotations,
                             label.qty = label.qty,
                             span = span,
+                            wls.target = wls.target,
                             summary.label = rsp.label,
                             text.size = text.size,
                             na.rm = TRUE)
@@ -522,6 +536,11 @@ q_rsp_plot <- function(spct,
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that
 #'   element.
+#' @param wls.target numeric vector indicating the spectral quantity values for
+#'   which wavelengths are to be searched and interpolated if need. The
+#'   \code{character} strings "half.maximum" and "half.range" are also accepted
+#'   as arguments. A list with \code{numeric} and/or \code{character} values is
+#'   also accepted.
 #' @param annotations a character vector.
 #' @param time.format character Format as accepted by
 #'   \code{\link[base]{strptime}}.
@@ -561,6 +580,7 @@ autoplot.response_spct <-
            pc.out = FALSE,
            label.qty = NULL,
            span = NULL,
+           wls.target = "HM",
            annotations = NULL,
            time.format = "",
            tz = "UTC",
@@ -599,6 +619,7 @@ autoplot.response_spct <-
                                pc.out = pc.out,
                                label.qty = label.qty,
                                span = span,
+                               wls.target = wls.target,
                                annotations = annotations,
                                norm = norm,
                                text.size = text.size,
@@ -613,6 +634,7 @@ autoplot.response_spct <-
                                pc.out = pc.out,
                                label.qty = label.qty,
                                span = span,
+                               wls.target = wls.target,
                                annotations = annotations, norm = norm,
                                text.size = text.size,
                                idfactor = idfactor,
