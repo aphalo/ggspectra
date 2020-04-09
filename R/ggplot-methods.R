@@ -99,10 +99,10 @@ ggplot.source_spct <-
     }
     if (is.null(mapping)) {
       if (unit.out == "energy") {
-        data <- q2e(data)
+        data <- q2e(data, action = "replace")
         mapping <- aes_(~w.length, ~s.e.irrad)
       } else if (unit.out %in% c("photon", "quantum")) {
-        data <- e2q(data)
+        data <- e2q(data, action = "replace")
         mapping <- aes_(~w.length, ~s.q.irrad)
       } else {
         stop("Invalid 'unit.out' argument value: '", unit.out, "'")
@@ -163,13 +163,13 @@ ggplot.filter_spct <-
     }
     if (is.null(mapping)) {
       if (plot.qty == "transmittance") {
-        data <- A2T(data)
+        data <- any2T(data, action = "replace")
         mapping <- aes_(~w.length, ~Tfr)
       } else if (plot.qty == "absorptance") {
-        data <- T2Afr(data)
+        data <- any2Afr(data, action = "replace")
         mapping <- aes_(~w.length, ~Afr)
       } else if (plot.qty == "absorbance") {
-        data <- T2A(data)
+        data <- any2A(data, action = "replace")
         mapping <- aes_(~w.length, ~A)
       } else {
         stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
@@ -358,5 +358,71 @@ ggplot.generic_mspct <-
       data <- trim_wl(data, range = range, use.hinges = TRUE, fill = NULL)
     }
     spct <- rbindspct(data)
-    ggplot(data = spct, mapping = mapping, ...)
+    ggplot(data = spct, mapping = mapping, ..., environment = environment)
   }
+
+#' @rdname ggplot
+#'
+#' @export
+#'
+ggplot.filter_mspct <-
+  function(data, mapping = NULL, ..., range = NULL,
+           plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
+           environment = parent.frame()) {
+    if (!is.null(range)) {
+      data <- trim_wl(data, range = range, use.hinges = TRUE, fill = NULL)
+    }
+    # conversion before binding as filter properties can differ
+    if (is.null(mapping)) {
+      if (plot.qty == "transmittance") {
+        data <- any2T(data, action = "replace")
+        mapping <- aes_(~w.length, ~Tfr)
+      } else if (plot.qty == "absorptance") {
+        data <- any2Afr(data, action = "replace")
+        mapping <- aes_(~w.length, ~Afr)
+      } else if (plot.qty == "absorbance") {
+        data <- any2A(data, action = "replace")
+        mapping <- aes_(~w.length, ~A)
+      } else {
+        stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
+      }
+    }
+    spct <- rbindspct(data)
+    ggplot(data = spct,
+           mapping = mapping,
+           plot.qty = plot.qty,
+           ...,
+           environment = environment)
+  }
+
+#' @rdname ggplot
+#'
+#' @export
+#'
+ggplot.source_mspct <-
+  function(data, mapping = NULL, ..., range = NULL,
+           unit.out = getOption("photobiology.radiation.unit", default = "energy"),
+           environment = parent.frame()) {
+    if (!is.null(range)) {
+      data <- trim_wl(data, range = range, use.hinges = TRUE, fill = NULL)
+    }
+    # conversion before binding, to avoid multiple conversions
+    if (is.null(mapping)) {
+      if (unit.out == "energy") {
+        data <- q2e(data, action = "replace")
+        mapping <- aes_(~w.length, ~s.e.irrad)
+      } else if (unit.out %in% c("photon", "quantum")) {
+        data <- e2q(data, action = "replace")
+        mapping <- aes_(~w.length, ~s.q.irrad)
+      } else {
+        stop("Invalid 'unit.out' argument value: '", unit.out, "'")
+      }
+    }
+    spct <- rbindspct(data)
+    ggplot(data = spct,
+           mapping = mapping,
+           unit.out = unit.out,
+           ...,
+           environment = environment)
+  }
+

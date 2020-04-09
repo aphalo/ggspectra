@@ -589,10 +589,23 @@ autoplot.source_spct <-
 #' @export
 #'
 autoplot.source_mspct <-
-  function(object, ..., range = NULL, plot.data = "as.is") {
+  function(object,
+           ...,
+           range = NULL,
+           unit.out = getOption("photobiology.radiation.unit",
+                                default = "energy"),
+           plot.data = "as.is") {
     # We trim the spectra to avoid unnecesary computaions later
     if (!is.null(range)) {
       object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
+    }
+    # conversion before binding and summaries
+    if (unit.out == "energy") {
+      data <- q2e(object, action = "replace")
+    } else if (unit.out %in% c("photon", "quantum")) {
+      data <- e2q(object, action = "replace")
+    } else {
+      stop("Invalid 'unit.out' argument value: '", unit.out, "'")
     }
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.

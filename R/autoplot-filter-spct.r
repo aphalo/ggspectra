@@ -54,55 +54,26 @@ Afr_plot <- function(spct,
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
   }
+  force(spct)
+  spct <- any2Afr(spct, action = "add")
   if (!is.null(range)) {
     spct <- trim_wl(spct, range = range)
   }
-  if (! "Afr" %in% names(spct)) {
-    if (!"Tfr" %in% names(spct)) {
-      # no A2Afr function defined yet
-      A2T(spct, byref = TRUE)
-    }
-    T2Afr(spct, byref = TRUE)
-  }
-  Afr.type <- getAfrType(spct)
-  if (!is.null(w.band)) {
+   if (!is.null(w.band)) {
     w.band <- trim_wl(w.band, range = range(spct))
   }
 #  setGenericSpct(spct, multiple.wl = getMultipleWl(spct)) # so that we can assign variable Afr
 
-  if (!length(Afr.type)) {
-    Afr.type <- "unknown"
-  }
   if (!pc.out) {
     scale.factor <- 1
-    if (Afr.type == "internal") {
-      s.Afr.label <- expression(Internal~~spectral~~absorptance~~italic(A)[int](lambda)~~(fraction))
-      Afr.label.total  <- "atop(italic(A)[int], (fraction))"
-      Afr.label.avg  <- "atop(bar(italic(A)[int](lambda)), (fraction))"
-    } else if (Afr.type == "total") {
-      s.Afr.label <- expression(Total~~spectral~~absorptance~~italic(A)[tot](lambda)~~(fraction))
-      Afr.label.total  <- "atop(italic(A)[tot], (total))"
-      Afr.label.avg  <- "atop(bar(italic(A)[tot](lambda)), (fraction))"
-    }  else {
-      s.Afr.label <- expression(Spectral~~absorptance~~italic(A)(lambda)~~(fraction))
-      Afr.label.total  <- "atop(italic(A), (total))"
-      Afr.label.avg  <- "atop(bar(italic(A)(lambda)), (fraction))"
-    }
+    s.Afr.label <- expression(Spectral~~absorptance~~italic(A)[int](lambda)~~(fraction))
+    Afr.label.total  <- "atop(italic(A)[int], (fraction))"
+    Afr.label.avg  <- "atop(bar(italic(A)[int](lambda)), (fraction))"
   } else if (pc.out) {
     scale.factor <- 100
-    if (Afr.type == "internal") {
-      s.Afr.label <- expression(Internal~~spectral~~absorptance~~italic(A)[int](lambda)~~(percent))
-      Afr.label.total  <- "atop(italic(A)[int], (total %*% 100))"
-      Afr.label.avg  <- "atop(bar(italic(A)[int](lambda)), (percent))"
-    } else if (Afr.type == "total") {
-      s.Afr.label <- expression(Total~~spectral~~absorptance~~italic(A)[tot](lambda)~~(percent))
-      Afr.label.total  <- "atop(italic(A)[tot], (total %*% 100))"
-      Afr.label.avg  <- "atop(bar(italic(A)[tot](lambda)), (percent))"
-    }  else {
-      s.Afr.label <- expression(Spectral~~absorptance~~italic(A)(lambda)~~(percent))
-      Afr.label.total  <- "atop(italic(A), (total  %*% 100))"
-      Afr.label.avg  <- "atop(bar(italic(A)(lambda)), (percent))"
-    }
+    s.Afr.label <- expression(Spectral~~absorptance~~italic(A)[int](lambda)~~(percent))
+    Afr.label.total  <- "atop(italic(A)[int], (total %*% 100))"
+    Afr.label.avg  <- "atop(bar(italic(A)[int](lambda)), (percent))"
   }
   if (label.qty == "total") {
     Afr.label <- Afr.label.total
@@ -257,10 +228,11 @@ T_plot <- function(spct,
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
   }
+  force(spct)
+  spct <- any2T(spct, action = "replace")
   if (!is.null(range)) {
     spct <- trim_wl(spct, range = range)
   }
-  A2T(spct, byref = TRUE)
   Tfr.type <- getTfrType(spct)
   if (!is.null(w.band)) {
     w.band <- trim_wl(w.band, range = range(spct))
@@ -449,10 +421,10 @@ A_plot <- function(spct,
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
   }
+  spct <- any2A(spct, action = "replace")
   if (!is.null(range)) {
     spct <- trim_wl(spct, range = range)
   }
-  T2A(spct, action = "replace", byref = TRUE)
   if (!is.null(w.band)) {
     w.band <- trim_wl(w.band, range = range(spct))
   }
@@ -614,6 +586,11 @@ R_plot <- function(spct,
   }
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
+  }
+  # delete other columns to optimize object size and code performance
+  extra.columns <- intersect(colnames(spct), c("Tfr", "Afr", "A"))
+  for (c in extra.columns) {
+    spct[[c]] <- NULL
   }
   if (!is.null(range)) {
     spct <- trim_wl(spct, range = range)
@@ -827,8 +804,9 @@ O_plot <- function(spct,
   if (Rfr.type != "total") {
     warning("Only 'total' reflectance can be meaningfully plotted in a combined plot")
   }
-  if (Tfr.type != "total") {
-    warning("Only 'total' transmittance can be meaningfully plotted in a combined plot")
+  if (Tfr.type == "internal") {
+#    warning("Internal transmittance converted to total transmittance")
+    spct <- convertTfrType(spct, Tfr.type = "total")
   }
   s.Rfr.label <- expression(atop(Spectral~~reflectance~R(lambda)~~spectral~~absorptance~~A(lambda), and~~spectral~~transmittance~T(lambda)))
   spct[["Afr"]] <- 1.0 - spct[["Tfr"]] - spct[["Rfr"]]
@@ -1103,10 +1081,24 @@ autoplot.filter_spct <-
 #' @export
 #'
 autoplot.filter_mspct <-
-  function(object, ..., range = NULL, plot.data = "as.is") {
+  function(object,
+           ...,
+           range = NULL,
+           plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
+           plot.data = "as.is") {
     # We trim the spectra to avoid unnecesary computaions later
     if (!is.null(range)) {
       object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
+    }
+    # conversion before binding or summaries
+    if (plot.qty == "transmittance") {
+      data <- any2T(object, action = "replace")
+    } else if (plot.qty == "absorptance") {
+      data <- any2Afr(object, action = "replace")
+    } else if (plot.qty == "absorbance") {
+      data <- any2A(object, action = "replace")
+    } else {
+      stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
     }
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
@@ -1115,7 +1107,7 @@ autoplot.filter_mspct <-
                 median = photobiology::s_median(object),
                 as.is = photobiology::rbindspct(object)
     )
-    autoplot(object = z, range = NULL, ...)
+    autoplot(object = z, range = NULL, plot.qty = plot.qty, ...)
   }
 
 #' Create a complete ggplot for a reflector spectrum.
@@ -1249,7 +1241,11 @@ autoplot.reflector_spct <-
 #' @export
 #'
 autoplot.reflector_mspct <-
-  function(object, ..., range = NULL, plot.data = "as.is") {
+  function(object,
+           ...,
+           range = NULL,
+           plot.qty = getOption("photobiology.reflector.qty", default = "reflectance"),
+           plot.data = "as.is") {
     # We trim the spectra to avoid unnecesary computaions later
     if (!is.null(range)) {
       object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
@@ -1261,7 +1257,7 @@ autoplot.reflector_mspct <-
                 median = photobiology::s_median(object),
                 as.is = photobiology::rbindspct(object)
     )
-    autoplot(object = z, range = NULL, ...)
+    autoplot(object = z, range = NULL, plot.qty = plot.qty, ...)
   }
 
 #' Create a complete ggplot for a object spectrum.
@@ -1324,7 +1320,8 @@ autoplot.reflector_mspct <-
 #' @family autoplot methods
 #'
 autoplot.object_spct <-
-  function(object, ...,
+  function(object,
+           ...,
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PAR())),
            range = NULL,
