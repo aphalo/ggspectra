@@ -66,14 +66,14 @@ Afr_plot <- function(spct,
 
   if (!pc.out) {
     scale.factor <- 1
-    s.Afr.label <- expression(Spectral~~absorptance~~italic(A)[int](lambda)~~(fraction))
-    Afr.label.total  <- "atop(italic(A)[int], (fraction))"
-    Afr.label.avg  <- "atop(bar(italic(A)[int](lambda)), (fraction))"
+    s.Afr.label <- expression(Spectral~~absorptance~~italic(A)(lambda)~~(fraction))
+    Afr.label.total  <- "atop(italic(A), (fraction))"
+    Afr.label.avg  <- "atop(bar(italic(A)(lambda)), (fraction))"
   } else if (pc.out) {
     scale.factor <- 100
-    s.Afr.label <- expression(Spectral~~absorptance~~italic(A)[int](lambda)~~(percent))
-    Afr.label.total  <- "atop(italic(A)[int], (total %*% 100))"
-    Afr.label.avg  <- "atop(bar(italic(A)[int](lambda)), (percent))"
+    s.Afr.label <- expression(Spectral~~absorptance~~italic(A)(lambda)~~(percent))
+    Afr.label.total  <- "atop(italic(A), (total %*% 100))"
+    Afr.label.avg  <- "atop(bar(italic(A)(lambda)), (percent))"
   }
   if (label.qty == "total") {
     Afr.label <- Afr.label.total
@@ -432,19 +432,10 @@ A_plot <- function(spct,
   if (!length(Tfr.type)) {
     Tfr.type <- "unknown"
   }
-  if (Tfr.type == "internal") {
-    s.A.label <- expression(Internal~~spectral~~absorbance~~A[int](lambda)~~(AU))
-    A.label.total  <- "atop(A[int], (AU %*% nm))"
-    A.label.avg  <- "atop(bar(A[int](lambda)), (AU))"
-  } else if (Tfr.type == "total") {
-    s.A.label <- expression(Total~~spectral~~absorbance~~A[tot](lambda)~~(AU))
-    A.label.total  <- "atop(A[tot], (AU %*% nm))"
-    A.label.avg  <- "atop(bar(A[tot](lambda)), (AU))"
-  }  else {
-    s.A.label <- expression(Spectral~~absorbance~~A(lambda)~~(AU))
-    A.label.total  <- "atop(A, (AU %*% nm))"
-    A.label.avg  <- "atop(bar(A(lambda)), (AU))"
-  }
+  s.A.label <- expression(Spectral~~absorbance~~A(lambda)~~(AU))
+  A.label.total  <- "atop(A, (AU %*% nm))"
+  A.label.avg  <- "atop(bar(A(lambda)), (AU))"
+
   if (label.qty == "total") {
     A.label <- A.label.total
   } else if (label.qty %in% c("average", "mean")) {
@@ -808,7 +799,7 @@ O_plot <- function(spct,
 #    warning("Internal transmittance converted to total transmittance")
     spct <- convertTfrType(spct, Tfr.type = "total")
   }
-  s.Rfr.label <- expression(atop(Spectral~~reflectance~R(lambda)~~spectral~~absorptance~~A(lambda), and~~spectral~~transmittance~T(lambda)))
+  s.Rfr.label <- expression(atop(Spectral~~reflectance~R(lambda)~~absorptance~~A(lambda), and~~transmittance~T(lambda)))
   spct[["Afr"]] <- 1.0 - spct[["Tfr"]] - spct[["Rfr"]]
   if (any((spct[["Afr"]]) < -0.01)) {
     message("Bad data or fluorescence.")
