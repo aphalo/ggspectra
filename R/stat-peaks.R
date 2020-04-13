@@ -41,6 +41,8 @@
 #'   be refined by fitting a function.
 #' @param method character String with the name of a method used for peak
 #'   fitting. Currently only spline interpolation is implemented.
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param label.fmt character  string giving a format definition for converting
 #'   values into character strings by means of function \code{\link{sprintf}}.
 #' @param x.label.fmt character  string giving a format definition for converting
