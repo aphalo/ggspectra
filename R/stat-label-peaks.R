@@ -32,6 +32,8 @@
 #'   consequtive neighbors on each side. Default: 5.
 #' @param strict logical flag: if TRUE, an element must be strictly greater than
 #'   all other values in its window to be considered a peak. Default: FALSE.
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param label.fmt character  string giving a format definition for converting
 #'   values into character strings by means of function \code{\link{sprintf}}.
 #' @param x.label.fmt character  string giving a format definition for
@@ -121,19 +123,29 @@
 #' @family stats functions
 #'
 stat_label_peaks <-
-  function(mapping = NULL, data = NULL, geom = "text",
-           span = 5, ignore_threshold = 0, strict = TRUE,
+  function(mapping = NULL,
+           data = NULL,
+           geom = "text",
+           span = 5,
+           ignore_threshold = 0,
+           strict = TRUE,
+           chroma.type = "CMF",
            label.fmt = "%.3g",
-           x.label.fmt = label.fmt, y.label.fmt = label.fmt,
+           x.label.fmt = label.fmt,
+           y.label.fmt = label.fmt,
            label.fill = "",
-           position = "identity", na.rm = TRUE, show.legend = FALSE,
-           inherit.aes = TRUE, ...) {
+           position = "identity",
+           na.rm = TRUE,
+           show.legend = FALSE,
+           inherit.aes = TRUE,
+           ...) {
     ggplot2::layer(
       stat = StatLabelPeaks, data = data, mapping = mapping, geom = geom,
       position = position, show.legend = show.legend, inherit.aes = inherit.aes,
       params = list(span = span,
                     ignore_threshold = ignore_threshold,
                     strict = strict,
+                    chroma.type = chroma.type,
                     label.fmt = label.fmt,
                     x.label.fmt = x.label.fmt,
                     y.label.fmt = y.label.fmt,
@@ -168,6 +180,7 @@ StatLabelPeaks <-
                                             span,
                                             ignore_threshold,
                                             strict,
+                                            chroma.type,
                                             label.fmt,
                                             x.label.fmt,
                                             y.label.fmt,
@@ -194,7 +207,7 @@ StatLabelPeaks <-
                                                    sprintf(y.label.fmt, out.df[["y"]]),
                                                    label.fill)
                      out.df[["wl.color"]] <- ifelse(out.df[["is_peak"]],
-                                                 photobiology::color_of(out.df[["x"]], type = "CMF"),
+                                                 photobiology::color_of(out.df[["x"]], chroma.type = chroma.type),
                                                  rgb(1, 1, 1, 0))
                      out.df[["BW.color"]] <- ifelse(out.df[["is_peak"]],
                                                     black_or_white(out.df[["wl.color"]]),
@@ -218,19 +231,29 @@ StatLabelPeaks <-
 #'
 #' @export
 #'
-stat_label_valleys <- function(mapping = NULL, data = NULL, geom = "text",
-                               span = 5, ignore_threshold = 0, strict = TRUE,
+stat_label_valleys <- function(mapping = NULL,
+                               data = NULL,
+                               geom = "text",
+                               span = 5,
+                               ignore_threshold = 0,
+                               strict = TRUE,
+                               chroma.type = "CMF",
                                label.fmt = "%.3g",
-                               x.label.fmt = label.fmt, y.label.fmt = label.fmt,
+                               x.label.fmt = label.fmt,
+                               y.label.fmt = label.fmt,
                                label.fill = "",
-                               position = "identity", na.rm = TRUE, show.legend = FALSE,
-                               inherit.aes = TRUE, ...) {
-  ggplot2::layer(
+                               position = "identity",
+                               na.rm = TRUE,
+                               show.legend = FALSE,
+                               inherit.aes = TRUE,
+                               ...) {
+    ggplot2::layer(
     stat = StatLabelValleys, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(span = span,
                   ignore_threshold = ignore_threshold,
                   strict = strict,
+                  chroma.type = chroma.type,
                   label.fmt = label.fmt,
                   x.label.fmt = x.label.fmt,
                   y.label.fmt = y.label.fmt,
@@ -251,6 +274,7 @@ StatLabelValleys <-
                                             span,
                                             ignore_threshold,
                                             strict,
+                                            chroma.type,
                                             label.fmt,
                                             x.label.fmt,
                                             y.label.fmt,
@@ -271,17 +295,17 @@ StatLabelValleys <-
                      out.df[["is_valley"]] <- FALSE
                      out.df[valleys.idx, "is_valley"] <- TRUE
                      out.df[["x.label"]] <- ifelse(out.df[["is_valley"]],
-                                                 sprintf(x.label.fmt, out.df[["x"]]),
-                                                 label.fill)
+                                                   sprintf(x.label.fmt, out.df[["x"]]),
+                                                   label.fill)
                      out.df[["y.label"]] <- ifelse(out.df[["is_valley"]],
-                                                 sprintf(y.label.fmt, out.df[["y"]]),
-                                                 label.fill)
+                                                   sprintf(y.label.fmt, out.df[["y"]]),
+                                                   label.fill)
                      out.df[["wl.color"]] <-  ifelse(out.df[["is_valley"]],
-                                                photobiology::color_of(out.df[["x"]], type = "CMF"),
-                                                rgb(1, 1, 1, 0))
+                                                     photobiology::color_of(out.df[["x"]], chroma.type = chroma.type),
+                                                     rgb(1, 1, 1, 0))
                      out.df[["BW.color"]] <- ifelse(out.df[["is_valley"]],
-                                                  black_or_white(out.df[["wl.color"]]),
-                                                  rgb(0, 0, 0, 0))
+                                                    black_or_white(out.df[["wl.color"]]),
+                                                    rgb(0, 0, 0, 0))
                      out.df[["lab.hjust"]] <- 0.5
                      out.df[["lab.vjust"]] <- 1.2
                      out.df

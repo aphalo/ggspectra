@@ -26,6 +26,8 @@
 #'   before the computation proceeds.
 #' @param w.band a waveband object or a list of waveband objects or numeric
 #'   vector of at least length two.
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param ypos.mult numeric Multiplier constant used to scale returned
 #'   \code{y} values.
 #' @param ypos.fixed numeric If not \code{NULL} used a constant value returned
@@ -91,16 +93,19 @@ stat_wb_box <- function(mapping = NULL,
                         data = NULL,
                         geom = "rect",
                         w.band = NULL,
+                        chroma.type = "CMF",
                         ypos.mult = 1.07,
                         ypos.fixed = NULL,
                         position = "identity",
                         na.rm = FALSE,
                         show.legend = NA,
-                        inherit.aes = TRUE, ...) {
+                        inherit.aes = TRUE,
+                        ...) {
   ggplot2::layer(
     stat = StatWbBox, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(w.band = w.band,
+                  chroma.type = chroma.type,
                   ypos.mult = ypos.mult,
                   ypos.fixed = ypos.fixed,
                   na.rm = na.rm,
@@ -117,6 +122,7 @@ StatWbBox <-
                    compute_panel = function(data,
                                             scales,
                                             w.band,
+                                            chroma.type,
                                             ypos.mult,
                                             ypos.fixed) {
                      wl.range <- range(data$x)
@@ -148,9 +154,9 @@ StatWbBox <-
                                                     wb.xmax = max(wb),
                                                     wb.ymin = min(data[["y"]]),
                                                     wb.ymax = max(data[["y"]]),
-                                                    wb.color = color_of(wb),
+                                                    wb.color = color_of(wb, chroma.type = chroma.type),
                                                     wb.name = labels(wb)[["label"]],
-                                                    BW.color = black_or_white(color_of(wb)))
+                                                    BW.color = black_or_white(color_of(wb, chroma.type = chroma.type)))
                                          )
                      }
                      if (is.null(ypos.fixed)) {

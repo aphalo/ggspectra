@@ -26,6 +26,8 @@
 #'   before the computation proceeds.
 #' @param w.band a waveband object or a list of waveband objects or numeric
 #'   vector of at least length two.
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param label.fmt character string giving a format definition for formating
 #'   the name of the waveband.
 #'   \code{\link{sprintf}}.
@@ -86,16 +88,23 @@
 #' @export
 #' @family stats functions
 #'
-stat_wb_label <- function(mapping = NULL, data = NULL, geom = "text",
+stat_wb_label <- function(mapping = NULL,
+                          data = NULL,
+                          geom = "text",
                           w.band = NULL,
+                          chroma.type = "CMF",
                           label.fmt = "%s",
                           ypos.fixed = 0,
-                          position = "identity", na.rm = TRUE, show.legend = NA,
-                          inherit.aes = TRUE, ...) {
+                          position = "identity",
+                          na.rm = TRUE,
+                          show.legend = NA,
+                          inherit.aes = TRUE,
+                          ...) {
   ggplot2::layer(
     stat = StatWbLabel, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(w.band = w.band,
+                  chroma.type = chroma.type,
                   label.fmt = label.fmt,
                   ypos.fixed = ypos.fixed,
                   na.rm = na.rm,
@@ -112,6 +121,7 @@ StatWbLabel <-
                    compute_panel = function(data,
                                             scales,
                                             w.band,
+                                            chroma.type,
                                             label.fmt,
                                             ypos.fixed) {
                      x.range <- range(data[["x"]])
@@ -132,14 +142,15 @@ StatWbLabel <-
                          wb <- waveband(wb)
                        }
                        range <- range(wb)
-                       integ.df <- rbind(integ.df,
-                                         data.frame(x = midpoint(wb),
-                                                    wb.xmin = min(wb),
-                                                    wb.xmax = max(wb),
-                                                    wb.color = color_of(wb),
-                                                    wb.name = labels(wb)$label,
-                                                    BW.color = black_or_white(color_of(wb)))
-                                         )
+                       integ.df <-
+                         rbind(integ.df,
+                               tibble::tibble(x = midpoint(wb),
+                                              wb.xmin = min(wb),
+                                              wb.xmax = max(wb),
+                                              wb.name = labels(wb)$label,
+                                              wb.color = color_of(wb, chroma.type = chroma.type),
+                                              BW.color = black_or_white(wb.color))
+                         )
                      }
                      if (is.null(ypos.fixed)) {
                        integ.df[["y"]] <- 0

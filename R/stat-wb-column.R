@@ -28,6 +28,8 @@
 #' @param w.band a waveband object or a list of waveband objects or numeric
 #'   vector of at least length two.
 #' @param integral.fun function on $x$ and $y$.
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #'
 #' @return A data frame with one row for each waveband object in the argument
 #' to \code{w.band}. Wavebeand outside the range of the spectral data are
@@ -94,13 +96,18 @@ stat_wb_column <- function(mapping = NULL,
                            geom = "rect",
                            w.band = NULL,
                            integral.fun = integrate_xy,
-                           position = "identity", na.rm = FALSE, show.legend = NA,
-                           inherit.aes = TRUE, ...) {
+                           chroma.type = "CMF",
+                           position = "identity",
+                           na.rm = FALSE,
+                           show.legend = NA,
+                           inherit.aes = TRUE,
+                           ...) {
   ggplot2::layer(
     stat = StatWbColumn, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(w.band = w.band,
                   integral.fun = integral.fun,
+                  chroma.type = chroma.type,
                   na.rm = na.rm,
                   ...)
   )
@@ -115,7 +122,8 @@ StatWbColumn <-
                    compute_group = function(data,
                                             scales,
                                             w.band,
-                                            integral.fun) {
+                                            integral.fun,
+                                            chroma.type) {
                      if (length(w.band) == 0) {
                        w.band <- waveband(data[["x"]])
                      }
@@ -140,7 +148,7 @@ StatWbColumn <-
                                             high.limit = range[2])
                        yint.tmp <- integral.fun(mydata[["x"]], mydata[["y"]])
                        ymean.tmp <- yint.tmp / wl_expanse(wb)
-                       wb.color <- color_of(wb) # avoid 'expensive' recalculation
+                       wb.color <- color_of(wb, chroma.type = chroma.type) # avoid 'expensive' recalculation
                        integ.df <- rbind(integ.df,
                                          data.frame(x = midpoint(mydata[["x"]]),
                                                     wb.xmin = min(wb),

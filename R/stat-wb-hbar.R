@@ -29,6 +29,8 @@
 #' @param w.band a waveband object or a list of waveband objects or numeric
 #'   vector of at least length two.
 #' @param integral.fun function on $x$ and $y$.
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param ypos.fixed numeric If not \code{NULL} used a constant value returned
 #'   in \code{y}.
 #'
@@ -98,6 +100,7 @@ stat_wb_hbar <- function(mapping = NULL,
                          geom = "errorbarh",
                          w.band = NULL,
                          integral.fun = integrate_xy,
+                         chroma.type = "CMF",
                          ypos.fixed = NULL,
                          position = "identity",
                          na.rm = FALSE,
@@ -108,6 +111,7 @@ stat_wb_hbar <- function(mapping = NULL,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(w.band = w.band,
                   integral.fun = integral.fun,
+                  chroma.type = chroma.type,
                   ypos.fixed = ypos.fixed,
                   na.rm = na.rm,
                   ...)
@@ -124,6 +128,7 @@ StatWbHbar <-
                                             scales,
                                             w.band,
                                             integral.fun,
+                                            chroma.type,
                                             ypos.mult,
                                             ypos.fixed) {
                      if (length(w.band) == 0) {
@@ -158,7 +163,7 @@ StatWbHbar <-
                                                     wb.ymax = max(data[["y"]]),
                                                     wb.yint = yint.tmp,
                                                     wb.ymean = ymean.tmp,
-                                                    wb.color = color_of(wb),
+                                                    wb.color = color_of(wb, chroma.type = chroma.type),
                                                     wb.name = labels(wb)[["label"]])
                                          )
                      }

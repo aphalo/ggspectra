@@ -22,11 +22,11 @@
 #'   \code{\link[ggplot2]{layer}} for more details.
 #' @param na.rm	a logical value indicating whether NA values should be
 #'   stripped before the computation proceeds.
-#' @param type character one of "CMF" (color matching function) or "CC"
-#'   (color coordinates).
 #' @param w.band waveband object or a list of such objects or NULL.
 #' @param length.out The number of steps to use to simulate a continuous
 #'   range of colours when w.band == NULL.
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #'
 #' @return generic_spect object with new \code{x} values plus other computed
 #'   variables described below.
@@ -75,14 +75,21 @@
 #' @export
 #' @family stats functions
 #'
-stat_wl_strip <- function(mapping = NULL, data = NULL, geom = "rect",
-                       type = "CMF", w.band = NULL, length.out = 150,
-                       position = "identity", na.rm = TRUE, show.legend = FALSE,
-                       inherit.aes = TRUE, ...) {
+stat_wl_strip <- function(mapping = NULL,
+                          data = NULL,
+                          geom = "rect",
+                          w.band = NULL,
+                          length.out = 150,
+                          chroma.type = "CMF",
+                          position = "identity",
+                          na.rm = TRUE,
+                          show.legend = FALSE,
+                          inherit.aes = TRUE,
+                          ...) {
   ggplot2::layer(
     stat = StatColorGuide, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(type = type,
+    params = list(chroma.type = chroma.type,
                   w.band = w.band,
                   length.out = length.out,
                   na.rm = na.rm,
@@ -99,16 +106,16 @@ StatColorGuide <-
   ggplot2::ggproto("StatColorGuide", ggplot2::Stat,
                    compute_panel = function(data,
                                             scales,
-                                            type,
                                             w.band,
-                                            length.out) {
+                                            length.out,
+                                            chroma.type) {
                      if (length(w.band) == 0) {
                        w.band <- split_bands(range(data[["x"]]), length.out = length.out)
                      } else {
                        w.band <- trim_waveband(w.band = w.band, range = data[["x"]], trim = TRUE)
                      }
 
-                     z <- wb2rect_spct(w.band = w.band)
+                     z <- wb2rect_spct(w.band = w.band, chroma.type = chroma.type)
                      names(z)[1] <- "x"
                      z
                     },
@@ -124,22 +131,29 @@ StatColorGuide <-
 #'
 #' @export
 #'
-wl_guide <- function(mapping = NULL, data = NULL,
-                             type = "CMF", w.band=NULL, length.out = 150,
-                             ymin = -Inf, ymax = Inf,
-                             position = "identity", na.rm = FALSE, show.legend = FALSE,
-                             inherit.aes = TRUE, ...) {
+wl_guide <- function(mapping = NULL,
+                     data = NULL,
+                     chroma.type = "CMF",
+                     w.band = NULL,
+                     length.out = 150,
+                     ymin = -Inf,
+                     ymax = Inf,
+                     position = "identity",
+                     na.rm = FALSE,
+                     show.legend = FALSE,
+                     inherit.aes = TRUE,
+                     ...) {
   list(stat_wl_strip(mapping = mapping,
-                        data = data,
-                        geom = "rect",
-                        type = type,
-                        w.band = w.band,
-                        length.out = length.out,
-                        show.legend = show.legend,
-                        inherit.aes = inherit.aes,
-                        ymin = ymin,
-                        ymax = ymax,
-                        ...),
+                     data = data,
+                     geom = "rect",
+                     w.band = w.band,
+                     chroma.type = chroma.type,
+                     length.out = length.out,
+                     show.legend = show.legend,
+                     inherit.aes = inherit.aes,
+                     ymin = ymin,
+                     ymax = ymax,
+                     ...),
        scale_fill_identity()
   )
 }

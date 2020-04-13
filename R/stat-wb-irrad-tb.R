@@ -251,9 +251,9 @@ StatWbIrrad <-
                                                     wb.ymax = max(data[["y"]]),
                                                     wb.ymin = min(data[["y"]]),
                                                     wb.ymean = ymean.tmp,
-                                                    wb.color = color_of(wb),
+                                                    wb.color = color_of(wb, chroma.type = chroma.type),
                                                     wb.name = labels(wb)[["label"]],
-                                                    BW.color = black_or_white(color_of(wb)))
+                                                    BW.color = black_or_white(color_of(wb, chroma.type = chroma.type)))
                                          )
                      }
 

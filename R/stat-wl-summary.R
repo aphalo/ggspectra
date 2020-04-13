@@ -72,12 +72,19 @@
 #' @export
 #' @family stats functions
 #'
-stat_wl_summary <- function(mapping = NULL, data = NULL, geom = "text",
-                       range = NULL,
-                       integral.fun = integrate_xy, label.fmt = "%.3g",
-                       position = "identity", na.rm = FALSE, show.legend = NA,
-                       inherit.aes = TRUE, ...) {
-  ggplot2::layer(
+stat_wl_summary <-
+  function(mapping = NULL,
+           data = NULL,
+           geom = "text",
+           range = NULL,
+           integral.fun = integrate_xy,
+           label.fmt = "%.3g",
+           position = "identity",
+           na.rm = FALSE,
+           show.legend = NA,
+           inherit.aes = TRUE,
+           ...) {
+    ggplot2::layer(
     stat = StatWlSummary, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(range = range,

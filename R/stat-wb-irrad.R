@@ -29,6 +29,8 @@
 #' @param label.qty character
 #' @param label.mult numeric Scaling factor applied to y-integral values before
 #'   conversion into character strings.
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param label.fmt character string giving a format definition for converting
 #'   y-integral values into character strings by means of function
 #'   \code{\link{sprintf}}.
@@ -104,17 +106,23 @@
 #' @export
 #' @family stats functions
 #'
-stat_wb_irrad <- function(mapping = NULL, data = NULL, geom = "text",
+stat_wb_irrad <- function(mapping = NULL,
+                          data = NULL,
+                          geom = "text",
                           w.band = NULL,
                           time.unit,
                           unit.in,
                           label.qty = "total",
                           label.mult = 1,
+                          chroma.type = "CMF",
                           label.fmt = "%.3g",
                           ypos.mult = 1.07,
                           ypos.fixed = NULL,
-                          position = "identity", na.rm = FALSE, show.legend = NA,
-                          inherit.aes = TRUE, ...) {
+                          position = "identity",
+                          na.rm = FALSE,
+                          show.legend = NA,
+                          inherit.aes = TRUE,
+                          ...) {
   ggplot2::layer(
     stat = StatWbIrrad, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -123,6 +131,7 @@ stat_wb_irrad <- function(mapping = NULL, data = NULL, geom = "text",
                   unit.in = unit.in,
                   label.qty = label.qty,
                   label.mult = label.mult,
+                  chroma.type = chroma.type,
                   label.fmt = label.fmt,
                   ypos.mult = ypos.mult,
                   ypos.fixed = ypos.fixed,
@@ -133,18 +142,24 @@ stat_wb_irrad <- function(mapping = NULL, data = NULL, geom = "text",
 
 #' @rdname stat_wb_irrad
 #' @export
-stat_wb_e_irrad <- function(mapping = NULL, data = NULL, geom = "text",
-                          w.band = NULL,
-                          time.unit = "second",
-                          unit.in = "energy",
-                          label.qty = "total",
-                          label.mult = 1,
-                          label.fmt = "%.3g",
-                          ypos.mult = 1.07,
-                          ypos.fixed = NULL,
-                          position = "identity", na.rm = FALSE, show.legend = NA,
-                          inherit.aes = TRUE, ...) {
-  ggplot2::layer(
+stat_wb_e_irrad <- function(mapping = NULL,
+                            data = NULL,
+                            geom = "text",
+                            w.band = NULL,
+                            time.unit = "second",
+                            unit.in = "energy",
+                            label.qty = "total",
+                            label.mult = 1,
+                            chroma.type = "CMF",
+                            label.fmt = "%.3g",
+                            ypos.mult = 1.07,
+                            ypos.fixed = NULL,
+                            position = "identity",
+                            na.rm = FALSE,
+                            show.legend = NA,
+                            inherit.aes = TRUE,
+                            ...) {
+    ggplot2::layer(
     stat = StatWbIrrad, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(w.band = w.band,
@@ -152,6 +167,7 @@ stat_wb_e_irrad <- function(mapping = NULL, data = NULL, geom = "text",
                   unit.in = unit.in,
                   label.qty = label.qty,
                   label.mult = label.mult,
+                  chroma.type = chroma.type,
                   label.fmt = label.fmt,
                   ypos.mult = ypos.mult,
                   ypos.fixed = ypos.fixed,
@@ -162,17 +178,23 @@ stat_wb_e_irrad <- function(mapping = NULL, data = NULL, geom = "text",
 
 #' @rdname stat_wb_irrad
 #' @export
-stat_wb_q_irrad <- function(mapping = NULL, data = NULL, geom = "text",
-                          w.band = NULL,
-                          time.unit = "second",
-                          unit.in = "photon",
-                          label.qty = "total",
-                          label.mult = 1,
-                          label.fmt = "%.3g",
-                          ypos.mult = 1.07,
-                          ypos.fixed = NULL,
-                          position = "identity", na.rm = FALSE, show.legend = NA,
-                          inherit.aes = TRUE, ...) {
+stat_wb_q_irrad <- function(mapping = NULL,
+                            data = NULL,
+                            geom = "text",
+                            w.band = NULL,
+                            time.unit = "second",
+                            unit.in = "photon",
+                            label.qty = "total",
+                            label.mult = 1,
+                            chroma.type = "CMF",
+                            label.fmt = "%.3g",
+                            ypos.mult = 1.07,
+                            ypos.fixed = NULL,
+                            position = "identity",
+                            na.rm = FALSE,
+                            show.legend = NA,
+                            inherit.aes = TRUE,
+                            ...) {
   ggplot2::layer(
     stat = StatWbIrrad, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -181,6 +203,7 @@ stat_wb_q_irrad <- function(mapping = NULL, data = NULL, geom = "text",
                   unit.in = unit.in,
                   label.qty = label.qty,
                   label.mult = label.mult,
+                  chroma.type = chroma.type,
                   label.fmt = label.fmt,
                   ypos.mult = ypos.mult,
                   ypos.fixed = ypos.fixed,
@@ -202,6 +225,7 @@ StatWbIrrad <-
                                             unit.in,
                                             label.qty,
                                             label.mult,
+                                            chroma.type,
                                             label.fmt,
                                             ypos.mult,
                                             ypos.fixed) {
@@ -248,9 +272,9 @@ StatWbIrrad <-
                                                     wb.ymax = max(data[["y"]]),
                                                     wb.ymin = min(data[["y"]]),
                                                     wb.ymean = ymean.tmp,
-                                                    wb.color = color_of(wb),
+                                                    wb.color = color_of(wb, chroma.type = chroma.type),
                                                     wb.name = labels(wb)[["label"]],
-                                                    BW.color = black_or_white(color_of(wb)))
+                                                    BW.color = black_or_white(color_of(wb, chroma.type = chroma.type)))
                                          )
                      }
 

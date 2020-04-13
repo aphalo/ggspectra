@@ -27,6 +27,8 @@
 #'   are considered to be spikes.
 #' @param max.spike.width integer Wider regions with high Z values are not detected as
 #'   spikes.
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param label.fmt character  string giving a format definition for converting
 #'   values into character strings by means of function \code{\link{sprintf}}.
 #' @param x.label.fmt character  string giving a format definition for converting
@@ -130,6 +132,7 @@ stat_spikes <- function(mapping = NULL,
                         ...,
                         z.threshold = 9,
                         max.spike.width = 8,
+                        chroma.type = "CMF",
                         label.fmt = "%.3g",
                         x.label.fmt = label.fmt,
                         y.label.fmt = label.fmt,
@@ -141,6 +144,7 @@ stat_spikes <- function(mapping = NULL,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(z.threshold = z.threshold,
                   max.spike.width = max.spike.width,
+                  chroma.type = chroma.type,
                   label.fmt = label.fmt,
                   x.label.fmt = x.label.fmt,
                   y.label.fmt = y.label.fmt,
@@ -159,6 +163,7 @@ StatSpikes <-
                                             scales,
                                             z.threshold,
                                             max.spike.width,
+                                            chroma.type,
                                             label.fmt,
                                             x.label.fmt,
                                             y.label.fmt) {
@@ -173,8 +178,8 @@ StatSpikes <-
                      dplyr::mutate(spikes.df,
                                    x.label = sprintf(x.label.fmt, x),
                                    y.label = sprintf(y.label.fmt, y),
-                                   wl.color = photobiology::color_of(x, type = "CMF"),
-                                   BW.color = black_or_white(photobiology::color_of(x, type = "CMF")))
+                                   wl.color = photobiology::color_of(x, chroma.type = chroma.type),
+                                   BW.color = black_or_white(photobiology::color_of(x, chroma.type = chroma.type)))
                    },
                    default_aes = ggplot2::aes(label = stat(x.label),
                                               fill = stat(wl.color),

@@ -31,6 +31,8 @@
 #' @param interpolate logical Indicating whether the nearest wavelength value in
 #'   \code{x} should be returned or a value calculated by linear interpolation
 #'   between wavelength values stradling the target.
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param label.fmt character  string giving a format definition for converting
 #'   values into character strings by means of function \code{\link{sprintf}}.
 #' @param x.label.fmt character  string giving a format definition for
@@ -93,6 +95,7 @@ stat_find_wls <- function(mapping = NULL,
                           geom = "point",
                           target = "half.maximum",
                           interpolate = TRUE,
+                          chroma.type = "CMF",
                           label.fmt = "%.3g",
                           x.label.fmt = label.fmt,
                           y.label.fmt = label.fmt,
@@ -105,6 +108,7 @@ stat_find_wls <- function(mapping = NULL,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(target = target,
                   interpolate = interpolate,
+                  chroma.type = chroma.type,
                   label.fmt = label.fmt,
                   x.label.fmt = x.label.fmt,
                   y.label.fmt = y.label.fmt,
@@ -123,6 +127,7 @@ StatFindWls <-
                                             scales,
                                             target,
                                             interpolate,
+                                            chroma.type,
                                             label.fmt,
                                             x.label.fmt,
                                             y.label.fmt) {
@@ -135,8 +140,8 @@ StatFindWls <-
                      dplyr::mutate(wls.df,
                                    x.label = sprintf(x.label.fmt, x),
                                    y.label = sprintf(y.label.fmt, y),
-                                   wl.color = photobiology::color_of(x, type = "CMF"),
-                                   BW.color = black_or_white(photobiology::color_of(x, type = "CMF")))
+                                   wl.color = photobiology::color_of(x, chroma.type = chroma.type),
+                                   BW.color = black_or_white(photobiology::color_of(x, chroma.type = chroma.type)))
                    },
                    default_aes = ggplot2::aes(label = stat(x.label),
                                               fill = stat(wl.color),
@@ -179,6 +184,8 @@ StatFindWls <-
 #' @param interpolate logical Indicating whether the nearest wavelength value
 #'   in \code{x} should be returned or a value calculated by linear
 #'   interpolation between wavelength values straddling the target.
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param label.fmt character  string giving a format definition for converting
 #'   values into character strings by means of function \code{\link{sprintf}}.
 #' @param x.label.fmt character  string giving a format definition for
@@ -244,6 +251,7 @@ stat_find_qtys <- function(mapping = NULL,
                            geom = "point",
                            target = "half.maximum",
                            interpolate = TRUE,
+                           chroma.type = "CMF",
                            label.fmt = "%.3g",
                            x.label.fmt = label.fmt,
                            y.label.fmt = label.fmt,
@@ -256,6 +264,7 @@ stat_find_qtys <- function(mapping = NULL,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(target = target,
                   interpolate = interpolate,
+                  chroma.type = chroma.type,
                   label.fmt = label.fmt,
                   x.label.fmt = x.label.fmt,
                   y.label.fmt = y.label.fmt,
@@ -274,6 +283,7 @@ StatFindQty <-
                                             scales,
                                             target,
                                             interpolate,
+                                            chroma.type,
                                             label.fmt,
                                             x.label.fmt,
                                             y.label.fmt) {
@@ -306,8 +316,8 @@ StatFindQty <-
                          dplyr::mutate(rows.df,
                                        x.label = sprintf(x.label.fmt, x),
                                        y.label = sprintf(y.label.fmt, y),
-                                       wl.color = photobiology::color_of(x, type = "CMF"),
-                                       BW.color = black_or_white(photobiology::color_of(x, type = "CMF")))
+                                       wl.color = color_of(x, chroma.type = chroma.type),
+                                       BW.color = black_or_white(color_of(x, chroma.type = chroma.type)))
                      }
                      rows.df
                    },

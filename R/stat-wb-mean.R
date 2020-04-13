@@ -30,6 +30,8 @@
 #' @param integral.fun function on $x$ and $y$.
 #' @param label.mult numeric Scaling factor applied to y-integral values before
 #'   conversion into character strings.
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param label.fmt character string giving a format definition for converting
 #'   y-integral values into character strings by means of function
 #'   \code{\link{sprintf}}.
@@ -112,6 +114,7 @@ stat_wb_mean <- function(mapping = NULL,
                          w.band = NULL,
                          integral.fun = integrate_xy,
                          label.mult = 1,
+                         chroma.type = "CMF",
                          label.fmt = "%.3g",
                          ypos.mult = 1.07,
                          xpos.fixed = NULL,
@@ -126,6 +129,7 @@ stat_wb_mean <- function(mapping = NULL,
     params = list(w.band = w.band,
                   integral.fun = integral.fun,
                   label.mult = label.mult,
+                  chroma.type = chroma.type,
                   label.fmt = label.fmt,
                   ypos.mult = ypos.mult,
                   xpos.fixed = xpos.fixed,
@@ -146,6 +150,7 @@ StatWbMean <-
                                             w.band,
                                             integral.fun,
                                             label.mult,
+                                            chroma.type,
                                             label.fmt,
                                             ypos.mult,
                                             xpos.fixed,
@@ -188,9 +193,9 @@ StatWbMean <-
                                                     wb.ymax = max(data[["y"]]),
                                                     wb.yint = yint.tmp,
                                                     wb.ymean = ymean.tmp,
-                                                    wb.color = color_of(wb),
+                                                    wb.color = color_of(wb, chroma.type = chroma.type),
                                                     wb.name = labels(wb)[["label"]],
-                                                    BW.color = black_or_white(color_of(wb)))
+                                                    BW.color = black_or_white(color_of(wb, chroma.type = chroma.type)))
                                          )
                      }
                      if (!is.null(xpos.fixed)) {

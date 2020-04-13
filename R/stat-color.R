@@ -22,8 +22,8 @@
 #'   \code{\link[ggplot2]{layer}} for more details.
 #' @param na.rm	a logical value indicating whether NA values should be
 #'   stripped before the computation proceeds.
-#' @param type character one of "CMF" (color matching function) or "CC"
-#'   (color coordinates).
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #'
 #' @return The original data frame with a variable with color definitions added.
 #'
@@ -57,14 +57,19 @@
 #' @export
 #' @family stats functions
 #'
-stat_color <- function(mapping = NULL, data = NULL, geom = "point",
-                       type = "CMF",
-                       position = "identity", na.rm = FALSE, show.legend = FALSE,
-                       inherit.aes = TRUE, ...) {
+stat_color <- function(mapping = NULL,
+                       data = NULL,
+                       geom = "point",
+                       chroma.type = "CMF",
+                       position = "identity",
+                       na.rm = FALSE,
+                       show.legend = FALSE,
+                       inherit.aes = TRUE,
+                       ...) {
   ggplot2::layer(
     stat = StatColor, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(type = type,
+    params = list(chroma.type = chroma.type,
                   na.rm = na.rm,
                   ...)
   )
@@ -76,13 +81,16 @@ stat_color <- function(mapping = NULL, data = NULL, geom = "point",
 #' @export
 #' @seealso \code{\link[ggplot2]{ggplot2-ggproto}}
 StatColor <-
-  ggplot2::ggproto("StatColor", ggplot2::Stat,
-                   compute_group = function(data,
-                                            scales,
-                                            type) {
-                   dplyr::mutate(data, wl.color = photobiology::color_of(x, type))
-                   },
-                   default_aes = ggplot2::aes(color = ..wl.color..,
-                                              fill = ..wl.color..),
-                   required_aes = c("x", "y")
+  ggplot2::ggproto(
+    "StatColor",
+    ggplot2::Stat,
+    compute_group = function(data,
+                             scales,
+                             chroma.type) {
+      dplyr::mutate(data,
+                    wl.color = color_of(x, chroma.type = chroma.type))
+    },
+    default_aes = ggplot2::aes(color = ..wl.color..,
+                               fill = ..wl.color..),
+    required_aes = c("x", "y")
   )

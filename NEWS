@@ -2,6 +2,8 @@ ggspectra 0.3.6 (2020-04-xx)
 ============================
 
 TODO: update vignette, add examples!!
+* Add support for computation of colors using other chromaticity coordinates
+than the color matching function (CMF) for human vision.
 * Revise for compatibility with 'dplyr' (>= 1.0.0).
 * Track changes in 'photobiology' 0.10.1.
 * Fix two bugs in ggplot() method for class object_spct.
@@ -10,6 +12,12 @@ TODO: update vignette, add examples!!
 * Rewrite stat_find_wls() using photobiology::wls_at_target().
 * Support new annotations "wls" and "wls.labels" in all autoplot() methods.
 * Update decoration() for this, and also other small tweaks.
+
+******************************************************************************
+Although this update should not break any code, the plots created will in many
+cases differ from those created with earlier versions. Changes only affect the
+text of labels.
+******************************************************************************
 
 ggspectra 0.3.5 (2020-01-15)
 ============================
