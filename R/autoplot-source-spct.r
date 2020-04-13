@@ -22,6 +22,8 @@
 #'   also accepted.
 #' @param annotations a character vector.
 #' @param text.size numeric size of text in the plot decorations.
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
@@ -45,6 +47,7 @@ e_plot <- function(spct,
                    wls.target,
                    annotations,
                    text.size,
+                   chroma.type,
                    idfactor,
                    ylim,
                    na.rm,
@@ -184,6 +187,7 @@ e_plot <- function(spct,
                             wls.target = wls.target,
                             summary.label = irrad.label,
                             text.size = text.size,
+                            chroma.type = chroma.type,
                             na.rm = TRUE)
 
   if (is_effective(spct)) {
@@ -250,6 +254,8 @@ e_plot <- function(spct,
 #'   also accepted.
 #' @param annotations a character vector
 #' @param text.size numeric size of text in the plot decorations.
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
@@ -273,6 +279,7 @@ q_plot <- function(spct,
                    wls.target,
                    annotations,
                    text.size,
+                   chroma.type,
                    idfactor,
                    ylim,
                    na.rm,
@@ -399,6 +406,7 @@ q_plot <- function(spct,
   } else if (label.qty %in% c("mean", "average")) {
     label.qty <- "sirrad"
   }
+
   plot <- plot + decoration(w.band = w.band,
                             unit.out = "photon",
                             time.unit = getTimeUnit(spct),
@@ -412,6 +420,7 @@ q_plot <- function(spct,
                             wls.target = wls.target,
                             summary.label = irrad.label,
                             text.size = text.size,
+                            chroma.type = chroma.type,
                             na.rm = TRUE)
 
   if (is_effective(spct)) {
@@ -486,6 +495,8 @@ q_plot <- function(spct,
 #'   \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
 #' @param text.size numeric size of text in the plot decorations.
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
@@ -521,6 +532,7 @@ autoplot.source_spct <-
            time.format = "",
            tz = "UTC",
            text.size = 2.5,
+           chroma.type = "CMF",
            idfactor = NULL,
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
@@ -554,6 +566,7 @@ autoplot.source_spct <-
                            wls.target = wls.target,
                            annotations = annotations,
                            text.size = text.size,
+                           chroma.type = chroma.type,
                            idfactor = idfactor,
                            ylim = ylim,
                            na.rm = na.rm,
@@ -565,6 +578,7 @@ autoplot.source_spct <-
                            wls.target = wls.target,
                            annotations = annotations,
                            text.size = text.size,
+                           chroma.type = chroma.type,
                            idfactor = idfactor,
                            ylim = ylim,
                            na.rm = na.rm,

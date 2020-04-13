@@ -20,6 +20,8 @@
 #'   also accepted.
 #' @param annotations a character vector.
 #' @param text.size numeric size of text in the plot decorations.
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
@@ -44,6 +46,7 @@ Afr_plot <- function(spct,
                      wls.target,
                      annotations,
                      text.size,
+                     chroma.type,
                      idfactor,
                      ylim,
                      na.rm,
@@ -146,6 +149,7 @@ Afr_plot <- function(spct,
                             wls.target = wls.target,
                             summary.label = Afr.label,
                             text.size = text.size,
+                            chroma.type = chroma.type,
                             na.rm = TRUE)
 
   if (!is.null(annotations) &&
@@ -194,6 +198,8 @@ Afr_plot <- function(spct,
 #'   also accepted.
 #' @param annotations a character vector.
 #' @param text.size numeric size of text in the plot decorations.
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
@@ -218,6 +224,7 @@ T_plot <- function(spct,
                    wls.target,
                    annotations,
                    text.size,
+                   chroma.type,
                    idfactor,
                    na.rm,
                    ylim,
@@ -342,6 +349,7 @@ T_plot <- function(spct,
                             wls.target = wls.target,
                             summary.label = Tfr.label,
                             text.size = text.size,
+                            chroma.type = chroma.type,
                             na.rm = TRUE)
 
   if (!is.null(annotations) &&
@@ -388,6 +396,8 @@ T_plot <- function(spct,
 #'   also accepted.
 #' @param annotations a character vector.
 #' @param text.size numeric size of text in the plot decorations.
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
@@ -411,6 +421,7 @@ A_plot <- function(spct,
                    wls.target,
                    annotations,
                    text.size,
+                   chroma.type,
                    idfactor,
                    na.rm,
                    ylim,
@@ -504,6 +515,7 @@ A_plot <- function(spct,
                             wls.target = wls.target,
                             summary.label = A.label,
                             text.size = text.size,
+                            chroma.type = chroma.type,
                             na.rm = TRUE)
 
   if (!is.null(annotations) &&
@@ -544,6 +556,8 @@ A_plot <- function(spct,
 #'   also accepted.
 #' @param annotations a character vector.
 #' @param text.size numeric size of text in the plot decorations.
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
@@ -568,6 +582,7 @@ R_plot <- function(spct,
                    wls.target,
                    annotations,
                    text.size,
+                   chroma.type,
                    idfactor,
                    ylim,
                    na.rm,
@@ -694,6 +709,7 @@ R_plot <- function(spct,
                             wls.target = wls.target,
                             summary.label = Rfr.label,
                             text.size = text.size,
+                            chroma.type = chroma.type,
                             na.rm = TRUE)
 
   if (!is.null(annotations) &&
@@ -741,6 +757,8 @@ R_plot <- function(spct,
 #' @param annotations a character vector.
 #' @param stacked logical.
 #' @param text.size numeric size of text in the plot decorations.
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param na.rm logical.
 #' @param ylim numeric y axis limits,
 #' @param ... currently ignored.
@@ -759,6 +777,7 @@ O_plot <- function(spct,
                    annotations,
                    stacked,
                    text.size,
+                   chroma.type,
                    na.rm,
                    ylim,
                    ...) {
@@ -889,6 +908,7 @@ O_plot <- function(spct,
                             wls.target = wls.target,
                             summary.label = "",
                             text.size = text.size,
+                            chroma.type = chroma.type,
                             na.rm = TRUE)
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "colour.guide", "reserve.space"), annotations)) > 0L) {
@@ -947,6 +967,8 @@ O_plot <- function(spct,
 #' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
 #' @param text.size numeric size of text in the plot decorations.
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
@@ -985,6 +1007,7 @@ autoplot.filter_spct <-
            time.format = "",
            tz = "UTC",
            text.size = 2.5,
+           chroma.type = "CMF",
            idfactor = NULL,
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
@@ -1021,6 +1044,7 @@ autoplot.filter_spct <-
                            wls.target = wls.target,
                            annotations = annotations,
                            text.size = text.size,
+                           chroma.type = chroma.type,
                            idfactor = idfactor,
                            ylim = ylim,
                            na.rm = na.rm,
@@ -1034,6 +1058,7 @@ autoplot.filter_spct <-
                            wls.target = wls.target,
                            annotations = annotations,
                            text.size = text.size,
+                           chroma.type = chroma.type,
                            idfactor = idfactor,
                            ylim = ylim,
                            na.rm = na.rm,
@@ -1048,6 +1073,7 @@ autoplot.filter_spct <-
                              wls.target = wls.target,
                              annotations = annotations,
                              text.size = text.size,
+                             chroma.type = chroma.type,
                              idfactor = idfactor,
                              ylim = ylim,
                              na.rm = na.rm,
@@ -1135,6 +1161,8 @@ autoplot.filter_mspct <-
 #' @param time.format character Format as accepted by
 #'   \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
@@ -1173,6 +1201,7 @@ autoplot.reflector_spct <-
            time.format = "",
            tz = "UTC",
            text.size = 2.5,
+           chroma.type = "CMF",
            idfactor = NULL,
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
@@ -1208,6 +1237,7 @@ autoplot.reflector_spct <-
                            wls.target = wls.target,
                            annotations = annotations,
                            text.size = text.size,
+                           chroma.type = chroma.type,
                            idfactor = idfactor,
                            ylim = ylim,
                            na.rm = na.rm,
@@ -1286,6 +1316,8 @@ autoplot.reflector_mspct <-
 #' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
 #' @param stacked logical
+#' @param chroma.type character one of "CMF" (color matching function) or "CC"
+#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
@@ -1326,6 +1358,7 @@ autoplot.object_spct <-
            tz = "UTC",
            stacked = TRUE,
            text.size = 2.5,
+           chroma.type = "CMF",
            idfactor = NULL,
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
@@ -1362,6 +1395,7 @@ autoplot.object_spct <-
                          annotations = annotations,
                          stacked = stacked,
                          text.size = text.size,
+                         chroma.type = chroma.type,
                          ylim = ylim,
                          na.rm = na.rm,
                          ...)
@@ -1376,6 +1410,7 @@ autoplot.object_spct <-
                            wls.target = wls.target,
                            annotations = annotations,
                            text.size = text.size,
+                           chroma.type = chroma.type,
                            idfactor = idfactor,
                            ylim = ylim,
                            na.rm = na.rm,
@@ -1390,6 +1425,7 @@ autoplot.object_spct <-
                            wls.target = wls.target,
                            annotations = annotations,
                            text.size = text.size,
+                           chroma.type = chroma.type,
                            idfactor = idfactor,
                            ylim = ylim,
                            na.rm = na.rm,
@@ -1405,6 +1441,7 @@ autoplot.object_spct <-
                              wls.target = wls.target,
                              annotations = annotations,
                              text.size = text.size,
+                             chroma.type = chroma.type,
                              idfactor = idfactor,
                              ylim = ylim,
                              na.rm = na.rm,
@@ -1420,6 +1457,7 @@ autoplot.object_spct <-
                            wls.target = wls.target,
                            annotations = annotations,
                            text.size = text.size,
+                           chroma.type = chroma.type,
                            idfactor = idfactor,
                            ylim = ylim,
                            na.rm = na.rm,
