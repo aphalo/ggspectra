@@ -1,7 +1,7 @@
 library(ggplot2)
 library(ggpmisc)
 
-mensur <- read.csv("./not-used/colour-bug/mensurations.csv", sep = ";")
+mensur <- read.csv("./inst-not/colour-bug/mensurations.csv", sep = ";")
 
 gcor <- ggplot(mensur, aes(x=cuisse, y=biceps))
 gcor +

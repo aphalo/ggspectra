@@ -253,18 +253,23 @@ ggplot(sun.spct) +
   geom_line() +
   scale_x_wl_continuous(sec.axis = sec_axis_w_number())
 ```
+
 ```{r}
 ggplot(sun.spct) + 
   geom_line() +
   scale_x_wl_continuous(sec.axis = sec_axis_w_frequency())
 ```
+
 It is possible to set a different SI scaling factor for the units.
+
 ```{r}
 ggplot(sun.spct) + 
   geom_line() +
   scale_x_wl_continuous(sec.axis = sec_axis_w_frequency(15))
 ```
+
 It is possible to set a non-SI scaling factor for the units.
+
 ```{r}
 ggplot(sun.spct) + 
   geom_line() +
@@ -276,6 +281,7 @@ It is possible find the largest valid SI-scaling factor that is smaller or equal
 ```{r}
 nearest_SI_exponent(14)
 ```
+
 ### Raw counts
 
 ```{r}
@@ -313,6 +319,7 @@ ggplot(sun.spct) +
   scale_x_wl_continuous() +
   scale_y_s.e.irrad_continuous()
 ```
+
 ```{r}
 ggplot(sun.spct, unit.out = "photon") + 
   geom_line() +
@@ -398,6 +405,7 @@ ggplot(yellow_gel.spct) +
   scale_y_Tfr_total_continuous(labels = percent)
   
 ```
+
 ### Absorbance
 
 ```{r}
@@ -567,6 +575,20 @@ ggplot(two_suns.spct) + aes(color = spct.idx) +
   facet_grid(spct.idx~.)
 ```
 
+An additional statistics, `stat_spikes()`, returns the same computed variables as `stat_peaks()` and `stat_valleys()` but detects only very narrow peaks and valleys, usually called spikes. They are common in Raman spectra but can also appear occasionally in any measurement with array spectrometers
+when integration times are long or if some pixels in an array detector are defective (e.g., hot pixels and dead pixels). Usually spikes are considered "noise" to be removed, but occasionally we may want to highlight in a plot the spikes, and do this consistently with function `despike()` from package 'photobiology'. 
+
+```{r}
+ggplot(white_led.raw_spct, aes(w.length, counts_3)) + 
+  geom_line() + 
+  stat_spikes(color = "red", z.threshold = 8, max.spike.width = 7)
+```
+```{r}
+ggplot(despike(white_led.raw_spct, z.threshold = 8, max.spike.width = 7), 
+       aes(w.length, counts_3)) + 
+  geom_line()
+```
+
 ## Color from wavelength
 
 This stat calculates the colour corresponding to each $x$-value (assumed expressed in nanometres) and adds it to the data. It does not summarize the data like `stat_summary()` nor does it subset the data like `stat_peaks`, consequently the plot does not require any additional _geom_ to have all observations plotted. It sets both _color_ and _fill_ aesthetics to a suitable default.
@@ -575,8 +597,20 @@ This stat calculates the colour corresponding to each $x$-value (assumed express
 ggplot(sun.spct) + 
   stat_color() + scale_color_identity()
 ```
+All statistics that generate color definitions from wavelengths or wavebands have a parameter, `chroma.type` to which can be used to select the color matching function or color coordinates to be used. If we use chromaticity coordinates, `"CC"`, instead of the default color matching fucntion, `"CMF"`, the apparent luminance is not taken into account, only the hue.
 
-By use of a filled _shape_ and adding a black border by overriding the default _color_ aesthetic and over-plotting these point on top of a line, we obtain a better separation from the background.
+```{r}
+ggplot(sun.spct) + 
+  stat_color(chroma.type = "CC") + scale_color_identity()
+```
+We here show _pseudo honey-bee vision_ colors. Bees have trichromic vision, but see green, blue and ultraviolet (GBU) instead of red, green and blue (RGB). The luminance is matched to wavelengths, but the colors shifted so that green becomes red, blue becomes green, and ultraviolet becomes blue.
+
+```{r}
+ggplot(clip_wl(sun.spct)) + 
+  stat_color(chroma.type = beesxyzCMF.spct) + scale_color_identity()
+```
+
+By use of a filled _shape_ and adding a black border by overriding the default _color_ aesthetic and over-plotting these points on top of a line, we obtain a better separation from the background.
 
 ```{r}
 ggplot(sun.spct) +
@@ -590,6 +624,16 @@ With a _trick_ using many narrow _bars_ we can fill the area under the line with
 ```{r}
 ggplot(sun.spct) + 
   stat_color(geom = "bar") + 
+  geom_line(color = "black") +
+  geom_point(shape = 21, color = "black", stroke = 1.2, fill = "white") +
+  scale_fill_identity() + 
+  scale_color_identity() + 
+  theme_bw()
+```
+```{r}
+ggplot(sun.spct) + 
+  stat_color(geom = "bar", chroma.type = beesxyzCMF.spct) + 
+  geom_line(color = "black") +
   geom_point(shape = 21, color = "black", stroke = 1.2, fill = "white") +
   scale_fill_identity() + 
   scale_color_identity() + 
@@ -636,6 +680,7 @@ ggplot(sun.spct) + geom_line() +
 These graphical summaries are frequently used together with text and label elements with names or numerical summaries.
 
 ### Name labels
+
 ```{r}
 ggplot(sun.spct) + geom_line() + 
   stat_wb_box(w.band = PAR(), color = "white", ypos.fixed = 0.85) +
@@ -725,6 +770,7 @@ ggplot(sun.spct) +
   scale_fill_identity() +
   theme_bw()
 ```
+
 Lists of wavebands, either user-defined or as in this case using a list constructor can be also used.
 
 ```{r}
