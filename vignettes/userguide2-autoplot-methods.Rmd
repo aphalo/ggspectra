@@ -110,6 +110,8 @@ Which annotations are included by default can be changed by setting R option `"p
 | "peak.labels" | none              | "peaks"      |
 | "valleys"  | none                 | "valley.labels" |
 | "valley.labels" | none            | "valleys"    |
+| "wls"      | none                 | "wls.labels" |
+| "wls.labels" | none               | "wls"    |
 | "labels"   | all                  |              |
 | "summaries" | `source_spct`, `response_spct`, `filter_spct`, `reflector_spct` |              |
 | "boundaries"  | `raw_spct`       |               |
@@ -272,22 +274,25 @@ filter_no_yes.spct <-
 autoplot(filter_no_yes.spct)
 ```
 
-In the examples above the `source_spct` object `sun.spct` was used. The `autoplot()` methods for other spectral classes have slight differences. We show some examples for `filter_spct` objects.
+In the examples above the `source_spct` object `sun.spct` was used. The `autoplot()` methods for other spectral classes have slight differences. We show some examples for `filter_spct` objects. For a long-pass filter the wavelength at half maximum is more interesting than peaks or valleys.
 
 ```{r}
-autoplot(yellow_gel.spct, annotations = c("-", "peaks"))
+autoplot(yellow_gel.spct, 
+         annotations = list(c("-", "peaks"), c("+", "wls")))
 ```
 
 By default transmittance, reflectance and absorptance are expressed as fractions of one, as in the plot above, but optionally percents can be plotted.
 
 ```{r}
-autoplot(yellow_gel.spct, pc.out = TRUE, annotations = c("-", "peaks"))
+autoplot(yellow_gel.spct, pc.out = TRUE, 
+         annotations = list(c("-", "peaks"), c("+", "wls")))
 ```
 
-In many cases it is possible to convert on-the-fly the quantity plotted.
+In many cases it is possible to convert on-the-fly the quantity plotted. In this case, given that the data are clipped as absorbance, a fixed target of A = 2 is appropriate.
 
 ```{r}
-autoplot(yellow_gel.spct, plot.qty = "absorbance", annotations = c("-", "peaks"))
+autoplot(yellow_gel.spct, plot.qty = "absorbance", wls.target = 2,
+         annotations = list(c("-", "peaks"), c("+", "wls")))
 ```
 
 <!-- We add a _guessed_ spectral reflectance to the data object to allow the estimation of internal absorptance. -->
@@ -329,6 +334,14 @@ autoplot(dplyr::select(white_led.raw_spct, w.length, counts = counts_1),
 ```{r, eval=FALSE}
 autoplot(dplyr::select(white_led.raw_spct, w.length, counts_1, counts_3),
      annotations = c("+", "boundaries"))
+```
+
+By defaulf color definitions are generated using the color matching function, `"CMF"`, for human vision. It is possible to pass a different definition as a `chroma_spct` object or a character name. Bees have trichromic vision, but see green, blue and ultraviolet (GBU) instead of red, green and blue (RGB). The luminance is matched to wavelengths, but the colors shifted so that green becomes red, blue becomes green, and ultraviolet becomes blue. Here instead of removing or adding specific annotations from/to the default, we set them using `"="` as the first string.
+
+```{r}
+autoplot(sun.spct, 
+         chroma.type = beesxyzCMF.spct,
+          annotations = c("=", "color.guide"))
 ```
 
 ### Handling of off-range data
