@@ -1,7 +1,6 @@
 ggspectra 0.3.6 (2020-04-20)
 ============================
 
-TODO: update vignette, add examples!!
 * Add support for computation of colors using other chromaticity coordinates
 than the color matching function (CMF) for human vision.
 * Revise for compatibility with 'dplyr' (>= 1.0.0).
