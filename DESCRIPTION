@@ -19,7 +19,7 @@ LazyData: TRUE
 LazyLoad: TRUE
 ByteCompile: TRUE
 Depends:
-    R (>= 3.5.0),
+    R (>= 3.6.0),
     photobiology (>= 0.10.1),
     ggplot2 (>= 3.3.0)
 Imports:
