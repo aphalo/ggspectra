@@ -88,7 +88,7 @@ StatColor <-
                              scales,
                              chroma.type) {
       dplyr::mutate(data,
-                    wl.color = color_of(x, chroma.type = chroma.type))
+                    wl.color = photobiology::fast_color_of_wl(x, chroma.type = chroma.type))
     },
     default_aes = ggplot2::aes(color = ..wl.color..,
                                fill = ..wl.color..),
