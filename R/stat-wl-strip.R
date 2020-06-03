@@ -115,7 +115,7 @@ StatColorGuide <-
                        w.band <- trim_waveband(w.band = w.band, range = data[["x"]], trim = TRUE)
                      }
 
-                     z <- wb2rect_spct(w.band = w.band, chroma.type = chroma.type)
+                     z <- fast_wb2rect_spct(w.band = w.band, chroma.type = chroma.type)
                      names(z)[1] <- "x"
                      z
                     },
