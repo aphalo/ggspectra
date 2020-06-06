@@ -18,6 +18,7 @@
 \alias{StatValleys}
 \alias{StatSpikes}
 \alias{StatWbBox}
+\alias{wb_col_compute_group}
 \alias{StatWbColumn}
 \alias{StatWbContrib}
 \alias{StatWbHbar}

@@ -113,58 +113,68 @@ stat_wb_column <- function(mapping = NULL,
   )
 }
 
+# Defined here to avoid a note in check --as-cran as the imports
+# are not seen when the function is defined in-line in the ggproto object.
+#' @rdname gg2spectra-ggproto
+#'
+#' @format NULL
+#' @usage NULL
+#'
+wb_col_compute_group <-
+  function(data,
+           scales,
+           w.band,
+           integral.fun,
+           chroma.type){
+    if (length(w.band) == 0) {
+      w.band <- waveband(data[["x"]])
+    }
+    if (is.any_spct(w.band) ||
+        (is.numeric(w.band) && length(stats::na.omit(w.band)) >= 2)) {
+      w.band <- waveband(range(w.band, na.rm = TRUE))
+    }
+    if (!is.list(w.band) || is.waveband(w.band)) {
+      w.band <- list(w.band)
+    }
+    stopifnot(is.function(integral.fun))
+    w.band <- trim_wl(w.band, data[["x"]])
+    integ.df <- data.frame()
+    for (wb in w.band) {
+      if (is.numeric(wb)) { # user supplied a list of numeric vectors
+        wb <- waveband(wb)
+      }
+
+      range <- range(wb)
+      mydata <- trim_tails(data[["x"]], data[["y"]], use.hinges = TRUE,
+                           low.limit = range[1],
+                           high.limit = range[2])
+      yint.tmp <- integral.fun(mydata[["x"]], mydata[["y"]])
+      ymean.tmp <- yint.tmp / wl_expanse(wb)
+      wb.color <- photobiology::fast_color_of_wb(wb, chroma.type = chroma.type)
+      integ.df <- rbind(integ.df,
+                        data.frame(x = midpoint(mydata[["x"]]),
+                                   wb.xmin = min(wb),
+                                   wb.xmax = max(wb),
+                                   y =  ymean.tmp,
+                                   yzero = 0,
+                                   wb.ymin = min(data[["y"]]),
+                                   wb.ymax = max(data[["y"]]),
+                                   wb.ymean = ymean.tmp,
+                                   wb.color = wb.color,
+                                   wb.name = labels(wb)[["label"]],
+                                   BW.color = black_or_white(wb.color))
+      )
+    }
+    integ.df
+  }
+
 #' @rdname gg2spectra-ggproto
 #' @format NULL
 #' @usage NULL
 #' @export
 StatWbColumn <-
   ggplot2::ggproto("StatWbColumn", ggplot2::Stat,
-                   compute_group = function(data,
-                                            scales,
-                                            w.band,
-                                            integral.fun,
-                                            chroma.type) {
-                     if (length(w.band) == 0) {
-                       w.band <- waveband(data[["x"]])
-                     }
-                     if (is.any_spct(w.band) ||
-                         (is.numeric(w.band) && length(na.omit(w.band)) >= 2)) {
-                       w.band <- waveband(range(w.band, na.rm = TRUE))
-                     }
-                     if (!is.list(w.band) || is.waveband(w.band)) {
-                       w.band <- list(w.band)
-                     }
-                     stopifnot(is.function(integral.fun))
-                     w.band <- trim_wl(w.band, data[["x"]])
-                     integ.df <- data.frame()
-                     for (wb in w.band) {
-                       if (is.numeric(wb)) { # user supplied a list of numeric vectors
-                         wb <- waveband(wb)
-                       }
-
-                       range <- range(wb)
-                       mydata <- trim_tails(data[["x"]], data[["y"]], use.hinges = TRUE,
-                                            low.limit = range[1],
-                                            high.limit = range[2])
-                       yint.tmp <- integral.fun(mydata[["x"]], mydata[["y"]])
-                       ymean.tmp <- yint.tmp / wl_expanse(wb)
-                       wb.color <- color_of(wb, chroma.type = chroma.type) # avoid 'expensive' recalculation
-                       integ.df <- rbind(integ.df,
-                                         data.frame(x = midpoint(mydata[["x"]]),
-                                                    wb.xmin = min(wb),
-                                                    wb.xmax = max(wb),
-                                                    y =  ymean.tmp,
-                                                    yzero = 0,
-                                                    wb.ymin = min(data[["y"]]),
-                                                    wb.ymax = max(data[["y"]]),
-                                                    wb.ymean = ymean.tmp,
-                                                    wb.color = wb.color,
-                                                    wb.name = labels(wb)[["label"]],
-                                                    BW.color = black_or_white(wb.color))
-                                         )
-                     }
-                    integ.df
-                   },
+                   compute_group = wb_col_compute_group,
                    default_aes = ggplot2::aes(xmin = ..wb.xmin..,
                                               xmax = ..wb.xmax..,
                                               ymax = ..wb.ymean..,

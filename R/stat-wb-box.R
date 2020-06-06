@@ -148,15 +148,16 @@ StatWbBox <-
                        mydata <- trim_tails(data$x, data$y, use.hinges = TRUE,
                                             low.limit = range[1],
                                             high.limit = range[2])
+                       wb.color <- photobiology::fast_color_of_wb(wb, chroma.type = chroma.type)
                        integ.df <- rbind(integ.df,
                                          data.frame(x = midpoint(mydata$x),
                                                     wb.xmin = min(wb),
                                                     wb.xmax = max(wb),
                                                     wb.ymin = min(data[["y"]]),
                                                     wb.ymax = max(data[["y"]]),
-                                                    wb.color = color_of(wb, chroma.type = chroma.type),
+                                                    wb.color = wb.color,
                                                     wb.name = labels(wb)[["label"]],
-                                                    BW.color = black_or_white(color_of(wb, chroma.type = chroma.type)))
+                                                    BW.color = black_or_white(wb.color))
                                          )
                      }
                      if (is.null(ypos.fixed)) {

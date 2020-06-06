@@ -207,7 +207,7 @@ StatLabelPeaks <-
                                                    sprintf(y.label.fmt, out.df[["y"]]),
                                                    label.fill)
                      out.df[["wl.color"]] <- ifelse(out.df[["is_peak"]],
-                                                 photobiology::color_of(out.df[["x"]], chroma.type = chroma.type),
+                                                 photobiology::fast_color_of_wl(out.df[["x"]], chroma.type = chroma.type),
                                                  rgb(1, 1, 1, 0))
                      out.df[["BW.color"]] <- ifelse(out.df[["is_peak"]],
                                                     black_or_white(out.df[["wl.color"]]),
@@ -301,7 +301,7 @@ StatLabelValleys <-
                                                    sprintf(y.label.fmt, out.df[["y"]]),
                                                    label.fill)
                      out.df[["wl.color"]] <-  ifelse(out.df[["is_valley"]],
-                                                     photobiology::color_of(out.df[["x"]], chroma.type = chroma.type),
+                                                     photobiology::fast_color_of_wl(out.df[["x"]], chroma.type = chroma.type),
                                                      rgb(1, 1, 1, 0))
                      out.df[["BW.color"]] <- ifelse(out.df[["is_valley"]],
                                                     black_or_white(out.df[["wl.color"]]),
