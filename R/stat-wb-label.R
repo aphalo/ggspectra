@@ -148,7 +148,7 @@ StatWbLabel <-
                                               wb.xmin = min(wb),
                                               wb.xmax = max(wb),
                                               wb.name = labels(wb)$label,
-                                              wb.color = color_of(wb, chroma.type = chroma.type),
+                                              wb.color = fast_color_of_wb(wb, chroma.type = chroma.type),
                                               BW.color = black_or_white(wb.color))
                          )
                      }

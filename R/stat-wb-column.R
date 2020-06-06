@@ -113,8 +113,7 @@ stat_wb_column <- function(mapping = NULL,
   )
 }
 
-# Defined here to avoid a note in check --as-cran as the imports
-# are not seen when the function is defined in-line in the ggproto object.
+# Defined here to make sure R check does not skip it.
 #' @rdname gg2spectra-ggproto
 #'
 #' @format NULL
