@@ -4,7 +4,7 @@ ggspectra 0.3.7 (2020-06-xx)
 * Track and profit from updated 'photobiology' (>= 0.10.4), which is now
 required.
 * Use performance-optimized computation for colors from wavelengths.
-* Improve stat_wl_guide() performance by simplifying data before plotting.
+* Improve stat_wl_strip() performance by simplifying data before plotting.
 
 ggspectra 0.3.6 (2020-04-20)
 ============================

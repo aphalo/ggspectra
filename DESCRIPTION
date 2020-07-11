@@ -37,5 +37,5 @@ URL: https://docs.r4photobiology.info/ggspectra/,
     https://bitbucket.org/aphalo/ggspectra/
 BugReports: https://bitbucket.org/aphalo/ggspectra/issues/
 Encoding: UTF-8
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr
