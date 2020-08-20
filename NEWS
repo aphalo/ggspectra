@@ -8,14 +8,15 @@ required.
 * Add suport for plotting action spectra (preliminary).
 * Update y-scales to support scaled and normalized data.
 * Update y-scales to generate more compact axis labels.
+* Implement scale_y_Afr_continuous() for absorptance spectra.
 * Update autolpot() methods to generate more compact axis labels.
 * Fix documentation example that stopped working because of changes to
 'ggplot2'.
 
 ******************************************************************************
 Although this update should not break any code, the plots created will in some
-cases differ from those created with earlier versions. Changes only affect the
-text of labels.
+cases differ slighttly from those created with earlier versions. Changes only
+affect the formatting of y-axis labels.
 ******************************************************************************
 
 ggspectra 0.3.6 (2020-04-20)

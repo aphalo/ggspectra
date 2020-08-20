@@ -45,7 +45,7 @@ s.e.response_label <- function(unit.exponent = 0,
                                normalized = FALSE) {
   if (scaled) {
     if (tolower(format) == "latex") {
-      "Spectral energy response $\\mathrm{R}_{\\lambda}$ (rel.\ units)"
+      "Spectral energy response $R_{\\lambda}$ (rel.\ units)"
     } else if (format == "R.expression") {
       expression(plain(Spectral~~energy~~response)~~R[lambda]~~plain((rel.~~units)))
     } else if (format == "R.character") {
@@ -53,7 +53,7 @@ s.e.response_label <- function(unit.exponent = 0,
     }
   } else if (normalized) {
     if (tolower(format) == "latex") {
-      paste("Spectral energy response $\\mathrm{R}_{\\lambda} / \\mathrm{R}_{", normalized, "}$ (/1)", sep = "")
+      paste("Spectral energy response $R_{\\lambda} / R_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
       bquote(plain(Spectral~~energy~~response)~~R[lambda]/R[.(normalized)]~~plain("(/1)"))
     } else if (format == "R.character") {
@@ -62,11 +62,11 @@ s.e.response_label <- function(unit.exponent = 0,
   } else {
     if (tolower(format) == "latex") {
       if (has_SI_prefix(unit.exponent)) {
-        paste("Spectral energy response $\\mathrm{R}_{\\lambda}$ ($",
+        paste("Spectral energy response $R_{\\lambda}$ ($",
               exponent2prefix(unit.exponent, char.set = "LaTeX"),
               "J^{-1} m^{-2} nm^{-1})$)", sep = "")
       } else {
-        paste("Spectral energy response $\\mathrm{R}_{\\lambda}$ ($\\times 10^{",
+        paste("Spectral energy response $R_{\\lambda}$ ($\\times 10^{",
               unit.exponent,
               "J^{-1} m^{-2} nm^{-1})$)", sep = "")
       }
@@ -100,7 +100,7 @@ s.q.response_label <- function(unit.exponent = 0,
                                normalized = FALSE) {
   if (scaled) {
     if (tolower(format) == "latex") {
-      "Spectral photon response $\\mathrm{R}_{\\lambda}$ (rel.\ units)"
+      "Spectral photon response $R_{\\lambda}$ (rel.\ units)"
     } else if (format == "R.expression") {
       expression(plain(Spectral~~photon~~response)~~R[lambda]~~plain((rel.~~units)))
     } else if (format == "R.character") {
@@ -108,7 +108,7 @@ s.q.response_label <- function(unit.exponent = 0,
     }
   } else if (normalized) {
     if (tolower(format) == "latex") {
-      paste("Spectral photon response $\\mathrm{R}_{\\lambda} / \\mathrm{R}_{", normalized, "}$ (/1)", sep = "")
+      paste("Spectral photon response $R_{\\lambda} / R_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
       bquote(plain(Spectral~~photon~~response)~~R[lambda]/R[.(normalized)]~~plain("(/1)"))
     } else if (format == "R.character") {
@@ -117,11 +117,11 @@ s.q.response_label <- function(unit.exponent = 0,
   } else {
     if (tolower(format) == "latex") {
       if (has_SI_prefix(unit.exponent)) {
-        paste("Spectral photon response $\\mathrm{R}_{\\lambda}$ ($",
+        paste("Spectral photon response $R_{\\lambda}$ ($",
               exponent2prefix(unit.exponent, char.set = "LaTeX"),
               "\\mathrm{mol^{-1}} m^{-2} nm^{-1}$)", sep = "")
       } else {
-        paste("Spectral photon response $\\mathrm{R}_{\\lambda}$ ($\\times 10^{",
+        paste("Spectral photon response $R_{\\lambda}$ ($\\times 10^{",
               unit.exponent,
               "}\\mathrm{mol^{-1}} m^{-2} nm^{-1}$)", sep = "")
       }
@@ -155,7 +155,7 @@ s.e.action_label <- function(unit.exponent = 0,
                              normalized = FALSE) {
   if (scaled) {
     if (tolower(format) == "latex") {
-      "Spectral energy action $\\mathrm{A}_{\\lambda}$ (rel.\ units)"
+      "Spectral energy action $A_{\\lambda}$ (rel.\ units)"
     } else if (format == "R.expression") {
       expression(plain(Spectral~~energy~~action)~~A[lambda]~~plain((rel.~~units)))
     } else if (format == "R.character") {
@@ -163,7 +163,7 @@ s.e.action_label <- function(unit.exponent = 0,
     }
   } else if (normalized) {
     if (tolower(format) == "latex") {
-      paste("Spectral energy action $\\mathrm{A}_{\\lambda} / \\mathrm{A}_{", normalized, "}$ (/1)", sep = "")
+      paste("Spectral energy action $A_{\\lambda} / A_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
       bquote(plain(Spectral~~energy~~action)~~A[lambda]/A[.(normalized)]~~plain("(/1)"))
     } else if (format == "R.character") {
@@ -172,11 +172,11 @@ s.e.action_label <- function(unit.exponent = 0,
   } else {
     if (tolower(format) == "latex") {
       if (has_SI_prefix(unit.exponent)) {
-        paste("Spectral energy action $\\mathrm{A}_{\\lambda}$ ($",
+        paste("Spectral energy action $A_{\\lambda}$ ($",
               exponent2prefix(unit.exponent, char.set = "LaTeX"),
               "J^{-1} m^{-2} nm^{-1})$)", sep = "")
       } else {
-        paste("Spectral energy action $\\mathrm{A}_{\\lambda}$ ($\\times 10^{",
+        paste("Spectral energy action $A_{\\lambda}$ ($\\times 10^{",
               unit.exponent,
               "J^{-1} m^{-2} nm^{-1})$)", sep = "")
       }
@@ -210,7 +210,7 @@ s.q.action_label <- function(unit.exponent = 0,
                              normalized = FALSE) {
   if (scaled) {
     if (tolower(format) == "latex") {
-      "Spectral photon action $\\mathrm{A}_{\\lambda}$ (rel.\ units)"
+      "Spectral photon action $A_{\\lambda}$ (rel.\ units)"
     } else if (format == "R.expression") {
       expression(plain(Spectral~~photon~~action)~~A[lambda]~~plain((rel.~~units)))
     } else if (format == "R.character") {
@@ -218,7 +218,7 @@ s.q.action_label <- function(unit.exponent = 0,
     }
   } else if (normalized) {
     if (tolower(format) == "latex") {
-      paste("Spectral photon action $\\mathrm{A}_{\\lambda} / \\mathrm{R}_{", normalized, "}$ (/1)", sep = "")
+      paste("Spectral photon action $A_{\\lambda} / A_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
       bquote(plain(Spectral~~photon~~action)~~A[lambda]/A[.(normalized)]~~plain("(/1)"))
     } else if (format == "R.character") {
@@ -227,11 +227,11 @@ s.q.action_label <- function(unit.exponent = 0,
   } else {
     if (tolower(format) == "latex") {
       if (has_SI_prefix(unit.exponent)) {
-        paste("Spectral photon action $\\mathrm{A}_{\\lambda}$ ($",
+        paste("Spectral photon action $A_{\\lambda}$ ($",
               exponent2prefix(unit.exponent, char.set = "LaTeX"),
               "\\mathrm{mol^{-1}} m^{-2} nm^{-1}$)", sep = "")
       } else {
-        paste("Spectral photon action $\\mathrm{A}_{\\lambda}$ ($\\times 10^{",
+        paste("Spectral photon action $A_{\\lambda}$ ($\\times 10^{",
               unit.exponent,
               "}\\mathrm{mol^{-1}} m^{-2} nm^{-1}$)", sep = "")
       }

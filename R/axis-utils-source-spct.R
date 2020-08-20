@@ -28,7 +28,7 @@ s.e.irrad_label <- function(unit.exponent = 0,
                             normalized = FALSE) {
   if (scaled) {
     if (tolower(format) == "latex") {
-      "Spectral energy irradiance $\\mathrm{E}_{\\lambda}$ (rel.\ units)"
+      "Spectral energy irradiance $E_{\\lambda}$ (rel.\ units)"
     } else if (format == "R.expression") {
       expression(plain(Spectral~~energy~~irradiance)~~E[lambda]~~plain((rel.~~units)))
     } else if (format == "R.character") {
@@ -36,7 +36,7 @@ s.e.irrad_label <- function(unit.exponent = 0,
     }
   } else if (normalized) {
     if (tolower(format) == "latex") {
-      paste("Spectral energy irradiance $\\mathrm{E}_{\\lambda} / \\mathrm{E}_{", normalized, "}$ (/1)", sep = "")
+      paste("Spectral energy irradiance $E_{\\lambda} / E_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
       bquote(plain(Spectral~~energy~~irradiance)~~E[lambda]/E[.(normalized)]~~plain("(/1)"))
     } else if (format == "R.character") {
@@ -45,11 +45,11 @@ s.e.irrad_label <- function(unit.exponent = 0,
   } else {
     if (tolower(format) == "latex") {
       if (has_SI_prefix(unit.exponent)) {
-        paste("Spectral energy irradiance $\\mathrm{E}_{\\lambda}$ ($",
+        paste("Spectral energy irradiance $E_{\\lambda}$ ($",
               exponent2prefix(unit.exponent, char.set = "LaTeX"),
               "W m^{-2} nm^{-1})$)", sep = "")
       } else {
-        paste("Spectral energy irradiance $\\mathrm{E}_{\\lambda}$ ($\\times 10^{",
+        paste("Spectral energy irradiance $E_{\\lambda}$ ($\\times 10^{",
               unit.exponent,
               "W m^{-2} nm^{-1})$)", sep = "")
       }
@@ -83,7 +83,7 @@ s.q.irrad_label <- function(unit.exponent = ifelse(normalized, 0, -6),
                             normalized = FALSE) {
   if (scaled) {
     if (tolower(format) == "latex") {
-      "Spectral photon irradiance $\\mathrm{Q}_{\\lambda}$ (rel.\ units)"
+      "Spectral photon irradiance $Q_{\\lambda}$ (rel.\ units)"
     } else if (format == "R.expression") {
       expression(plain(Spectral~~photon~~irradiance)~~Q[lambda]~~plain((rel.~~units)))
     } else if (format == "R.character") {
@@ -91,7 +91,7 @@ s.q.irrad_label <- function(unit.exponent = ifelse(normalized, 0, -6),
     }
   } else if (normalized) {
     if (tolower(format) == "latex") {
-      paste("Spectral photon irradiance $\\mathrm{Q}_{\\lambda} / \\mathrm{R}_{", normalized, "}$ (/1)", sep = "")
+      paste("Spectral photon irradiance $Q_{\\lambda} / Q_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
       bquote(plain(Spectral~~photon~~irradiance)~~Q[lambda]/Q[.(normalized)]~~plain("(/1)"))
     } else if (format == "R.character") {
@@ -100,11 +100,11 @@ s.q.irrad_label <- function(unit.exponent = ifelse(normalized, 0, -6),
   } else {
     if (tolower(format) == "latex") {
       if (has_SI_prefix(unit.exponent)) {
-        paste("Spectral photon irradiance $\\mathrm{Q}_{\\lambda}$ ($",
+        paste("Spectral photon irradiance $Q_{\\lambda}$ ($",
               exponent2prefix(unit.exponent, char.set = "LaTeX"),
               "\\mathrm{mol} s^{-1} m^{-2} nm^{-1}$)", sep = "")
       } else {
-        paste("Spectral photon irradiance $\\mathrm{Q}_{\\lambda}$ ($\\times 10^{",
+        paste("Spectral photon irradiance $Q_{\\lambda}$ ($\\times 10^{",
               unit.exponent,
               "}\\mathrm{mol} s^{-1} m^{-2} nm^{-1}$)", sep = "")
       }

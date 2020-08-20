@@ -243,7 +243,7 @@ sec_axis_w_frequency <- function(unit.exponent = 12) {
 #'
 scale_x_wl_continuous <- function(unit.exponent = -9,
                                   name = w_length_label(unit.exponent = unit.exponent),
-                                  breaks = scales::pretty_breaks(n=7),
+                                  breaks = scales::pretty_breaks(n = 7),
                                   labels = SI_pl_format(exponent = unit.exponent + 9),
                                   ...) {
   scale_x_continuous(name = name,
