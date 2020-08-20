@@ -1,13 +1,22 @@
 ggspectra 0.3.7 (2020-08-xx)
 ============================
 
-* Track and profit from updated 'photobiology' (>= 0.10.4), which is now
+* Track and profit from updated 'photobiology' (>= 0.10.4), with (>= 0.10.5) now
 required.
 * Use performance-optimized computation for colors from wavelengths.
 * Improve stat_wl_strip() performance by simplifying data before plotting.
 * Add suport for plotting action spectra (preliminary).
+* Update y-scales to support scaled and normalized data.
+* Update y-scales to generate more compact axis labels.
+* Update autolpot() methods to generate more compact axis labels.
 * Fix documentation example that stopped working because of changes to
 'ggplot2'.
+
+******************************************************************************
+Although this update should not break any code, the plots created will in some
+cases differ from those created with earlier versions. Changes only affect the
+text of labels.
+******************************************************************************
 
 ggspectra 0.3.6 (2020-04-20)
 ============================
