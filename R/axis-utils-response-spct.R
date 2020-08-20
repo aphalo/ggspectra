@@ -93,7 +93,7 @@ s.e.response_label <- function(unit.exponent = 0,
 #'
 #' @export
 #'
-s.q.response_label <- function(unit.exponent = -6,
+s.q.response_label <- function(unit.exponent = 0,
                                format = getOption("photobiology.math",
                                                   default = "R.expression"),
                                scaled = FALSE,
@@ -203,7 +203,7 @@ s.e.action_label <- function(unit.exponent = 0,
 #'
 #' @export
 #'
-s.q.action_label <- function(unit.exponent = -6,
+s.q.action_label <- function(unit.exponent = 0,
                              format = getOption("photobiology.math",
                                                 default = "R.expression"),
                              scaled = FALSE,
