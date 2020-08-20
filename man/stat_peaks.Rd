@@ -200,14 +200,14 @@ ggplot(sun.spct) +
   stat_peaks(span = 51, geom = "point", colour = "red", refine.wl = TRUE) +
   stat_peaks(mapping = aes(fill = stat(wl.colour), color = stat(BW.colour)),
              span = 51, geom = "label",
-             vjust = -0.3, hjust = c(1, 0, 0.5), label.fmt = "\%.6g nm",
+             size = 3, vjust = -0.2, label.fmt = "\%.3g nm",
              refine.wl = TRUE) +
   stat_valleys(span = 71, geom = "point", colour = "blue", refine.wl = TRUE) +
   stat_valleys(mapping = aes(fill = stat(wl.colour), color = stat(BW.colour)),
-             span = 71, geom = "label",
-             vjust = 1.3, hjust = 2/3, label.fmt = "\%.6g nm",
-             refine.wl = TRUE) +
-  expand_limits(y = 1) +
+               span = 71, geom = "label",
+               size = 3, vjust = 1.2, label.fmt = "\%.3g nm",
+               refine.wl = TRUE) +
+  expand_limits(y = 4e-6) +
   scale_fill_identity() +
   scale_color_identity()
 
