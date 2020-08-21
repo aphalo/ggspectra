@@ -236,9 +236,120 @@ ggplot(two_suns.mspct) +
 ```
 ## Scales
 
+The scales provided are all wrappers of continuous scales from packages 'ggplot2'
+or 'scales'. All pass non-specific parameters to the wrapped scales. The scales
+defined in 'ggspectra' compute suitable arguments for `name` and `labels` and
+pass them to the wrapped scales. The default text for the labels can be also
+set by the user by redefining a function, in addition than overriding the
+defaults in individual calls. This is a step towards multilingual support.
+
+## Shared features
+
+We present here, only once for all scales, examples of how to use features
+common to all of them. To start with we show the defaults for the scale for
+wavelengths and spectral energy irradiance that we will use for this examples.
+
+
+```{r}
+ggplot(sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_s.e.irrad_continuous()
+```
+
+Here we change the `unit.exponent` from its default 
+value of `-9` (nanometres) to `-6` (micrometers) for wavelengts, change `0` to
+`-3` for irradiance. When they exist SI multipliers 
+are used, and powers of 10 otherwise. This is not a transformation of the data,
+it only affects the tick labels and the axis labels in coordination. **Consequently summary values will not be affected.**
+
+```{r}
+ggplot(sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous(unit.exponent = -6) +
+  scale_y_s.e.irrad_continuous(unit.exponent = -3)
+```
+```{r}
+ggplot(sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous(unit.exponent = -7)  +
+  scale_y_s.e.irrad_continuous()
+```
+We can find the largest valid SI-scaling factor that is smaller or equal to an arbitrary power of 10.
+
+```{r}
+nearest_SI_exponent(-4)
+```
+We can call this function on-the-fly.
+
+```{r}
+ggplot(sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous(unit.exponent = nearest_SI_exponent(-4))  +
+  scale_y_s.e.irrad_continuous()
+```
+In addition to formatters defined in package 'scales', additional formatters are defined this package, `SI_pl_format()` and `SI_tg_format()`. Most of the scales
+in this package use the first of them, while the second one can be passed as an
+argument. _When it is used as shoen here, it is important to remember that as 
+the axis label should not show scaled units, `unit.exponent` must be always 
+passed zero as argument._ I have seen this approach used in engineering related publications. 
+
+```{r}
+ggplot(sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_s.e.irrad_continuous(unit.exponent = 0,
+                               labels = SI_tg_format(exponent = -3))
+```
+Transformation objects from package 'scales', or user defined, can be passed as additional arguments. We replace zeros to avoid a warnings from the `log10()` call, and as the scale `limits`
+discards some observations, we use `na.rm = TRUE` to silence this additional warning.
+
+```{r}
+temp.spct <- clean(sun.spct, range.s.data = c(1e-20, Inf), fill = 1e-20)
+ggplot(temp.spct) + 
+  geom_line(na.rm = TRUE) +
+  scale_x_wl_continuous() +
+  scale_y_s.e.irrad_continuous(unit.exponent = 0,
+                               trans = "log10",
+                               labels = trans_format("log10", math_format()),
+                               limits = c(1e-6, NA))
+```
+
+The default text used can be overridden. To keep only the symbol and units pass `""`
+as argument (not shown).
+
+```{r}
+ggplot(sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous(label.text = "Longitud de onda,") +
+  scale_y_s.e.irrad_continuous(label.text = "Irradiancia,")
+```
+
+If the data are normalized, we can pass the normalization wavelength as an argument.
+
+```{r}
+norm_sun.spct <- normalize(sun.spct)
+ggplot(norm_sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_s.e.irrad_continuous(normalized = getNormalized(norm_sun.spct))
+```
+If the data have been scaled, we can pass this information to the scale.
+
+```{r}
+scaled_sun.spct <- fscale(sun.spct)
+ggplot(scaled_sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_s.e.irrad_continuous(scaled = is_scaled(scaled_sun.spct))
+```
+
+Name and labels can be passed directly as arguments, but this defeats the purpose
+of these wrappers.
+
 ### Wavelength
 
-Currently only an x-scale function suitable for wavelengths in nanometres is defined in package 'ggspectra'.
+Currently only one x-scale function suitable for wavelengths in nanometres is exported by package 'ggspectra', as well as two secondary axis definitions for wavenumber and frequency.
 
 ```{r}
 ggplot(sun.spct) + 
@@ -246,7 +357,7 @@ ggplot(sun.spct) +
   scale_x_wl_continuous()
 ```
 
-Functions for automating the addition of secondary axes are also defined.
+Functions for automating the addition of secondary axes are available.
 
 ```{r}
 ggplot(sun.spct) + 
@@ -260,7 +371,7 @@ ggplot(sun.spct) +
   scale_x_wl_continuous(sec.axis = sec_axis_w_frequency())
 ```
 
-It is possible to set a different SI scaling factor for the units.
+As shown above for the main axis, it is possible to set a different SI scaling factor for the units in secondary scales.
 
 ```{r}
 ggplot(sun.spct) + 
@@ -268,50 +379,41 @@ ggplot(sun.spct) +
   scale_x_wl_continuous(sec.axis = sec_axis_w_frequency(15))
 ```
 
-It is possible to set a non-SI scaling factor for the units.
-
-```{r}
-ggplot(sun.spct) + 
-  geom_line() +
-  scale_x_wl_continuous(sec.axis = sec_axis_w_frequency(14))
-```
-
-It is possible find the largest valid SI-scaling factor that is smaller or equal to and arbitrary power of 10.
-
-```{r}
-nearest_SI_exponent(14)
-```
-
 ### Raw counts
+
+Raw counts from array detectors are expressed in counts, as "counts" is a whole
+word rather than a unit a power of ten multiplier is used.
 
 ```{r}
 ggplot(white_led.raw_spct) + 
   geom_line() +
   scale_x_wl_continuous() +
   scale_y_counts_continuous()
-  
 ```
+The `tg` for tag version adds a suffix to the tick labels, as is common in engineering.
 
 ```{r}
 ggplot(white_led.raw_spct) + 
   geom_line() +
   scale_x_wl_continuous() +
   scale_y_counts_tg_continuous()
-  
 ```
 
 ### Counts per second
+
+Raw counts from array detectors are expressed as a rate, as "counts" is a whole
+word rather than a unit a power of ten multiplier is used.
 
 ```{r}
 ggplot(white_led.cps_spct) + 
   geom_line() +
   scale_x_wl_continuous() +
-  scale_y_counts_continuous()
-  
+  scale_y_cps_continuous(unit.exponent = 3)
 ```
 
-
 ### Spectral irradiance
+
+Four scales are available, one for energy irradiance and one for photon irradiance. We show those for energy irradiance. There are equivalent scales `scale_y_s.q.irrad_continuous()` and `scale_y_s.e.irrad_log10()` for photon irradiance.
 
 ```{r}
 ggplot(sun.spct) + 
@@ -324,106 +426,97 @@ ggplot(sun.spct) +
 ggplot(sun.spct, unit.out = "photon") + 
   geom_line() +
   scale_x_wl_continuous() +
-  scale_y_s.q.irrad_continuous()
+  scale_y_s.e.irrad_log10(unit.exponent = -6)
 ```
 
-We can change the SI unit multipliers on-the-fly. Beware that these are not data transformations, only the labelling of the axes changes! Consequently summary values will not be affected. We will express the spectral irradiance using milli watts instead of watts and wavelengths in micrometres instead of nanometres.
+### Response and action
+
+Four scales are available, for energy response and action and for photon
+response and action. We show those for energy irradiance. There are equivalent scales `scale_y_q.e.resoponse_continuous()` and `scale_y_s.q.action_continuous()` for photon irradiance.
+
+_The difference between response and action spectra stems from the measurement
+procedure._ We will _wrongly_ use here response data for both examples.
 
 ```{r}
-ggplot(sun.spct) + 
-  geom_line() +
-  scale_x_wl_continuous(-6) +
-  scale_y_s.e.irrad_continuous(-3)
-```
-
-The scales are just wrappers on the _scales_ defined in packages '**ggplot2**' and '**scales**' with defaults suitable for spectral data. They pass additional arguments to the underlying scale functions allowing, for example, the control of the formatting of tick labels.
-
-```{r}
-ggplot(sun.spct, unit.out = "photon") + 
+ggplot(ccd.spct) + 
   geom_line() +
   scale_x_wl_continuous() +
-  scale_y_s.q.irrad_continuous(unit.exponent = 0,
-                               labels = scientific_format())
+  scale_y_s.e.response_continuous(unit.exponent = 6)
 ```
-
-In addition to formatters defined in package '**scales**' as used above, additional formatters are defined in package '**ggspectra**', like those used in the next example.
+The figures are identical, but the text and symbol on the y-axis label are different.
 
 ```{r}
-library(scales)
-ggplot(sun.spct, unit.out = "photon") + 
+ggplot(ccd.spct) + 
   geom_line() +
   scale_x_wl_continuous() +
-  scale_y_s.q.irrad_continuous(unit.exponent = 0,
-                               labels = SI_tg_format(exponent = -6))
-```
-
-Transformation objects from package '**scales**', or user defined, can be also passed as arguments. We replace zeros to avoid a warnings from the `log10()` call, and as the scale `limits`
-discards some observations, we use `na.rm = TRUE` to silence this additional warning.
-
-```{r}
-temp.spct <- clean(sun.spct, range.s.data = c(1e-20, Inf), fill = 1e-20)
-ggplot(temp.spct, unit.out = "photon") + 
-  geom_line(na.rm = TRUE) +
-  scale_x_wl_continuous() +
-  scale_y_s.q.irrad_continuous(unit.exponent = 0,
-                               trans = "log10",
-                               labels = trans_format("log10", math_format()),
-                               limits = c(1e-12, NA))
-```
-
-### Response
-
-```{r}
-ggplot(ccd.spct, unit.out = "photon") + 
-  geom_line() +
-  scale_x_wl_continuous() +
-  scale_y_s.q.response_continuous()
-```
-
-```{r}
-ggplot(ccd.spct, unit.out = "photon") + 
-  geom_line() +
-  scale_x_wl_continuous() +
-  scale_y_s.q.response_continuous(trans = "log10",
-                                  labels = trans_format("log10", math_format()))
+  scale_y_s.e.action_continuous(unit.exponent = 6)
 ```
 
 ### Transmittance
 
+Two definitions of transmittance exist, total and internal. To obtain the correct labels we query the object containing the data. If we plot data from a data
+frame or tibble, then we can manualy pass one of `"total"` or `"internal"` as
+argument.
+
 ```{r}
 ggplot(yellow_gel.spct) + 
   geom_line() +
   scale_x_wl_continuous() +
-  scale_y_Tfr_total_continuous()
-  
+  scale_y_Tfr_continuous(Tfr.type = getTfrType(yellow_gel.spct))
 ```
 
 ```{r}
 ggplot(yellow_gel.spct) + 
   geom_line() +
   scale_x_wl_continuous() +
-  scale_y_Tfr_total_continuous(labels = percent)
-  
+  scale_y_Tfr_continuous(Tfr.type = getTfrType(yellow_gel.spct),
+                         labels = percent)
+```
+
+```{r}
+gel_internal.spct <- convertTfrType(yellow_gel.spct, Tfr.type = "internal")
+ggplot(gel_internal.spct) + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_Tfr_continuous(Tfr.type = getTfrType(gel_internal.spct))
 ```
 
 ### Absorbance
 
+Two definitions of absorbance exist, total and internal. To obtain the correct labels we query the object containing the data. If we plot data from a data
+frame or tibble, then we can manualy pass one of `"total"` or `"internal"` as
+argument. _This package only supports absorbance as defined using logs on base 10._
+
 ```{r}
-ggplot(yellow_gel.spct, plot.qty = "absorbance") + 
+ggplot(gel_internal.spct, plot.qty = "absorbance") + 
   geom_line() +
   scale_x_wl_continuous() +
-  scale_y_A_total_continuous()
+  scale_y_A_continuous(Tfr.type = getTfrType(gel_internal.spct))
+```
+
+### Absorptance
+
+Absorptance has only one definition, at least within this package.
+
+```{r}
+ggplot(yellow_gel.spct, plot.qty = "absorptance") + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_Afr_continuous()
 ```
 
 ### Reflectance
+
+Two definitions of reflectance exist, total and specular. To obtain the correct labels we query the object containing the data. If we plot data from a data
+frame or tibble, then we can manualy pass one of `"total"` or `"specular"` as
+argument.
 
 ```{r}
 ggplot(green_leaf.spct) + 
   geom_line() +
   scale_x_wl_continuous() +
-  scale_y_Rfr_total_continuous()
+  scale_y_Rfr_continuous(Rfr.type = getRfrType(green_leaf.spct))
 ```
-
 ## Stats
 
 Several `ggplot` stats are defined by this package. All of them target light spectra, as they expect $x$ to represent wavelengths expressed in nanometres. However, they should behave correctly as long as this is true, with any `ggplot` object, based on any data format acceptable to `ggplot`. The name of the original variable is irrelevant, and it is the user responsibility to supply the correct variables through `aes()`. Of course, when using the spectral classes defined in package `photobiology` the defaults easy this task.
