@@ -9,10 +9,14 @@
 #' @param unit.exponent integer
 #' @param format character string, "R", "R.expresion", "R.character", or
 #'   "LaTeX".
+#' @param label.text character Textual portion of the labels.
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
 #' @param Tfr.type character, either "total" or "internal".
+#'
+#' @note Default for \code{label.text} depends on the value passed as argument
+#'   to \code{Tfr.type}.
 #'
 #' @return a character string or an R expression.
 #'
@@ -26,51 +30,54 @@
 A_label <- function(unit.exponent = 0,
                     format = getOption("photobiology.math",
                                        default = "R.expression"),
+                    label.text = NULL,
                     scaled = FALSE,
                     normalized = FALSE,
                     Tfr.type) {
-  label.txt <- switch(tolower(Tfr.type),
-                      internal = "Internal spectral absorbance",
-                      total = "Total spectral absorbance",
-                      stop("Bad Tfr.type: ", Tfr.type)
-  )
+  if (is.null(label.text)) {
+    label.text <- switch(tolower(Tfr.type),
+                         internal = axis_labels()[["A.int"]],
+                         total = axis_labels()[["A.tot"]],
+                         stop("Bad Tfr.type: ", Tfr.type)
+    )
+  }
 
   if (scaled) {
     if (tolower(format) == "latex") {
-      paste(label.txt, " $A_{\\lambda}$ (rel.\ units)")
+      paste(label.text, " $A_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      bquote(.(label.txt)~~A[lambda]~~plain((rel.~~units)))
+      bquote(.(label.text)~~A[lambda]~~plain((rel.~~units)))
     } else if (format == "R.character") {
-      paste(label.txt, " A(lambda) (rel. units)")
+      paste(label.text, " A(lambda) (rel. units)")
     }
   } else if (normalized) {
     if (tolower(format) == "latex") {
-      paste(label.txt, " $A_{\\lambda}/A_{", normalized, "}$ (/1)", sep = "")
+      paste(label.text, " $A_{\\lambda}/A_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.txt)~~A[lambda]/A[.(normalized)]~~plain("(/1)"))
+      bquote(.(label.text)~~A[lambda]/A[.(normalized)]~~plain("(/1)"))
     } else if (format == "R.character") {
-      paste(label.txt, " A(lambda) (norm. at", normalized, "nm)")
+      paste(label.text, " A(lambda) (norm. at", normalized, "nm)")
     }
   } else {
     if (tolower(format) == "latex") {
       if (has_SI_prefix(unit.exponent)) {
-        paste(label.txt, " $A_{\\lambda}$ (",
+        paste(label.text, " $A_{\\lambda}$ (",
               exponent2prefix(unit.exponent),
               "AU)", sep = "")
       } else {
-        paste(label.txt, "  $A_{\\lambda}$ ($\\times 10^{",
+        paste(label.text, "  $A_{\\lambda}$ ($\\times 10^{",
               unit.exponent,
               "}$ AU)", sep = "")
       }
     } else if (format %in% c("R.expression")) {
       if (has_SI_prefix(unit.exponent)) {
         prefix <- exponent2prefix(unit.exponent)
-        bquote(.(label.txt)~~A[lambda]~~(plain(.(prefix)*AU)))
+        bquote(.(label.text)~~A[lambda]~~(plain(.(prefix)*AU)))
       } else {
-        bquote(.(label.txt)~~A[lambda]~~(10^{.(unit.exponent)}*plain(AU)))
+        bquote(.(label.text)~~A[lambda]~~(10^{.(unit.exponent)}*plain(AU)))
       }
     } else if (format == "R.character" && has_SI_prefix(unit.exponent)) {
-      paste(label.txt, " A(lambda) (",
+      paste(label.text, " A(lambda) (",
             exponent2prefix(unit.exponent),
             "AU)", sep = "")
     } else {
@@ -96,10 +103,12 @@ A_label <- function(unit.exponent = 0,
 A_internal_label <- function(unit.exponent = 0,
                              format = getOption("photobiology.math",
                                                 default = "R.expression"),
+                             label.text = NULL,
                              scaled = FALSE,
                              normalized = FALSE) {
   A_label(unit.exponent = unit.exponent,
           format = format,
+          label.text = label.text,
           scaled = scaled,
           normalized = normalized,
           Tfr.type = "internal")
@@ -120,10 +129,12 @@ A_internal_label <- function(unit.exponent = 0,
 A_total_label <- function(unit.exponent = 0,
                           format = getOption("photobiology.math",
                                              default = "R.expression"),
+                          label.text = NULL,
                           scaled = FALSE,
                           normalized = FALSE) {
   A_label(unit.exponent = unit.exponent,
           format = format,
+          label.text = label.text,
           scaled = scaled,
           normalized = normalized,
           Tfr.type = "total")
@@ -138,6 +149,7 @@ A_total_label <- function(unit.exponent = 0,
 #' @param labels The tick labels or a function to generate them.
 #' @param format character string, "R", "R.expression", "R.character", or
 #'   "LaTeX".
+#' @param label.text character Textual portion of the labels.
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
@@ -170,12 +182,14 @@ scale_y_A_continuous <-
   function(unit.exponent = 0,
            name = A_label(unit.exponent = unit.exponent,
                           format = format,
+                          label.text = label.text,
                           scaled = scaled,
                           normalized = round(normalized, 1),
                           Tfr.type = Tfr.type),
            labels = SI_pl_format(exponent = unit.exponent),
            format = getOption("photobiology.math",
                               default = "R.expression"),
+           label.text = NULL,
            scaled = FALSE,
            normalized = FALSE,
            Tfr.type,
@@ -193,12 +207,14 @@ scale_y_A_internal_continuous <-
   function(unit.exponent = 0,
            name = A_label(unit.exponent = unit.exponent,
                           format = format,
+                          label.text = label.text,
                           scaled = scaled,
                           normalized = round(normalized, 1),
                           Tfr.type = "internal"),
            labels = SI_pl_format(exponent = unit.exponent),
            format = getOption("photobiology.math",
                               default = "R.expression"),
+           label.text = NULL,
            scaled = FALSE,
            normalized = FALSE,
            ...) {
@@ -215,12 +231,14 @@ scale_y_A_total_continuous <-
   function(unit.exponent = 0,
            name = A_label(unit.exponent = unit.exponent,
                           format = format,
+                          label.text = label.text,
                           scaled = scaled,
                           normalized = round(normalized, 1),
                           Tfr.type = "total"),
            labels = SI_pl_format(exponent = unit.exponent),
            format = getOption("photobiology.math",
                               default = "R.expression"),
+           label.text = NULL,
            scaled = FALSE,
            normalized = FALSE,
            ...) {
@@ -240,10 +258,14 @@ scale_y_A_total_continuous <-
 #' @param unit.exponent integer
 #' @param format character string, "R", "R.expresion", "R.character", or
 #'   "LaTeX".
+#' @param label.text character Textual portion of the labels.
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
 #' @param Tfr.type character, either "total" or "internal".
+#'
+#' @note Default for \code{label.text} depends on the value passed as argument
+#'   to \code{Tfr.type}.
 #'
 #' @return a character string or an R expression.
 #'
@@ -257,14 +279,17 @@ scale_y_A_total_continuous <-
 Tfr_label <- function(unit.exponent = 0,
                       format = getOption("photobiology.math",
                                          default = "R.expression"),
+                      label.text = NULL,
                       scaled = FALSE,
                       normalized = FALSE,
                       Tfr.type) {
-  label.txt <- switch(tolower(Tfr.type),
-                      internal = "Internal spectral transmittance",
-                      total = "Total spectral transmittance",
-                      stop("Bad Tfr.type: ", Tfr.type)
-  )
+  if (is.null(label.text)) {
+    label.text <- switch(tolower(Tfr.type),
+                         internal = axis_labels()[["Tfr.int"]],
+                         total = axis_labels()[["Tfr.tot"]],
+                         stop("Bad Tfr.type: ", Tfr.type)
+    )
+  }
   if (unit.exponent == 0) {
     unit.text = "(/1)"
     unit.tex = "(/1)"
@@ -282,27 +307,27 @@ Tfr_label <- function(unit.exponent = 0,
   }
   if (scaled) {
     if (tolower(format) == "latex") {
-      paste(label.txt, " $t_{\\lambda}$ (rel.\ units)")
+      paste(label.text, " $t_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      bquote(.(label.txt)~~t[lambda]~~plain((rel.~~units)))
+      bquote(.(label.text)~~t[lambda]~~plain((rel.~~units)))
     } else if (format == "R.character") {
-      paste(label.txt, " t(lambda) (rel. units)")
+      paste(label.text, " t(lambda) (rel. units)")
     }
   } else if (normalized) {
     if (tolower(format) == "latex") {
-      paste(label.txt, " $t_{\\lambda}/t_{", normalized, "}$ (/1)", sep = "")
+      paste(label.text, " $t_{\\lambda}/t_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.txt)~~t[lambda]/t[.(normalized)]~~plain("(/1)"))
+      bquote(.(label.text)~~t[lambda]/t[.(normalized)]~~plain("(/1)"))
     } else if (format == "R.character") {
-      paste(label.txt, " t(lambda) (norm. at", normalized, "nm)")
+      paste(label.text, " t(lambda) (norm. at", normalized, "nm)")
     }
   } else {
     if (tolower(format) == "latex") {
-      paste(label.txt, " $t_{\\lambda}$ ", unit.tex, sep = "")
+      paste(label.text, " $t_{\\lambda}$ ", unit.tex, sep = "")
     } else if (format %in% c("R.expression")) {
-        bquote(.(label.txt)~~t[lambda]~~plain(.(unit.text)))
+        bquote(.(label.text)~~t[lambda]~~plain(.(unit.text)))
     } else if (format == "R.character") {
-      paste(label.txt, " t(lambda) ", unit.text, sep = "")
+      paste(label.text, " t(lambda) ", unit.text, sep = "")
     } else {
       warning("'format = ", format,
               "' not implemented for unit.exponent = ", unit.exponent)
@@ -327,10 +352,12 @@ Tfr_label <- function(unit.exponent = 0,
 Tfr_internal_label <- function(unit.exponent = 0,
                                format = getOption("photobiology.math",
                                                   default = "R.expression"),
+                               label.text = NULL,
                                scaled = FALSE,
                                normalized = FALSE) {
   Tfr_label(unit.exponent = unit.exponent,
             format = format,
+            label.text = label.text,
             scaled = scaled,
             normalized = normalized,
             Tfr.type = "internal")
@@ -352,10 +379,12 @@ Tfr_internal_label <- function(unit.exponent = 0,
 Tfr_total_label <- function(unit.exponent = 0,
                             format = getOption("photobiology.math",
                                                default = "R.expression"),
+                            label.text = NULL,
                             scaled = FALSE,
                             normalized = FALSE) {
   Tfr_label(unit.exponent = unit.exponent,
             format = format,
+            label.text = label.text,
             scaled = scaled,
             normalized = normalized,
             Tfr.type = "total")
@@ -373,6 +402,7 @@ Tfr_total_label <- function(unit.exponent = 0,
 #'   data-based limits as argument and returns new limits.
 #' @param format character string, "R", "R.expression", "R.character", or
 #'   "LaTeX".
+#' @param label.text character Textual portion of the labels.
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
@@ -413,6 +443,7 @@ Tfr_total_label <- function(unit.exponent = 0,
 scale_y_Tfr_continuous <- function(unit.exponent = 0,
                                    name = Tfr_label(unit.exponent = unit.exponent,
                                                     format = format,
+                                                    label.text = label.text,
                                                     scaled = scaled,
                                                     normalized = round(normalized, 1),
                                                     Tfr.type = Tfr.type),
@@ -420,6 +451,7 @@ scale_y_Tfr_continuous <- function(unit.exponent = 0,
                                    limits = c(0, 1),
                                    format = getOption("photobiology.math",
                                                       default = "R.expression"),
+                                   label.text = NULL,
                                    scaled = FALSE,
                                    normalized = FALSE,
                                    Tfr.type,
@@ -438,6 +470,7 @@ scale_y_Tfr_internal_continuous <-
   function(unit.exponent = 0,
            name = Tfr_label(unit.exponent = unit.exponent,
                             format = format,
+                            label.text = label.text,
                             scaled = scaled,
                             normalized = round(normalized, 1),
                             Tfr.type = "internal"),
@@ -445,6 +478,7 @@ scale_y_Tfr_internal_continuous <-
            limits = c(0, 1),
            format = getOption("photobiology.math",
                               default = "R.expression"),
+           label.text = NULL,
            scaled = FALSE,
            normalized = FALSE,
            ...) {
@@ -462,6 +496,7 @@ scale_y_Tfr_total_continuous <-
   function(unit.exponent = 0,
            name = Tfr_label(unit.exponent = unit.exponent,
                             format = format,
+                            label.text = label.text,
                             scaled = scaled,
                             normalized = round(normalized, 1),
                             Tfr.type = "total"),
@@ -469,6 +504,7 @@ scale_y_Tfr_total_continuous <-
            limits = c(0, 1),
            format = getOption("photobiology.math",
                               default = "R.expression"),
+           label.text = NULL,
            scaled = FALSE,
            normalized = FALSE,
            ...) {
@@ -489,6 +525,7 @@ scale_y_Tfr_total_continuous <-
 #' @param unit.exponent integer
 #' @param format character string, "R", "R.expresion", "R.character", or
 #'   "LaTeX".
+#' @param label.text character Textual portion of the labels.
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
@@ -509,10 +546,9 @@ scale_y_Tfr_total_continuous <-
 Afr_label <- function(unit.exponent = 0,
                       format = getOption("photobiology.math",
                                          default = "R.expression"),
+                      label.text = axis_labels()[["Afr"]],
                       scaled = FALSE,
                       normalized = FALSE) {
-  label.txt <- "Spectral absorptance"
-
   if (unit.exponent == 0) {
     unit.text = "(/1)"
     unit.tex = "(/1)"
@@ -530,27 +566,27 @@ Afr_label <- function(unit.exponent = 0,
   }
   if (scaled) {
     if (tolower(format) == "latex") {
-      paste(label.txt, " $a_{\\lambda}$ (rel.\ units)")
+      paste(label.text, " $a_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      bquote(.(label.txt)~~a[lambda]~~plain((rel.~~units)))
+      bquote(.(label.text)~~a[lambda]~~plain((rel.~~units)))
     } else if (format == "R.character") {
-      paste(label.txt, " a(lambda) (rel. units)")
+      paste(label.text, " a(lambda) (rel. units)")
     }
   } else if (normalized) {
     if (tolower(format) == "latex") {
-      paste(label.txt, " $a_{\\lambda}/a_{", normalized, "}$ (/1)", sep = "")
+      paste(label.text, " $a_{\\lambda}/a_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.txt)~~a[lambda]/a[.(normalized)]~~plain("(/1)"))
+      bquote(.(label.text)~~a[lambda]/a[.(normalized)]~~plain("(/1)"))
     } else if (format == "R.character") {
-      paste(label.txt, " a(lambda) (norm. at", normalized, "nm)")
+      paste(label.text, " a(lambda) (norm. at", normalized, "nm)")
     }
   } else {
     if (tolower(format) == "latex") {
-      paste(label.txt, " $a_{\\lambda}$ ", unit.tex, sep = "")
+      paste(label.text, " $a_{\\lambda}$ ", unit.tex, sep = "")
     } else if (format %in% c("R.expression")) {
-      bquote(.(label.txt)~~a[lambda]~~plain(.(unit.text)))
+      bquote(.(label.text)~~a[lambda]~~plain(.(unit.text)))
     } else if (format == "R.character") {
-      paste(label.txt, " a(lambda) ", unit.text, sep = "")
+      paste(label.text, " a(lambda) ", unit.text, sep = "")
     } else {
       warning("'format = ", format,
               "' not implemented for unit.exponent = ", unit.exponent)
@@ -571,6 +607,7 @@ Afr_label <- function(unit.exponent = 0,
 #'   data-based limits as argument and returns new limits.
 #' @param format character string, "R", "R.expression", "R.character", or
 #'   "LaTeX".
+#' @param label.text character Textual portion of the labels.
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
@@ -600,23 +637,26 @@ Afr_label <- function(unit.exponent = 0,
 #'   scale_y_Afr_continuous(unit.exponent = -3) +
 #'   scale_x_wl_continuous()
 #'
-scale_y_Afr_continuous <- function(unit.exponent = 0,
-                                   name = Afr_label(unit.exponent = unit.exponent,
-                                                    format = format,
-                                                    scaled = scaled,
-                                                    normalized = round(normalized, 1)),
-                                   labels = SI_pl_format(exponent = unit.exponent),
-                                   limits = c(0, 1),
-                                   format = getOption("photobiology.math",
-                                                      default = "R.expression"),
-                                   scaled = FALSE,
-                                   normalized = FALSE,
-                                   ...) {
-  scale_y_continuous(name = name,
-                     labels = labels,
-                     limits = limits,
-                     ...)
-}
+scale_y_Afr_continuous <-
+  function(unit.exponent = 0,
+           name = Afr_label(unit.exponent = unit.exponent,
+                            format = format,
+                            label.text = label.text,
+                            scaled = scaled,
+                            normalized = round(normalized, 1)),
+           labels = SI_pl_format(exponent = unit.exponent),
+           limits = c(0, 1),
+           format = getOption("photobiology.math",
+                              default = "R.expression"),
+           label.text = axis_labels()[["Afr"]],
+           scaled = FALSE,
+           normalized = FALSE,
+           ...) {
+    scale_y_continuous(name = name,
+                       labels = labels,
+                       limits = limits,
+                       ...)
+  }
 
 # Reflectance --------------------------------------------------------------
 
@@ -629,10 +669,14 @@ scale_y_Afr_continuous <- function(unit.exponent = 0,
 #' @param unit.exponent integer
 #' @param format character string, "R", "R.expresion", "R.character", or
 #'   "LaTeX".
+#' @param label.text character Textual portion of the labels.
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
 #' @param Rfr.type character, either "total" or "specular".
+#'
+#' @note Default for \code{label.text} depends on the value passed as argument
+#'   to \code{Rfr.type}.
 #'
 #' @return a character string or an R expression.
 #'
@@ -646,14 +690,18 @@ scale_y_Afr_continuous <- function(unit.exponent = 0,
 Rfr_label <- function(unit.exponent = 0,
                       format = getOption("photobiology.math",
                                          default = "R.expression"),
+                      label.text = NULL,
                       scaled = FALSE,
                       normalized = FALSE,
                       Rfr.type) {
-  label.txt <- switch(tolower(Rfr.type),
-                      specular = "Specular spectral reflectance",
-                      total = "Total spectral reflectance",
-                      stop("Bad Rfr.type: ", Rfr.type)
-  )
+  if (is.null(label.text)) {
+    label.text <- switch(tolower(Rfr.type),
+                         specular = axis_labels()[["Rfr.spec"]],
+                         total = axis_labels()[["Rfr.tot"]],
+                         stop("Bad Rfr.type: ", Rfr.type)
+    )
+  }
+
   if (unit.exponent == 0) {
     unit.text = "(/1)"
     unit.tex = "(/1)"
@@ -671,27 +719,27 @@ Rfr_label <- function(unit.exponent = 0,
   }
   if (scaled) {
     if (tolower(format) == "latex") {
-      paste(label.txt, " $r_{\\lambda}$ (rel.\ units)")
+      paste(label.text, " $r_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      bquote(.(label.txt)~~t[lambda]~~plain((rel.~~units)))
+      bquote(.(label.text)~~t[lambda]~~plain((rel.~~units)))
     } else if (format == "R.character") {
-      paste(label.txt, " r(lambda) (rel. units)")
+      paste(label.text, " r(lambda) (rel. units)")
     }
   } else if (normalized) {
     if (tolower(format) == "latex") {
-      paste(label.txt, " $r_{\\lambda}/r_{", normalized, "}$ (/1)", sep = "")
+      paste(label.text, " $r_{\\lambda}/r_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.txt)~~r[lambda]/r[.(normalized)]~~plain("(/1)"))
+      bquote(.(label.text)~~r[lambda]/r[.(normalized)]~~plain("(/1)"))
     } else if (format == "R.character") {
-      paste(label.txt, " r(lambda) (norm. at", normalized, "nm)")
+      paste(label.text, " r(lambda) (norm. at", normalized, "nm)")
     }
   } else {
     if (tolower(format) == "latex") {
-      paste(label.txt, " $r_{\\lambda}$ ", unit.tex, sep = "")
+      paste(label.text, " $r_{\\lambda}$ ", unit.tex, sep = "")
     } else if (format %in% c("R.expression")) {
-      bquote(.(label.txt)~~r[lambda]~~plain(.(unit.text)))
+      bquote(.(label.text)~~r[lambda]~~plain(.(unit.text)))
     } else if (format == "R.character") {
-      paste(label.txt, " r(lambda) ", unit.text, sep = "")
+      paste(label.text, " r(lambda) ", unit.text, sep = "")
     } else {
       warning("'format = ", format,
               "' not implemented for unit.exponent = ", unit.exponent)
@@ -716,10 +764,12 @@ Rfr_label <- function(unit.exponent = 0,
 Rfr_specular_label <- function(unit.exponent = 0,
                                format = getOption("photobiology.math",
                                                   default = "R.expression"),
+                               label.text = NULL,
                                scaled = FALSE,
                                normalized = FALSE) {
   Rfr_label(unit.exponent = unit.exponent,
             format = format,
+            label.text = label.text,
             scaled = scaled,
             normalized = normalized,
             Rfr.type = "specular")
@@ -741,10 +791,12 @@ Rfr_specular_label <- function(unit.exponent = 0,
 Rfr_total_label <- function(unit.exponent = 0,
                             format = getOption("photobiology.math",
                                                default = "R.expression"),
+                            label.text = NULL,
                             scaled = FALSE,
                             normalized = FALSE) {
   Rfr_label(unit.exponent = unit.exponent,
             format = format,
+            label.text = label.text,
             scaled = scaled,
             normalized = normalized,
             Rfr.type = "total")
@@ -762,6 +814,7 @@ Rfr_total_label <- function(unit.exponent = 0,
 #'   data-based limits as argument and returns new limits.
 #' @param format character string, "R", "R.expression", "R.character", or
 #'   "LaTeX".
+#' @param label.text character Textual portion of the labels.
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
@@ -801,6 +854,7 @@ scale_y_Rfr_continuous <-
   function(unit.exponent = 0,
            name = Rfr_label(unit.exponent = unit.exponent,
                             format = format,
+                            label.text = label.text,
                             scaled = scaled,
                             normalized = round(normalized, 1),
                             Rfr.type = Rfr.type),
@@ -808,6 +862,7 @@ scale_y_Rfr_continuous <-
            limits = c(0, 1),
            format = getOption("photobiology.math",
                               default = "R.expression"),
+           label.text = NULL,
            scaled = FALSE,
            normalized = FALSE,
            Rfr.type,
@@ -826,6 +881,7 @@ scale_y_Rfr_specular_continuous <-
   function(unit.exponent = 0,
            name = Rfr_label(unit.exponent = unit.exponent,
                             format = format,
+                            label.text = label.text,
                             scaled = scaled,
                             normalized = round(normalized, 1),
                             Rfr.type = "specular"),
@@ -833,6 +889,7 @@ scale_y_Rfr_specular_continuous <-
            limits = c(0, 1),
            format = getOption("photobiology.math",
                               default = "R.expression"),
+           label.text = NULL,
            scaled = FALSE,
            normalized = FALSE,
            ...) {
@@ -850,6 +907,7 @@ scale_y_Rfr_total_continuous <-
   function(unit.exponent = 0,
            name = Rfr_label(unit.exponent = unit.exponent,
                             format = format,
+                            label.text = label.text,
                             scaled = scaled,
                             normalized = round(normalized, 1),
                             Rfr.type = "total"),
@@ -857,6 +915,7 @@ scale_y_Rfr_total_continuous <-
            limits = c(0, 1),
            format = getOption("photobiology.math",
                               default = "R.expression"),
+           label.text = NULL,
            scaled = FALSE,
            normalized = FALSE,
            ...) {

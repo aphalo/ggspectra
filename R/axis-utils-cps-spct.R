@@ -6,6 +6,7 @@
 #' @param unit.exponent integer
 #' @param format character string, "R", "R.expresion", "R.character", or
 #'   "LaTeX".
+#' @param label.text character Textual portion of the labels.
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
@@ -25,43 +26,44 @@
 #'
 cps_label <- function(unit.exponent = 0,
                       format = getOption("photobiology.math",
-                                            default = "R.expression"),
+                                         default = "R.expression"),
+                      label.text = axis_labels()[["cps"]],
                       scaled = FALSE,
                       normalized = FALSE) {
   if (scaled) {
     if (tolower(format) == "latex") {
-      "Pixel response rate $N_{\\lambda}$ (rel.\ units)"
+      paste(label.text, "rate $N_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      expression(plain(Pixel~~response~~rate)~~N[lambda]~~plain((rel.~~units)))
+      bquote(.(label.text)~~N[lambda]~~plain((rel.~~units)))
     } else if (format == "R.character") {
-      "Pixel response rate N(lambda) (rel. units)"
+      paste(label.text, "N(lambda) (rel. units)")
     }
   } else if (normalized) {
     if (tolower(format) == "latex") {
-      paste("Pixel response rate $N_{\\lambda} / N_{", normalized, "}$ (/1)", sep = "")
+      paste(label.text, " rate $N_{\\lambda} / N_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(plain(Pixel~~response~~rate)~~N[lambda]/N[.(normalized)]~~plain("(/1)"))
+      bquote(.(label.text)~~N[lambda]/N[.(normalized)]~~plain("(/1)"))
     } else if (format == "R.character") {
-      paste("Pixel response rate N(lambda) (norm. at", normalized, "nm)")
+      paste(label.text, "N(lambda) (norm. at", normalized, "nm)")
     }
   } else {
     if (tolower(format) == "latex") {
       if (unit.exponent == 0) {
-        "Pixel response rate $N_{\\lambda}$ (counts~s$^{-1}$)"
+        paste(label.text, "$N_{\\lambda}$ (counts~s$^{-1}$)")
       } else {
-        paste("Pixel response rate $N_{\\lambda}$ ($\\times 10^{",
+        paste(label.text, " $N_{\\lambda}$ ($\\times 10^{",
               unit.exponent,
               "}$ counts~s$^{-1}$)", sep = "")
       }
     } else if (format %in% c("R.expression")) {
       if (unit.exponent == 0) {
-        expression(plain(Pixel~~response~~rate)~~N[lambda]~~(plain(counts)~s^{-1}))
+        bquote(.(label.text)~~N[lambda]~~(plain(counts)~s^{-1}))
       } else {
-        bquote(plain(Pixel~~response~~rate)~~N[lambda]~~(10^{.(unit.exponent)}*plain(counts)~s^{-1}))
+        bquote(.(label.text)~~N[lambda]~~(10^{.(unit.exponent)}*plain(counts)~s^{-1}))
 
       }
     } else if (format == "R.character" && unit.exponent == 0) {
-      "Pixel response N(lambda) (counts/s)"
+      paste(label.text, "N(lambda) (counts/s)")
     } else {
       warning("'format = ", format,
               "' not implemented for unit.exponent = ", unit.exponent)
@@ -79,6 +81,7 @@ cps_label <- function(unit.exponent = 0,
 #' @param labels The tick labels or a function to generate them.
 #' @param format character string, "R", "R.expression", "R.character", or
 #'   "LaTeX".
+#' @param label.text character Textual portion of the labels.
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
@@ -113,18 +116,22 @@ cps_label <- function(unit.exponent = 0,
 #'   scale_y_cps_continuous(normalized = getNormalized(norm_led.cps_spct)) +
 #'   scale_x_wl_continuous()
 #'
-scale_y_cps_continuous <- function(unit.exponent = 0,
-                                   name = cps_label(unit.exponent = unit.exponent,
-                                                    format = format,
-                                                    scaled = scaled,
-                                                    normalized = round(normalized, 1)),
-                                   labels = SI_pl_format(exponent = unit.exponent),
-                                   format = getOption("photobiology.math",
-                                                      default = "R.expression"),
-                                   scaled = FALSE,
-                                   normalized = FALSE,
-                                   ...) {
-  scale_y_continuous(name = name,
-                     labels = labels,
-                     ...)
-}
+scale_y_cps_continuous <-
+  function(unit.exponent = 0,
+           name = cps_label(unit.exponent = unit.exponent,
+                            format = format,
+                            label.text = label.text,
+                            scaled = scaled,
+                            normalized = round(normalized, 1)),
+           labels = SI_pl_format(exponent = unit.exponent),
+           format = getOption("photobiology.math",
+                              default = "R.expression"),
+           label.text = axis_labels()[["cps"]],
+           scaled = FALSE,
+           normalized = FALSE,
+           ...) {
+    scale_y_continuous(name = name,
+                       labels = labels,
+                       ...)
+  }
+

@@ -7,6 +7,7 @@
 #' @param unit.exponent integer
 #' @param format character string, "R", "R.expresion", "R.character", or
 #'   "LaTeX".
+#' @param label.text character Textual portion of the labels.
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
@@ -24,45 +25,46 @@
 s.e.irrad_label <- function(unit.exponent = 0,
                             format = getOption("photobiology.math",
                                                default = "R.expression"),
+                            label.text = axis_labels()[["s.e.irrad"]],
                             scaled = FALSE,
                             normalized = FALSE) {
   if (scaled) {
     if (tolower(format) == "latex") {
-      "Spectral energy irradiance $E_{\\lambda}$ (rel.\ units)"
+      paste(label.text, "$E_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      expression(plain(Spectral~~energy~~irradiance)~~E[lambda]~~plain((rel.~~units)))
+      bquote(.(label.text)~~E[lambda]~~plain((rel.~~units)))
     } else if (format == "R.character") {
-      "Spectral energy irradiance (rel. units)"
+      paste(label.text, "E(lambda) (rel. units)")
     }
   } else if (normalized) {
     if (tolower(format) == "latex") {
-      paste("Spectral energy irradiance $E_{\\lambda} / E_{", normalized, "}$ (/1)", sep = "")
+      paste(label.text, " $E_{\\lambda} / E_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(plain(Spectral~~energy~~irradiance)~~E[lambda]/E[.(normalized)]~~plain("(/1)"))
+      bquote(.(label.text)~~E[lambda]/E[.(normalized)]~~plain("(/1)"))
     } else if (format == "R.character") {
-      paste("Spectral energy irradiance (norm. at", normalized, "nm)")
+      paste(label.text, "E(lambda) (norm. at", normalized, "nm)")
     }
   } else {
     if (tolower(format) == "latex") {
       if (has_SI_prefix(unit.exponent)) {
-        paste("Spectral energy irradiance $E_{\\lambda}$ ($",
+        paste(label.text, " $E_{\\lambda}$ ($",
               exponent2prefix(unit.exponent, char.set = "LaTeX"),
               "W m^{-2} nm^{-1})$)", sep = "")
       } else {
-        paste("Spectral energy irradiance $E_{\\lambda}$ ($\\times 10^{",
+        paste(label.text, " $E_{\\lambda}$ ($\\times 10^{",
               unit.exponent,
               "W m^{-2} nm^{-1})$)", sep = "")
       }
     } else if (format %in% c("R.expression")) {
       if (has_SI_prefix(unit.exponent)) {
         prefix <- exponent2prefix(unit.exponent)
-        bquote(plain(Spectral~~energy~~irradiance)~~E[lambda]~~(plain(.(prefix))*plain(W~m^{-2}~nm^{-1})))
+        bquote(.(label.text)~~E[lambda]~~(plain(.(prefix))*plain(W~m^{-2}~nm^{-1})))
       } else {
-        bquote(plain(Spectral~~energy~~irradiance)~~E[lambda]~(10^{.(unit.exponent)}~plain(W~m^{-2}~nm^{-1})))
+        bquote(.(label.text)~~E[lambda]~(10^{.(unit.exponent)}~plain(W~m^{-2}~nm^{-1})))
       }
     } else if (format == "R.character" &&
                has_SI_prefix(unit.exponent)) {
-      paste("Spectral energy irradiance E(lambda) (",
+      paste(label.text, " E(lambda) (",
             exponent2prefix(unit.exponent, char.set = "ascii"),
             "W m-2 nm-1)", sep = "")
     } else {
@@ -79,45 +81,46 @@ s.e.irrad_label <- function(unit.exponent = 0,
 s.q.irrad_label <- function(unit.exponent = ifelse(normalized, 0, -6),
                             format = getOption("photobiology.math",
                                                default = "R.expression"),
+                            label.text = axis_labels()[["s.q.irrad"]],
                             scaled = FALSE,
                             normalized = FALSE) {
   if (scaled) {
     if (tolower(format) == "latex") {
-      "Spectral photon irradiance $Q_{\\lambda}$ (rel.\ units)"
+      paste(label.text, "$Q_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      expression(plain(Spectral~~photon~~irradiance)~~Q[lambda]~~plain((rel.~~units)))
+      bquote(.(label.text)~~Q[lambda]~~plain((rel.~~units)))
     } else if (format == "R.character") {
-      "Spectral photon irradiance (rel. units)"
+      paste(label.text, "Q(lambda) (rel. units)")
     }
   } else if (normalized) {
     if (tolower(format) == "latex") {
-      paste("Spectral photon irradiance $Q_{\\lambda} / Q_{", normalized, "}$ (/1)", sep = "")
+      paste(label.text, " $Q_{\\lambda} / Q_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(plain(Spectral~~photon~~irradiance)~~Q[lambda]/Q[.(normalized)]~~plain("(/1)"))
+      bquote(.(label.text)~~Q[lambda]/Q[.(normalized)]~~plain("(/1)"))
     } else if (format == "R.character") {
-      paste("Spectral photon irradiance (norm. at", normalized, "nm)")
+      paste(label.text, "Q(lambda) (norm. at", normalized, "nm)")
     }
   } else {
     if (tolower(format) == "latex") {
       if (has_SI_prefix(unit.exponent)) {
-        paste("Spectral photon irradiance $Q_{\\lambda}$ ($",
+        paste(label.text, " $Q_{\\lambda}$ ($",
               exponent2prefix(unit.exponent, char.set = "LaTeX"),
               "\\mathrm{mol} s^{-1} m^{-2} nm^{-1}$)", sep = "")
       } else {
-        paste("Spectral photon irradiance $Q_{\\lambda}$ ($\\times 10^{",
+        paste(label.text, " $Q_{\\lambda}$ ($\\times 10^{",
               unit.exponent,
               "}\\mathrm{mol} s^{-1} m^{-2} nm^{-1}$)", sep = "")
       }
     } else if (format %in% c("R.expression")) {
       if (has_SI_prefix(unit.exponent)) {
         prefix <- exponent2prefix(unit.exponent)
-        bquote(plain(Spectral~~photon~~irradiance~~Q[lambda]~~(plain(.(prefix))*mol~s^{-1}~m^{-2}~nm^{-1})))
+        bquote(.(label.text)~~Q[lambda]~~(plain(.(prefix))*mol~s^{-1}~m^{-2}~nm^{-1}))
       } else {
-        bquote(plain(Spectral~~photon~~irradiance~~Q[lambda]~~(10^{.(unit.exponent)}*mol~s^{-1}~m^{-2}~nm^{-1})))
+        bquote(.(label.text)~~Q[lambda]~~(10^{.(unit.exponent)}*mol~s^{-1}~m^{-2}~nm^{-1}))
       }
     } else if (format == "R.character" &&
                has_SI_prefix(unit.exponent)) {
-      paste("Spectral photon irradiance Q(lambda) (",
+      paste(label.text, " Q(lambda) (",
             exponent2prefix(unit.exponent, char.set = "ascii"),
             "mol s-1 m-2 nm-1)", sep = "")
     } else {
@@ -136,6 +139,7 @@ s.q.irrad_label <- function(unit.exponent = ifelse(normalized, 0, -6),
 #' @param labels The tick labels or a function to generate them.
 #' @param format character string, "R", "R.expression", "R.character", or
 #'   "LaTeX".
+#' @param label.text character Textual portion of the labels.
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
@@ -148,9 +152,21 @@ s.q.irrad_label <- function(unit.exponent = ifelse(normalized, 0, -6),
 #'
 #' @examples
 #'
+#' energy_as_default()
+#'
 #' ggplot(sun.spct) +
 #'   geom_line() +
 #'   scale_y_s.e.irrad_continuous() +
+#'   scale_x_wl_continuous()
+#'
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   scale_y_s.e.irrad_continuous(label.text = "") +
+#'   scale_x_wl_continuous()
+#'
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   scale_y_s.e.irrad_continuous(label.text = "Irradiancia spectral") +
 #'   scale_x_wl_continuous()
 #'
 #' ggplot(sun.spct) +
@@ -186,11 +202,13 @@ scale_y_s.e.irrad_continuous <-
   function(unit.exponent = 0,
            name = s.e.irrad_label(unit.exponent = unit.exponent,
                                   format = format,
+                                  label.text = label.text,
                                   scaled = scaled,
                                   normalized = round(normalized, 1)),
            labels = SI_pl_format(exponent = unit.exponent),
            format = getOption("photobiology.math",
                               default = "R.expression"),
+           label.text = axis_labels()[["s.e.irrad"]],
            scaled = FALSE,
            normalized = FALSE,
            ...) {
@@ -207,11 +225,13 @@ scale_y_s.q.irrad_continuous <-
   function(unit.exponent = ifelse(normalized, 0, -6),
            name = s.q.irrad_label(unit.exponent = unit.exponent,
                                   format = format,
+                                  label.text = label.text,
                                   scaled = scaled,
                                   normalized = round(normalized, 1)),
            labels = SI_pl_format(exponent = unit.exponent),
            format = getOption("photobiology.math",
                               default = "R.expression"),
+           label.text = axis_labels()[["s.q.irrad"]],
            scaled = FALSE,
            normalized = FALSE,
            ...) {
@@ -228,11 +248,13 @@ scale_y_s.e.irrad_log10 <-
   function(unit.exponent = 0,
            name = s.e.irrad_label(unit.exponent = unit.exponent,
                                   format = format,
+                                  label.text = label.text,
                                   scaled = scaled,
                                   normalized = round(normalized, 1)),
            labels = SI_pl_format(exponent = unit.exponent),
            format = getOption("photobiology.math",
                               default = "R.expression"),
+           label.text = axis_labels()[["s.e.irrad"]],
            scaled = FALSE,
            normalized = FALSE,
            ...) {
@@ -249,11 +271,13 @@ scale_y_s.q.irrad_log10 <-
   function(unit.exponent = ifelse(normalized, 0, -6),
            name = s.q.irrad_label(unit.exponent = unit.exponent,
                                   format = format,
+                                  label.text = label.text,
                                   scaled = scaled,
                                   normalized = round(normalized, 1)),
            labels = SI_pl_format(exponent = unit.exponent),
            format = getOption("photobiology.math",
                               default = "R.expression"),
+           label.text = axis_labels()[["s.q.irrad"]],
            scaled = FALSE,
            normalized = FALSE,
            ...) {
@@ -261,7 +285,6 @@ scale_y_s.q.irrad_log10 <-
                        labels = labels,
                        ...)
   }
-
 
 ## internal
 

@@ -7,6 +7,7 @@
 #' @param unit.exponent integer
 #' @param format character string, "R", "R.expression", "R.character", or
 #'   "LaTeX".
+#' @param label.text character Textual portion of the labels.
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
@@ -41,45 +42,46 @@
 s.e.response_label <- function(unit.exponent = 0,
                                format = getOption("photobiology.math",
                                                   default = "R.expression"),
+                               label.text = axis_labels()[["s.e.response"]],
                                scaled = FALSE,
                                normalized = FALSE) {
   if (scaled) {
     if (tolower(format) == "latex") {
-      "Spectral energy response $R_{\\lambda}$ (rel.\ units)"
+      paste(label.text, "$R(E)_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      expression(plain(Spectral~~energy~~response)~~R[lambda]~~plain((rel.~~units)))
+      bquote(.(label.text)~~R(E)[lambda]~~plain((rel.~~units)))
     } else if (format == "R.character") {
-      "Spectral energy response (rel. units)"
+      paste(label.text, "R(lambda) (rel. units)")
     }
   } else if (normalized) {
     if (tolower(format) == "latex") {
-      paste("Spectral energy response $R_{\\lambda} / R_{", normalized, "}$ (/1)", sep = "")
+      paste(label.text, " $R(E)_{\\lambda} / R(E)_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(plain(Spectral~~energy~~response)~~R[lambda]/R[.(normalized)]~~plain("(/1)"))
+      bquote(.(label.text)~~R[lambda]/R[.(normalized)]~~plain("(/1)"))
     } else if (format == "R.character") {
-      paste("Spectral energy response (norm. at", normalized, "nm)")
+      paste(label.text, "R(E)(lambda) (norm. at", normalized, "nm)")
     }
   } else {
     if (tolower(format) == "latex") {
       if (has_SI_prefix(unit.exponent)) {
-        paste("Spectral energy response $R_{\\lambda}$ ($",
+        paste(label.text, " $R(E)_{\\lambda}$ ($",
               exponent2prefix(unit.exponent, char.set = "LaTeX"),
               "J^{-1} m^{-2} nm^{-1})$)", sep = "")
       } else {
-        paste("Spectral energy response $R_{\\lambda}$ ($\\times 10^{",
+        paste(label.text, " $R(E)_{\\lambda}$ ($\\times 10^{",
               unit.exponent,
               "J^{-1} m^{-2} nm^{-1})$)", sep = "")
       }
     } else if (format %in% c("R.expression")) {
       if (has_SI_prefix(unit.exponent)) {
         prefix <- exponent2prefix(unit.exponent)
-        bquote(plain(Spectral~~energy~~response)~~R[lambda]~~(plain(.(prefix))*plain(J^{-1}~m^{-2}~nm^{-1})))
+        bquote(.(label.text)~~R(E)[lambda]~~(plain(.(prefix))*plain(J^{-1}~m^{-2}~nm^{-1})))
       } else {
-        bquote(plain(Spectral~~energy~~response)~~R[lambda]~(10^{.(unit.exponent)}~plain(J^{-1}~m^{-2}~nm^{-1})))
+        bquote(.(label.text)~~R(E)[lambda]~(10^{.(unit.exponent)}~plain(J^{-1}~m^{-2}~nm^{-1})))
       }
     } else if (format == "R.character" &&
                has_SI_prefix(unit.exponent)) {
-      paste("Spectral energy response R(lambda) (",
+      paste(label.text, " R(E)(lambda) (",
             exponent2prefix(unit.exponent, char.set = "ascii"),
             "J-1 m-2 nm-1)", sep = "")
     } else {
@@ -96,45 +98,46 @@ s.e.response_label <- function(unit.exponent = 0,
 s.q.response_label <- function(unit.exponent = 0,
                                format = getOption("photobiology.math",
                                                   default = "R.expression"),
+                               label.text = axis_labels()[["s.q.response"]],
                                scaled = FALSE,
                                normalized = FALSE) {
   if (scaled) {
     if (tolower(format) == "latex") {
-      "Spectral photon response $R_{\\lambda}$ (rel.\ units)"
+      paste(label.text, " $R(Q)_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      expression(plain(Spectral~~photon~~response)~~R[lambda]~~plain((rel.~~units)))
+      expression(.(label.text)~~R(Q)[lambda]~~plain((rel.~~units)))
     } else if (format == "R.character") {
-      "Spectral photon response (rel. units)"
+      paste(label.text, " (rel. units)")
     }
   } else if (normalized) {
     if (tolower(format) == "latex") {
-      paste("Spectral photon response $R_{\\lambda} / R_{", normalized, "}$ (/1)", sep = "")
+      paste(label.text, " $R(Q)_{\\lambda} / R(Q)_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(plain(Spectral~~photon~~response)~~R[lambda]/R[.(normalized)]~~plain("(/1)"))
+      bquote(.(label.text)~~R(Q)[lambda]/R(Q)[.(normalized)]~~plain("(/1)"))
     } else if (format == "R.character") {
-      paste("Spectral photon response (norm.", normalized, "nm)")
+      paste(label.text, "R(Q)(lambda) (norm.", normalized, "nm)")
     }
   } else {
     if (tolower(format) == "latex") {
       if (has_SI_prefix(unit.exponent)) {
-        paste("Spectral photon response $R_{\\lambda}$ ($",
+        paste(label.text, " $R(Q)_{\\lambda}$ ($",
               exponent2prefix(unit.exponent, char.set = "LaTeX"),
               "\\mathrm{mol^{-1}} m^{-2} nm^{-1}$)", sep = "")
       } else {
-        paste("Spectral photon response $R_{\\lambda}$ ($\\times 10^{",
+        paste(label.text, " $R(Q)_{\\lambda}$ ($\\times 10^{",
               unit.exponent,
               "}\\mathrm{mol^{-1}} m^{-2} nm^{-1}$)", sep = "")
       }
     } else if (format %in% c("R.expression")) {
       if (has_SI_prefix(unit.exponent)) {
         prefix <- exponent2prefix(unit.exponent)
-        bquote(plain(Spectral~~photon~~response)~~R[lambda]~~(plain(.(prefix))*plain(mol^{-1}~m^{-2}~nm^{-1})))
+        bquote(.(label.text)~~R(Q)[lambda]~~(plain(.(prefix))*plain(mol^{-1}~m^{-2}~nm^{-1})))
       } else {
-        bquote(plain(Spectral~~photon~~response)~~R[lambda]~~(10^{.(unit.exponent)}*plain(mol^{-1}~m^{-2}~nm^{-1})))
+        bquote(.(label.text)~~R(Q)[lambda]~~(10^{.(unit.exponent)}*plain(mol^{-1}~m^{-2}~nm^{-1})))
       }
     } else if (format == "R.character" &&
                has_SI_prefix(unit.exponent)) {
-      paste("Spectral photon response R(lambda) (",
+      paste(label.text, " R(Q)(lambda) (",
             exponent2prefix(unit.exponent, char.set = "ascii"),
             "mol-1 m-2 nm-1)", sep = "")
     } else {
@@ -151,45 +154,46 @@ s.q.response_label <- function(unit.exponent = 0,
 s.e.action_label <- function(unit.exponent = 0,
                              format = getOption("photobiology.math",
                                                 default = "R.expression"),
+                             label.text = axis_labels()[["s.e.action"]],
                              scaled = FALSE,
                              normalized = FALSE) {
   if (scaled) {
     if (tolower(format) == "latex") {
-      "Spectral energy action $A_{\\lambda}$ (rel.\ units)"
+      paste(label.text, "$A(E)_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      expression(plain(Spectral~~energy~~action)~~A[lambda]~~plain((rel.~~units)))
+      bquote(.(label.text)~~A(E)[lambda]~~plain((rel.~~units)))
     } else if (format == "R.character") {
-      "Spectral energy action (rel. units)"
+      paste(label.text, "A(E)(lambda) (rel. units)")
     }
   } else if (normalized) {
     if (tolower(format) == "latex") {
-      paste("Spectral energy action $A_{\\lambda} / A_{", normalized, "}$ (/1)", sep = "")
+      paste(label.text, " $A(E)_{\\lambda} / A(E)_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(plain(Spectral~~energy~~action)~~A[lambda]/A[.(normalized)]~~plain("(/1)"))
+      bquote(.(label.text)~~A(E)[lambda]/A(E)[.(normalized)]~~plain("(/1)"))
     } else if (format == "R.character") {
-      paste("Spectral energy action (norm. at", normalized, "nm)")
+      paste(label.text, "A(E)(lambda) (norm. at", normalized, "nm)")
     }
   } else {
     if (tolower(format) == "latex") {
       if (has_SI_prefix(unit.exponent)) {
-        paste("Spectral energy action $A_{\\lambda}$ ($",
+        paste(label.text, " $A(E)_{\\lambda}$ ($",
               exponent2prefix(unit.exponent, char.set = "LaTeX"),
               "J^{-1} m^{-2} nm^{-1})$)", sep = "")
       } else {
-        paste("Spectral energy action $A_{\\lambda}$ ($\\times 10^{",
+        paste(label.text, " $A(E)_{\\lambda}$ ($\\times 10^{",
               unit.exponent,
               "J^{-1} m^{-2} nm^{-1})$)", sep = "")
       }
     } else if (format %in% c("R.expression")) {
       if (has_SI_prefix(unit.exponent)) {
         prefix <- exponent2prefix(unit.exponent)
-        bquote(plain(Spectral~~energy~~action)~~A[lambda]~~(plain(.(prefix))*plain(J^{-1}~m^{-2}~nm^{-1})))
+        bquote(.(label.text)~~A(E)[lambda]~~(plain(.(prefix))*plain(J^{-1}~m^{-2}~nm^{-1})))
       } else {
-        bquote(plain(Spectral~~energy~~action)~~A[lambda]~(10^{.(unit.exponent)}~plain(J^{-1}~m^{-2}~nm^{-1})))
+        bquote(.(label.text)~~A(E)[lambda]~(10^{.(unit.exponent)}~plain(J^{-1}~m^{-2}~nm^{-1})))
       }
     } else if (format == "R.character" &&
                has_SI_prefix(unit.exponent)) {
-      paste("Spectral energy action A(lambda) (",
+      paste(label.text, " A(E)(lambda) (",
             exponent2prefix(unit.exponent, char.set = "ascii"),
             "J-1 m-2 nm-1)", sep = "")
     } else {
@@ -206,45 +210,46 @@ s.e.action_label <- function(unit.exponent = 0,
 s.q.action_label <- function(unit.exponent = 0,
                              format = getOption("photobiology.math",
                                                 default = "R.expression"),
+                             label.text = axis_labels()[["s.q.action"]],
                              scaled = FALSE,
                              normalized = FALSE) {
   if (scaled) {
     if (tolower(format) == "latex") {
-      "Spectral photon action $A_{\\lambda}$ (rel.\ units)"
+      paste(label.text, "$A(Q)_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      expression(plain(Spectral~~photon~~action)~~A[lambda]~~plain((rel.~~units)))
+      expression(.(label.text)~~A(Q)[lambda]~~plain((rel.~~units)))
     } else if (format == "R.character") {
-      "Spectral photon action (rel. units)"
+      paste(label.text, "A(Q)(lambda) (rel. units)")
     }
   } else if (normalized) {
     if (tolower(format) == "latex") {
-      paste("Spectral photon action $A_{\\lambda} / A_{", normalized, "}$ (/1)", sep = "")
+      paste(label.text, " $A(Q)_{\\lambda} / A(Q)_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(plain(Spectral~~photon~~action)~~A[lambda]/A[.(normalized)]~~plain("(/1)"))
+      bquote(.(label.text)~~A(Q)[lambda]/A(Q)[.(normalized)]~~plain("(/1)"))
     } else if (format == "R.character") {
-      paste("Spectral photon action (norm. at", normalized, "nm)")
+      paste(label.text, "A(Q)(lambda) (norm. at", normalized, "nm)")
     }
   } else {
     if (tolower(format) == "latex") {
       if (has_SI_prefix(unit.exponent)) {
-        paste("Spectral photon action $A_{\\lambda}$ ($",
+        paste(label.text, " $A(Q)_{\\lambda}$ ($",
               exponent2prefix(unit.exponent, char.set = "LaTeX"),
               "\\mathrm{mol^{-1}} m^{-2} nm^{-1}$)", sep = "")
       } else {
-        paste("Spectral photon action $A_{\\lambda}$ ($\\times 10^{",
+        paste(label.text, " $A(Q)_{\\lambda}$ ($\\times 10^{",
               unit.exponent,
               "}\\mathrm{mol^{-1}} m^{-2} nm^{-1}$)", sep = "")
       }
     } else if (format %in% c("R.expression")) {
       if (has_SI_prefix(unit.exponent)) {
         prefix <- exponent2prefix(unit.exponent)
-        bquote(plain(Spectral~~photon~~action)~~A[lambda]~~(plain(.(prefix))*plain(mol^{-1}~m^{-2}~nm^{-1})))
+        bquote(.(label.text)~~A(Q)[lambda]~~(plain(.(prefix))*plain(mol^{-1}~m^{-2}~nm^{-1})))
       } else {
-        bquote(plain(Spectral~~photon~~action)~~A[lambda]~~(10^{.(unit.exponent)}*plain(mol^{-1}~m^{-2}~nm^{-1})))
+        bquote(.(label.text)~~A(Q)[lambda]~~(10^{.(unit.exponent)}*plain(mol^{-1}~m^{-2}~nm^{-1})))
       }
     } else if (format == "R.character" &&
                has_SI_prefix(unit.exponent)) {
-      paste("Spectral photon action A(lambda) (",
+      paste(label.text, " A(Q)(lambda) (",
             exponent2prefix(unit.exponent, char.set = "ascii"),
             "mol-1 m-2 nm-1)", sep = "")
     } else {
@@ -263,6 +268,7 @@ s.q.action_label <- function(unit.exponent = 0,
 #' @param labels The tick labels or a function to generate them.
 #' @param format character string, "R", "R.expression", "R.character", or
 #'   "LaTeX".
+#' @param label.text character Textual portion of the labels.
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
@@ -321,11 +327,13 @@ scale_y_s.e.response_continuous <-
   function(unit.exponent = 0,
            name = s.e.response_label(unit.exponent = unit.exponent,
                                      format = format,
+                                     label.text = label.text,
                                      scaled = scaled,
                                      normalized = round(normalized, 1)),
            labels = SI_pl_format(exponent = -unit.exponent), # per unit
            format = getOption("photobiology.math",
                               default = "R.expression"),
+           label.text = axis_labels()[["s.e.response"]],
            scaled = FALSE,
            normalized = FALSE,
            ...) {
@@ -342,11 +350,13 @@ scale_y_s.q.response_continuous <-
   function(unit.exponent = 0,
            name = s.q.response_label(unit.exponent = unit.exponent,
                                      format = format,
+                                     label.text = label.text,
                                      scaled = scaled,
                                      normalized = round(normalized, 1)),
            labels = SI_pl_format(exponent = -unit.exponent),  # per unit
            format = getOption("photobiology.math",
                               default = "R.expression"),
+           label.text = axis_labels()[["s.q.response"]],
            scaled = FALSE,
            normalized = FALSE,
            ...) {
@@ -363,11 +373,13 @@ scale_y_s.e.action_continuous <-
   function(unit.exponent = 0,
            name = s.e.action_label(unit.exponent = unit.exponent,
                                    format = format,
+                                   label.text = label.text,
                                    scaled = scaled,
                                    normalized = round(normalized, 1)),
            labels = SI_pl_format(exponent = -unit.exponent), # per unit
            format = getOption("photobiology.math",
                               default = "R.expression"),
+           label.text = axis_labels()[["s.e.action"]],
            scaled = FALSE,
            normalized = FALSE,
            ...) {
@@ -384,11 +396,13 @@ scale_y_s.q.action_continuous <-
   function(unit.exponent = 0,
            name = s.q.action_label(unit.exponent = unit.exponent,
                                    format = format,
+                                   label.text = label.text,
                                    scaled = scaled,
                                    normalized = round(normalized, 1)),
            labels = SI_pl_format(exponent = -unit.exponent),  # per unit
            format = getOption("photobiology.math",
                               default = "R.expression"),
+           label.text = axis_labels()[["s.q.action"]],
            scaled = FALSE,
            normalized = FALSE,
            ...) {

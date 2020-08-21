@@ -7,10 +7,11 @@ required.
 * Improve stat_wl_strip() performance by simplifying data before plotting.
 * Add suport for plotting action spectra (preliminary).
 * Update y-scales to support scaled and normalized data.
-* Update y-scales to generate more compact axis labels.
+* Update y-scales to generate more compact axis labels and allow users to
+override the default label text.
 * Implement scale_y_Afr_continuous() for absorptance spectra.
 * Update autolpot() methods to generate more compact axis labels.
-* Fix documentation example that stopped working because of changes to
+* Fix a documentation example that stopped working because of changes to
 'ggplot2'.
 
 ******************************************************************************
