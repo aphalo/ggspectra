@@ -49,7 +49,7 @@ s.e.response_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, "$R(E)_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~~R(E)[lambda]~~plain((rel.~~units)))
+      bquote(.(label.text)~italic(R(E))[lambda]~plain((rel.~units)))
     } else if (format == "R.character") {
       paste(label.text, "R(lambda) (rel. units)")
     }
@@ -57,7 +57,7 @@ s.e.response_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $R(E)_{\\lambda} / R(E)_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~~R[lambda]/R[.(normalized)]~~plain("(/1)"))
+      bquote(.(label.text)~italic(R(E))[lambda]/italic(R(E))[.(normalized)]~plain("(/1)"))
     } else if (format == "R.character") {
       paste(label.text, "R(E)(lambda) (norm. at", normalized, "nm)")
     }
@@ -75,9 +75,9 @@ s.e.response_label <- function(unit.exponent = 0,
     } else if (format %in% c("R.expression")) {
       if (has_SI_prefix(unit.exponent)) {
         prefix <- exponent2prefix(unit.exponent)
-        bquote(.(label.text)~~R(E)[lambda]~~(plain(.(prefix))*plain(J^{-1}~m^{-2}~nm^{-1})))
+        bquote(.(label.text)~italic(R(E))[lambda]~(plain(.(prefix))*plain(J^{-1}~m^{-2}~nm^{-1})))
       } else {
-        bquote(.(label.text)~~R(E)[lambda]~(10^{.(unit.exponent)}~plain(J^{-1}~m^{-2}~nm^{-1})))
+        bquote(.(label.text)~italic(R(E))[lambda]~(10^{.(unit.exponent)}~plain(J^{-1}~m^{-2}~nm^{-1})))
       }
     } else if (format == "R.character" &&
                has_SI_prefix(unit.exponent)) {
@@ -105,7 +105,7 @@ s.q.response_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $R(Q)_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      expression(.(label.text)~~R(Q)[lambda]~~plain((rel.~~units)))
+      expression(.(label.text)~italic(R(Q))[lambda]~plain((rel.~units)))
     } else if (format == "R.character") {
       paste(label.text, " (rel. units)")
     }
@@ -113,7 +113,7 @@ s.q.response_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $R(Q)_{\\lambda} / R(Q)_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~~R(Q)[lambda]/R(Q)[.(normalized)]~~plain("(/1)"))
+      bquote(.(label.text)~italic(R(Q))[lambda]/italic(R(Q))[.(normalized)]~plain("(/1)"))
     } else if (format == "R.character") {
       paste(label.text, "R(Q)(lambda) (norm.", normalized, "nm)")
     }
@@ -131,9 +131,9 @@ s.q.response_label <- function(unit.exponent = 0,
     } else if (format %in% c("R.expression")) {
       if (has_SI_prefix(unit.exponent)) {
         prefix <- exponent2prefix(unit.exponent)
-        bquote(.(label.text)~~R(Q)[lambda]~~(plain(.(prefix))*plain(mol^{-1}~m^{-2}~nm^{-1})))
+        bquote(.(label.text)~italic(R(Q))[lambda]~(plain(.(prefix))*plain(mol^{-1}~m^{-2}~nm^{-1})))
       } else {
-        bquote(.(label.text)~~R(Q)[lambda]~~(10^{.(unit.exponent)}*plain(mol^{-1}~m^{-2}~nm^{-1})))
+        bquote(.(label.text)~italic(R(Q))[lambda]~(10^{.(unit.exponent)}*plain(mol^{-1}~m^{-2}~nm^{-1})))
       }
     } else if (format == "R.character" &&
                has_SI_prefix(unit.exponent)) {
@@ -161,7 +161,7 @@ s.e.action_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, "$A(E)_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~~A(E)[lambda]~~plain((rel.~~units)))
+      bquote(.(label.text)~italic(A(E))[lambda]~plain((rel.~units)))
     } else if (format == "R.character") {
       paste(label.text, "A(E)(lambda) (rel. units)")
     }
@@ -169,7 +169,7 @@ s.e.action_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $A(E)_{\\lambda} / A(E)_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~~A(E)[lambda]/A(E)[.(normalized)]~~plain("(/1)"))
+      bquote(.(label.text)~italic(A(E))[lambda]/italic(A(E))[.(normalized)]~plain("(/1)"))
     } else if (format == "R.character") {
       paste(label.text, "A(E)(lambda) (norm. at", normalized, "nm)")
     }
@@ -187,9 +187,9 @@ s.e.action_label <- function(unit.exponent = 0,
     } else if (format %in% c("R.expression")) {
       if (has_SI_prefix(unit.exponent)) {
         prefix <- exponent2prefix(unit.exponent)
-        bquote(.(label.text)~~A(E)[lambda]~~(plain(.(prefix))*plain(J^{-1}~m^{-2}~nm^{-1})))
+        bquote(.(label.text)~italic(A(E))[lambda]~(plain(.(prefix))*plain(J^{-1}~m^{-2}~nm^{-1})))
       } else {
-        bquote(.(label.text)~~A(E)[lambda]~(10^{.(unit.exponent)}~plain(J^{-1}~m^{-2}~nm^{-1})))
+        bquote(.(label.text)~italic(A(E))[lambda]~(10^{.(unit.exponent)}~plain(J^{-1}~m^{-2}~nm^{-1})))
       }
     } else if (format == "R.character" &&
                has_SI_prefix(unit.exponent)) {
@@ -217,7 +217,7 @@ s.q.action_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, "$A(Q)_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      expression(.(label.text)~~A(Q)[lambda]~~plain((rel.~~units)))
+      expression(.(label.text)~talic(A(Q))[lambda]~plain((rel.~units)))
     } else if (format == "R.character") {
       paste(label.text, "A(Q)(lambda) (rel. units)")
     }
@@ -225,7 +225,7 @@ s.q.action_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $A(Q)_{\\lambda} / A(Q)_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~~A(Q)[lambda]/A(Q)[.(normalized)]~~plain("(/1)"))
+      bquote(.(label.text)~italic(A(Q))[lambda]/talic(A(Q))[.(normalized)]~plain("(/1)"))
     } else if (format == "R.character") {
       paste(label.text, "A(Q)(lambda) (norm. at", normalized, "nm)")
     }
@@ -243,9 +243,9 @@ s.q.action_label <- function(unit.exponent = 0,
     } else if (format %in% c("R.expression")) {
       if (has_SI_prefix(unit.exponent)) {
         prefix <- exponent2prefix(unit.exponent)
-        bquote(.(label.text)~~A(Q)[lambda]~~(plain(.(prefix))*plain(mol^{-1}~m^{-2}~nm^{-1})))
+        bquote(.(label.text)~talic(A(Q))[lambda]~(plain(.(prefix))*plain(mol^{-1}~m^{-2}~nm^{-1})))
       } else {
-        bquote(.(label.text)~~A(Q)[lambda]~~(10^{.(unit.exponent)}*plain(mol^{-1}~m^{-2}~nm^{-1})))
+        bquote(.(label.text)~talic(A(Q))[lambda]~(10^{.(unit.exponent)}*plain(mol^{-1}~m^{-2}~nm^{-1})))
       }
     } else if (format == "R.character" &&
                has_SI_prefix(unit.exponent)) {
@@ -275,13 +275,18 @@ s.q.action_label <- function(unit.exponent = 0,
 #' @param ... other named arguments passed to \code{scale_y_continuous}
 #'
 #' @note This function only alters two default arguments, please, see
-#' documentation for \code{\link[ggplot2]{scale_continuous}}
+#' documentation for \code{\link[ggplot2]{scale_continuous}}.
 #'
 #' @export
 #'
 #' @examples
 #'
 #' energy_as_default()
+#'
+#' ggplot(ccd.spct) +
+#'   geom_line() +
+#'   scale_y_s.e.action_continuous() + #  per joule
+#'   scale_x_wl_continuous()
 #'
 #' ggplot(ccd.spct) +
 #'   geom_line() +

@@ -84,7 +84,6 @@ Functions for automatic generation of secondary x-axes in the case when a variab
 
 In addition secondary axis definitions, `sec_axis_w_number()` and `sec_axis_w_frequency()`, and SI system formatters `SI_pl_format`, and `SI_tg_format` are exported, together with auxiliary functions for finding the nearest SI multiplier based on an arbitrary exponent.
 
-
 ### What are functions `color_chart()` and `black_or_white()` for?
 
 Function `color_chart()` makes a color chart of rectangular tiles from a vector R color definitions. The chart returned is a `ggplot` object. Function `black_or_white()` accepts a vector of color definitions and returns a vector with colors `"white"` or `"black"` depending on the approximate luminosity of each color in the input. The main use is to automatically achieve suitable contrast between text plotted on top of a color background.
@@ -95,7 +94,7 @@ Function `autotitle()` adds a title, subtitle and/or a caption to a plot. The di
 
 ## Set up 
 
-```{r}
+```{r, message=FALSE}
 library(ggplot2)
 library(dplyr)
 library(scales)
@@ -104,9 +103,7 @@ library(photobiologyWavebands)
 library(ggspectra)
 library(ggrepel)
 
-good_label_repel <- packageVersion('ggrepel') != "0.8.0" #||
-#  packageVersion('ggplot2') >= "3.1.0"
-
+good_label_repel <- packageVersion('ggrepel') != "0.8.0"
 ```
 
 ```{r, include=FALSE, echo=FALSE}
@@ -234,6 +231,7 @@ ggplot(two_suns.mspct) +
   geom_line() +
   facet_wrap(~spct.idx, ncol = 1L, scales = "free_y")
 ```
+
 ## Scales
 
 The scales provided are all wrappers of continuous scales from packages 'ggplot2'
@@ -243,7 +241,7 @@ pass them to the wrapped scales. The default text for the labels can be also
 set by the user by redefining a function, in addition than overriding the
 defaults in individual calls. This is a step towards multilingual support.
 
-## Shared features
+### Shared features
 
 We present here, only once for all scales, examples of how to use features
 common to all of them. To start with we show the defaults for the scale for
@@ -517,6 +515,7 @@ ggplot(green_leaf.spct) +
   scale_x_wl_continuous() +
   scale_y_Rfr_continuous(Rfr.type = getRfrType(green_leaf.spct))
 ```
+
 ## Stats
 
 Several `ggplot` stats are defined by this package. All of them target light spectra, as they expect $x$ to represent wavelengths expressed in nanometres. However, they should behave correctly as long as this is true, with any `ggplot` object, based on any data format acceptable to `ggplot`. The name of the original variable is irrelevant, and it is the user responsibility to supply the correct variables through `aes()`. Of course, when using the spectral classes defined in package `photobiology` the defaults easy this task.

@@ -1,4 +1,4 @@
-ggspectra 0.3.7 (2020-08-xx)
+ggspectra 0.3.7 (2020-08-22)
 ============================
 
 * Track and profit from updated 'photobiology' (>= 0.10.4), with (>= 0.10.5) now
@@ -7,7 +7,8 @@ required.
 * Improve stat_wl_strip() performance by simplifying data before plotting.
 * Add suport for plotting action spectra (preliminary).
 * Update y-axis scales to support scaled and normalized data.
-* Update y-scales to generate more compact axis labels.
+* Update y-scales to generate more compact axis labels and use IUPAC-recommended
+symbols.
 * Update x-axis- and y-axis scales to allow users to override the default label
 text.
 * Implement scale_y_Afr_continuous() for absorptance spectra.
@@ -20,6 +21,7 @@ text.
 Although this update should not break any code, the plots created will in some
 cases differ slighttly from those created with earlier versions. Changes only
 affect the formatting of y-axis labels.
+(These changes do not concern autoplot() methods yet.)
 ******************************************************************************
 
 ggspectra 0.3.6 (2020-04-20)

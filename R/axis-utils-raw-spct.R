@@ -32,7 +32,7 @@ counts_label <- function(unit.exponent = 3,
     if (tolower(format) == "latex") {
       paste(label.text, "$N_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~~N[lambda]~~plain((rel.~~units)))
+      bquote(.(label.text)~italic(N)[lambda]~plain((rel.~units)))
     } else if (format == "R.character") {
       "Pixel response N(lambda) (rel. units)"
     }
@@ -40,7 +40,7 @@ counts_label <- function(unit.exponent = 3,
     if (tolower(format) == "latex") {
       paste(label.text, " $N_{\\lambda} / N_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(plain(Pixel~~response)~~N[lambda]/N[.(normalized)]~~plain("(/1)"))
+      bquote(plain(Pixel~~response)~italic(N)[lambda]/italic(N)[.(normalized)]~plain("(/1)"))
     } else if (format == "R.character") {
       paste(label.text, "N(lambda) (norm. at", normalized, "nm)")
     }
@@ -55,9 +55,9 @@ counts_label <- function(unit.exponent = 3,
       }
     } else if (format %in% c("R.expression")) {
       if (unit.exponent == 0) {
-        bquote(.(label.text)~~N[lambda]~~(counts))
+        bquote(.(label.text)~italic(N)[lambda]~(counts))
       } else {
-        bquote(.(label.text)~~N[lambda]~~(10^{.(unit.exponent)}*plain(counts)))
+        bquote(.(label.text)~italic(N)[lambda]~(10^{.(unit.exponent)}*plain(counts)))
       }
     } else if (format == "R.character" && unit.exponent == 0) {
       paste(label.text, "N(lambda) (counts)")

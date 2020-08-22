@@ -32,7 +32,7 @@ s.e.irrad_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, "$E_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~~E[lambda]~~plain((rel.~~units)))
+      bquote(.(label.text)~italic(E)[lambda]~plain((rel.~units)))
     } else if (format == "R.character") {
       paste(label.text, "E(lambda) (rel. units)")
     }
@@ -40,7 +40,7 @@ s.e.irrad_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $E_{\\lambda} / E_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~~E[lambda]/E[.(normalized)]~~plain("(/1)"))
+      bquote(.(label.text)~italic(E)[lambda]/italic(E)[.(normalized)]~plain("(/1)"))
     } else if (format == "R.character") {
       paste(label.text, "E(lambda) (norm. at", normalized, "nm)")
     }
@@ -58,9 +58,9 @@ s.e.irrad_label <- function(unit.exponent = 0,
     } else if (format %in% c("R.expression")) {
       if (has_SI_prefix(unit.exponent)) {
         prefix <- exponent2prefix(unit.exponent)
-        bquote(.(label.text)~~E[lambda]~~(plain(.(prefix))*plain(W~m^{-2}~nm^{-1})))
+        bquote(.(label.text)~italic(E)[lambda]~(plain(.(prefix))*plain(W~m^{-2}~nm^{-1})))
       } else {
-        bquote(.(label.text)~~E[lambda]~(10^{.(unit.exponent)}~plain(W~m^{-2}~nm^{-1})))
+        bquote(.(label.text)~italic(E)[lambda]~(10^{.(unit.exponent)}~plain(W~m^{-2}~nm^{-1})))
       }
     } else if (format == "R.character" &&
                has_SI_prefix(unit.exponent)) {
@@ -88,7 +88,7 @@ s.q.irrad_label <- function(unit.exponent = ifelse(normalized, 0, -6),
     if (tolower(format) == "latex") {
       paste(label.text, "$Q_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~~Q[lambda]~~plain((rel.~~units)))
+      bquote(.(label.text)~italic(Q)[lambda]~plain((rel.~units)))
     } else if (format == "R.character") {
       paste(label.text, "Q(lambda) (rel. units)")
     }
@@ -96,7 +96,7 @@ s.q.irrad_label <- function(unit.exponent = ifelse(normalized, 0, -6),
     if (tolower(format) == "latex") {
       paste(label.text, " $Q_{\\lambda} / Q_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~~Q[lambda]/Q[.(normalized)]~~plain("(/1)"))
+      bquote(.(label.text)~italic(Q)[lambda]/italic(Q)[.(normalized)]~plain("(/1)"))
     } else if (format == "R.character") {
       paste(label.text, "Q(lambda) (norm. at", normalized, "nm)")
     }
@@ -114,9 +114,9 @@ s.q.irrad_label <- function(unit.exponent = ifelse(normalized, 0, -6),
     } else if (format %in% c("R.expression")) {
       if (has_SI_prefix(unit.exponent)) {
         prefix <- exponent2prefix(unit.exponent)
-        bquote(.(label.text)~~Q[lambda]~~(plain(.(prefix))*mol~s^{-1}~m^{-2}~nm^{-1}))
+        bquote(.(label.text)~italic(Q)[lambda]~(plain(.(prefix))*mol~s^{-1}~m^{-2}~nm^{-1}))
       } else {
-        bquote(.(label.text)~~Q[lambda]~~(10^{.(unit.exponent)}*mol~s^{-1}~m^{-2}~nm^{-1}))
+        bquote(.(label.text)~italic(Q)[lambda]~(10^{.(unit.exponent)}*mol~s^{-1}~m^{-2}~nm^{-1}))
       }
     } else if (format == "R.character" &&
                has_SI_prefix(unit.exponent)) {
@@ -166,8 +166,8 @@ s.q.irrad_label <- function(unit.exponent = ifelse(normalized, 0, -6),
 #'
 #' ggplot(sun.spct) +
 #'   geom_line() +
-#'   scale_y_s.e.irrad_continuous(label.text = "Irradiancia spectral") +
-#'   scale_x_wl_continuous()
+#'   scale_y_s.e.irrad_continuous(label.text = "Irradiancia spectral,") +
+#'   scale_x_wl_continuous(label.text = "Longitud de onda,")
 #'
 #' ggplot(sun.spct) +
 #'   geom_line() +

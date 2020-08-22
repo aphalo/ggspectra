@@ -34,7 +34,7 @@ multipliers_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, "$k_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~~k[lambda]~~plain((rel.~~units)))
+      bquote(.(label.text)~italic(k)[lambda]~plain((rel.~units)))
     } else if (format == "R.character") {
       paste(label.text, "k(lambda) (rel. units)")
     }
@@ -42,7 +42,7 @@ multipliers_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $k_{\\lambda} / k_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~~k[lambda]/k[.(normalized)]~~plain("(/1)"))
+      bquote(.(label.text)~italic(k)[lambda]/italic(k)[.(normalized)]~plain("(/1)"))
     } else if (format == "R.character") {
       paste(label.text, "k(lambda) (norm. at", normalized, "nm)")
     }
@@ -57,9 +57,9 @@ multipliers_label <- function(unit.exponent = 0,
       }
     } else if (format %in% c("R.expression")) {
       if (unit.exponent == 0) {
-        bquote(.(label.text)~~k[lambda]~~(plain(W~m^{-2}~nm^{-1}~counts^{-1}~s)))
+        bquote(.(label.text)~italic(k)[lambda]~(plain(W~m^{-2}~nm^{-1}~counts^{-1}~s)))
       } else {
-        bquote(.(label.text)~~k[lambda]~~(10^{.(unit.exponent)}*plain(W~m^{-2}~nm^{-1}~counts^{-1}~s)))
+        bquote(.(label.text)~italic(k)[lambda]~(10^{.(unit.exponent)}*plain(W~m^{-2}~nm^{-1}~counts^{-1}~s)))
       }
     } else if (format == "R.character" && unit.exponent == 0) {
       paste(label.text, "k(lambda) (W m-2 nm-1 per counts/s)")

@@ -54,7 +54,7 @@ w_frequency <- function(w.length,
 w_length_label <- function(unit.exponent = -9,
                            format = getOption("photobiology.math",
                                               default = "R.expression"),
-                           label.text = "Wavelength") {
+                           label.text = axis_labels()[["w.length"]]) {
   if (tolower(format) == "latex") {
     if (has_SI_prefix(unit.exponent)) {
       paste(label.text, " $\\lambda$ (",
@@ -90,27 +90,27 @@ w_length_label <- function(unit.exponent = -9,
 w_number_label <- function(unit.exponent = 0,
                            format = getOption("photobiology.math",
                                               default = "R.expression"),
-                           label.text = "Wavenumber") {
+                           label.text = axis_labels()[["w.number"]]) {
   if (tolower(format) == "latex") {
     if (has_SI_prefix(unit.exponent)) {
-      paste(label.text, " (",
+      paste(label.text, " $\\nu$ (",
             exponent2prefix(unit.exponent, char.set = "LaTeX"),
             "m$^{-1}$)", sep = "")
     } else {
-      paste(label.text, " ($\\times 10^{",
+      paste(label.text, " $\\nu$ ($\\times 10^{",
             unit.exponent,
             "m$^{-1}$)", sep = "")
     }
   } else if (format %in% c("R.expression")) {
     if (has_SI_prefix(unit.exponent)) {
       prefix <- exponent2prefix(unit.exponent)
-      bquote(.(label.text)~(plain(.(prefix))*plain(m)^{-1}))
+      bquote(.(label.text)~nu~(plain(.(prefix))*plain(m)^{-1}))
     } else {
-      bquote(.(label.text)~(10^{.(unit.exponent)}~plain(m)^{-1}))
+      bquote(.(label.text)~nu~(10^{.(unit.exponent)}~plain(m)^{-1}))
     }
   } else if (format == "R.character" &&
              has_SI_prefix(unit.exponent)) {
-    paste(label.text, " (1/",
+    paste(label.text, " v (1/",
           exponent2prefix(unit.exponent, char.set = "ascii"),
           "m)", sep = "")
   } else {
@@ -127,27 +127,27 @@ w_number_label <- function(unit.exponent = 0,
 w_frequency_label <- function(unit.exponent = 9,
                               format = getOption("photobiology.math",
                                                  default = "R.expression"),
-                              label.text = "Frequency") {
+                              label.text = axis_labels()[["freq"]]) {
   if (tolower(format) == "latex") {
     if (has_SI_prefix(unit.exponent)) {
-      paste(label.text, " (",
+      paste(label.text, " $f$ (",
             exponent2prefix(unit.exponent, char.set = "LaTeX"),
             "Hz)", sep = "")
     } else {
-      paste(label.text, " ($\\times 10^{",
+      paste(label.text, " $f$ ($\\times 10^{",
             unit.exponent,
             "}$~Hz)", sep = "")
     }
   } else if (format %in% c("R.expression")) {
     if (has_SI_prefix(unit.exponent)) {
       prefix <- exponent2prefix(unit.exponent)
-      bquote(.(label.text)~(plain(.(prefix))*plain(Hz)))
+      bquote(.(label.text)~italic(f)~(plain(.(prefix))*plain(Hz)))
     } else {
-      bquote(.(label.text)~(10^{.(unit.exponent)}~plain(Hz)))
+      bquote(.(label.text)~italic(f)~(10^{.(unit.exponent)}~plain(Hz)))
     }
   } else if (format == "R.character" &&
              has_SI_prefix(unit.exponent)) {
-    paste(label.text, " (",
+    paste(label.text, " f (",
           exponent2prefix(unit.exponent, char.set = "ascii"),
           "Hz)", sep = "")
   } else {
@@ -196,7 +196,7 @@ w_frequency_label <- function(unit.exponent = 9,
 #'
 sec_axis_w_number <-
   function(unit.exponent = -6,
-           label.text = "Wavenumber") {
+           label.text = axis_labels()[["w.number"]]) {
     ggplot2::sec_axis(trans = ~w_number(., unit.exponent),
                       name = w_number_label(unit.exponent = unit.exponent,
                                             label.text = label.text),
@@ -209,7 +209,7 @@ sec_axis_w_number <-
 #'
 sec_axis_w_frequency <-
   function(unit.exponent = 12,
-           label.text = "Frequency") {
+           label.text = axis_labels()[["freq"]]) {
     ggplot2::sec_axis(trans = ~w_frequency(., unit.exponent),
                       name = w_frequency_label(unit.exponent = unit.exponent,
                                                label.text = label.text),
@@ -246,6 +246,10 @@ sec_axis_w_frequency <-
 #'
 #' ggplot(sun.spct) +
 #'   geom_line() +
+#'   scale_x_wl_continuous(sec.axis = sec_axis_w_frequency())
+#'
+#' ggplot(sun.spct) +
+#'   geom_line() +
 #'   scale_x_wl_continuous(sec.axis = sec_axis_w_number())
 #'
 #' ggplot(sun.spct) +
@@ -259,7 +263,7 @@ scale_x_wl_continuous <-
                                  label.text = label.text),
            breaks = scales::pretty_breaks(n = 7),
            labels = SI_pl_format(exponent = unit.exponent + 9),
-           label.text = "Wavelength",
+           label.text = axis_labels()[["w.length"]],
            ...) {
     scale_x_continuous(name = name,
                        breaks = breaks,

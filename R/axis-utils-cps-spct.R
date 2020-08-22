@@ -32,38 +32,38 @@ cps_label <- function(unit.exponent = 0,
                       normalized = FALSE) {
   if (scaled) {
     if (tolower(format) == "latex") {
-      paste(label.text, "rate $N_{\\lambda}$ (rel.\ units)")
+      paste(label.text, "rate $n_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~~N[lambda]~~plain((rel.~~units)))
+      bquote(.(label.text)~italic(n)[lambda]~plain((rel.~units)))
     } else if (format == "R.character") {
-      paste(label.text, "N(lambda) (rel. units)")
+      paste(label.text, "n(lambda) (rel. units)")
     }
   } else if (normalized) {
     if (tolower(format) == "latex") {
-      paste(label.text, " rate $N_{\\lambda} / N_{", normalized, "}$ (/1)", sep = "")
+      paste(label.text, " rate $n_{\\lambda} / N_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~~N[lambda]/N[.(normalized)]~~plain("(/1)"))
+      bquote(.(label.text)~italic(n)[lambda]/italic(n)[.(normalized)]~plain("(/1)"))
     } else if (format == "R.character") {
-      paste(label.text, "N(lambda) (norm. at", normalized, "nm)")
+      paste(label.text, "n(lambda) (norm. at", normalized, "nm)")
     }
   } else {
     if (tolower(format) == "latex") {
       if (unit.exponent == 0) {
-        paste(label.text, "$N_{\\lambda}$ (counts~s$^{-1}$)")
+        paste(label.text, "$n_{\\lambda}$ (counts~s$^{-1}$)")
       } else {
-        paste(label.text, " $N_{\\lambda}$ ($\\times 10^{",
+        paste(label.text, " $n_{\\lambda}$ ($\\times 10^{",
               unit.exponent,
               "}$ counts~s$^{-1}$)", sep = "")
       }
     } else if (format %in% c("R.expression")) {
       if (unit.exponent == 0) {
-        bquote(.(label.text)~~N[lambda]~~(plain(counts)~s^{-1}))
+        bquote(.(label.text)~italic(n)[lambda]~(plain(counts)~s^{-1}))
       } else {
-        bquote(.(label.text)~~N[lambda]~~(10^{.(unit.exponent)}*plain(counts)~s^{-1}))
+        bquote(.(label.text)~italic(n)[lambda]~(10^{.(unit.exponent)}*plain(counts)~s^{-1}))
 
       }
     } else if (format == "R.character" && unit.exponent == 0) {
-      paste(label.text, "N(lambda) (counts/s)")
+      paste(label.text, "n(lambda) (counts/s)")
     } else {
       warning("'format = ", format,
               "' not implemented for unit.exponent = ", unit.exponent)

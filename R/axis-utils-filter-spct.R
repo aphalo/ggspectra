@@ -46,7 +46,7 @@ A_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $A_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~~A[lambda]~~plain((rel.~~units)))
+      bquote(.(label.text)~italic(A)[lambda]~plain((rel.~units)))
     } else if (format == "R.character") {
       paste(label.text, " A(lambda) (rel. units)")
     }
@@ -54,7 +54,7 @@ A_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $A_{\\lambda}/A_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~~A[lambda]/A[.(normalized)]~~plain("(/1)"))
+      bquote(.(label.text)~italic(A)[lambda]/italic(A)[.(normalized)]~~plain("(/1)"))
     } else if (format == "R.character") {
       paste(label.text, " A(lambda) (norm. at", normalized, "nm)")
     }
@@ -72,9 +72,9 @@ A_label <- function(unit.exponent = 0,
     } else if (format %in% c("R.expression")) {
       if (has_SI_prefix(unit.exponent)) {
         prefix <- exponent2prefix(unit.exponent)
-        bquote(.(label.text)~~A[lambda]~~(plain(.(prefix)*AU)))
+        bquote(.(label.text)~italic(A)[lambda]~~(plain(.(prefix)*AU)))
       } else {
-        bquote(.(label.text)~~A[lambda]~~(10^{.(unit.exponent)}*plain(AU)))
+        bquote(.(label.text)~italic(A)[lambda]~(10^{.(unit.exponent)}*plain(AU)))
       }
     } else if (format == "R.character" && has_SI_prefix(unit.exponent)) {
       paste(label.text, " A(lambda) (",
@@ -307,25 +307,25 @@ Tfr_label <- function(unit.exponent = 0,
   }
   if (scaled) {
     if (tolower(format) == "latex") {
-      paste(label.text, " $t_{\\lambda}$ (rel.\ units)")
+      paste(label.text, " $\\tau_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~~t[lambda]~~plain((rel.~~units)))
+      bquote(.(label.text)~tau[lambda]~plain((rel.~units)))
     } else if (format == "R.character") {
       paste(label.text, " t(lambda) (rel. units)")
     }
   } else if (normalized) {
     if (tolower(format) == "latex") {
-      paste(label.text, " $t_{\\lambda}/t_{", normalized, "}$ (/1)", sep = "")
+      paste(label.text, " $\\tau_{\\lambda}/\\tau_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~~t[lambda]/t[.(normalized)]~~plain("(/1)"))
+      bquote(.(label.text)~tau[lambda]/tau[.(normalized)]~plain("(/1)"))
     } else if (format == "R.character") {
       paste(label.text, " t(lambda) (norm. at", normalized, "nm)")
     }
   } else {
     if (tolower(format) == "latex") {
-      paste(label.text, " $t_{\\lambda}$ ", unit.tex, sep = "")
+      paste(label.text, " $\\tau_{\\lambda}$ ", unit.tex, sep = "")
     } else if (format %in% c("R.expression")) {
-        bquote(.(label.text)~~t[lambda]~~plain(.(unit.text)))
+        bquote(.(label.text)~tau[lambda]~plain(.(unit.text)))
     } else if (format == "R.character") {
       paste(label.text, " t(lambda) ", unit.text, sep = "")
     } else {
@@ -566,25 +566,25 @@ Afr_label <- function(unit.exponent = 0,
   }
   if (scaled) {
     if (tolower(format) == "latex") {
-      paste(label.text, " $a_{\\lambda}$ (rel.\ units)")
+      paste(label.text, " $\\alpha_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~~a[lambda]~~plain((rel.~~units)))
+      bquote(.(label.text)~alpha[lambda]~plain((rel.~units)))
     } else if (format == "R.character") {
       paste(label.text, " a(lambda) (rel. units)")
     }
   } else if (normalized) {
     if (tolower(format) == "latex") {
-      paste(label.text, " $a_{\\lambda}/a_{", normalized, "}$ (/1)", sep = "")
+      paste(label.text, " $\\alpha_{\\lambda}/\\alpha_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~~a[lambda]/a[.(normalized)]~~plain("(/1)"))
+      bquote(.(label.text)~alpha[lambda]/alpha[.(normalized)]~plain("(/1)"))
     } else if (format == "R.character") {
       paste(label.text, " a(lambda) (norm. at", normalized, "nm)")
     }
   } else {
     if (tolower(format) == "latex") {
-      paste(label.text, " $a_{\\lambda}$ ", unit.tex, sep = "")
+      paste(label.text, " $\\alpha_{\\lambda}$ ", unit.tex, sep = "")
     } else if (format %in% c("R.expression")) {
-      bquote(.(label.text)~~a[lambda]~~plain(.(unit.text)))
+      bquote(.(label.text)~alpha[lambda]~~plain(.(unit.text)))
     } else if (format == "R.character") {
       paste(label.text, " a(lambda) ", unit.text, sep = "")
     } else {
@@ -719,25 +719,25 @@ Rfr_label <- function(unit.exponent = 0,
   }
   if (scaled) {
     if (tolower(format) == "latex") {
-      paste(label.text, " $r_{\\lambda}$ (rel.\ units)")
+      paste(label.text, " $\\rho_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~~t[lambda]~~plain((rel.~~units)))
+      bquote(.(label.text)~rho[lambda]~plain((rel.~units)))
     } else if (format == "R.character") {
-      paste(label.text, " r(lambda) (rel. units)")
+      paste(label.text, " r (lambda) (rel. units)")
     }
   } else if (normalized) {
     if (tolower(format) == "latex") {
-      paste(label.text, " $r_{\\lambda}/r_{", normalized, "}$ (/1)", sep = "")
+      paste(label.text, " $\\rho_{\\lambda}/\\rho_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~~r[lambda]/r[.(normalized)]~~plain("(/1)"))
+      bquote(.(label.text)~rho[lambda]/rho[.(normalized)]~plain("(/1)"))
     } else if (format == "R.character") {
       paste(label.text, " r(lambda) (norm. at", normalized, "nm)")
     }
   } else {
     if (tolower(format) == "latex") {
-      paste(label.text, " $r_{\\lambda}$ ", unit.tex, sep = "")
+      paste(label.text, " $\\rho_{\\lambda}$ ", unit.tex, sep = "")
     } else if (format %in% c("R.expression")) {
-      bquote(.(label.text)~~r[lambda]~~plain(.(unit.text)))
+      bquote(.(label.text)~rho[lambda]~plain(.(unit.text)))
     } else if (format == "R.character") {
       paste(label.text, " r(lambda) ", unit.text, sep = "")
     } else {
