@@ -31,6 +31,9 @@
 #'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
+#' @param facets logical Flag indicating if facets are to be created for the
+#'   levels of \code{idfactor} when \code{spct} contain multiple spectra in long
+#'   form.
 #' @param ylim numeric y axis limits,
 #' @param na.rm logical.
 #' @param ... currently ignored.
@@ -49,6 +52,7 @@ e_plot <- function(spct,
                    text.size,
                    chroma.type,
                    idfactor,
+                   facets,
                    ylim,
                    na.rm,
                    ...) {
@@ -146,6 +150,7 @@ e_plot <- function(spct,
   plot <- ggplot(spct, aes_(x = ~w.length, y = ~s.e.irrad))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
+                        facets = facets,
                         annotations = annotations)
   plot <- plot + temp$ggplot_comp
   annotations <- temp$annotations
@@ -263,6 +268,9 @@ e_plot <- function(spct,
 #'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
+#' @param facets logical Flag indicating if facets are to be created for the
+#'   levels of \code{idfactor} when \code{spct} contain multiple spectra in long
+#'   form.
 #' @param ylim numeric y axis limits,
 #' @param na.rm logical.
 #' @param ... currently ignored.
@@ -281,6 +289,7 @@ q_plot <- function(spct,
                    text.size,
                    chroma.type,
                    idfactor,
+                   facets,
                    ylim,
                    na.rm,
                    ...) {
@@ -379,6 +388,7 @@ q_plot <- function(spct,
   plot <- ggplot(spct, aes_(x = ~w.length, y = ~s.q.irrad))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
+                        facets = facets,
                         annotations = annotations)
   plot <- plot + temp$ggplot_comp
   annotations <- temp$annotations
@@ -463,7 +473,7 @@ q_plot <- function(spct,
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 }
 
-#' Create a complete ggplot for a light-source spectrum.
+#' Create a complete ggplot for light-source spectra.
 #'
 #' These methods return a ggplot object with an annotated plot of a source_spct
 #' object or of the spectra contained in a source_mspct object.
@@ -499,12 +509,19 @@ q_plot <- function(spct,
 #'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
-#'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
-#'   the factor is retrieved from metadata or if no metadata found, the default
-#'   "spct.idx" is tried.
+#'   corresponding to a distinct level of the factor.
+#' @param facets logical Flag indicating if facets are to be created for the
+#'   levels of \code{idfactor} when \code{spct} contain multiple spectra in long
+#'   form.
 #' @param ylim numeric y axis limits,
 #' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.
+#'
+#' @note  If \code{idfactor = NULL}, the default for single spectra, the name of
+#'   the factor is retrieved from metadata or if no metadata found, the default
+#'   "spct.idx" is tried. The default for collections of spectra is to create
+#'   a factor named "spct.idx", but if a different name is passed, it will be
+#'   used instead.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -516,6 +533,13 @@ q_plot <- function(spct,
 #'
 #' autoplot(sun.spct)
 #' autoplot(sun.spct, unit.out = "photon")
+#'
+#' two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct / 2))
+#' autoplot(two_suns.mspct)
+#' autoplot(two_suns.mspct, idfactor = "Spectra")
+#' autoplot(two_suns.mspct, facets = TRUE) # uses ggplot2's default
+#' autoplot(two_suns.mspct, facets = 1) # one column
+#' autoplot(two_suns.mspct, facets = 2) # two columns
 #'
 #' @family autoplot methods
 #'
@@ -534,6 +558,7 @@ autoplot.source_spct <-
            text.size = 2.5,
            chroma.type = "CMF",
            idfactor = NULL,
+           facets = FALSE,
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
@@ -568,6 +593,7 @@ autoplot.source_spct <-
                            text.size = text.size,
                            chroma.type = chroma.type,
                            idfactor = idfactor,
+                           facets = facets,
                            ylim = ylim,
                            na.rm = na.rm,
                            ...)
@@ -580,6 +606,7 @@ autoplot.source_spct <-
                            text.size = text.size,
                            chroma.type = chroma.type,
                            idfactor = idfactor,
+                           facets = facets,
                            ylim = ylim,
                            na.rm = na.rm,
                            ...)
@@ -608,7 +635,8 @@ autoplot.source_mspct <-
            range = NULL,
            unit.out = getOption("photobiology.radiation.unit",
                                 default = "energy"),
-           plot.data = "as.is") {
+           plot.data = "as.is",
+           idfactor = TRUE) {
     # We trim the spectra to avoid unnecesary computaions later
     if (!is.null(range)) {
       object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
@@ -626,9 +654,12 @@ autoplot.source_mspct <-
     z <- switch(plot.data,
                 mean = photobiology::s_mean(object),
                 median = photobiology::s_median(object),
-                as.is = photobiology::rbindspct(object)
+                as.is = photobiology::rbindspct(object,
+                                                idfactor = ifelse(is.na(idfactor),
+                                                                  TRUE,
+                                                                  idfactor))
     )
-    autoplot(object = z, range = NULL, ...)
+    autoplot(object = z, range = NULL, idfactor = idfactor, ...)
   }
 
 ## internal

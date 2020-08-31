@@ -1,4 +1,4 @@
-ggspectra 0.3.7 (2020-08-24)
+ggspectra 0.3.7 (2020-08-31)
 ============================
 
 * Track and profit from updated 'photobiology' (>= 0.10.4), with (>= 0.10.5) now
@@ -14,6 +14,7 @@ text.
 * Implement scale_y_Afr_continuous() for absorptance spectra.
 * Implement scale_y_mult_continuous() for calibration spectra.
 * Update autoplot() methods to generate more compact axis labels (preliminary).
+* Update autoplot() methods to to natively support facets (partial).
 * Update stat_wb_box() adding parameter box.height (default behavior unchanged).
 * Fix a documentation example that stopped working because of changes to
 'ggplot2'.

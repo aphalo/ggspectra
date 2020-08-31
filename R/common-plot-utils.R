@@ -12,6 +12,8 @@
 #'   spectra and the user needs to use 'ggplot2' functions to manually map an
 #'   aesthetic or use facets for the spectra.
 #' @param annotations a character vector.
+#' @param facets logical or numeric Flag indicating if facets are to be created
+#'   when the data contains multiple spectra, if numeric the number of columns.
 #' @param ... currently not used.
 #'
 #' @return A list object containing a list of ggplot components and a vector of
@@ -20,25 +22,33 @@
 #' @keywords internal
 #'
 find_idfactor <- function(spct,
-                         idfactor,
-                         annotations,
-                         ...) {
+                          idfactor,
+                          annotations,
+                          facets = FALSE,
+                          ...) {
   if ((is.null(idfactor) || !is.na(idfactor)) && getMultipleWl(spct) > 1L) {
-    if (is.null(idfactor)) {
+    if (is.null(idfactor) || (is.logical(idfactor) && idfactor)) {
       idfactor <- getIdFactor(spct)
-    }
-    if (is.na(idfactor)) {
-      # handle objects created with 'photobiology' <= 9.20
-      idfactor <- "spct.idx"
+      if (is.na(idfactor)) {
+        # handle objects created with 'photobiology' <= 9.20
+        idfactor <- "spct.idx"
+      }
     }
     if (!exists(idfactor, spct, inherits = FALSE)) {
       message("'multiple.wl > 1' but no idexing factor found.")
       ggplot_comp <- list()
-    } else {
+    } else if(!facets) {
       ggplot_comp <- list(aes_string(linetype = idfactor))
       annotations <- setdiff(annotations, "summaries")
+    } else {
+      if (is.numeric(facets)) {
+        ggplot_comp <- list(facet_wrap(facets = idfactor,
+                                       ncol = as.integer(facets)))
+      } else {
+        ggplot_comp <- list(facet_wrap(facets = idfactor))
+      }
     }
-  } else { # only one spectrum
+  } else { # only one spectrum or idfactor is NA
     ggplot_comp <- list()
   }
   list(annotations = annotations,

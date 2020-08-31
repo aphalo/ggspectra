@@ -370,7 +370,13 @@ Plot accepting all defaults.
 autoplot(two_suns.mspct)
 ```
 
-Plot using one panel per spectrum. Setting `idfactor = NA` suppresses the default mapping to `linetype`.
+Facets in one column, automatically.
+
+```{r}
+autoplot(two_suns.mspct, facets = 1)
+```
+
+Plot using one panel per spectrum. Setting `idfactor = NA` suppresses the default mapping to `linetype`. 
 
 ```{r, fig.width = 7, fig.height = 8}
 autoplot(two_suns.mspct, idfactor = NA) + 
