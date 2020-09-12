@@ -42,8 +42,7 @@ autoplot(sun.spct, annotations = c("+", "title:where:when"), unit.out = "photon"
 Maximum flexibilty is achieved when building a plot layer by layer using the grammar of graphics approach, as implemented in 'ggplot2', but taking advantage of the specialized `ggplot()` methods, _geometries_, _statistics_ and _scales_ specialized for the plotting of spectra, defined in this package .
 
 ```{r example2, message=FALSE}
-photon_as_default()
-ggplot(sun.spct) +
+ggplot(sun.spct, unit.out = "photon") +
   geom_spct() +
   scale_y_s.q.irrad_continuous() +
   scale_x_wl_continuous(sec.axis = sec_axis_w_number()) +

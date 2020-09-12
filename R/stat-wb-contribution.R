@@ -107,7 +107,7 @@
 #' ggplot(sun.spct) +
 #'   geom_line() +
 #'   stat_wb_box(w.band = VIS_bands()) +
-#'   stat_wb_contribution(w.band = VIS_bands(), angle = 90, size = 2.5,
+#'   stat_wb_contribution(w.band = VIS_bands(), size = 2.5,
 #'                        label.mult = 100, label.fmt = "%3.0f%%") +
 #'   scale_fill_identity() + scale_color_identity()
 #'

@@ -53,7 +53,7 @@ multipliers_label <- function(unit.exponent = 0,
       } else {
         paste(label.text, " $k_{\\lambda}$ ($\\times 10^{",
               unit.exponent,
-              "W m^{-2} nm^{-1} \\mathrm{count}^{-1}~s$)", sep = "")
+              "} W m^{-2} nm^{-1} \\mathrm{count}^{-1}~s$)", sep = "")
       }
     } else if (format %in% c("R.expression")) {
       if (unit.exponent == 0) {

@@ -56,6 +56,7 @@ reference:
     - scale_y_Afr_continuous
     - scale_y_cps_continuous
     - scale_y_counts_continuous
+    - scale_y_multipliers_continuous
     - sec_axis_w_number
   - title: Automatic plot creation
     desc: Autoplot methods for spectra and a function for color-patch charts. They all return `gg` objects.
@@ -80,6 +81,8 @@ reference:
     - SI_pl_format
     - SI_tg_format
     - w_number
+    - axis_labels
+    - w_length_label
     - counts_label
     - cps_label
     - Rfr_label
@@ -88,5 +91,5 @@ reference:
     - Afr_label
     - s.e.irrad_label
     - s.e.response_label
-    - w_length_label
+    - multipliers_label
     - multiplot

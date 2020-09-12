@@ -87,21 +87,44 @@
 #'
 #' library(photobiologyWavebands)
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
+#'
+#' # using defaults for energy irradiance in W m-2
 #' ggplot(sun.spct) +
-#'   stat_wb_column(w.band = VIS_bands()) +
-#'   stat_wb_e_irrad(w.band = VIS_bands(),
-#'                   angle = 90, size = 4,
-#'                   label.fmt = "%2.0f", ypos.fixed = 0.1) +
+#'   stat_wb_column(w.band = PAR(), alpha = 0.5) +
+#'   stat_wb_e_irrad(w.band = PAR(), ypos.fixed = 0.32) +
 #'   geom_line() +
 #'   scale_fill_identity() + scale_color_identity()
 #'
-#' ggplot(sun.spct) +
-#'   stat_wb_box(w.band = VIS_bands()) +
-#'   stat_wb_e_irrad(w.band = VIS_bands(),
-#'                   angle = 90, size = 4,
-#'                   label.fmt = "%2.0f") +
+#' # using defaults for photon irradiance in umol m-2 s-1
+#' ggplot(sun.spct, unit.out = "photon") +
+#'   stat_wb_column(w.band = PAR(), alpha = 0.5) +
+#'   stat_wb_q_irrad(w.band = PAR(), ypos.fixed = 1.5e-6, label.mult = 1e6) +
 #'   geom_line() +
 #'   scale_fill_identity() + scale_color_identity()
+#'
+#' # modify label format and position
+#' ggplot(sun.spct) +
+#'   stat_wb_column(w.band = VIS_bands(), alpha = 0.7) +
+#'   stat_wb_e_irrad(w.band = VIS_bands(),
+#'                   angle = 90, size = 3, hjust = "left",
+#'                   label.fmt = "%2.0f~~W~m^{-2}", parse = TRUE,
+#'                   ypos.fixed = 0.1) +
+#'   geom_line() +
+#'   scale_fill_identity() + scale_color_identity()
+#'
+#' # Changing label mapping
+#' ggplot(sun.spct) +
+#'   stat_wb_column(w.band = VIS_bands(), alpha = 0.5) +
+#'   stat_wb_e_irrad(w.band = VIS_bands(),
+#'                label.fmt = "%.2f",
+#'                angle = 90, color = "black", ypos.fixed = 0.1,
+#'                hjust = "left", size = 3,
+#'                mapping = aes(label = stat(paste(wb.name, ": ",
+#'                                                 signif(wb.yint, 3),
+#'                                                 sep = "")))) +
+#'   geom_line() +
+#'   scale_fill_identity() + scale_color_identity() +
+#'   theme_bw()
 #'
 #' @export
 #' @family stats functions
