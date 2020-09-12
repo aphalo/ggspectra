@@ -38,7 +38,7 @@
 #' 21-29. \url{https://doi.org/10.19232/uv4pb.2015.1.14}.
 #'
 #' \code{ggplot2} web site at \url{https://ggplot2.tidyverse.org/}\cr
-#' \code{ggplot2} source code at \url{https://github.com/hadley/ggplot2}\cr
+#' \code{ggplot2} source code at \url{https://github.com/tidyverse/ggplot2}\cr
 #' Function \code{multiplot} from \url{http://www.cookbook-r.com/}
 #'
 #'

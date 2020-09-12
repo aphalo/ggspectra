@@ -87,23 +87,47 @@
 #'
 #' library(photobiologyWavebands)
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
+#'
+#' # Using defaults
 #' ggplot(sun.spct) +
 #'   stat_wb_column(w.band = VIS_bands()) +
-#'   stat_wb_mean(w.band = VIS_bands(), angle = 90, color = "black") +
-#'   geom_line() +
+#'   stat_wb_mean(w.band = VIS_bands(),
+#'                color = "black") +
 #'   scale_fill_identity() + scale_color_identity()
 #'
-#' \dontrun{
-#' # example takes long to run
+#' # Setting format for numbers, position, angle, and color
+#' ggplot(sun.spct) +
+#'   stat_wb_column(w.band = VIS_bands(), alpha = 0.5) +
+#'   stat_wb_mean(w.band = VIS_bands(),
+#'                label.fmt = "%.2f",
+#'                angle = 90, color = "black", ypos.fixed = 0.1) +
+#'   geom_line() +
+#'   scale_fill_identity() + scale_color_identity() +
+#'   theme_bw()
+#'
+#' # Changing label mapping
+#' ggplot(sun.spct) +
+#'   stat_wb_column(w.band = VIS_bands(), alpha = 0.5) +
+#'   stat_wb_mean(w.band = VIS_bands(),
+#'                label.fmt = "%.2f",
+#'                angle = 90, color = "black", ypos.fixed = 0.1,
+#'                hjust = "left", size = 3,
+#'                mapping = aes(label = stat(paste(wb.name, ": ", y.label, sep = "")))) +
+#'   geom_line() +
+#'   scale_fill_identity() + scale_color_identity() +
+#'   theme_bw()
+#'
+#' # example using repulsion
 #' library(ggrepel)
 #' ggplot(sun.spct) +
 #'   geom_line() +
 #'   stat_wb_hbar(w.band = VIS_bands(), size = 1.5) +
 #'   stat_wb_mean(w.band = VIS_bands(),
-#'                geom = "label_repel", nudge_y = +0.03,
-#'                segment.colour = NA) +
-#'   scale_fill_identity() + scale_color_identity()
-#' }
+#'                geom = "label_repel", nudge_y = +0.04, size = 3,
+#'                segment.colour = NA, label.size = NA) +
+#'   expand_limits(y = 0.9) +
+#'   scale_fill_identity() + scale_color_identity() +
+#'   theme_bw()
 #'
 #' @export
 #' @family stats functions
