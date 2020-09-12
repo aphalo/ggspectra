@@ -440,6 +440,8 @@ Tfr_total_label <- function(unit.exponent = 0,
 #'   scale_y_Tfr_total_continuous() +
 #'   scale_x_wl_continuous()
 #'
+#' unset_filter_qty_default()
+#'
 scale_y_Tfr_continuous <- function(unit.exponent = 0,
                                    name = Tfr_label(unit.exponent = unit.exponent,
                                                     format = format,
@@ -636,6 +638,8 @@ Afr_label <- function(unit.exponent = 0,
 #'   geom_line() +
 #'   scale_y_Afr_continuous(unit.exponent = -3) +
 #'   scale_x_wl_continuous()
+#'
+#' unset_filter_qty_default()
 #'
 scale_y_Afr_continuous <-
   function(unit.exponent = 0,

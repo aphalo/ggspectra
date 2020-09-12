@@ -152,8 +152,6 @@ s.q.irrad_label <- function(unit.exponent = ifelse(normalized, 0, -6),
 #'
 #' @examples
 #'
-#' energy_as_default()
-#'
 #' ggplot(sun.spct) +
 #'   geom_line() +
 #'   scale_y_s.e.irrad_continuous() +
@@ -197,6 +195,8 @@ s.q.irrad_label <- function(unit.exponent = ifelse(normalized, 0, -6),
 #'   scale_y_s.q.irrad_continuous(normalized =
 #'                             getNormalized(normalized_sun.spct)) +
 #'   scale_x_wl_continuous()
+#'
+#' unset_radiation_unit_default()
 #'
 scale_y_s.e.irrad_continuous <-
   function(unit.exponent = 0,

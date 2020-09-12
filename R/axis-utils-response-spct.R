@@ -281,8 +281,6 @@ s.q.action_label <- function(unit.exponent = 0,
 #'
 #' @examples
 #'
-#' energy_as_default()
-#'
 #' ggplot(ccd.spct) +
 #'   geom_line() +
 #'   scale_y_s.e.action_continuous() + #  per joule
@@ -327,6 +325,8 @@ s.q.action_label <- function(unit.exponent = 0,
 #'   scale_y_s.q.response_continuous(unit.exponent = 2,
 #'                                   normalized = getNormalized(norm_ccd.spct)) +
 #'   scale_x_wl_continuous()
+#'
+#' unset_radiation_unit_default()
 #'
 scale_y_s.e.response_continuous <-
   function(unit.exponent = 0,
