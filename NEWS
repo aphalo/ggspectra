@@ -5,7 +5,7 @@ ggspectra 0.3.7 (2020-10-03)
 required.
 * Use performance-optimized computation for colors from wavelengths.
 * Improve stat_wl_strip() performance by simplifying data before plotting.
-* Add suport for plotting action spectra (preliminary).
+* Add support for plotting action spectra (preliminary).
 * Update y-axis scales to support scaled and normalized data.
 * Update y-scales to generate more compact axis labels and use IUPAC-recommended
 symbols.
