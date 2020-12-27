@@ -5,9 +5,6 @@ library(scales)
 library(photobiology)
 library(photobiologyWavebands)
 library(ggspectra)
-library(ggrepel)
-
-good_label_repel <- packageVersion('ggrepel') != "0.8.0"
 
 ## ---- include=FALSE, echo=FALSE-----------------------------------------------
 library(knitr)
@@ -274,25 +271,11 @@ ggplot(sun.spct) + geom_line() +
              geom = "label", span = 25, vjust = "bottom", size = 3) + 
   scale_color_identity()
 
-## ---- eval=good_label_repel---------------------------------------------------
-ggplot(sun.spct) + geom_line() + 
-  stat_peaks(shape = 21, span = 25, size = 2) + 
-  stat_label_peaks(geom = "label_repel", span = 41,
-                   segment.color = "black",
-                   size = 3, vjust = 1, nudge_y = 0.1,
-                   direction = "y") + 
-  stat_valleys(shape = 21, span = 25, size = 2) + 
-  stat_label_valleys(geom = "label_repel", span = 51, 
-                     segment.color = "black",
-                     size = 3, vjust = 0, nudge_y = -0.1,
-                     direction = "y") +
-  scale_fill_identity() + scale_color_identity() +
-  expand_limits(y = c(-0.08, 0.9))
-
 ## -----------------------------------------------------------------------------
 ggplot(sun.spct) + geom_line() + 
-  stat_peaks(shape = 21, span = 25, size = 2) + scale_fill_identity() +
+  stat_peaks(shape = 21, span = 25, size = 2) + 
   stat_label_peaks(geom = "label", span = 25, size = 3, na.rm = TRUE) +
+  scale_fill_identity() +
   scale_color_identity() +
   expand_limits(y = c(NA, 0.9))
 
@@ -301,13 +284,11 @@ ggplot(sun.spct) + geom_line() +
   stat_peaks(span = NULL, geom = "vline", linetype = "dotted", color = "red") +
   stat_peaks(span = NULL, geom = "hline", linetype = "dotted", color = "red")
 
-## ---- eval=good_label_repel---------------------------------------------------
+## -----------------------------------------------------------------------------
 ggplot(sun.spct) + geom_line() + 
   stat_label_peaks(aes(label = stat(y.label)), 
-                   span = 31, geom = "label_repel", size = 3,
-                   label.fmt = "y = %1.2f", segment.colour = "red",
-                   min.segment.length = unit(0.05, "lines"),
-                   nudge_y = 0.1) +
+                   span = 41, geom = "label", size = 2.5,
+                   label.fmt = "y = %1.2f", segment.colour = "red") +
   expand_limits(y = 1) +
   scale_fill_identity() + scale_color_identity()
 

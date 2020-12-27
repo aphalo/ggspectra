@@ -3,8 +3,8 @@ library(dplyr)
 library(photobiologyWavebands)
 library(ggspectra)
 
-good_label_repel <- packageVersion('ggrepel') != "0.8.0" #||
-#  packageVersion('ggplot2') >= "3.1.0"
+good_label_repel <- packageVersion('ggrepel') != "0.8.0" && packageVersion('ggrepel') != "0.9.0" 
+options(ggrepel.max.overlaps = Inf) # needed for 'ggrepel' (>= 0.9.0)
 
 ## ---- include=FALSE, echo=FALSE-----------------------------------------------
 library(knitr)
@@ -63,7 +63,7 @@ autoplot(sun.spct, annotations = c("-", "summaries", "peaks"))
 autoplot(sun.spct, annotations = c("+", "valleys"), span = 41)
 
 ## ---- eval=good_label_repel---------------------------------------------------
-autoplot(sun.spct, annotations = c("+", "peak.labels", "valley.labels"), span = 51)
+#  autoplot(sun.spct, annotations = c("+", "peak.labels", "valley.labels"), span = 51)
 
 ## -----------------------------------------------------------------------------
 autoplot(sun.spct, annotations = "")

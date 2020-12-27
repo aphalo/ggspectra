@@ -2,6 +2,7 @@
 
 S3method(autoplot,calibration_mspct)
 S3method(autoplot,calibration_spct)
+S3method(autoplot,cps_mspct)
 S3method(autoplot,cps_spct)
 S3method(autoplot,filter_mspct)
 S3method(autoplot,filter_spct)

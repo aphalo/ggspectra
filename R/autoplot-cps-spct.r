@@ -286,4 +286,23 @@ autoplot.cps_spct <-
                    annotations = annotations)
   }
 
+#' @rdname autoplot.cps_spct
+#'
+#' @param plot.data character Data to plot. Default is "as.is" plotting
+#'   one line per spectrum. When passing "mean" or "median" as
+#'   argument all the spectra must contain data at the same wavelength values.
+#'
+#' @export
+#'
+autoplot.cps_mspct <-
+  function(object, ..., range = NULL, plot.data = "as.is") {
+    # we convert the collection of spectra into a single spectrum object
+    # containing a summary spectrum or multiple spectra in long form.
+    z <- switch(plot.data,
+                mean = photobiology::s_mean(object),
+                median = photobiology::s_median(object),
+                as.is = photobiology::rbindspct(object)
+    )
+    autoplot(object = z, range = NULL, ...)
+  }
 

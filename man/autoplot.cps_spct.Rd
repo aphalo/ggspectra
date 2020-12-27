@@ -2,6 +2,7 @@
 % Please edit documentation in R/autoplot-cps-spct.r
 \name{autoplot.cps_spct}
 \alias{autoplot.cps_spct}
+\alias{autoplot.cps_mspct}
 \title{Create a complete ggplot for detector-counts per second spectra.}
 \usage{
 \method{autoplot}{cps_spct}(
@@ -25,6 +26,8 @@
   object.label = deparse(substitute(object)),
   na.rm = TRUE
 )
+
+\method{autoplot}{cps_mspct}(object, ..., range = NULL, plot.data = "as.is")
 }
 \arguments{
 \item{object}{a cps_spct object.}
@@ -76,6 +79,10 @@ default "spct.idx" is tried.}
 \item{object.label}{character The name of the object being plotted.}
 
 \item{na.rm}{logical.}
+
+\item{plot.data}{character Data to plot. Default is "as.is" plotting
+one line per spectrum. When passing "mean" or "median" as
+argument all the spectra must contain data at the same wavelength values.}
 }
 \value{
 a \code{ggplot} object.
