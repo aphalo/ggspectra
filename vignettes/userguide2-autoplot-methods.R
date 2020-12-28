@@ -63,6 +63,12 @@ autoplot(sun.spct, annotations = c("-", "summaries", "peaks"))
 autoplot(sun.spct, annotations = c("+", "valleys"), span = 41)
 
 ## ---- eval=good_label_repel---------------------------------------------------
+#  autoplot(sun.spct, annotations = c("+", "peak.labels"), span = 51)
+
+## ---- eval=good_label_repel---------------------------------------------------
+#  autoplot(sun.spct, annotations = c("+", "valley.labels"), span = 51)
+
+## ---- eval=good_label_repel---------------------------------------------------
 #  autoplot(sun.spct, annotations = c("+", "peak.labels", "valley.labels"), span = 51)
 
 ## -----------------------------------------------------------------------------

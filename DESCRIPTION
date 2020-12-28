@@ -25,7 +25,7 @@ Depends:
 Imports:
     photobiologyWavebands (>= 0.4.3),
     scales (>= 1.1.1),
-    ggrepel (>= 0.8.2),
+    ggrepel (>= 0.9.0),
     dplyr (>= 1.0.2),
     lubridate (>= 1.7.9),
     tidyr (>= 1.0.2),

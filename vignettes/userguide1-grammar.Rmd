@@ -264,17 +264,20 @@ ggplot(sun.spct) +
   scale_x_wl_continuous(unit.exponent = -6) +
   scale_y_s.e.irrad_continuous(unit.exponent = -3)
 ```
+
 ```{r}
 ggplot(sun.spct) + 
   geom_line() +
   scale_x_wl_continuous(unit.exponent = -7)  +
   scale_y_s.e.irrad_continuous()
 ```
+
 We can find the largest valid SI-scaling factor that is smaller or equal to an arbitrary power of 10.
 
 ```{r}
 nearest_SI_exponent(-4)
 ```
+
 We can call this function on-the-fly.
 
 ```{r}
@@ -283,6 +286,7 @@ ggplot(sun.spct) +
   scale_x_wl_continuous(unit.exponent = nearest_SI_exponent(-4))  +
   scale_y_s.e.irrad_continuous()
 ```
+
 In addition to formatters defined in package 'scales', additional formatters are defined this package, `SI_pl_format()` and `SI_tg_format()`. Most of the scales
 in this package use the first of them, while the second one can be passed as an
 argument. _When it is used as shoen here, it is important to remember that as 
@@ -296,6 +300,7 @@ ggplot(sun.spct) +
   scale_y_s.e.irrad_continuous(unit.exponent = 0,
                                labels = SI_tg_format(exponent = -3))
 ```
+
 Transformation objects from package 'scales', or user defined, can be passed as additional arguments. We replace zeros to avoid a warnings from the `log10()` call, and as the scale `limits`
 discards some observations, we use `na.rm = TRUE` to silence this additional warning.
 
@@ -329,6 +334,7 @@ ggplot(norm_sun.spct) +
   scale_x_wl_continuous() +
   scale_y_s.e.irrad_continuous(normalized = getNormalized(norm_sun.spct))
 ```
+
 If the data have been scaled, we can pass this information to the scale.
 
 ```{r}
@@ -385,6 +391,7 @@ ggplot(white_led.raw_spct) +
   scale_x_wl_continuous() +
   scale_y_counts_continuous()
 ```
+
 The `tg` for tag version adds a suffix to the tick labels, as is common in engineering.
 
 ```{r}
@@ -438,6 +445,7 @@ ggplot(ccd.spct) +
   scale_x_wl_continuous() +
   scale_y_s.e.response_continuous(unit.exponent = 6)
 ```
+
 The figures are identical, but the text and symbol on the y-axis label are different.
 
 ```{r}
@@ -546,7 +554,7 @@ ggplot(sun.spct) + geom_line() + stat_valleys(color = "blue")
 Stats `stat_find_wls()` and `stat_find_qtys()` are another complementary pair. The default target, used in this example, is the half maximum. 
 
 ```{r}
-ggplot(yellow_gel.spct) + geom_line() + stat_find_wls(color = "darkgreen")
+ggplot(yellow_gel.spct) + geom_line() + stat_find_wls(color = "orange")
 ```
 
 One of the values calculated and mapped is colour as seen by humans corresponding to the wavelength at the location of peaks and valleys. The colour is mapped to the `fill` aesthetic, so using a 'filled' shape results in a colourful plot. The _identity_ scale is needed so that the correct colours are displayed using the colour definitions in the calculated data instead of a palette.
@@ -609,7 +617,16 @@ By default the `label` aesthetic is mapped to a calculated label `x.label` givin
 ggplot(sun.spct) + geom_line() + 
   stat_label_peaks(aes(label = stat(y.label)), 
                    span = 41, geom = "label", size = 2.5,
-                   label.fmt = "y = %1.2f", segment.colour = "red") +
+                   label.fmt = "y = %1.2f") +
+  expand_limits(y = 1) +
+  scale_fill_identity() + scale_color_identity()
+```
+
+```{r}
+ggplot(sun.spct) + geom_line() + 
+  stat_label_peaks(aes(label = stat(y.label)), 
+                   span = 41, geom = "label_repel", size = 2.5,
+                   label.fmt = "y = %1.2f") +
   expand_limits(y = 1) +
   scale_fill_identity() + scale_color_identity()
 ```
@@ -625,6 +642,7 @@ ggplot(sun.spct) + geom_line() +
 ```
 
 Finally we demonstrate that both stats can be simultaneously used. One can also choose to use different spans as demonstrated here, resulting in more maxima being marked by points than labelled with text.
+
 ```{r}
 ggplot(sun.spct) + geom_line() + 
   stat_peaks(span = 21, geom = "point", colour = "red") +
@@ -655,6 +673,7 @@ ggplot(white_led.raw_spct, aes(w.length, counts_3)) +
   geom_line() + 
   stat_spikes(color = "red", z.threshold = 8, max.spike.width = 7)
 ```
+
 ```{r}
 ggplot(despike(white_led.raw_spct, z.threshold = 8, max.spike.width = 7), 
        aes(w.length, counts_3)) + 
@@ -669,12 +688,14 @@ This stat calculates the colour corresponding to each $x$-value (assumed express
 ggplot(sun.spct) + 
   stat_color() + scale_color_identity()
 ```
+
 All statistics that generate color definitions from wavelengths or wavebands have a parameter, `chroma.type` to which can be used to select the color matching function or color coordinates to be used. If we use chromaticity coordinates, `"CC"`, instead of the default color matching fucntion, `"CMF"`, the apparent luminance is not taken into account, only the hue.
 
 ```{r}
 ggplot(sun.spct) + 
   stat_color(chroma.type = "CC") + scale_color_identity()
 ```
+
 We here show _pseudo honey-bee vision_ colors. Bees have trichromic vision, but see green, blue and ultraviolet (GBU) instead of red, green and blue (RGB). The luminance is matched to wavelengths, but the colors shifted so that green becomes red, blue becomes green, and ultraviolet becomes blue.
 
 ```{r}
@@ -702,6 +723,7 @@ ggplot(sun.spct) +
   scale_color_identity() + 
   theme_bw()
 ```
+
 ```{r}
 ggplot(sun.spct) + 
   stat_color(geom = "bar", chroma.type = beesxyzCMF.spct) + 
@@ -741,6 +763,7 @@ The _statistics_ `stat_wb_column` outputs a column for each waveband, with an ar
 ggplot(sun.spct) + stat_wb_column(w.band = VIS_bands()) + geom_line() +
   scale_fill_identity()
 ```
+
 The _statistic_ `stat_wd_hbar` outputs a horizontal bar showing the mean spectral _y_-value for each waveband.
 
 ```{r}
@@ -1157,6 +1180,7 @@ ggplot(data.frame(w.length = 100:400), aes(w.length)) +
        subtitle = "According to ISO standard, CIE recommendations, and non-standard use") +
   theme_classic()
 ```
+
 It should be noted that this approach is rather different from the way one would normally plot a horizontal bar plot with the grammar of graphics of 'ggplot2', but for plottings existing waveband definitions it is convenient and ensures that the waveband definitions agree with those used for computing summary quantities elsewhere.
 
 ## Wavelength colours at new _x_-values 
@@ -1288,6 +1312,7 @@ ggplot(sun.spct) +
 ```{r}
 color_chart(colors())
 ```
+
 ```{r}
 color_chart(grep("blue", colors(), value = TRUE), ncol = 5, text.size = 4)
 ```

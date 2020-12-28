@@ -288,7 +288,15 @@ ggplot(sun.spct) + geom_line() +
 ggplot(sun.spct) + geom_line() + 
   stat_label_peaks(aes(label = stat(y.label)), 
                    span = 41, geom = "label", size = 2.5,
-                   label.fmt = "y = %1.2f", segment.colour = "red") +
+                   label.fmt = "y = %1.2f", nudge_y = 3) +
+  expand_limits(y = 1) +
+  scale_fill_identity() + scale_color_identity()
+
+## -----------------------------------------------------------------------------
+ggplot(sun.spct) + geom_line() + 
+  stat_label_peaks(aes(label = stat(y.label)), 
+                   span = 41, geom = "label_repel", size = 2.5,
+                   label.fmt = "y = %1.2f") +
   expand_limits(y = 1) +
   scale_fill_identity() + scale_color_identity()
 
