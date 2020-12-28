@@ -1091,8 +1091,8 @@ autoplot.filter_spct <-
 
 #' @rdname autoplot.filter_spct
 #'
-#' @param plot.data character Data to plot. Default is "as.is" plotting
-#'   one line per spectrum. When passing "mean" or "median" as
+#' @param plot.data character Data to plot. Default is "as.is" plotting one line
+#'   per spectrum. When passing "mean", "median", "sum", "var", "sd", "se" as
 #'   argument all the spectra must contain data at the same wavelength values.
 #'
 #' @export
@@ -1120,9 +1120,13 @@ autoplot.filter_mspct <-
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
     z <- switch(plot.data,
+                as.is = photobiology::rbindspct(object),
                 mean = photobiology::s_mean(object),
                 median = photobiology::s_median(object),
-                as.is = photobiology::rbindspct(object)
+                sum = photobiology::s_sum(object),
+                var = photobiology::s_var(object),
+                sd = photobiology::s_sd(object),
+                se = photobiology::s_se(object)
     )
     autoplot(object = z, range = NULL, plot.qty = plot.qty, ...)
   }
@@ -1255,8 +1259,8 @@ autoplot.reflector_spct <-
 
 #' @rdname autoplot.reflector_spct
 #'
-#' @param plot.data character Data to plot. Default is "as.is" plotting
-#'   one line per spectrum. When passing "mean" or "median" as
+#' @param plot.data character Data to plot. Default is "as.is" plotting one line
+#'   per spectrum. When passing "mean", "median", "sum", "var", "sd", "se" as
 #'   argument all the spectra must contain data at the same wavelength values.
 #'
 #' @export
@@ -1267,16 +1271,20 @@ autoplot.reflector_mspct <-
            range = NULL,
            plot.qty = getOption("photobiology.reflector.qty", default = "reflectance"),
            plot.data = "as.is") {
-    # We trim the spectra to avoid unnecesary computaions later
+    # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
       object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
     }
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
     z <- switch(plot.data,
+                as.is = photobiology::rbindspct(object),
                 mean = photobiology::s_mean(object),
                 median = photobiology::s_median(object),
-                as.is = photobiology::rbindspct(object)
+                sum = photobiology::s_sum(object),
+                var = photobiology::s_var(object),
+                sd = photobiology::s_sd(object),
+                se = photobiology::s_se(object)
     )
     autoplot(object = z, range = NULL, plot.qty = plot.qty, ...)
   }

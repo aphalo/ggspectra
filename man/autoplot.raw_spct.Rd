@@ -2,6 +2,7 @@
 % Please edit documentation in R/autoplot-raw-spct.r
 \name{autoplot.raw_spct}
 \alias{autoplot.raw_spct}
+\alias{autoplot.raw_mspct}
 \title{Create a complete ggplot for raw detector-counts spectra.}
 \usage{
 \method{autoplot}{raw_spct}(
@@ -25,6 +26,8 @@
   object.label = deparse(substitute(object)),
   na.rm = TRUE
 )
+
+\method{autoplot}{raw_mspct}(object, ..., range = NULL, plot.data = "as.is")
 }
 \arguments{
 \item{object}{a raw_spct object.}
@@ -76,6 +79,10 @@ default "spct.idx" is tried.}
 \item{object.label}{character The name of the object being plotted.}
 
 \item{na.rm}{logical.}
+
+\item{plot.data}{character Data to plot. Default is "as.is" plotting one line
+per spectrum. When passing "mean", "median", "sum", "var", "sd", "se" as
+argument all the spectra must contain data at the same wavelength values.}
 }
 \value{
 a \code{ggplot} object.
