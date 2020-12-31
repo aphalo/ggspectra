@@ -126,6 +126,8 @@ stat_label_peaks <-
   function(mapping = NULL,
            data = NULL,
            geom = "text",
+           position = "identity",
+           ...,
            span = 5,
            ignore_threshold = 0,
            strict = TRUE,
@@ -134,11 +136,9 @@ stat_label_peaks <-
            x.label.fmt = label.fmt,
            y.label.fmt = label.fmt,
            label.fill = "",
-           position = "identity",
            na.rm = TRUE,
            show.legend = FALSE,
-           inherit.aes = TRUE,
-           ...) {
+           inherit.aes = TRUE) {
     ggplot2::layer(
       stat = StatLabelPeaks, data = data, mapping = mapping, geom = geom,
       position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -216,14 +216,15 @@ StatLabelPeaks <-
                      out.df[["lab.vjust"]] <- -0.2
                      out.df
                    },
-                   default_aes = ggplot2::aes(label = ..x.label..,
-                                              fill = ..wl.color..,
-                                              color = ..BW.color..,
+                   default_aes = ggplot2::aes(label = stat(x.label),
+                                              fill = stat(wl.color),
+                                              color = stat(BW.color),
                                               segment.color = "black",
-                                              xintercept = ..x..,
-                                              yintercept = ..y..,
-                                              hjust = ..lab.hjust..,
-                                              vjust = ..lab.vjust..),
+                                              xintercept = stat(x),
+                                              yintercept = stat(y)#,
+                                              # hjust = stat(lab.hjust),
+                                              # vjust = stat(lab.vjust)
+                                              ),
                    required_aes = c("x", "y")
   )
 
@@ -234,6 +235,8 @@ StatLabelPeaks <-
 stat_label_valleys <- function(mapping = NULL,
                                data = NULL,
                                geom = "text",
+                               position = "identity",
+                               ...,
                                span = 5,
                                ignore_threshold = 0,
                                strict = TRUE,
@@ -242,11 +245,9 @@ stat_label_valleys <- function(mapping = NULL,
                                x.label.fmt = label.fmt,
                                y.label.fmt = label.fmt,
                                label.fill = "",
-                               position = "identity",
                                na.rm = TRUE,
                                show.legend = FALSE,
-                               inherit.aes = TRUE,
-                               ...) {
+                               inherit.aes = TRUE) {
     ggplot2::layer(
     stat = StatLabelValleys, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -310,14 +311,15 @@ StatLabelValleys <-
                      out.df[["lab.vjust"]] <- 1.2
                      out.df
                    },
-                   default_aes = ggplot2::aes(label = ..x.label..,
-                                              fill = ..wl.color..,
-                                              color = ..BW.color..,
+                   default_aes = ggplot2::aes(label = stat(x.label),
+                                              fill = stat(wl.color),
+                                              color = stat(BW.color),
                                               segment.color = "black",
-                                              xintercept = ..x..,
-                                              yintercept = ..y..,
-                                              hjust = ..lab.hjust..,
-                                              vjust = ..lab.vjust..),
+                                              xintercept = stat(x),
+                                              yintercept = stat(y)#,
+ #                                             hjust = stat(lab.hjust),
+ #                                             vjust = stat(lab.vjust)
+                                              ),
                    required_aes = c("x", "y")
 )
 

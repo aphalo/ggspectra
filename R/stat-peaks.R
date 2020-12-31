@@ -137,7 +137,7 @@
 #'                span = 71, geom = "label",
 #'                size = 3, vjust = 1.2, label.fmt = "%.3g nm",
 #'                refine.wl = TRUE) +
-#'   expand_limits(y = 4e-6) +
+#'   expand_limits(y = 0.85) + # make room for label
 #'   scale_fill_identity() +
 #'   scale_color_identity()
 #'
@@ -226,11 +226,8 @@ StatPeaks <-
                    },
                    default_aes = ggplot2::aes(label = stat(x.label),
                                               fill = stat(wl.color),
-#                                              color = ..BW.color..,
                                               xintercept = stat(x),
-                                              yintercept = stat(y),
-                                              hjust = 0.5,
-                                              vjust = 0.5),
+                                              yintercept = stat(y)),
                    required_aes = c("x", "y")
   )
 
@@ -241,6 +238,8 @@ StatPeaks <-
 stat_valleys <- function(mapping = NULL,
                          data = NULL,
                          geom = "point",
+                         position = "identity",
+                         ...,
                          span = 5,
                          ignore_threshold = -0.01,
                          strict = is.null(span),
@@ -250,11 +249,9 @@ stat_valleys <- function(mapping = NULL,
                          label.fmt = "%.3g",
                          x.label.fmt = label.fmt,
                          y.label.fmt = label.fmt,
-                         position = "identity",
                          na.rm = FALSE,
                          show.legend = FALSE,
-                         inherit.aes = TRUE,
-                         ...) {
+                         inherit.aes = TRUE) {
   ggplot2::layer(
     stat = StatValleys, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -306,10 +303,7 @@ StatValleys <-
                    },
                    default_aes = ggplot2::aes(label = stat(x.label),
                                               fill = stat(wl.color),
-#                                              color = stat(BW.color),
                                               xintercept = stat(x),
-                                              yintercept = stat(y),
-                                              hjust = 0.5,
-                                              vjust = 0.5),
+                                              yintercept = stat(y)),
                    required_aes = c("x", "y")
   )

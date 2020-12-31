@@ -5,7 +5,8 @@
 #' of spectra but as it may change in the future it is not exported.
 #'
 #' @param w.band waveband object or list of waveband objects
-#' @param ymax,ymin,xmax,xmin numeric
+#' @param y.max,y.min,x.max,x.min,x.expanse,y.expanse numeric
+#' @param nudge_npcx,nudge_npcy numeric
 #' @param annotations character vector
 #' @param span numeric
 #' @param strict logical
@@ -30,8 +31,10 @@ decoration <- function(w.band,
                        y.min,
                        x.max,
                        x.min,
+                       x.expanse = x.max - x.min,
+                       y.expanse = y.max - y.min,
                        annotations,
-                       span = NULL,
+                       span,
                        strict = is.null(span),
                        wls.target = "HM",
                        label.qty,
@@ -64,6 +67,7 @@ decoration <- function(w.band,
                             na.rm = na.rm)
   z <- list()
   if ("peaks" %in% annotations) {
+    nudge.y <- 0.012 * y.expanse
     z <- c(z,
            stat_peaks(geom = "text",
                       span = span,
@@ -72,7 +76,9 @@ decoration <- function(w.band,
                       chroma.type = chroma.type,
                       label.fmt = "%.4g",
                       color = "red",
-                      vjust = -0.5,
+                      vjust = 0,
+                      hjust = 0.5,
+                      position = ggplot2::position_nudge(y = nudge.y),
                       size = text.size,
                       na.rm = na.rm),
            stat_peaks(geom = "point",
@@ -84,6 +90,7 @@ decoration <- function(w.band,
                       shape = 16))
   }
   if ("peak.labels" %in% annotations) {
+    nudge.y <- 0.07 * y.expanse
     z <- c(z,
            stat_label_peaks(geom = "label_repel",
                             mapping = aes_(color = ~..BW.color..),
@@ -92,12 +99,17 @@ decoration <- function(w.band,
                             strict = strict,
                             chroma.type = chroma.type,
                             label.fmt = "%.4g",
-                            segment.colour = "red",
-                            min.segment.length = unit(0.02, "lines"),
                             size = text.size,
+                            vjust = 0,
+                            hjust = 0.5,
+                            position = ggrepel::position_nudge_repel(y = nudge.y),
+                            max.overlaps = 100,
+                            segment.colour = "black",
+                            min.segment.length = 0,
                             box.padding = unit(0.02, "lines"),
                             direction = "x",
-                            nudge_y = 0.1,
+                            force = 1,
+                            force_pull = 1/4,
                             na.rm = na.rm),
            stat_peaks(geom = "point",
                       chroma.type = chroma.type,
@@ -108,6 +120,7 @@ decoration <- function(w.band,
                       shape = 16))
   }
   if ("valleys" %in% annotations) {
+    nudge.y <- -0.01 * y.expanse
     z <- c(z,
            stat_valleys(geom = "text",
                         span = span,
@@ -115,9 +128,11 @@ decoration <- function(w.band,
                         strict = strict,
                         chroma.type = chroma.type,
                         label.fmt = "%.4g",
-                        color = "blue",
-                        vjust = +1.2,
                         size = text.size,
+                        color = "blue",
+                        vjust = 1,
+                        hjust = 0.5,
+                        position = ggplot2::position_nudge(y = nudge.y),
                         na.rm = na.rm),
            stat_valleys(geom = "point",
                         span = span,
@@ -128,6 +143,7 @@ decoration <- function(w.band,
                         shape = 16))
   }
   if ("valley.labels" %in% annotations) {
+    nudge.y <- -0.07 * y.expanse
     z <- c(z,
            stat_label_valleys(geom = "label_repel",
                               mapping = aes_(color = ~..BW.color..),
@@ -136,12 +152,17 @@ decoration <- function(w.band,
                               strict = strict,
                               chroma.type = chroma.type,
                               label.fmt = "%.4g",
-                              segment.colour = "blue",
-                              min.segment.length = unit(0.02, "lines"),
                               size = text.size,
+                              vjust = 0,
+                              hjust = 0.5,
+                              position = ggrepel::position_nudge_repel(y = nudge.y),
+                              max.overlaps = 100,
+                              segment.colour = "black",
+                              min.segment.length = 0,
                               box.padding = unit(0.02, "lines"),
                               direction = "x",
-                              nudge_y = -0.1,
+                              force = 1,
+                              force_pull = 1/4,
                               na.rm = na.rm),
            stat_valleys(geom = "point",
                         span = span,
@@ -152,13 +173,15 @@ decoration <- function(w.band,
                         shape = 16))
   }
   if ("wls" %in% annotations) {
+    nudge.x <- 0.005 * x.expanse
     z <- c(z,
            stat_find_wls(geom = "text",
                          target = wls.target,
                          interpolate = TRUE,
                          chroma.type = chroma.type,
                          color = "black",
-                         hjust = 1.3,
+                         hjust = 0,
+                         position = ggplot2::position_nudge(x = nudge.x),
                          size = text.size,
                          na.rm = na.rm),
            stat_find_wls(geom = "point",
@@ -169,6 +192,7 @@ decoration <- function(w.band,
                          shape = 16))
   }
   if ("wls.labels" %in% annotations) {
+    nudge.x <- 0.1 * x.expanse
     z <- c(z,
            stat_find_wls(geom = "label_repel",
                          mapping = aes_(color = ~..BW.color..),
@@ -176,12 +200,16 @@ decoration <- function(w.band,
                          interpolate = TRUE,
                          chroma.type = chroma.type,
                          label.fmt = "%.4g",
-                         segment.colour = "black",
-                         min.segment.length = unit(0.02, "lines"),
                          size = text.size,
+                         position = ggrepel::position_nudge_repel(x = nudge.x),
+                         vjust = 0.5,
+                         hjust = 0,
+                         segment.colour = "black",
+                         min.segment.length = 0,
                          box.padding = unit(0.02, "lines"),
                          direction = "y",
-                         nudge_x = 10,
+                         force = 1,
+                         force_pull = 1/4,
                          na.rm = na.rm),
            stat_find_wls(geom = "point",
                          target = wls.target,
