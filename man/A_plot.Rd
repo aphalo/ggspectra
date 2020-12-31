@@ -15,6 +15,7 @@ A_plot(
   text.size,
   chroma.type,
   idfactor,
+  facets,
   na.rm,
   ylim,
   ...
@@ -55,6 +56,10 @@ the factor is retrieved from metadata or if no metadata found, the
 default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
 to the spectra and the user needs to use 'ggplot2' functions to manually
 map an aesthetic or use facets for the spectra.}
+
+\item{facets}{logical or integer Indicating if facets are to be created for
+the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+long form.}
 
 \item{na.rm}{logical.}
 

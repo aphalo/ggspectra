@@ -29,6 +29,9 @@
 #'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
+#' @param facets logical or integer Indicating if facets are to be created for
+#'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+#'   long form.
 #' @param ylim numeric y axis limits,
 #' @param na.rm logical.
 #' @param ... currently ignored.
@@ -48,6 +51,7 @@ Afr_plot <- function(spct,
                      text.size,
                      chroma.type,
                      idfactor,
+                     facets,
                      ylim,
                      na.rm,
                      ...) {
@@ -110,6 +114,7 @@ Afr_plot <- function(spct,
   plot <- ggplot(spct, aes_(x = ~w.length, y = ~Afr))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
+                        facets = facets,
                         annotations = annotations)
   plot <- plot + temp$ggplot_comp
   annotations <- temp$annotations
@@ -207,6 +212,9 @@ Afr_plot <- function(spct,
 #'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
+#' @param facets logical or integer Indicating if facets are to be created for
+#'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+#'   long form.
 #' @param na.rm logical.
 #' @param ylim numeric y axis limits,
 #' @param ... currently ignored.
@@ -226,6 +234,7 @@ T_plot <- function(spct,
                    text.size,
                    chroma.type,
                    idfactor,
+                   facets,
                    na.rm,
                    ylim,
                    ...) {
@@ -310,6 +319,7 @@ T_plot <- function(spct,
   plot <- ggplot(spct, aes_(x = ~w.length, y = ~Tfr))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
+                        facets = facets,
                         annotations = annotations)
   plot <- plot + temp$ggplot_comp
   annotations <- temp$annotations
@@ -405,6 +415,9 @@ T_plot <- function(spct,
 #'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
+#' @param facets logical or integer Indicating if facets are to be created for
+#'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+#'   long form.
 #' @param na.rm logical.
 #' @param ylim numeric y axis limits,
 #' @param ... currently ignored.
@@ -423,6 +436,7 @@ A_plot <- function(spct,
                    text.size,
                    chroma.type,
                    idfactor,
+                   facets,
                    na.rm,
                    ylim,
                    ...) {
@@ -479,7 +493,9 @@ A_plot <- function(spct,
   plot <- ggplot(spct, aes_(x = ~w.length, y = ~A))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
+                        facets = facets,
                         annotations = annotations)
+  plot <- plot + temp$ggplot_comp
   plot <- plot + temp$ggplot_comp
   annotations <- temp$annotations
 
@@ -565,6 +581,9 @@ A_plot <- function(spct,
 #'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
+#' @param facets logical or integer Indicating if facets are to be created for
+#'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+#'   long form.
 #' @param na.rm logical.
 #' @param ylim numeric y axis limits,
 #' @param ... currently ignored.
@@ -584,6 +603,7 @@ R_plot <- function(spct,
                    text.size,
                    chroma.type,
                    idfactor,
+                   facets,
                    ylim,
                    na.rm,
                    ...) {
@@ -671,7 +691,9 @@ R_plot <- function(spct,
   plot <- ggplot(spct, aes_(x = ~w.length, y = ~Rfr))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
+                        facets = facets,
                         annotations = annotations)
+  plot <- plot + temp$ggplot_comp
   plot <- plot + temp$ggplot_comp
   annotations <- temp$annotations
 
@@ -976,6 +998,9 @@ O_plot <- function(spct,
 #'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
+#' @param facets logical or integer Indicating if facets are to be created for
+#'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+#'   long form.
 #' @param ylim numeric y axis limits,
 #' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.
@@ -1009,6 +1034,7 @@ autoplot.filter_spct <-
            text.size = 2.5,
            chroma.type = "CMF",
            idfactor = NULL,
+           facets = FALSE,
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
@@ -1046,6 +1072,7 @@ autoplot.filter_spct <-
                            text.size = text.size,
                            chroma.type = chroma.type,
                            idfactor = idfactor,
+                           facets = facets,
                            ylim = ylim,
                            na.rm = na.rm,
                            ...)
@@ -1060,6 +1087,7 @@ autoplot.filter_spct <-
                            text.size = text.size,
                            chroma.type = chroma.type,
                            idfactor = idfactor,
+                           facets = facets,
                            ylim = ylim,
                            na.rm = na.rm,
                            ...)
@@ -1075,6 +1103,7 @@ autoplot.filter_spct <-
                              text.size = text.size,
                              chroma.type = chroma.type,
                              idfactor = idfactor,
+                             facets = facets,
                              ylim = ylim,
                              na.rm = na.rm,
                              ...)
@@ -1175,6 +1204,9 @@ autoplot.filter_mspct <-
 #'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
+#' @param facets logical or integer Indicating if facets are to be created for
+#'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+#'   long form.
 #' @param ylim numeric y axis limits,
 #' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.
@@ -1207,6 +1239,7 @@ autoplot.reflector_spct <-
            text.size = 2.5,
            chroma.type = "CMF",
            idfactor = NULL,
+           facets = FALSE,
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
@@ -1243,6 +1276,7 @@ autoplot.reflector_spct <-
                            text.size = text.size,
                            chroma.type = chroma.type,
                            idfactor = idfactor,
+                           facets = facets,
                            ylim = ylim,
                            na.rm = na.rm,
                            ...)
@@ -1334,6 +1368,9 @@ autoplot.reflector_mspct <-
 #'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
+#' @param facets logical or integer Indicating if facets are to be created for
+#'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+#'   long form.
 #' @param ylim numeric y axis limits,
 #' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.
@@ -1368,6 +1405,7 @@ autoplot.object_spct <-
            text.size = 2.5,
            chroma.type = "CMF",
            idfactor = NULL,
+           facets = FALSE,
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
@@ -1404,6 +1442,7 @@ autoplot.object_spct <-
                          stacked = stacked,
                          text.size = text.size,
                          chroma.type = chroma.type,
+                         facets = facets,
                          ylim = ylim,
                          na.rm = na.rm,
                          ...)
@@ -1420,6 +1459,7 @@ autoplot.object_spct <-
                            text.size = text.size,
                            chroma.type = chroma.type,
                            idfactor = idfactor,
+                           facets = facets,
                            ylim = ylim,
                            na.rm = na.rm,
                            ...)
@@ -1435,6 +1475,7 @@ autoplot.object_spct <-
                            text.size = text.size,
                            chroma.type = chroma.type,
                            idfactor = idfactor,
+                           facets = facets,
                            ylim = ylim,
                            na.rm = na.rm,
                            ...)
@@ -1451,6 +1492,7 @@ autoplot.object_spct <-
                              text.size = text.size,
                              chroma.type = chroma.type,
                              idfactor = idfactor,
+                             facets = facets,
                              ylim = ylim,
                              na.rm = na.rm,
                              ...)
@@ -1467,6 +1509,7 @@ autoplot.object_spct <-
                            text.size = text.size,
                            chroma.type = chroma.type,
                            idfactor = idfactor,
+                           facets = facets,
                            ylim = ylim,
                            na.rm = na.rm,
                            ...)
@@ -1486,9 +1529,29 @@ autoplot.object_spct <-
 #' @export
 #'
 autoplot.object_mspct <-
-  function(object, ..., range = NULL) {
-    stop("plot() not implemented for 'object_mspct'")
-    # z <- rbindspct(x)
-    # plot(x = z, ...)
+  function(object,
+           ...,
+           range = NULL,
+           plot.qty = "all",
+           plot.data = "as.is",
+           facets = FALSE) {
+    # We trim the spectra to avoid unnecessary computations later
+    if (!is.null(range)) {
+      object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
+    }
+    # we convert the collection of spectra into a single spectrum object
+    # containing a summary spectrum or multiple spectra in long form.
+    ### can be enabled once methods are implemented in 'photobiology'
+    # z <- switch(plot.data,
+    #             as.is = photobiology::rbindspct(object),
+    #             mean = photobiology::s_mean(object),
+    #             median = photobiology::s_median(object),
+    #             sum = photobiology::s_sum(object),
+    #             var = photobiology::s_var(object),
+    #             sd = photobiology::s_sd(object),
+    #             se = photobiology::s_se(object)
+    # )
+    z <- photobiology::rbindspct(object)
+    facets <- facets | getMultipleWl(z)
+    autoplot(object = z, range = NULL, plot.qty = plot.qty, facets = facets, ...)
   }
-

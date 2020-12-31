@@ -7,92 +7,192 @@ output:
   rmarkdown::html_vignette:
     toc: yes
 vignette: >
+  %\VignetteEncoding{UTF-8}
   %\VignetteIndexEntry{User Guide: 1 Grammar of Graphics}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ## Introduction
 
-Package `ggspectra` extends `ggplot2` with stats, geoms, scales and annotations suitable for light spectra. It also defines `ggplot()` and  `autoplot()` methods specialized for the classes defined in package `photobiology` for storing different types of spectral data. The `autoplot()` methods are described separately in vignette 'Autoplot Methods'.
+Package `ggspectra` extends `ggplot2` with stats, geoms, scales and
+annotations suitable for light spectra. It also defines `ggplot()` and
+`autoplot()` methods specialized for the classes defined in package
+`photobiology` for storing different types of spectral data. The
+`autoplot()` methods are described separately in vignette 'Autoplot
+Methods'.
 
-The new elements can be freely combined with methods and functions defined in packages `ggplot2`, `scales`, `ggrepel` and `cowplot`.
+The new elements can be freely combined with methods and functions
+defined in packages `ggplot2`, `scales`, `ggrepel` and `cowplot`.
 
 ### What are `plot` specializations for?
 
-The `plot` specializations produce fully annotated plots as `ggplot` objects, which can be further manipulated if so desired. They use the metadata stored in spectral objects of classes defined in package 'photobiology' to automatically generate suitable axis labels, scales and annotations. (Please, see vignette "Plot methods" for details.)
+The `plot` specializations produce fully annotated plots as `ggplot`
+objects, which can be further manipulated if so desired. They use the
+metadata stored in spectral objects of classes defined in package
+'photobiology' to automatically generate suitable axis labels, scales
+and annotations. (Please, see vignette "Plot methods" for details.)
 
 ### What are `ggplot` specializations for?
 
-The `ggplot` specializations set default `aes` according to the type of spectral object. They also add support for `unit.out` arguments allowing on-the-fly conversion of units of expression or spectral quantities. These are only defaults and can be overridden by explicit use of `aes()` to set the mapping of _aesthetics_.
+The `ggplot` specializations set default `aes` according to the type of
+spectral object. They also add support for `unit.out` arguments allowing
+on-the-fly conversion of units of expression or spectral quantities.
+These are only defaults and can be overridden by explicit use of `aes()`
+to set the mapping of *aesthetics*.
 
-### What are the different _stats_ useful for?
+### What are the different *stats* useful for?
 
-The _stats_ defined in this package help with with the generation of annotations and decorations of plots of spectral data. They are meant to be used only when the _x_ aesthetic is mapped to a variable containing wavelength values expressed in nanometres. They are designed to work with spectral objects of the classes defined in package 'photobiology'. Many of them also work well with any data frame as long as the _x_ aesthetic mapping fulfils the expectations. Package 'ggpmisc' contains some equivalent _stats_ which do not assume that _x_ is mapped to wavelength, accepting `numeric` and _datetime_ values.  
+The *stats* defined in this package help with with the generation of
+annotations and decorations of plots of spectral data. They are meant to
+be used only when the *x* aesthetic is mapped to a variable containing
+wavelength values expressed in nanometres. They are designed to work
+with spectral objects of the classes defined in package 'photobiology'.
+Many of them also work well with any data frame as long as the *x*
+aesthetic mapping fulfils the expectations. Package 'ggpmisc' contains
+some equivalent *stats* which do not assume that *x* is mapped to
+wavelength, accepting `numeric` and *datetime* values.
 
-| _stat_     | default _geom_ (used for)  | other uses                                   |
-|:---------------|:---------------------|:----------------------------------------------|
-| `stat_peaks`        | point (highlight maxima)  | wavelength label, spectral quantity label |
-| `stat_valleys`        | point (highlight minima)  | wavelength label, spectral quantity label |
-| `stat_label_peaks`   |  text (wavelength label)  | spectral quantity label (support 'ggrepel') |
-| `stat_label_valleys`   | text (wavelength label)  | spectral quantity label (support 'ggrepel') |
-| `stat_find_wls` | point (highlight wls at qty)  | wavelength label, spectral quantity label | 
-| `stat_find_qtys` | point (highlight qty at wl)  | wavelength label, spectral quantity label | 
-| `stat_color`         | color, fill |                                              |
-| `stat_wb_label` | text (waveband name) | rect (showing range of waveband and its color) |
-| `stat_wb_total` | text (y integral) | label(s) with waveband integral |
-| `stat_wb_mean` | text (y mean) | label(s) with waveband mean |
-| `stat_wl_summary` | text (y mean) | label with wavelength _range_ mean |
-| `stat_wb_contribution` | text (contribution) | label(s) with waveband integral / whole spectrum integral |
-| `stat_wb_relative` | text (relative) | label(s) with waveband integral / sum of integrals of all wavebands |
-| `stat_wb_e_irrad` | text (energy irradiance) |  rect (showing range of waveband and its color) |
-| `stat_wb_q_irrad` |  text (photon irradiance) | rect (showing range of waveband and its color) |
-| `stat_wb_e_sirrad` | text (spectral energy irradiance) |  rect (showing range of waveband and its color) |
-| `stat_wb_q_sirrad` |  text (spectral photon irradiance) | rect (showing range of waveband and its color) |
-| `stat_wl_strip` |  rect (fill of wavelength or waveband) | text (label with waveband name) |
-| `stat_wb_box` |  rect (fill of waveband) |   |
-| `stat_wb_hbar` |  errorbarh (color of waveband) |  |
-| `stat_wb_column` |  rect (fill of waveband) |  |
++------------+-----------------+--------------------------------------+
+| *stat*     | default *geom*  | other uses                           |
+|            | (used for)      |                                      |
++:===========+:================+:=====================================+
+| `s         | point           | wavelength label, spectral quantity  |
+| tat_peaks` | (highlight      | label                                |
+|            | maxima)         |                                      |
++------------+-----------------+--------------------------------------+
+| `sta       | point           | wavelength label, spectral quantity  |
+| t_valleys` | (highlight      | label                                |
+|            | minima)         |                                      |
++------------+-----------------+--------------------------------------+
+| `stat_la   | text            | spectral quantity label (support     |
+| bel_peaks` | (wavelength     | 'ggrepel')                           |
+|            | label)          |                                      |
++------------+-----------------+--------------------------------------+
+| `stat_labe | text            | spectral quantity label (support     |
+| l_valleys` | (wavelength     | 'ggrepel')                           |
+|            | label)          |                                      |
++------------+-----------------+--------------------------------------+
+| `stat      | point           | wavelength label, spectral quantity  |
+| _find_wls` | (highlight wls  | label                                |
+|            | at qty)         |                                      |
++------------+-----------------+--------------------------------------+
+| `stat_     | point           | wavelength label, spectral quantity  |
+| find_qtys` | (highlight qty  | label                                |
+|            | at wl)          |                                      |
++------------+-----------------+--------------------------------------+
+| `s         | color, fill     |                                      |
+| tat_color` |                 |                                      |
++------------+-----------------+--------------------------------------+
+| `stat      | text (waveband  | rect (showing range of waveband and  |
+| _wb_label` | name)           | its color)                           |
++------------+-----------------+--------------------------------------+
+| `stat      | text (y         | label(s) with waveband integral      |
+| _wb_total` | integral)       |                                      |
++------------+-----------------+--------------------------------------+
+| `sta       | text (y mean)   | label(s) with waveband mean          |
+| t_wb_mean` |                 |                                      |
++------------+-----------------+--------------------------------------+
+| `stat_w    | text (y mean)   | label with wavelength *range* mean   |
+| l_summary` |                 |                                      |
++------------+-----------------+--------------------------------------+
+| `s         | text            | label(s) with waveband integral /    |
+| tat_wb_con | (contribution)  | whole spectrum integral              |
+| tribution` |                 |                                      |
++------------+-----------------+--------------------------------------+
+| `stat_wb   | text (relative) | label(s) with waveband integral /    |
+| _relative` |                 | sum of integrals of all wavebands    |
++------------+-----------------+--------------------------------------+
+| `stat_w    | text (energy    | rect (showing range of waveband and  |
+| b_e_irrad` | irradiance)     | its color)                           |
++------------+-----------------+--------------------------------------+
+| `stat_w    | text (photon    | rect (showing range of waveband and  |
+| b_q_irrad` | irradiance)     | its color)                           |
++------------+-----------------+--------------------------------------+
+| `stat_wb   | text (spectral  | rect (showing range of waveband and  |
+| _e_sirrad` | energy          | its color)                           |
+|            | irradiance)     |                                      |
++------------+-----------------+--------------------------------------+
+| `stat_wb   | text (spectral  | rect (showing range of waveband and  |
+| _q_sirrad` | photon          | its color)                           |
+|            | irradiance)     |                                      |
++------------+-----------------+--------------------------------------+
+| `stat      | rect (fill of   | text (label with waveband name)      |
+| _wl_strip` | wavelength or   |                                      |
+|            | waveband)       |                                      |
++------------+-----------------+--------------------------------------+
+| `st        | rect (fill of   |                                      |
+| at_wb_box` | waveband)       |                                      |
++------------+-----------------+--------------------------------------+
+| `sta       | errorbarh       |                                      |
+| t_wb_hbar` | (color of       |                                      |
+|            | waveband)       |                                      |
++------------+-----------------+--------------------------------------+
+| `stat_     | rect (fill of   |                                      |
+| wb_column` | waveband)       |                                      |
++------------+-----------------+--------------------------------------+
 
 ### What is `geom_spct` useful for?
 
-The `geom_spct` _geometry_ is a special case of `geom_area`, but with the minimum of the _y_ range fixed to 0, but with stacking not enabled.
+The `geom_spct` *geometry* is a special case of `geom_area`, but with
+the minimum of the *y* range fixed to 0, but with stacking not enabled.
 
-### What are the new _scales_ for?
+### What are the new *scales* for?
 
-The new scales are convenience wrapper functions built on top of the scales exported by package 'ggplot2', but with default arguments that are suitable for spectral data. 
+The new scales are convenience wrapper functions built on top of the
+scales exported by package 'ggplot2', but with default arguments that
+are suitable for spectral data.
 
-Functions for automatic generation of secondary x-axes in the case when a variable containing wavelength data (nm) is mapped to the _x_ _aesthetic_ simplify the task of adding an axis with frequencies or wave numbers to the plot of a spectrum.
+Functions for automatic generation of secondary x-axes in the case when
+a variable containing wavelength data (nm) is mapped to the *x*
+*aesthetic* simplify the task of adding an axis with frequencies or wave
+numbers to the plot of a spectrum.
 
-| _scale_     | unit.exponent | name | labels                       |  breaks  |
-|:---------------|:---------------------|:---------------|:----------------|:---------------|
-| scale_y_cps_continuous | 0 | cps_label() | SI_pl_format() | |
-| scale_y_counts_continuous | 3 | counts_label() | SI_pl_format() | |
-| scale_y_counts_tg_continuous | 3 | counts_label() | SI_tg_format() | |
-| scale_y_A_internal_continuous | 0 | A_internal_label() | SI_pl_format() | |
-| scale_y_A_total_continuous | 0 | A_total_label() | SI_pl_format() | |
-| scale_y_Tfr_internal_continuous | 0 | Tfr_internal_label() | SI_pl_format() | |
-| scale_y_Tfr_total_continuous | 0 | Tfr_total_label() | SI_pl_format() | |
-| scale_y_Rfr_internal_continuous | 0 | Rfr_internal_label() | SI_pl_format() | |
-| scale_y_Rfr_total_continuous | 0 | Rfr_total_label() | SI_pl_format() | |
-| scale_y_s.e.irrad_continuous | 0 | s.e.irrad_label() | SI_pl_format() | |
-| scale_y_s.q.irrad_continuous | -6 | s.q.irrad_label() | SI_pl_format() | |
-| scale_y_s.e.response_continuous | 0 | s.e.response_label() | SI_pl_format() | |
-| scale_y_s.q.response_continuous | 0 | s.q.response_label() | SI_pl_format() | |
-| scale_x_wl_continuous | -9 | w_length_label() | SI_pl_format() | pretty_breaks(n=7) |
- 
+| *scale*                          | unit.exponent | name                 | labels         | breaks             |
+|:---------------------------------|:--------------|:---------------------|:---------------|:-------------------|
+| scale_y\_cps_continuous          | 0             | cps_label()          | SI_pl_format() |                    |
+| scale_y\_counts_continuous       | 3             | counts_label()       | SI_pl_format() |                    |
+| scale_y\_counts_tg_continuous    | 3             | counts_label()       | SI_tg_format() |                    |
+| scale_y\_A_internal_continuous   | 0             | A_internal_label()   | SI_pl_format() |                    |
+| scale_y\_A_total_continuous      | 0             | A_total_label()      | SI_pl_format() |                    |
+| scale_y\_Tfr_internal_continuous | 0             | Tfr_internal_label() | SI_pl_format() |                    |
+| scale_y\_Tfr_total_continuous    | 0             | Tfr_total_label()    | SI_pl_format() |                    |
+| scale_y\_Rfr_internal_continuous | 0             | Rfr_internal_label() | SI_pl_format() |                    |
+| scale_y\_Rfr_total_continuous    | 0             | Rfr_total_label()    | SI_pl_format() |                    |
+| scale_y\_s.e.irrad_continuous    | 0             | s.e.irrad_label()    | SI_pl_format() |                    |
+| scale_y\_s.q.irrad_continuous    | -6            | s.q.irrad_label()    | SI_pl_format() |                    |
+| scale_y\_s.e.response_continuous | 0             | s.e.response_label() | SI_pl_format() |                    |
+| scale_y\_s.q.response_continuous | 0             | s.q.response_label() | SI_pl_format() |                    |
+| scale_x\_wl_continuous           | -9            | w_length_label()     | SI_pl_format() | pretty_breaks(n=7) |
 
-In addition secondary axis definitions, `sec_axis_w_number()` and `sec_axis_w_frequency()`, and SI system formatters `SI_pl_format`, and `SI_tg_format` are exported, together with auxiliary functions for finding the nearest SI multiplier based on an arbitrary exponent.
+In addition secondary axis definitions, `sec_axis_w_number()` and
+`sec_axis_w_frequency()`, and SI system formatters `SI_pl_format`, and
+`SI_tg_format` are exported, together with auxiliary functions for
+finding the nearest SI multiplier based on an arbitrary exponent.
 
 ### What are functions `color_chart()` and `black_or_white()` for?
 
-Function `color_chart()` makes a color chart of rectangular tiles from a vector R color definitions. The chart returned is a `ggplot` object. Function `black_or_white()` accepts a vector of color definitions and returns a vector with colors `"white"` or `"black"` depending on the approximate luminosity of each color in the input. The main use is to automatically achieve suitable contrast between text plotted on top of a color background.
+Function `color_chart()` makes a color chart of rectangular tiles from a
+vector R color definitions. The chart returned is a `ggplot` object.
+Function `black_or_white()` accepts a vector of color definitions and
+returns a vector with colors `"white"` or `"black"` depending on the
+approximate luminosity of each color in the input. The main use is to
+automatically achieve suitable contrast between text plotted on top of a
+color background.
 
 ### What is function `autotitle()` for?
 
-Function `autotitle()` adds a title, subtitle and/or a caption to a plot. The difference with `ggtitle()` from package 'ggplot2' is that `autotitle()` automatically retrieves metadata from an spectral object based on _keys_. It is used internally by all `autoplot()` methods defined in package 'ggspectra' and allowed syntax and key values are described in _User Guide 2: Plot Methods_ together with plot annotations.
+Function `autotitle()` adds a title, subtitle and/or a caption to a
+plot. The difference with `ggtitle()` from package 'ggplot2' is that
+`autotitle()` automatically retrieves metadata from an spectral object
+based on *keys*. It is used internally by all `autoplot()` methods
+defined in package 'ggspectra' and allowed syntax and key values are
+described in *User Guide 2: Plot Methods* together with plot
+annotations.
 
-## Set up 
+## Set up
 
 ```{r, message=FALSE}
 library(ggplot2)
@@ -101,6 +201,7 @@ library(scales)
 library(photobiology)
 library(photobiologyWavebands)
 library(ggspectra)
+library(ggrepel)
 ```
 
 ```{r, include=FALSE, echo=FALSE}
@@ -117,9 +218,9 @@ Create a collection of two source_spct objects.
 two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct / 2))
 ```
 
-We bind the two spectra in the collection into a single spectral object. This object
-includes an indexing factor, by default names `spct.idx`. We use this new object to 
-later on demonstrate grouping in ggplots.
+We bind the two spectra in the collection into a single spectral object.
+This object includes an indexing factor, by default names `spct.idx`. We
+use this new object to later on demonstrate grouping in ggplots.
 
 ```{r}
 two_suns.spct <- rbindspct(two_suns.mspct)
@@ -133,31 +234,44 @@ theme_set(theme_bw())
 
 ## ggplot() methods for spectra
 
-The only difference between these specializations and the base `ggplot()` method is that the aesthetics for $x$ and $y$ have suitable defaults. These are just defaults, so if needed they can still be supplied with a `mapping` argument with an user-defined `aes()`.
+The only difference between these specializations and the base
+`ggplot()` method is that the aesthetics for $x$ and $y$ have suitable
+defaults. These are just defaults, so if needed they can still be
+supplied with a `mapping` argument with an user-defined `aes()`.
 
 ```{r}
 ggplot(sun.spct) + geom_line()
 ```
 
-It is possible to add to the defaults by means of `+` and `aes()` as shown below.
+It is possible to add to the defaults by means of `+` and `aes()` as
+shown below.
 
 ```{r}
 ggplot(two_suns.spct) + aes(color = spct.idx) + geom_line()
 ```
 
-If a mapping is supplied directly through `ggplot`, $x$ and $y$ should be included.
+If a mapping is supplied directly through `ggplot`, $x$ and $y$ should
+be included.
 
 ```{r}
 ggplot(two_suns.spct, aes(w.length, s.e.irrad, color = spct.idx)) + geom_line()
 ```
 
-In the case of `ggplot.source_spct()` an additional parameter allows setting the type of units to use in the plot. This not only sets a suitable `aes()` for $y$ but also if needed converts the spectral data. The two possible values are `"energy"` and `"photon"` and the default, depends on option `photobiology.radiation.unit`. This parameter has a default value that can be modified through option `"photobiology.radiation.unit"`. Package 'photobiology' defines convenience functions for this.
+In the case of `ggplot.source_spct()` an additional parameter allows
+setting the type of units to use in the plot. This not only sets a
+suitable `aes()` for $y$ but also if needed converts the spectral data.
+The two possible values are `"energy"` and `"photon"` and the default,
+depends on option `photobiology.radiation.unit`. This parameter has a
+default value that can be modified through option
+`"photobiology.radiation.unit"`. Package 'photobiology' defines
+convenience functions for this.
 
 ```{r}
 ggplot(sun.spct, unit.out = "photon") + geom_line()
 ```
 
-After evaluation of `photon_as_default()`, a new default is in effect, but we can override it with an explicit argument if needed.
+After evaluation of `photon_as_default()`, a new default is in effect,
+but we can override it with an explicit argument if needed.
 
 ```{r}
 photon_as_default()
@@ -165,7 +279,9 @@ ggplot(sun.spct) + geom_line()
 ggplot(sun.spct, unit.out = "energy") + geom_line()
 ```
 
-This new default will remain active for the rest of the R session, unless changed. We can easily either unset this default, or all photobiology-package related user set defaults.
+This new default will remain active for the rest of the R session,
+unless changed. We can easily either unset this default, or all
+photobiology-package related user set defaults.
 
 ```{r}
 unset_user_defaults()
@@ -177,30 +293,40 @@ The next example is for spectral properties of filters.
 ggplot(yellow_gel.spct) + geom_line()
 ```
 
-In the case of `ggplot.filter_spct()` the additional parameter is called `plot.qty` and allows choosing between `"transmittance"` and `"absorbance"`.
+In the case of `ggplot.filter_spct()` the additional parameter is called
+`plot.qty` and allows choosing between `"transmittance"` and
+`"absorbance"`.
 
 ```{r}
 ggplot(yellow_gel.spct, plot.qty = "absorbance") + geom_line()
 ```
 
-In the case of `ggplot.object_spct()` three values (`"reflectance"`, `"transmittance"` and `"all"` are accepted. Passing `"all"` as argument results in the spectral data being molten into a long form, using `value` and `variable` as value and key columns, respectively. The column `variable` has three levels `Tfr`, `Rfr` and `Afr` indexing the `Tfr` and `Rfr` from the `object_spct` object plus newly calculated absorptance values. 
+In the case of `ggplot.object_spct()` three values (`"reflectance"`,
+`"transmittance"` and `"all"` are accepted. Passing `"all"` as argument
+results in the spectral data being molten into a long form, using
+`value` and `variable` as value and key columns, respectively. The
+column `variable` has three levels `Tfr`, `Rfr` and `Afr` indexing the
+`Tfr` and `Rfr` from the `object_spct` object plus newly calculated
+absorptance values.
 
-This parameter has a default value that can be modified through option `"photobiology.filter.qty"`. Package 'photobiology' defines convenience functions for this.
+This parameter has a default value that can be modified through option
+`"photobiology.filter.qty"`. Package 'photobiology' defines convenience
+functions for this.
 
 ```{r}
 Afr_as_default()
 ggplot(yellow_gel.spct) + geom_line()
-ggplot(polyester.spct) + geom_line()
 unset_user_defaults()
 ```
 
-The names of the additional parameters are consistent with those used in the `autoplot()` methods defined in this package.
+The names of the additional parameters are consistent with those used in
+the `autoplot()` methods defined in this package.
 
 ## ggplot() methods for collections fof spectra
 
-The `ggplot()` methods for collections of spectra work similarly to the methods 
-for spectra when used with an spectral object containing concatenated spectra, as
-that shown in the previous section.
+The `ggplot()` methods for collections of spectra work similarly to the
+methods for spectra when used with an spectral object containing
+concatenated spectra, as that shown in the previous section.
 
 Plotting a collection of spectra using an aesthetic.
 
@@ -231,19 +357,20 @@ ggplot(two_suns.mspct) +
 
 ## Scales
 
-The scales provided are all wrappers of continuous scales from packages 'ggplot2'
-or 'scales'. All pass non-specific parameters to the wrapped scales. The scales
-defined in 'ggspectra' compute suitable arguments for `name` and `labels` and
-pass them to the wrapped scales. The default text for the labels can be also
-set by the user by redefining a function, in addition than overriding the
-defaults in individual calls. This is a step towards multilingual support.
+The scales provided are all wrappers of continuous scales from packages
+'ggplot2' or 'scales'. All pass non-specific parameters to the wrapped
+scales. The scales defined in 'ggspectra' compute suitable arguments for
+`name` and `labels` and pass them to the wrapped scales. The default
+text for the labels can be also set by the user by redefining a
+function, in addition than overriding the defaults in individual calls.
+This is a step towards multilingual support.
 
 ### Shared features
 
-We present here, only once for all scales, examples of how to use features
-common to all of them. To start with we show the defaults for the scale for
-wavelengths and spectral energy irradiance that we will use for this examples.
-
+We present here, only once for all scales, examples of how to use
+features common to all of them. To start with we show the defaults for
+the scale for wavelengths and spectral energy irradiance that we will
+use for this examples.
 
 ```{r}
 ggplot(sun.spct) + 
@@ -252,11 +379,12 @@ ggplot(sun.spct) +
   scale_y_s.e.irrad_continuous()
 ```
 
-Here we change the `unit.exponent` from its default 
-value of `-9` (nanometres) to `-6` (micrometers) for wavelengts, change `0` to
-`-3` for irradiance. When they exist SI multipliers 
-are used, and powers of 10 otherwise. This is not a transformation of the data,
-it only affects the tick labels and the axis labels in coordination. **Consequently summary values will not be affected.**
+Here we change the `unit.exponent` from its default value of `-9`
+(nanometres) to `-6` (micrometers) for wavelengts, change `0` to `-3`
+for irradiance. When they exist SI multipliers are used, and powers of
+10 otherwise. This is not a transformation of the data, it only affects
+the tick labels and the axis labels in coordination. **Consequently
+summary values will not be affected.**
 
 ```{r}
 ggplot(sun.spct) + 
@@ -272,7 +400,8 @@ ggplot(sun.spct) +
   scale_y_s.e.irrad_continuous()
 ```
 
-We can find the largest valid SI-scaling factor that is smaller or equal to an arbitrary power of 10.
+We can find the largest valid SI-scaling factor that is smaller or equal
+to an arbitrary power of 10.
 
 ```{r}
 nearest_SI_exponent(-4)
@@ -287,11 +416,14 @@ ggplot(sun.spct) +
   scale_y_s.e.irrad_continuous()
 ```
 
-In addition to formatters defined in package 'scales', additional formatters are defined this package, `SI_pl_format()` and `SI_tg_format()`. Most of the scales
-in this package use the first of them, while the second one can be passed as an
-argument. _When it is used as shoen here, it is important to remember that as 
-the axis label should not show scaled units, `unit.exponent` must be always 
-passed zero as argument._ I have seen this approach used in engineering related publications. 
+In addition to formatters defined in package 'scales', additional
+formatters are defined this package, `SI_pl_format()` and
+`SI_tg_format()`. Most of the scales in this package use the first of
+them, while the second one can be passed as an argument. *When it is
+used as shoen here, it is important to remember that as the axis label
+should not show scaled units, `unit.exponent` must be always passed zero
+as argument.* I have seen this approach used in engineering related
+publications.
 
 ```{r}
 ggplot(sun.spct) + 
@@ -301,8 +433,10 @@ ggplot(sun.spct) +
                                labels = SI_tg_format(exponent = -3))
 ```
 
-Transformation objects from package 'scales', or user defined, can be passed as additional arguments. We replace zeros to avoid a warnings from the `log10()` call, and as the scale `limits`
-discards some observations, we use `na.rm = TRUE` to silence this additional warning.
+Transformation objects from package 'scales', or user defined, can be
+passed as additional arguments. We replace zeros to avoid a warnings
+from the `log10()` call, and as the scale `limits` discards some
+observations, we use `na.rm = TRUE` to silence this additional warning.
 
 ```{r}
 temp.spct <- clean(sun.spct, range.s.data = c(1e-20, Inf), fill = 1e-20)
@@ -315,8 +449,8 @@ ggplot(temp.spct) +
                                limits = c(1e-6, NA))
 ```
 
-The default text used can be overridden. To keep only the symbol and units pass `""`
-as argument (not shown).
+The default text used can be overridden. To keep only the symbol and
+units pass `""` as argument (not shown).
 
 ```{r}
 ggplot(sun.spct) + 
@@ -325,7 +459,8 @@ ggplot(sun.spct) +
   scale_y_s.e.irrad_continuous(label.text = "Irradiancia,")
 ```
 
-If the data are normalized, we can pass the normalization wavelength as an argument.
+If the data are normalized, we can pass the normalization wavelength as
+an argument.
 
 ```{r}
 norm_sun.spct <- normalize(sun.spct)
@@ -345,12 +480,14 @@ ggplot(scaled_sun.spct) +
   scale_y_s.e.irrad_continuous(scaled = is_scaled(scaled_sun.spct))
 ```
 
-Name and labels can be passed directly as arguments, but this defeats the purpose
-of these wrappers.
+Name and labels can be passed directly as arguments, but this defeats
+the purpose of these wrappers.
 
 ### Wavelength
 
-Currently only one x-scale function suitable for wavelengths in nanometres is exported by package 'ggspectra', as well as two secondary axis definitions for wavenumber and frequency.
+Currently only one x-scale function suitable for wavelengths in
+nanometres is exported by package 'ggspectra', as well as two secondary
+axis definitions for wavenumber and frequency.
 
 ```{r}
 ggplot(sun.spct) + 
@@ -372,7 +509,8 @@ ggplot(sun.spct) +
   scale_x_wl_continuous(sec.axis = sec_axis_w_frequency())
 ```
 
-As shown above for the main axis, it is possible to set a different SI scaling factor for the units in secondary scales.
+As shown above for the main axis, it is possible to set a different SI
+scaling factor for the units in secondary scales.
 
 ```{r}
 ggplot(sun.spct) + 
@@ -382,8 +520,8 @@ ggplot(sun.spct) +
 
 ### Raw counts
 
-Raw counts from array detectors are expressed in counts, as "counts" is a whole
-word rather than a unit a power of ten multiplier is used.
+Raw counts from array detectors are expressed in counts, as "counts" is
+a whole word rather than a unit a power of ten multiplier is used.
 
 ```{r}
 ggplot(white_led.raw_spct) + 
@@ -392,7 +530,8 @@ ggplot(white_led.raw_spct) +
   scale_y_counts_continuous()
 ```
 
-The `tg` for tag version adds a suffix to the tick labels, as is common in engineering.
+The `tg` for tag version adds a suffix to the tick labels, as is common
+in engineering.
 
 ```{r}
 ggplot(white_led.raw_spct) + 
@@ -403,8 +542,8 @@ ggplot(white_led.raw_spct) +
 
 ### Counts per second
 
-Raw counts from array detectors are expressed as a rate, as "counts" is a whole
-word rather than a unit a power of ten multiplier is used.
+Raw counts from array detectors are expressed as a rate, as "counts" is
+a whole word rather than a unit a power of ten multiplier is used.
 
 ```{r}
 ggplot(white_led.cps_spct) + 
@@ -415,7 +554,10 @@ ggplot(white_led.cps_spct) +
 
 ### Spectral irradiance
 
-Four scales are available, one for energy irradiance and one for photon irradiance. We show those for energy irradiance. There are equivalent scales `scale_y_s.q.irrad_continuous()` and `scale_y_s.e.irrad_log10()` for photon irradiance.
+Four scales are available, one for energy irradiance and one for photon
+irradiance. We show those for energy irradiance. There are equivalent
+scales `scale_y_s.q.irrad_continuous()` and `scale_y_s.e.irrad_log10()`
+for photon irradiance.
 
 ```{r}
 ggplot(sun.spct) + 
@@ -434,10 +576,13 @@ ggplot(sun.spct, unit.out = "photon") +
 ### Response and action
 
 Four scales are available, for energy response and action and for photon
-response and action. We show those for energy irradiance. There are equivalent scales `scale_y_q.e.resoponse_continuous()` and `scale_y_s.q.action_continuous()` for photon irradiance.
+response and action. We show those for energy irradiance. There are
+equivalent scales `scale_y_q.e.resoponse_continuous()` and
+`scale_y_s.q.action_continuous()` for photon irradiance.
 
-_The difference between response and action spectra stems from the measurement
-procedure._ We will _wrongly_ use here response data for both examples.
+*The difference between response and action spectra stems from the
+measurement procedure.* We will *wrongly* use here response data for
+both examples.
 
 ```{r}
 ggplot(ccd.spct) + 
@@ -446,7 +591,8 @@ ggplot(ccd.spct) +
   scale_y_s.e.response_continuous(unit.exponent = 6)
 ```
 
-The figures are identical, but the text and symbol on the y-axis label are different.
+The figures are identical, but the text and symbol on the y-axis label
+are different.
 
 ```{r}
 ggplot(ccd.spct) + 
@@ -457,9 +603,10 @@ ggplot(ccd.spct) +
 
 ### Transmittance
 
-Two definitions of transmittance exist, total and internal. To obtain the correct labels we query the object containing the data. If we plot data from a data
-frame or tibble, then we can manualy pass one of `"total"` or `"internal"` as
-argument.
+Two definitions of transmittance exist, total and internal. To obtain
+the correct labels we query the object containing the data. If we plot
+data from a data frame or tibble, then we can manualy pass one of
+`"total"` or `"internal"` as argument.
 
 ```{r}
 ggplot(yellow_gel.spct) + 
@@ -486,9 +633,11 @@ ggplot(gel_internal.spct) +
 
 ### Absorbance
 
-Two definitions of absorbance exist, total and internal. To obtain the correct labels we query the object containing the data. If we plot data from a data
-frame or tibble, then we can manualy pass one of `"total"` or `"internal"` as
-argument. _This package only supports absorbance as defined using logs on base 10._
+Two definitions of absorbance exist, total and internal. To obtain the
+correct labels we query the object containing the data. If we plot data
+from a data frame or tibble, then we can manualy pass one of `"total"`
+or `"internal"` as argument. *This package only supports absorbance as
+defined using logs on base 10.*
 
 ```{r}
 ggplot(gel_internal.spct, plot.qty = "absorbance") + 
@@ -510,9 +659,10 @@ ggplot(yellow_gel.spct, plot.qty = "absorptance") +
 
 ### Reflectance
 
-Two definitions of reflectance exist, total and specular. To obtain the correct labels we query the object containing the data. If we plot data from a data
-frame or tibble, then we can manualy pass one of `"total"` or `"specular"` as
-argument.
+Two definitions of reflectance exist, total and specular. To obtain the
+correct labels we query the object containing the data. If we plot data
+from a data frame or tibble, then we can manualy pass one of `"total"`
+or `"specular"` as argument.
 
 ```{r}
 ggplot(green_leaf.spct) + 
@@ -523,23 +673,50 @@ ggplot(green_leaf.spct) +
 
 ## Stats
 
-Several `ggplot` stats are defined by this package. All of them target light spectra, as they expect $x$ to represent wavelengths expressed in nanometres. However, they should behave correctly as long as this is true, with any `ggplot` object, based on any data format acceptable to `ggplot`. The name of the original variable is irrelevant, and it is the user responsibility to supply the correct variables through `aes()`. Of course, when using the spectral classes defined in package `photobiology` the defaults easy this task.
+Several `ggplot` stats are defined by this package. All of them target
+light spectra, as they expect $x$ to represent wavelengths expressed in
+nanometres. However, they should behave correctly as long as this is
+true, with any `ggplot` object, based on any data format acceptable to
+`ggplot`. The name of the original variable is irrelevant, and it is the
+user responsibility to supply the correct variables through `aes()`. Of
+course, when using the spectral classes defined in package
+`photobiology` the defaults easy this task.
 
 ### Peaks, valleys and target values
 
-Four stats are available for peaks and valleys, with the same formal parameters. These stats do not fit peaks, simply search for local maxima and local minima in the data as supplied. Stats `stat_peaks()` and `stat_valleys()` subset the original data while `stat_label_peaks()` and `stat_label_valleys()` only set a boolean flag to mark the local extremes.
-Two stats are available for highlighting arbitrary locations in spectra, one of them, `stat_find_wls()` accepts a target for the spectral quantity and locates the corresponding wavelength values while the other, `stat_find_qtys()` accepts a target wavelength value and locates the corresponding spectral quantity value. Stats `stat_find_wls()` and `stat_find_qtys()` subset the original data or generate new data by interpolation.
+Four stats are available for peaks and valleys, with the same formal
+parameters. These stats do not fit peaks, simply search for local maxima
+and local minima in the data as supplied. Stats `stat_peaks()` and
+`stat_valleys()` subset the original data while `stat_label_peaks()` and
+`stat_label_valleys()` only set a boolean flag to mark the local
+extremes. Two stats are available for highlighting arbitrary locations
+in spectra, one of them, `stat_find_wls()` accepts a target for the
+spectral quantity and locates the corresponding wavelength values while
+the other, `stat_find_qtys()` accepts a target wavelength value and
+locates the corresponding spectral quantity value. Stats
+`stat_find_wls()` and `stat_find_qtys()` subset the original data or
+generate new data by interpolation.
 
-All six stats set the same default aesthetics based on calculated values. Not all of these default aesthetics are used by the default geom, but they make using other geoms easier. Furthermore generated text labels are formatted with `sptintf()` and these six stats accept format definitions through parameters `label.fmt`, `x.label.fmt`, and `y.label.fmt`. Please
-see the documentation for a list of all the computed varaibles returned in `data`. These stats use internally functions `photobiology::find_peaks()` and `photobiology::find_wls()` and arguments are passed down to them.
+All six stats set the same default aesthetics based on calculated
+values. Not all of these default aesthetics are used by the default
+geom, but they make using other geoms easier. Furthermore generated text
+labels are formatted with `sptintf()` and these six stats accept format
+definitions through parameters `label.fmt`, `x.label.fmt`, and
+`y.label.fmt`. Please see the documentation for a list of all the
+computed varaibles returned in `data`. These stats use internally
+functions `photobiology::find_peaks()` and `photobiology::find_wls()`
+and arguments are passed down to them.
 
-The examples that follow, apply with minimal changes to `stat_peaks()`, `stat_valleys()`, `stat_find_wls()` and `stat_find_qtys()`.
+The examples that follow, apply with minimal changes to `stat_peaks()`,
+`stat_valleys()`, `stat_find_wls()` and `stat_find_qtys()`.
 
 ```{r}
 ggplot(sun.spct) + geom_line() + stat_peaks(color = "red")
 ```
 
-Because of the conversion, the location of maxima and minima when an irradiance or response spectrum is expressed in photon- vs. energy-based units may differ. This is expected and not a bug.
+Because of the conversion, the location of maxima and minima when an
+irradiance or response spectrum is expressed in photon- vs. energy-based
+units may differ. This is expected and not a bug.
 
 ```{r}
 ggplot(sun.spct, unit.out = "photon") + geom_line() + stat_peaks(color = "red")
@@ -551,59 +728,96 @@ The complement to `stat_peaks()` is `stat_valleys`.
 ggplot(sun.spct) + geom_line() + stat_valleys(color = "blue")
 ```
 
-Stats `stat_find_wls()` and `stat_find_qtys()` are another complementary pair. The default target, used in this example, is the half maximum. 
+Stats `stat_find_wls()` and `stat_find_qtys()` are another complementary
+pair. The default target, used in this example, is the half maximum.
 
 ```{r}
 ggplot(yellow_gel.spct) + geom_line() + stat_find_wls(color = "orange")
 ```
 
-One of the values calculated and mapped is colour as seen by humans corresponding to the wavelength at the location of peaks and valleys. The colour is mapped to the `fill` aesthetic, so using a 'filled' shape results in a colourful plot. The _identity_ scale is needed so that the correct colours are displayed using the colour definitions in the calculated data instead of a palette.
+One of the values calculated and mapped is colour as seen by humans
+corresponding to the wavelength at the location of peaks and valleys.
+The colour is mapped to the `fill` aesthetic, so using a 'filled' shape
+results in a colourful plot. The *identity* scale is needed so that the
+correct colours are displayed using the colour definitions in the
+calculated data instead of a palette.
 
 ```{r}
 ggplot(sun.spct) + geom_line() + 
   stat_peaks(shape = 21, color = "black") + scale_fill_identity()
 ```
 
-We can use any of the aesthetics affecting the default _geom_, `"point"`, and also with other _geom_s.
+We can use any of the aesthetics affecting the default *geom*,
+`"point"`, and also with other \_geom_s.
 
 ```{r}
 ggplot(sun.spct) + geom_line() + 
-  stat_peaks(span = 21, shape = 4, color = "red", size = 2) +
-  stat_peaks(span = 21, color = "red", geom = "rug", sides = "b")
+  stat_peaks(span = 35, shape = 4, color = "red", size = 2) +
+  stat_peaks(span = 35, color = "red", geom = "rug", sides = "b")
 ```
 
-We can use several other _geoms_ as needed, demonstrated here with _geom_ `"text"`.
+We can use several other *geoms* as needed, demonstrated here with
+*geom* `"text"`. To displace the text we can use nudging, justification
+or both. If we want to have the bottom edge of the label 0.01 *y*-data
+units above its natural position we can use.
 
 ```{r}
 ggplot(sun.spct) + geom_line() + 
-  stat_peaks(span = 21, geom = "text", color = "red", vjust = "bottom") 
+  stat_peaks(geom = "text", 
+             span = 35,
+             color = "red", 
+             vjust = "bottom",
+             position = position_nudge(y = 0.01)) 
 ```
 
-The same stat can be included more than once in the same plot, using different _geoms_. We here in addition demonstrate the use of several different parameters. The `span` argument determines the number of consecutive observations tested when searching for a local extreme, and it should be an odd integer number. In addition we here demonstrate the use of a _geom_ new to `ggplot2` 2.0.0 called `"label"` which again results in colourful labels by default. Here we make use of the computed variable `BW.color` which is set to `"white"` or `"white"` for maximum contrast with the computed variable `fill`.
+The same stat can be included more than once in the same plot, using
+different *geoms*. We here in addition demonstrate the use of several
+different parameters. The `span` argument determines the number of
+consecutive observations tested when searching for a local extreme, and
+it should be an odd integer number. In addition we here demonstrate the
+use of a *geom* new to `ggplot2` 2.0.0 called `"label"` which again
+results in colourful labels by default. Here we make use of the computed
+variable `BW.color` which is set to `"white"` or `"white"` for maximum
+contrast with the computed variable `fill`.
 
 ```{r}
 ggplot(sun.spct) + geom_line() + 
-  stat_peaks(shape = 21, span = 25, size = 2) + 
+  stat_peaks(shape = 21, 
+             span = 35, 
+             size = 2) + 
+  stat_label_peaks(geom = "label", 
+                   span = 35, 
+                   vjust = "bottom", 
+                   size = 3,
+                   position = position_nudge(y = 0.01)) +
   scale_fill_identity() +
-  stat_peaks(aes(color = ..BW.color..), 
-             geom = "label", span = 25, vjust = "bottom", size = 3) + 
-  scale_color_identity()
+  scale_color_identity() + 
+  expand_limits(y = 0.9)
 ```
 
-To avoid overlap between labels we could use the repulsive geoms from package 'ggrepel'. In this case we would use `stat_label_peaks()`. Repulsion allows the use of larger labels. We would also need to expand the $y$ limits to make space for the labels. (Example not shown.)
-
-If we do not use a repulsive geom that skips labels set to `""`, the plot produced by `stat_label_peaks` is of little use unless we explicitly skip the unlabelled observations as shown below.
+Using a larger number as argument to span reduces the number of peaks
+detected.
 
 ```{r}
 ggplot(sun.spct) + geom_line() + 
-  stat_peaks(shape = 21, span = 25, size = 2) + 
-  stat_label_peaks(geom = "label", span = 25, size = 3, na.rm = TRUE) +
+  stat_peaks(shape = 21, 
+             span = 35, 
+             size = 2) + 
+  stat_label_peaks(geom = "label", 
+                   span = 35, 
+                   size = 3,
+                   na.rm = TRUE,
+                   vjust = "bottom",
+                   position = position_nudge(y = 0.01)) +
   scale_fill_identity() +
   scale_color_identity() +
-  expand_limits(y = c(NA, 0.9))
+  expand_limits(y = 0.9)
 ```
 
-Setting `span` to `NULL` results in the span set to the range of the data, and so in this case the stat returns the global extreme, instead of a local one. In this case we use geoms `"vline"` and `"hline"` taking advantage that suitable aesthetics are set by the stats.
+Setting `span` to `NULL` results in the span set to the range of the
+data, and so in this case the stat returns the global extreme, instead
+of a local one. In this case we use geoms `"vline"` and `"hline"` taking
+advantage that suitable aesthetics are set by the stats.
 
 ```{r}
 ggplot(sun.spct) + geom_line() + 
@@ -611,27 +825,75 @@ ggplot(sun.spct) + geom_line() +
   stat_peaks(span = NULL, geom = "hline", linetype = "dotted", color = "red")
 ```
 
-By default the `label` aesthetic is mapped to a calculated label `x.label` giving the wavelength in nanometres. This mapping can be changed to give to a label giving the _y_-value at the peak.
+By default the `label` aesthetic is mapped to a calculated label
+`x.label` giving the wavelength in nanometres. This mapping can be
+changed to give to a label giving the *y*-value at the peak. We cannot
+pass `nudge_y` directly, we need to the nudge as a `position`.
 
 ```{r}
 ggplot(sun.spct) + geom_line() + 
-  stat_label_peaks(aes(label = stat(y.label)), 
-                   span = 41, geom = "label", size = 2.5,
-                   label.fmt = "y = %1.2f") +
+  stat_peaks(shape = 21, span = 35, size = 2) + 
+  stat_label_peaks(aes(label = stat(y.label)),
+                   span = 35, geom = "label", size = 3,
+                   position = position_nudge(y = 0.04),
+                   label.fmt = "%1.2f") +
   expand_limits(y = 1) +
   scale_fill_identity() + scale_color_identity()
 ```
 
 ```{r}
 ggplot(sun.spct) + geom_line() + 
-  stat_label_peaks(aes(label = stat(y.label)), 
-                   span = 41, geom = "label_repel", size = 2.5,
-                   label.fmt = "y = %1.2f") +
-  expand_limits(y = 1) +
-  scale_fill_identity() + scale_color_identity()
+  stat_valleys(shape = 21, 
+               span = 35, 
+               size = 2) + 
+  stat_label_valleys(geom = "label", 
+                     span = 35, 
+                     size = 3,
+                     na.rm = TRUE,
+                     vjust = "top",
+                     position = position_nudge(y = -0.01)) +
+  scale_fill_identity() +
+  scale_color_identity()
 ```
 
-As _aesthetics_ can use values computed on-the-fly we can even use `paste()` to map a label that combines both values and adds additional text.
+Above, using `geom_label()` there is some overlap. We can use
+`geom_label_repel()` from package 'ggrepel' to avoid it. These geometry
+has additional parameters to which we need to pass arguments to get a
+satisfactory positioning of labels.
+
+```{r}
+ggplot(sun.spct) + geom_line() + 
+  stat_peaks(shape = 21, span = 35, size = 2) + 
+  stat_label_peaks(segment.colour = "black", 
+                   span = 35, geom = "label_repel", size = 3,
+                   max.overlaps = Inf,
+                   position = position_nudge_repel(y = 0.12),
+                   min.segment.length = 0,
+                   box.padding = 0.5,
+                   force_pull = 0) +
+  expand_limits(y = 1) +
+  scale_fill_identity() + 
+  scale_color_identity()
+```
+
+```{r}
+ggplot(sun.spct) + geom_line() + 
+  stat_valleys(shape = 21, span = 35, size = 2) + 
+  stat_label_valleys(segment.colour = "black", 
+                     span = 35, geom = "label_repel", size = 3,
+                     max.overlaps = Inf,
+                     position = position_nudge_repel(y = -0.12),
+                     min.segment.length = 0,
+                     box.padding = 0.53,
+                     force = 0.5,
+                     force_pull = 1) +
+  scale_fill_identity() + 
+  scale_color_identity()
+```
+
+As *aesthetics* can use values computed on-the-fly we can even use
+`paste()` to map a label that combines both values and adds additional
+text.
 
 ```{r}
 ggplot(sun.spct) + geom_line() + 
@@ -641,7 +903,9 @@ ggplot(sun.spct) + geom_line() +
   expand_limits(y = c(NA, 0.9))
 ```
 
-Finally we demonstrate that both stats can be simultaneously used. One can also choose to use different spans as demonstrated here, resulting in more maxima being marked by points than labelled with text.
+Finally we demonstrate that both stats can be simultaneously used. One
+can also choose to use different spans as demonstrated here, resulting
+in more maxima being marked by points than labelled with text.
 
 ```{r}
 ggplot(sun.spct) + geom_line() + 
@@ -653,7 +917,11 @@ ggplot(sun.spct) + geom_line() +
                vjust = 1.2, label.fmt = "%3.0f nm")
 ```
 
-This final example shows a few additional tricks used in this case to mark and label the maximum of the spectrum. This example also demonstrates why it is important that these are stats. The peaks are searched and labels generated once for each group, in this case each _facet_.
+This final example shows a few additional tricks used in this case to
+mark and label the maximum of the spectrum. This example also
+demonstrates why it is important that these are stats. The peaks are
+searched and labels generated once for each group, in this case each
+*facet*.
 
 ```{r}
 ggplot(two_suns.spct) + aes(color = spct.idx) +
@@ -665,8 +933,15 @@ ggplot(two_suns.spct) + aes(color = spct.idx) +
   facet_grid(spct.idx~.)
 ```
 
-An additional statistics, `stat_spikes()`, returns the same computed variables as `stat_peaks()` and `stat_valleys()` but detects only very narrow peaks and valleys, usually called spikes. They are common in Raman spectra but can also appear occasionally in any measurement with array spectrometers
-when integration times are long or if some pixels in an array detector are defective (e.g., hot pixels and dead pixels). Usually spikes are considered "noise" to be removed, but occasionally we may want to highlight in a plot the spikes, and do this consistently with function `despike()` from package 'photobiology'. 
+An additional statistics, `stat_spikes()`, returns the same computed
+variables as `stat_peaks()` and `stat_valleys()` but detects only very
+narrow peaks and valleys, usually called spikes. They are common in
+Raman spectra but can also appear occasionally in any measurement with
+array spectrometers when integration times are long or if some pixels in
+an array detector are defective (e.g., hot pixels and dead pixels).
+Usually spikes are considered "noise" to be removed, but occasionally we
+may want to highlight in a plot the spikes, and do this consistently
+with function `despike()` from package 'photobiology'.
 
 ```{r}
 ggplot(white_led.raw_spct, aes(w.length, counts_3)) + 
@@ -677,33 +952,50 @@ ggplot(white_led.raw_spct, aes(w.length, counts_3)) +
 ```{r}
 ggplot(despike(white_led.raw_spct, z.threshold = 8, max.spike.width = 7), 
        aes(w.length, counts_3)) + 
-  geom_line()
+  geom_line() + 
+  stat_spikes(color = "red", z.threshold = 8, max.spike.width = 7)
 ```
 
 ## Color from wavelength
 
-This stat calculates the colour corresponding to each $x$-value (assumed expressed in nanometres) and adds it to the data. It does not summarize the data like `stat_summary()` nor does it subset the data like `stat_peaks`, consequently the plot does not require any additional _geom_ to have all observations plotted. It sets both _color_ and _fill_ aesthetics to a suitable default.
+This stat calculates the colour corresponding to each $x$-value (assumed
+expressed in nanometres) and adds it to the data. It does not summarize
+the data like `stat_summary()` nor does it subset the data like
+`stat_peaks`, consequently the plot does not require any additional
+*geom* to have all observations plotted. It sets both *color* and *fill*
+aesthetics to a suitable default.
 
 ```{r}
 ggplot(sun.spct) + 
   stat_color() + scale_color_identity()
 ```
 
-All statistics that generate color definitions from wavelengths or wavebands have a parameter, `chroma.type` to which can be used to select the color matching function or color coordinates to be used. If we use chromaticity coordinates, `"CC"`, instead of the default color matching fucntion, `"CMF"`, the apparent luminance is not taken into account, only the hue.
+All statistics that generate color definitions from wavelengths or
+wavebands have a parameter, `chroma.type` to which can be used to select
+the color matching function or color coordinates to be used. If we use
+chromaticity coordinates, `"CC"`, instead of the default color matching
+fucntion, `"CMF"`, the apparent luminance is not taken into account,
+only the hue.
 
 ```{r}
 ggplot(sun.spct) + 
   stat_color(chroma.type = "CC") + scale_color_identity()
 ```
 
-We here show _pseudo honey-bee vision_ colors. Bees have trichromic vision, but see green, blue and ultraviolet (GBU) instead of red, green and blue (RGB). The luminance is matched to wavelengths, but the colors shifted so that green becomes red, blue becomes green, and ultraviolet becomes blue.
+We here show *pseudo honey-bee vision* colors. Bees have trichromic
+vision, but see green, blue and ultraviolet (GBU) instead of red, green
+and blue (RGB). The luminance is matched to wavelengths, but the colors
+shifted so that green becomes red, blue becomes green, and ultraviolet
+becomes blue.
 
 ```{r}
 ggplot(clip_wl(sun.spct)) + 
   stat_color(chroma.type = beesxyzCMF.spct) + scale_color_identity()
 ```
 
-By use of a filled _shape_ and adding a black border by overriding the default _color_ aesthetic and over-plotting these points on top of a line, we obtain a better separation from the background.
+By use of a filled *shape* and adding a black border by overriding the
+default *color* aesthetic and over-plotting these points on top of a
+line, we obtain a better separation from the background.
 
 ```{r}
 ggplot(sun.spct) +
@@ -712,7 +1004,10 @@ ggplot(sun.spct) +
   scale_fill_identity()
 ```
 
-With a _trick_ using many narrow _bars_ we can fill the area under the line with a the calculated colours. This works satisfactorily as the data set has a small wavelength step, as in this case we are using a bar of uniform colour for each wavelength value in the data set.
+With a *trick* using many narrow *bars* we can fill the area under the
+line with a the calculated colours. This works satisfactorily as the
+data set has a small wavelength step, as in this case we are using a bar
+of uniform colour for each wavelength value in the data set.
 
 ```{r}
 ggplot(sun.spct) + 
@@ -734,7 +1029,8 @@ ggplot(sun.spct) +
   theme_bw()
 ```
 
-As final example we demonstrate a plot with _facets_ and _shape_ based groups.
+As final example we demonstrate a plot with *facets* and *shape* based
+groups.
 
 ```{r}
 ggplot(two_suns.spct) + aes(shape = spct.idx) +
@@ -745,11 +1041,18 @@ ggplot(two_suns.spct) + aes(shape = spct.idx) +
 
 ## Averages and similar summaries
 
-Our summary _statistics_ are quite different to `ggplot2`s `stat_summary()`. One could criticize that they calculates summaries using a grouping that is not based on a _ggplot_ _aesthetic_. This is a deviation from the grammar of graphics but allows the calculation of summaries for an arbitrary region of the range of $x$-values in the spectral data.
+Our summary *statistics* are quite different to `ggplot2`s
+`stat_summary()`. One could criticize that they calculates summaries
+using a grouping that is not based on a *ggplot* *aesthetic*. This is a
+deviation from the grammar of graphics but allows the calculation of
+summaries for an arbitrary region of the range of $x$-values in the
+spectral data.
 
 ### Summaries producing graphical elements
 
-Three _statistics_ generate only graphic output. First we demonstrate `stat_wb_box()` that produces a filled box for each waveband, filled with the color corresponding to the waveband.
+Three *statistics* generate only graphic output. First we demonstrate
+`stat_wb_box()` that produces a filled box for each waveband, filled
+with the color corresponding to the waveband.
 
 ```{r}
 ggplot(sun.spct) + geom_line() + 
@@ -757,14 +1060,17 @@ ggplot(sun.spct) + geom_line() +
   scale_fill_identity()
 ```
 
-The _statistics_ `stat_wb_column` outputs a column for each waveband, with an area equal to the integral for the corresponding region of the spectrum.
+The *statistics* `stat_wb_column` outputs a column for each waveband,
+with an area equal to the integral for the corresponding region of the
+spectrum.
 
 ```{r}
 ggplot(sun.spct) + stat_wb_column(w.band = VIS_bands()) + geom_line() +
   scale_fill_identity()
 ```
 
-The _statistic_ `stat_wd_hbar` outputs a horizontal bar showing the mean spectral _y_-value for each waveband.
+The *statistic* `stat_wd_hbar` outputs a horizontal bar showing the mean
+spectral *y*-value for each waveband.
 
 ```{r}
 ggplot(sun.spct) + geom_line() + 
@@ -772,7 +1078,8 @@ ggplot(sun.spct) + geom_line() +
   scale_color_identity()
 ```
 
-These graphical summaries are frequently used together with text and label elements with names or numerical summaries.
+These graphical summaries are frequently used together with text and
+label elements with names or numerical summaries.
 
 ### Name labels
 
@@ -785,13 +1092,18 @@ ggplot(sun.spct) + geom_line() +
 
 ### Summaries by wavelength range
 
-The summary is calculated for a range of wavelengths, and the `range` argument defaults to the range of wavelengths in each group defined by other aesthetics. The default _geom_ is `"text"`.
+The summary is calculated for a range of wavelengths, and the `range`
+argument defaults to the range of wavelengths in each group defined by
+other aesthetics. The default *geom* is `"text"`.
 
 ```{r}
 ggplot(sun.spct) + geom_line() + stat_wl_summary()
 ```
 
-We can optionally supply an argument for `range` to limit the summary to a certain part of the spectrum, in which case the use of the default `"text"` _geom_ is misleading. We add the line last so that it is drawn on top of the rectangle.
+We can optionally supply an argument for `range` to limit the summary to
+a certain part of the spectrum, in which case the use of the default
+`"text"` *geom* is misleading. We add the line last so that it is drawn
+on top of the rectangle.
 
 ```{r}
 ggplot(sun.spct) + 
@@ -799,7 +1111,8 @@ ggplot(sun.spct) +
   geom_line()
 ```
 
-Here we show how to add horizontal line and label for the overall mean, by adding the same stat twice, using different values for `geom`.
+Here we show how to add horizontal line and label for the overall mean,
+by adding the same stat twice, using different values for `geom`.
 
 ```{r}
 ggplot(sun.spct) +
@@ -808,7 +1121,10 @@ ggplot(sun.spct) +
   stat_wl_summary(label.fmt = "Mean = %.3g", color = "red", vjust = -0.3)
 ```
 
-Or we can add the _aesthetic_ twice with two different geoms to get the value plotted as a rectangular area and the value as formatted text. We use `vjust` to move the text above the end of the bar, instead of it being centred on the value itself.
+Or we can add the *aesthetic* twice with two different geoms to get the
+value plotted as a rectangular area and the value as formatted text. We
+use `vjust` to move the text above the end of the bar, instead of it
+being centred on the value itself.
 
 ```{r}
 ggplot(sun.spct) +
@@ -817,7 +1133,8 @@ ggplot(sun.spct) +
   geom_line()
 ```
 
-An example using the `color` _aesthetic_ for grouping and moving the text label down. Setting 
+An example using the `color` *aesthetic* for grouping and moving the
+text label down. Setting
 
 ```{r}
 ggplot(two_suns.spct) + aes(color = spct.idx) +
@@ -827,7 +1144,8 @@ ggplot(two_suns.spct) + aes(color = spct.idx) +
   facet_grid(spct.idx~.)
 ```
 
-Same example as above but using a free scale for $y$, still working as expected.
+Same example as above but using a free scale for $y$, still working as
+expected.
 
 ```{r}
 ggplot(two_suns.spct) + aes(color = spct.idx) +
@@ -839,9 +1157,19 @@ ggplot(two_suns.spct) + aes(color = spct.idx) +
 
 ### Means by waveband
 
-Our `stat_wb_mean()` is quite different to `ggplot2`s `stat_summary()`. One could criticize that it calculates summaries using a grouping that is not based on a _ggplot_ _aesthetic_. This is a deviation from the grammar of graphics but allows the calculation of summaries for an arbitrary waveband of the spectrum based on `photobiology::waveband` objects, or lists of such objects. In contrast to `stat_wl_summary()` this allows the use of several ranges, and also of different weighting functions. This function returns both mean and total values for each waveband. It differs from `stat_wb_total()` only in the default _aesthetics_ set.
+Our `stat_wb_mean()` is quite different to `ggplot2`s `stat_summary()`.
+One could criticize that it calculates summaries using a grouping that
+is not based on a *ggplot* *aesthetic*. This is a deviation from the
+grammar of graphics but allows the calculation of summaries for an
+arbitrary waveband of the spectrum based on `photobiology::waveband`
+objects, or lists of such objects. In contrast to `stat_wl_summary()`
+this allows the use of several ranges, and also of different weighting
+functions. This function returns both mean and total values for each
+waveband. It differs from `stat_wb_total()` only in the default
+*aesthetics* set.
 
-The first example uses a `waveband` object created on-the-fly and defining a range of wavelengths.
+The first example uses a `waveband` object created on-the-fly and
+defining a range of wavelengths.
 
 ```{r}
 ggplot(sun.spct) +
@@ -853,7 +1181,9 @@ ggplot(sun.spct) +
   theme_bw()
 ```
 
-If a numeric vector or a spectrum is supplied as argument to `waveband`, its range is calculated and used to construct a temporary `waveband` object.
+If a numeric vector or a spectrum is supplied as argument to `waveband`,
+its range is calculated and used to construct a temporary `waveband`
+object.
 
 ```{r}
 ggplot(sun.spct) +
@@ -866,7 +1196,8 @@ ggplot(sun.spct) +
   theme_bw()
 ```
 
-Lists of wavebands, either user-defined or as in this case using a list constructor can be also used.
+Lists of wavebands, either user-defined or as in this case using a list
+constructor can be also used.
 
 ```{r}
 ggplot(sun.spct) +
@@ -882,9 +1213,19 @@ ggplot(sun.spct) +
 
 ### Totals by waveband
 
-Our `stat_wb_total()` is quite different to `ggplot2`s `stat_summary()`. One could criticize that it calculates summaries using a grouping that is not based on a _ggplot_ _aesthetic_. This is a deviation from the grammar of graphics but allows the calculation of summaries for an arbitrary waveband of the spectrum based on `photobiology::waveband` objects, or lists of such objects. In contrast to `stat_wl_summary()` this allows the use of several ranges, and also of different weighting functions. This function returns both mean and total values for each waveband. It differs from `stat_wb_mean()` only in the default _aesthetics_ set.
+Our `stat_wb_total()` is quite different to `ggplot2`s `stat_summary()`.
+One could criticize that it calculates summaries using a grouping that
+is not based on a *ggplot* *aesthetic*. This is a deviation from the
+grammar of graphics but allows the calculation of summaries for an
+arbitrary waveband of the spectrum based on `photobiology::waveband`
+objects, or lists of such objects. In contrast to `stat_wl_summary()`
+this allows the use of several ranges, and also of different weighting
+functions. This function returns both mean and total values for each
+waveband. It differs from `stat_wb_mean()` only in the default
+*aesthetics* set.
 
-The first example uses a `waveband` object created on-the-fly and defining a range of wavelengths.
+The first example uses a `waveband` object created on-the-fly and
+defining a range of wavelengths.
 
 ```{r}
 ggplot(sun.spct) +
@@ -896,7 +1237,9 @@ ggplot(sun.spct) +
   theme_bw()
 ```
 
-If a numeric vector or a spectrum is supplied as argument to `waveband`, its range is calculated and used to construct a temporary `waveband` object.
+If a numeric vector or a spectrum is supplied as argument to `waveband`,
+its range is calculated and used to construct a temporary `waveband`
+object.
 
 ```{r}
 ggplot(sun.spct) +
@@ -908,7 +1251,10 @@ ggplot(sun.spct) +
   theme_bw()
 ```
 
-Lists of wavebands, either user-defined or as in this case using constructor defined in package `photobiologyWavebands` can be also used. In the case of totals, areas represent them graphically in a very useful way.
+Lists of wavebands, either user-defined or as in this case using
+constructor defined in package `photobiologyWavebands` can be also used.
+In the case of totals, areas represent them graphically in a very useful
+way.
 
 ```{r}
 ggplot(sun.spct * yellow_gel.spct) +
@@ -923,8 +1269,14 @@ ggplot(sun.spct * yellow_gel.spct) +
 
 ### Irradiances by waveband
 
-The _stat_s in previous sections can be used for non-weighed irradiances, but not for BSWFs. These `irrad` _stat_s have additional formal parameters for passing metadata, and use method `photobiology::irrad()` internally on a `photobiology::source_spct` object constructed from the
-data for $x$ and $y$ _aesthetics_. Function `stat_wb_sirrad()` is equivalent to `stat_wb_mean()` and function `stat_wb_irrad()` is equivalent to `stat_wb_total()` following the same naming convention as in package `photobiology`. 
+The \_stat_s in previous sections can be used for non-weighed
+irradiances, but not for BSWFs. These `irrad` \_stat_s have additional
+formal parameters for passing metadata, and use method
+`photobiology::irrad()` internally on a `photobiology::source_spct`
+object constructed from the data for $x$ and $y$ *aesthetics*. Function
+`stat_wb_sirrad()` is equivalent to `stat_wb_mean()` and function
+`stat_wb_irrad()` is equivalent to `stat_wb_total()` following the same
+naming convention as in package `photobiology`.
 
 ```{r}
 ggplot(sun.spct) +
@@ -948,7 +1300,9 @@ ggplot(sun.spct, unit.out = "photon") +
   theme_bw()
 ```
 
-Also following the same naming convention as in package `photobiology`, `e` and `q` versions of these functions default to energy and photon based quantities to `"seconds"` for time unit.
+Also following the same naming convention as in package `photobiology`,
+`e` and `q` versions of these functions default to energy and photon
+based quantities to `"seconds"` for time unit.
 
 ```{r}
 ggplot(sun.spct) +
@@ -960,7 +1314,8 @@ ggplot(sun.spct) +
   theme_bw()
 ```
 
-We can also use `waveband` objects describing _biological spectral weighting functions_ (BSWFs), such as CIE's erythema function.
+We can also use `waveband` objects describing *biological spectral
+weighting functions* (BSWFs), such as CIE's erythema function.
 
 ```{r}
 ggplot(sun.spct) +
@@ -984,7 +1339,8 @@ ggplot(sun.daily.spct) +
   theme_bw()
 ```
 
-Here we pass a list of `waveband` objects. And add areas to facilitate comparisons as irradiances are integral over wavelengths.
+Here we pass a list of `waveband` objects. And add areas to facilitate
+comparisons as irradiances are integral over wavelengths.
 
 ```{r}
 ggplot(sun.spct, unit.out = "photon") +
@@ -999,7 +1355,8 @@ ggplot(sun.spct, unit.out = "photon") +
 
 ### Spectral irradiances by waveband
 
-Spectral irradiances are equivalent to means, and can be best represented graphically as horizontal bars.
+Spectral irradiances are equivalent to means, and can be best
+represented graphically as horizontal bars.
 
 ```{r}
 ggplot(sun.spct) +
@@ -1092,7 +1449,6 @@ ggplot(sun.spct, unit.out = "photon") +
   theme_bw()
 ```
 
-
 ```{r}
 my.bands <- split_bands(c(300,800), length.out = 10)
 ggplot(sun.spct) +
@@ -1107,7 +1463,12 @@ ggplot(sun.spct) +
 
 ## Labels from wavebands
 
-Sometimes we may want to only annotate a plot with waveband names and regions without calculating any summary quantity. `stat_wb_label()` fills this role. Although the same result can be achieved with some of the summary statistics, if no summary is needed this statistic can avoid unnecessary computations, and more importantly used in plots where the $y$ is not mapped, as only the $x$ aesthetic is required.
+Sometimes we may want to only annotate a plot with waveband names and
+regions without calculating any summary quantity. `stat_wb_label()`
+fills this role. Although the same result can be achieved with some of
+the summary statistics, if no summary is needed this statistic can avoid
+unnecessary computations, and more importantly used in plots where the
+$y$ is not mapped, as only the $x$ aesthetic is required.
 
 ```{r}
 ggplot(data.frame(w.length = 300:800), aes(w.length)) +
@@ -1122,7 +1483,9 @@ ggplot(data.frame(w.length = 300:800), aes(w.length)) +
 
 ```
 
-We can also in a similar way make a plot comparing different sets of wavebands, in the next example we compare the VIS and NIR bands of the different imagers used in Landsat missions 1 to 8.
+We can also in a similar way make a plot comparing different sets of
+wavebands, in the next example we compare the VIS and NIR bands of the
+different imagers used in Landsat missions 1 to 8.
 
 ```{r}
 ggplot(data.frame(w.length = 300:1100), aes(w.length)) +
@@ -1181,11 +1544,20 @@ ggplot(data.frame(w.length = 100:400), aes(w.length)) +
   theme_classic()
 ```
 
-It should be noted that this approach is rather different from the way one would normally plot a horizontal bar plot with the grammar of graphics of 'ggplot2', but for plottings existing waveband definitions it is convenient and ensures that the waveband definitions agree with those used for computing summary quantities elsewhere.
+It should be noted that this approach is rather different from the way
+one would normally plot a horizontal bar plot with the grammar of
+graphics of 'ggplot2', but for plottings existing waveband definitions
+it is convenient and ensures that the waveband definitions agree with
+those used for computing summary quantities elsewhere.
 
-## Wavelength colours at new _x_-values 
+## Wavelength colours at new *x*-values
 
-The `stat_wl_summary()` and `stat_wb_mean()` return a _reduced_ data set with fewer rows than the original data. `stat_wl_strip()` depending on the input, can also return a data set with more rows than the input data. This is the default behaviour, with `w.band` with argument `NULL`. This _stat_ operates only on the variable mapped to the _x_ _aesthetic_, a _y_-mapping is not required as input.
+The `stat_wl_summary()` and `stat_wb_mean()` return a *reduced* data set
+with fewer rows than the original data. `stat_wl_strip()` depending on
+the input, can also return a data set with more rows than the input
+data. This is the default behaviour, with `w.band` with argument `NULL`.
+This *stat* operates only on the variable mapped to the *x* *aesthetic*,
+a *y*-mapping is not required as input.
 
 ```{r}
 my.data <- data.frame(x = 300:800)
@@ -1193,7 +1565,11 @@ ggplot(my.data, aes(x)) + stat_wl_strip(ymin = -1, ymax = 1, color = NA) +
     scale_fill_identity()
 ```
 
-The default _geom_ is `"rect"` which with suitable mappings of `ymin` and `ymax` _aesthetics_ can be used to add a colour guide to the _x_-axis (if its scale maps wavelengths in nanometres). When `w.band` is `NULL` a long series of contiguous wavebands is generated to create the illusion of a continuous colour gradient.
+The default *geom* is `"rect"` which with suitable mappings of `ymin`
+and `ymax` *aesthetics* can be used to add a colour guide to the
+*x*-axis (if its scale maps wavelengths in nanometres). When `w.band` is
+`NULL` a long series of contiguous wavebands is generated to create the
+illusion of a continuous colour gradient.
 
 ```{r}
 ggplot(sun.spct) +
@@ -1203,7 +1579,11 @@ ggplot(sun.spct) +
   theme_bw()
 ```
 
-When a list of wavebands is supplied, it is used for the calculation of colours. These calculations do not use the spectral irradiance, they simply assume a flat spectrum, so the represent the colours of the wavelengths, rather than the colour of the light described by the spectral irradiance.
+When a list of wavebands is supplied, it is used for the calculation of
+colours. These calculations do not use the spectral irradiance, they
+simply assume a flat spectrum, so the represent the colours of the
+wavelengths, rather than the colour of the light described by the
+spectral irradiance.
 
 ```{r}
 ggplot(sun.spct) +
@@ -1213,7 +1593,9 @@ ggplot(sun.spct) +
   theme_bw()
 ```
 
-`stat_wl_strip()` can also used to produce a background layer with colours corresponding to _wavebands_. Here we use `alpha = 0.5` to add transparency.
+`stat_wl_strip()` can also used to produce a background layer with
+colours corresponding to *wavebands*. Here we use `alpha = 0.5` to add
+transparency.
 
 ```{r}
 ggplot(sun.spct) +
@@ -1223,7 +1605,8 @@ ggplot(sun.spct) +
   theme_bw()
 ```
 
-By default an almost continuous colour gradient can be generated for the background.
+By default an almost continuous colour gradient can be generated for the
+background.
 
 ```{r}
 ggplot(sun.spct) +
@@ -1235,7 +1618,11 @@ ggplot(sun.spct) +
 
 ## Multiple stats in the same plot
 
-The _stats_ described above can be used together to produce more complex plots. This is just one possibility out of a vast range. Be aware that when adding many layers to the same plot, the order of the layers and adjusting their transparency using the `alpha` _aesthetic_ is very important, and best tuned by trial and error.
+The *stats* described above can be used together to produce more complex
+plots. This is just one possibility out of a vast range. Be aware that
+when adding many layers to the same plot, the order of the layers and
+adjusting their transparency using the `alpha` *aesthetic* is very
+important, and best tuned by trial and error.
 
 ```{r}
 ggplot(sun.spct, unit.out = "photon") +
@@ -1250,13 +1637,19 @@ ggplot(sun.spct, unit.out = "photon") +
 
 ## Geometries
 
-A simple _geom_ called `"spct"` is defined. It differs from _geom_ `"area"` only in the default `position` which is `"stacked"` for _geom_ `"area"` and `"identity"` for _geom_ `"spct"` which is usually better for spectra.
+A simple *geom* called `"spct"` is defined. It differs from *geom*
+`"area"` only in the default `position` which is `"stacked"` for *geom*
+`"area"` and `"identity"` for *geom* `"spct"` which is usually better
+for spectra.
 
 ```{r}
 ggplot(sun.spct) + geom_spct()
 ```
 
-Using as fill the _color_ calculated from the spectral data is different to earlier examples in that the spectral irradiance is actually taken into account in the calculation of the colour, instead of just the wavelength range.
+Using as fill the *color* calculated from the spectral data is different
+to earlier examples in that the spectral irradiance is actually taken
+into account in the calculation of the colour, instead of just the
+wavelength range.
 
 ```{r}
 ggplot(sun.spct) + 
@@ -1270,11 +1663,22 @@ ggplot(sun.spct * yellow_gel.spct) +
 
 ## Packaged stats, geoms plus scales
 
-Some of the examples in previous sections can be simplified by use of `wl_guide()` and `wb_guide()` which add both the statistics and the scale, and provide a default _mapping_ for both `ymin` and `ymax`. This is handy for simple plots, but it can generate spurious warnings due to the replacement of existing scales with identical ones. In general only one of `wl_guide()` or `wb_guide()` should be used in a plot, and each one, only once. They just save some typing for the simplest uses, but are not suitable for complex _decorations_.
+Some of the examples in previous sections can be simplified by use of
+`wl_guide()` and `wb_guide()` which add both the statistics and the
+scale, and provide a default *mapping* for both `ymin` and `ymax`. This
+is handy for simple plots, but it can generate spurious warnings due to
+the replacement of existing scales with identical ones. In general only
+one of `wl_guide()` or `wb_guide()` should be used in a plot, and each
+one, only once. They just save some typing for the simplest uses, but
+are not suitable for complex *decorations*.
 
 ### wl_guide
 
-The examples for `stat_wl_strip` can be simplified by use of `wl_guide()` which adds both the statistics and the scale, and provides default _mappings_ for both `ymin` (`-Inf`) and `ymax` (`Inf`). Another important difference is that the `"rect"` _geom_ used cannot be set to a different one by the user.
+The examples for `stat_wl_strip` can be simplified by use of
+`wl_guide()` which adds both the statistics and the scale, and provides
+default *mappings* for both `ymin` (`-Inf`) and `ymax` (`Inf`). Another
+important difference is that the `"rect"` *geom* used cannot be set to a
+different one by the user.
 
 ```{r}
 ggplot(sun.spct) + 
@@ -1288,7 +1692,8 @@ ggplot(sun.spct) +
   geom_line() 
 ```
 
-This example produces a plot with a very different look than earlier ones, but can also be achieved with a very succinct statement.
+This example produces a plot with a very different look than earlier
+ones, but can also be achieved with a very succinct statement.
 
 ```{r}
 ggplot(sun.spct) + 
@@ -1296,7 +1701,9 @@ ggplot(sun.spct) +
   geom_spct(alpha = 0.75, colour = "white", size = 1) 
 ```
 
-In the next example we demonstrate a trick achieved by over-plotting two lines of different width (`size`) to make the spectrum visible on a background of variable luminosity and colour.
+In the next example we demonstrate a trick achieved by over-plotting two
+lines of different width (`size`) to make the spectrum visible on a
+background of variable luminosity and colour.
 
 ```{r}
 ggplot(sun.spct) + 
@@ -1322,4 +1729,3 @@ color_chart(grep("blue", colors(), value = TRUE), ncol = 5, text.size = 4)
             use.names = TRUE, text.size = 4) +
   ggtitle("Reddish colors", subtitle = "Labels: wavelength (nm)")
 ```
-

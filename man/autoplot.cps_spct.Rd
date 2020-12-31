@@ -22,12 +22,13 @@
   norm = NULL,
   text.size = 2.5,
   idfactor = NULL,
+  facets = FALSE,
   ylim = c(NA, NA),
   object.label = deparse(substitute(object)),
   na.rm = TRUE
 )
 
-\method{autoplot}{cps_mspct}(object, ..., range = NULL, plot.data = "as.is")
+\method{autoplot}{cps_mspct}(object, ..., range = NULL, idfactor = NULL, facets = FALSE)
 }
 \arguments{
 \item{object}{a cps_spct object.}
@@ -79,10 +80,6 @@ default "spct.idx" is tried.}
 \item{object.label}{character The name of the object being plotted.}
 
 \item{na.rm}{logical.}
-
-\item{plot.data}{character Data to plot. Default is "as.is" plotting one line
-per spectrum. When passing "mean", "median", "sum", "var", "sd", "se" as
-argument all the spectra must contain data at the same wavelength values.}
 }
 \value{
 a \code{ggplot} object.

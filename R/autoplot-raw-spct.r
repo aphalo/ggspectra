@@ -53,6 +53,7 @@ raw_plot <- function(spct,
                      norm,
                      text.size,
                      idfactor,
+                     facets,
                      ylim,
                      na.rm,
                      ...) {
@@ -144,6 +145,7 @@ raw_plot <- function(spct,
     plot <- ggplot(spct) + aes_(x = ~w.length, y = ~counts)
     temp <- find_idfactor(spct = spct,
                           idfactor = idfactor,
+                          facets = facets,
                           annotations = annotations)
     plot <- plot + temp$ggplot_comp
     annotations <- temp$annotations
@@ -282,6 +284,7 @@ autoplot.raw_spct <-
            norm = NULL,
            text.size = 2.5,
            idfactor = NULL,
+           facets = FALSE,
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
@@ -312,6 +315,7 @@ autoplot.raw_spct <-
              norm = norm,
              text.size = text.size,
              idfactor = idfactor,
+             facets = facets,
              ylim = ylim,
              na.rm = na.rm,
              ...) +
@@ -324,25 +328,14 @@ autoplot.raw_spct <-
 
 #' @rdname autoplot.raw_spct
 #'
-#' @param plot.data character Data to plot. Default is "as.is" plotting one line
-#'   per spectrum. When passing "mean", "median", "sum", "var", "sd", "se" as
-#'   argument all the spectra must contain data at the same wavelength values.
-#'
 #' @export
 #'
 autoplot.raw_mspct <-
-  function(object, ..., range = NULL, plot.data = "as.is") {
+  function(object, ..., range = NULL, idfactor = NULL, facets = FALSE) {
     # we convert the collection of spectra into a single spectrum object
-    # containing a summary spectrum or multiple spectra in long form.
-    z <- switch(plot.data,
-                as.is = photobiology::rbindspct(object),
-                mean = photobiology::s_mean(object),
-                median = photobiology::s_median(object),
-                sum = photobiology::s_sum(object),
-                var = photobiology::s_var(object),
-                sd = photobiology::s_sd(object),
-                se = photobiology::s_se(object)
-    )
-    autoplot(object = z, range = NULL, ...)
+    # containing multiple spectra in long form.
+    z <- photobiology::rbindspct(object)
+    facets <- facets | getMultipleWl(z, idfactor = idfactor)
+    autoplot(object = z, range = NULL, idfactor = idfactor, facets = facets, ...)
   }
 

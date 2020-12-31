@@ -10,8 +10,10 @@ decoration(
   y.min,
   x.max,
   x.min,
+  x.expanse = x.max - x.min,
+  y.expanse = y.max - y.min,
   annotations,
-  span = NULL,
+  span,
   strict = is.null(span),
   wls.target = "HM",
   label.qty,
@@ -28,6 +30,8 @@ decoration(
 }
 \arguments{
 \item{w.band}{waveband object or list of waveband objects}
+
+\item{y.max, y.min, x.max, x.min, x.expanse, y.expanse}{numeric}
 
 \item{annotations}{character vector}
 
@@ -52,7 +56,7 @@ decoration(
 
 \item{na.rm}{logical}
 
-\item{ymax, ymin, xmax, xmin}{numeric}
+\item{nudge_npcx, nudge_npcy}{numeric}
 }
 \value{
 A list of ggplot "components" that can be added to a ggplot object

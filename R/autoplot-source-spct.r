@@ -31,9 +31,9 @@
 #'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
-#' @param facets logical Flag indicating if facets are to be created for the
-#'   levels of \code{idfactor} when \code{spct} contain multiple spectra in long
-#'   form.
+#' @param facets logical or integer Indicating if facets are to be created for
+#'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+#'   long form.
 #' @param ylim numeric y axis limits,
 #' @param na.rm logical.
 #' @param ... currently ignored.
@@ -510,9 +510,9 @@ q_plot <- function(spct,
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
 #'   corresponding to a distinct level of the factor.
-#' @param facets logical Flag indicating if facets are to be created for the
-#'   levels of \code{idfactor} when \code{spct} contain multiple spectra in long
-#'   form.
+#' @param facets logical or integer Indicating if facets are to be created for
+#'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+#'   long form.
 #' @param ylim numeric y axis limits,
 #' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.

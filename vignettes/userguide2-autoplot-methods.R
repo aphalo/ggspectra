@@ -2,8 +2,9 @@
 library(dplyr)
 library(photobiologyWavebands)
 library(ggspectra)
+library(ggrepel)
 
-good_label_repel <- packageVersion('ggrepel') != "0.8.0" && packageVersion('ggrepel') != "0.9.0" 
+good_label_repel <- packageVersion('ggrepel') != "0.9.0" # >= 0.9.0 required
 options(ggrepel.max.overlaps = Inf) # needed for 'ggrepel' (>= 0.9.0)
 
 ## ---- include=FALSE, echo=FALSE-----------------------------------------------
@@ -63,13 +64,19 @@ autoplot(sun.spct, annotations = c("-", "summaries", "peaks"))
 autoplot(sun.spct, annotations = c("+", "valleys"), span = 41)
 
 ## ---- eval=good_label_repel---------------------------------------------------
-#  autoplot(sun.spct, annotations = c("+", "peak.labels"), span = 51)
+autoplot(sun.spct, 
+         annotations = list(c("+", "peak.labels"), 
+                            c("-", "boxes", "summaries", "labels")), 
+         span = 51)
 
 ## ---- eval=good_label_repel---------------------------------------------------
-#  autoplot(sun.spct, annotations = c("+", "valley.labels"), span = 51)
+autoplot(sun.spct, 
+         annotations = list(c("+", "valley.labels"), 
+                            c("-", "peaks")), 
+         span = 51)
 
 ## ---- eval=good_label_repel---------------------------------------------------
-#  autoplot(sun.spct, annotations = c("+", "peak.labels", "valley.labels"), span = 51)
+autoplot(sun.spct, annotations = c("+", "peak.labels", "valley.labels"), span = 51)
 
 ## -----------------------------------------------------------------------------
 autoplot(sun.spct, annotations = "")
@@ -160,6 +167,10 @@ autoplot(white_led.raw_spct, annotations = c("+", "boundaries"))
 autoplot(sun.spct, 
          chroma.type = beesxyzCMF.spct,
           annotations = c("=", "color.guide"))
+
+## ---- eval=FALSE--------------------------------------------------------------
+#  # Not run so as to pass CRAN checks!!
+#  autoplot(yellow_gel.spct - 0.01, annotations = c("+", "boundaries"))
 
 ## -----------------------------------------------------------------------------
 two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct / 2))

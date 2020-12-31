@@ -16,6 +16,7 @@ cps_plot(
   norm,
   text.size,
   idfactor,
+  facets,
   ylim,
   na.rm,
   ...

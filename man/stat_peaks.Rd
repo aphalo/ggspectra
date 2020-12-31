@@ -29,6 +29,8 @@ stat_valleys(
   mapping = NULL,
   data = NULL,
   geom = "point",
+  position = "identity",
+  ...,
   span = 5,
   ignore_threshold = -0.01,
   strict = is.null(span),
@@ -38,11 +40,9 @@ stat_valleys(
   label.fmt = "\%.3g",
   x.label.fmt = label.fmt,
   y.label.fmt = label.fmt,
-  position = "identity",
   na.rm = FALSE,
   show.legend = FALSE,
-  inherit.aes = TRUE,
-  ...
+  inherit.aes = TRUE
 )
 }
 \arguments{
@@ -207,7 +207,7 @@ ggplot(sun.spct) +
                span = 71, geom = "label",
                size = 3, vjust = 1.2, label.fmt = "\%.3g nm",
                refine.wl = TRUE) +
-  expand_limits(y = 4e-6) +
+  expand_limits(y = 0.85) + # make room for label
   scale_fill_identity() +
   scale_color_identity()
 

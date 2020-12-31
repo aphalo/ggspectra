@@ -9,6 +9,8 @@ stat_label_peaks(
   mapping = NULL,
   data = NULL,
   geom = "text",
+  position = "identity",
+  ...,
   span = 5,
   ignore_threshold = 0,
   strict = TRUE,
@@ -17,17 +19,17 @@ stat_label_peaks(
   x.label.fmt = label.fmt,
   y.label.fmt = label.fmt,
   label.fill = "",
-  position = "identity",
   na.rm = TRUE,
   show.legend = FALSE,
-  inherit.aes = TRUE,
-  ...
+  inherit.aes = TRUE
 )
 
 stat_label_valleys(
   mapping = NULL,
   data = NULL,
   geom = "text",
+  position = "identity",
+  ...,
   span = 5,
   ignore_threshold = 0,
   strict = TRUE,
@@ -36,11 +38,9 @@ stat_label_valleys(
   x.label.fmt = label.fmt,
   y.label.fmt = label.fmt,
   label.fill = "",
-  position = "identity",
   na.rm = TRUE,
   show.legend = FALSE,
-  inherit.aes = TRUE,
-  ...
+  inherit.aes = TRUE
 )
 }
 \arguments{
@@ -52,6 +52,13 @@ set at the layer level if you are overriding the plot defaults.}
 the plot defaults.}
 
 \item{geom}{The geometric object to use display the data}
+
+\item{position}{The position adjustment to use for overlapping points on this
+layer}
+
+\item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This
+can include aesthetics whose values you want to set, not map. See
+\code{\link[ggplot2]{layer}} for more details.}
 
 \item{span}{a peak is defined as an element in a sequence which is greater
 than all other elements within a window of width span centered at that
@@ -81,9 +88,6 @@ converting $y$-values into character strings by means of function
 \item{label.fill}{character string ot use for labels not at peaks or valleys
 being highlighted.}
 
-\item{position}{The position adjustment to use for overlapping points on this
-layer}
-
 \item{na.rm}{a logical value indicating whether NA values should be stripped
 before the computation proceeds.}
 
@@ -95,10 +99,6 @@ never includes, and \code{TRUE} always includes.}
 than combining with them. This is most useful for helper functions that
 define both data and aesthetics and shouldn't inherit behaviour from the
 default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
-
-\item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This
-can include aesthetics whose values you want to set, not map. See
-\code{\link[ggplot2]{layer}} for more details.}
 }
 \value{
 The original data with additional computed variables added.

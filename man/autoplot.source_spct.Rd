@@ -79,9 +79,9 @@ also accepted.}
 \code{factor} with each spectrum in a long-form multispectrum object
 corresponding to a distinct level of the factor.}
 
-\item{facets}{logical Flag indicating if facets are to be created for the
-levels of \code{idfactor} when \code{spct} contain multiple spectra in long
-form.}
+\item{facets}{logical or integer Indicating if facets are to be created for
+the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+long form.}
 
 \item{ylim}{numeric y axis limits,}
 
