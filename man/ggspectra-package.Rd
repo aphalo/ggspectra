@@ -6,6 +6,8 @@
 \alias{ggspectra-package}
 \title{ggspectra: Extensions to 'ggplot2' for Radiation Spectra}
 \description{
+\if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
+
 Additional annotations, stats, geoms and scales for plotting 
     "light" spectra with 'ggplot2', together with specializations of ggplot()
     and autoplot() methods for spectral data and waveband definitions

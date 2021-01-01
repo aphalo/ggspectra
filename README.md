@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ggspectra
+# ggspectra <img src="man/figures/logo.png" align="right" width="120" />
 
 [![cran
 version](https://www.r-pkg.org/badges/version/ggspectra)](https://cran.r-project.org/package=ggspectra)
