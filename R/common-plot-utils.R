@@ -14,6 +14,8 @@
 #' @param annotations a character vector.
 #' @param facets logical or numeric Flag indicating if facets are to be created
 #'   when the data contains multiple spectra, if numeric the number of columns.
+#' @param num.columns numeric Number of data columns from multiple scans. Relevant
+#'   only to \code{raw_spct} and \code{cps_spct} objects.
 #' @param ... currently not used.
 #'
 #' @return A list object containing a list of ggplot components and a vector of
@@ -25,8 +27,9 @@ find_idfactor <- function(spct,
                           idfactor,
                           annotations,
                           facets = FALSE,
+                          num.columns = 1L,
                           ...) {
-  if ((is.null(idfactor) || !is.na(idfactor)) && getMultipleWl(spct) > 1L) {
+  if ((is.null(idfactor) || !is.na(idfactor)) && getMultipleWl(spct) > num.columns) {
     if (is.null(idfactor) || (is.logical(idfactor) && idfactor)) {
       idfactor <- getIdFactor(spct)
       if (is.na(idfactor)) {

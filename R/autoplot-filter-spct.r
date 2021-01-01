@@ -800,11 +800,13 @@ O_plot <- function(spct,
                    stacked,
                    text.size,
                    chroma.type,
+                   facets,
                    na.rm,
                    ylim,
                    ...) {
-  if (getMultipleWl(spct) > 1L) {
-    stop("Only one object spectrum per plot supported")
+  if (getMultipleWl(spct) > 1L & !facets) {
+    warning("Only one object spectrum per panel supported")
+    facets <- TRUE
   }
   if (!is.object_spct(spct)) {
     stop("O_plot() can only plot object_spct objects.")
@@ -1014,7 +1016,21 @@ O_plot <- function(spct,
 #' @examples
 #'
 #' autoplot(yellow_gel.spct)
+#' autoplot(yellow_gel.spct, plot.qty = "transmittance")
+#' autoplot(yellow_gel.spct, plot.qty = "absorptance")
+#' autoplot(yellow_gel.spct, plot.qty = "absorbance")
 #' autoplot(yellow_gel.spct, pc.out = TRUE)
+#' autoplot(yellow_gel.spct, annotations = "")
+#' autoplot(yellow_gel.spct, annotations = c("+", "wls"))
+#'
+#' two_filters.mspct <-
+#'  filter_mspct(list("Yellow gel" = yellow_gel.spct,
+#'                    "Polyester film" = polyester.spct))
+#' autoplot(two_filters.mspct)
+#' autoplot(two_filters.mspct, idfactor = "Spectra")
+#' autoplot(two_filters.mspct, facets = TRUE)
+#' autoplot(two_filters.mspct, facets = 1)
+#' autoplot(two_filters.mspct, facets = 2)
 #'
 #' @family autoplot methods
 #'
@@ -1131,7 +1147,8 @@ autoplot.filter_mspct <-
            ...,
            range = NULL,
            plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
-           plot.data = "as.is") {
+           plot.data = "as.is",
+           idfactor = TRUE) {
     # We trim the spectra to avoid unnecesary computaions later
     if (!is.null(range)) {
       object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
@@ -1149,7 +1166,7 @@ autoplot.filter_mspct <-
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
     z <- switch(plot.data,
-                as.is = photobiology::rbindspct(object),
+                as.is = photobiology::rbindspct(object, idfactor = idfactor),
                 mean = photobiology::s_mean(object),
                 median = photobiology::s_median(object),
                 sum = photobiology::s_sum(object),
@@ -1157,7 +1174,7 @@ autoplot.filter_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
-    autoplot(object = z, range = NULL, plot.qty = plot.qty, ...)
+    autoplot(object = z, range = NULL, plot.qty = plot.qty, idfactor = idfactor, ...)
   }
 
 #' Create a complete ggplot for a reflector spectrum.
@@ -1220,6 +1237,17 @@ autoplot.filter_mspct <-
 #' @examples
 #'
 #' autoplot(Ler_leaf_rflt.spct)
+#' autoplot(Ler_leaf_rflt.spct, annotations = "")
+#' autoplot(Ler_leaf_rflt.spct, annotations = c("+", "valleys"))
+#'
+#' two_leaves.mspct <-
+#'  reflector_mspct(list("Arabidopsis leaf 1" = Ler_leaf_rflt.spct,
+#'                       "Arabidopsis leaf 2" = Ler_leaf_rflt.spct / 2))
+#' autoplot(two_leaves.mspct)
+#' autoplot(two_leaves.mspct, idfactor = "Spectra")
+#' autoplot(two_leaves.mspct, facets = TRUE)
+#' autoplot(two_leaves.mspct, facets = 1)
+#' autoplot(two_leaves.mspct, facets = 2)
 #'
 #' @family autoplot methods
 #'
@@ -1304,7 +1332,8 @@ autoplot.reflector_mspct <-
            ...,
            range = NULL,
            plot.qty = getOption("photobiology.reflector.qty", default = "reflectance"),
-           plot.data = "as.is") {
+           plot.data = "as.is",
+           idfactor = TRUE) {
     # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
       object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
@@ -1312,7 +1341,7 @@ autoplot.reflector_mspct <-
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
     z <- switch(plot.data,
-                as.is = photobiology::rbindspct(object),
+                as.is = photobiology::rbindspct(object, idfactor = idfactor),
                 mean = photobiology::s_mean(object),
                 median = photobiology::s_median(object),
                 sum = photobiology::s_sum(object),
@@ -1320,7 +1349,7 @@ autoplot.reflector_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
-    autoplot(object = z, range = NULL, plot.qty = plot.qty, ...)
+    autoplot(object = z, range = NULL, plot.qty = plot.qty, idfactor = idfactor, ...)
   }
 
 #' Create a complete ggplot for a object spectrum.
@@ -1377,6 +1406,9 @@ autoplot.reflector_mspct <-
 #'
 #' @return a \code{ggplot} object.
 #'
+#' @note A method for collections of object spectra of length > 1 is not yet
+#'   implemented for \code{plot.qty = "all"}.
+#'
 #' @export
 #'
 #' @keywords hplot
@@ -1384,6 +1416,22 @@ autoplot.reflector_mspct <-
 #' @examples
 #'
 #' autoplot(Ler_leaf.spct)
+#' autoplot(Ler_leaf.spct, plot.qty = "transmittance")
+#' autoplot(Ler_leaf.spct, plot.qty = "reflectance")
+#' autoplot(Ler_leaf.spct, plot.qty = "absorptance")
+#' autoplot(Ler_leaf.spct, annotations = "")
+#'
+#' two_leaves.mspct <-
+#'  object_mspct(list("Arabidopsis leaf 1" = Ler_leaf.spct,
+#'                    "Arabidopsis leaf 2" = Ler_leaf.spct))
+#' autoplot(two_leaves.mspct)
+#' autoplot(two_leaves.mspct, idfactor = "Spectra")
+#' autoplot(two_leaves.mspct, plot.qty = "transmittance")
+#' autoplot(two_leaves.mspct, plot.qty = "reflectance")
+#' autoplot(two_leaves.mspct, plot.qty = "absorptance")
+#' autoplot(two_leaves.mspct, facets = TRUE)
+#' autoplot(two_leaves.mspct, facets = 1)
+#' autoplot(two_leaves.mspct, facets = 2)
 #'
 #' @family autoplot methods
 #'
@@ -1396,7 +1444,7 @@ autoplot.object_spct <-
            plot.qty = "all",
            pc.out = FALSE,
            label.qty = NULL,
-           span = 61,
+           span = NULL,
            wls.target = "HM",
            annotations = NULL,
            time.format = "",
@@ -1526,19 +1574,49 @@ autoplot.object_spct <-
 
 #' @rdname autoplot.object_spct
 #'
+#' @param plot.data character Data to plot. Default is "as.is" plotting one line
+#'   per spectrum. When passing "mean", "median", "sum", "var", "sd", "se" as
+#'   argument all the spectra must contain data at the same wavelength values.
+#'
 #' @export
 #'
 autoplot.object_mspct <-
   function(object,
            ...,
            range = NULL,
-           plot.qty = "all",
-           facets = FALSE) {
+           plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
+           facets = FALSE,
+           plot.data = "as.is",
+           idfactor = TRUE) {
+    if (plot.qty == "all") {
+      message("'plot.qty = \"all\"' not yet supported for collections.")
+      plot.qty <- "transmittance"
+    }
+    # conversion needed as methods are not implemented for object_spct
+    if (plot.qty == "reflectance") {
+      object <- as.reflector_mspct(object)
+    } else {
+      object <- as.filter_mspct(object)
+    }
     # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
       object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
     }
-    z <- photobiology::rbindspct(object)
-    facets <- facets | getMultipleWl(z)
-    autoplot(object = z, range = NULL, plot.qty = plot.qty, facets = facets, ...)
+    # we convert the collection of spectra into a single spectrum object
+    # containing a summary spectrum or multiple spectra in long form.
+    z <- switch(plot.data,
+                as.is = photobiology::rbindspct(object, idfactor = idfactor),
+                mean = photobiology::s_mean(object),
+                median = photobiology::s_median(object),
+                sum = photobiology::s_sum(object),
+                var = photobiology::s_var(object),
+                sd = photobiology::s_sd(object),
+                se = photobiology::s_se(object)
+    )
+    autoplot(object = z,
+             range = NULL,
+             plot.qty = plot.qty,
+             idfactor = idfactor,
+             facets = facets,
+             ...)
   }

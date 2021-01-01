@@ -4,7 +4,7 @@ inst/web
 inst-not
 vignettes/figure
 ^tests$
-^docs$
+^pkgdown$
 ^_pkgdown\.yml$
 ^README\.Rmd$
 ^README-.*\.png$

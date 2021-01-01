@@ -34,6 +34,9 @@
 #'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
+#' @param facets logical or integer Indicating if facets are to be created for
+#'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+#'   long form.
 #' @param na.rm logical.
 #' @param ylim numeric y axis limits,
 #' @param ... currently ignored.
@@ -53,6 +56,7 @@ cal_plot <- function(spct,
                      norm,
                      text.size,
                      idfactor,
+                     facets,
                      ylim,
                      na.rm,
                      ...) {
@@ -71,10 +75,12 @@ cal_plot <- function(spct,
 
   mult.cols <- names(spct)[grep("^irrad.mult", names(spct))]
   num.mult.cols <- length(mult.cols)
-  if (num.mult.cols > 1L && getMultipleWl(spct) != 1L) {
-    stop("Error: spectra can be either in wide or long format, but not both.")
+  # if individual spectra have multiple columns we force facets
+  if (!as.logical(facets) && num.mult.cols > 1L && getMultipleWl(spct) > 1L) {
+    message("Usings facets because spectra contain multiple scans.")
+    facets <- TRUE
   }
-#  other.cols <- setdiff(names(x), mult.cols)
+  #  other.cols <- setdiff(names(x), mult.cols)
   if (is.null(norm)) {
     # we will use the original data
     scale.factor <- 1
@@ -123,11 +129,29 @@ cal_plot <- function(spct,
   }
 
   if (num.mult.cols > 1L) {
-    spct <- tidyr::gather_(spct,
+    # remove raw_spct class before melting as it invalidates expectations
+    rmDerivedSpct(spct)
+    spct <- tidyr::gather_(data = spct,
                            key_col = "scan",
                            value_col = "irrad.mult",
                            gather_cols = mult.cols)
-    setCalibrationSpct(spct, multiple.wl = length(mult.cols))
+    setCalibrationSpct(spct, multiple.wl = NULL) # guessed from data
+    plot <- ggplot(spct) + aes_(x = ~w.length, y = ~irrad.mult, linetype = ~scan)
+    temp <- find_idfactor(spct = spct,
+                          idfactor = idfactor,
+                          facets = facets,
+                          annotations = annotations,
+                          num.columns = num.mult.cols)
+    plot <- plot + temp$ggplot_comp
+    annotations <- temp$annotations
+  } else {
+    plot <- ggplot(spct) + aes_(x = ~w.length, y = ~irrad.mult)
+    temp <- find_idfactor(spct = spct,
+                          idfactor = idfactor,
+                          facets = facets,
+                          annotations = annotations)
+    plot <- plot + temp$ggplot_comp
+    annotations <- temp$annotations
   }
 
   y.min <- ifelse(!is.na(ylim[1]),
@@ -136,13 +160,6 @@ cal_plot <- function(spct,
   y.max <- ifelse(!is.na(ylim[2]),
                   ylim[2],
                   max(spct[["irrad.mult"]], 0, na.rm = TRUE))
-
-  plot <- ggplot(spct, aes_(x = ~w.length, y = ~irrad.mult))
-  temp <- find_idfactor(spct = spct,
-                        idfactor = idfactor,
-                        annotations = annotations)
-  plot <- plot + temp$ggplot_comp
-  annotations <- temp$annotations
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
@@ -233,6 +250,9 @@ cal_plot <- function(spct,
 #'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
 #'   to the spectra and the user needs to use 'ggplot2' functions to manually
 #'   map an aesthetic or use facets for the spectra.
+#' @param facets logical or integer Indicating if facets are to be created for
+#'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+#'   long form.
 #' @param ylim numeric y axis limits,
 #' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.
@@ -240,8 +260,6 @@ cal_plot <- function(spct,
 #' @return a \code{ggplot} object.
 #'
 #' @export
-#'
-#' @keywords hplot
 #'
 #' @family autoplot methods
 #'
@@ -261,6 +279,7 @@ autoplot.calibration_spct <-
            norm = NULL,
            text.size = 2.5,
            idfactor = NULL,
+           facets = FALSE,
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
@@ -290,6 +309,7 @@ autoplot.calibration_spct <-
              norm = norm,
              text.size = text.size,
              idfactor = idfactor,
+             facets = facets,
              na.rm = na.rm,
              ylim = ylim,
              ...) +
@@ -309,7 +329,12 @@ autoplot.calibration_spct <-
 #' @export
 #'
 autoplot.calibration_mspct <-
-  function(object, ..., range = NULL, plot.data = "as.is") {
+  function(object,
+           ...,
+           range = NULL,
+           idfactor = TRUE,
+           facets = FALSE,
+           plot.data = "as.is") {
     # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
       object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
@@ -317,7 +342,7 @@ autoplot.calibration_mspct <-
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
     z <- switch(plot.data,
-                as.is = photobiology::rbindspct(object),
+                as.is = photobiology::rbindspct(object, idfactor = idfactor),
                 mean = photobiology::s_mean(object),
                 median = photobiology::s_median(object),
                 sum = photobiology::s_sum(object),
@@ -325,6 +350,6 @@ autoplot.calibration_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
-    autoplot(object = z, range = NULL, ...)
+    autoplot(object = z, range = NULL, idfactor = idfactor, facets = facets, ...)
   }
 

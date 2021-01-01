@@ -30,6 +30,9 @@
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
 #'   the factor is retrieved from metadata or if no metadata found, the
 #'   default "spct.idx" is tried.
+#' @param facets logical or integer Indicating if facets are to be created for
+#'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+#'   long form.
 #' @param na.rm logical.
 #' @param ylim numeric y axis limits,
 #' @param ... currently ignored.
@@ -49,6 +52,7 @@ e_rsp_plot <- function(spct,
                        norm,
                        text.size,
                        idfactor,
+                       facets,
                        ylim,
                        na.rm,
                        ...) {
@@ -192,6 +196,7 @@ e_rsp_plot <- function(spct,
   plot <- ggplot(spct, aes_(~w.length, ~s.e.response))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
+                        facets = facets,
                         annotations = annotations)
   plot <- plot + temp$ggplot_comp
   annotations <- temp$annotations
@@ -286,6 +291,9 @@ e_rsp_plot <- function(spct,
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
 #'   the factor is retrieved from metadata or if no metadata found, the
 #'   default "spct.idx" is tried.
+#' @param facets logical or integer Indicating if facets are to be created for
+#'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+#'   long form.
 #' @param ylim numeric y axis limits,
 #' @param na.rm logical.
 #' @param ... currently ignored.
@@ -305,6 +313,7 @@ q_rsp_plot <- function(spct,
                        norm,
                        text.size,
                        idfactor,
+                       facets,
                        ylim,
                        na.rm,
                        ...) {
@@ -451,6 +460,7 @@ q_rsp_plot <- function(spct,
   plot <- ggplot(spct, aes_(x = ~w.length, y = ~s.q.response))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
+                        facets = facets,
                         annotations = annotations)
   plot <- plot + temp$ggplot_comp
   annotations <- temp$annotations
@@ -554,6 +564,9 @@ q_rsp_plot <- function(spct,
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
 #'   the factor is retrieved from metadata or if no metadata found, the
 #'   default "spct.idx" is tried.
+#' @param facets logical or integer Indicating if facets are to be created for
+#'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+#'   long form.
 #' @param ylim numeric y axis limits,
 #' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.
@@ -568,6 +581,17 @@ q_rsp_plot <- function(spct,
 #'
 #' autoplot(photodiode.spct)
 #' autoplot(photodiode.spct, unit.out = "photon")
+#' autoplot(photodiode.spct, annotations = "")
+#'
+#' two_sensors.mspct <-
+#'  response_mspct(list("Photodiode" = photodiode.spct,
+#'                      "Coupled charge device" = ccd.spct))
+#' two_sensors.mspct <- normalise(two_sensors.mspct)
+#' autoplot(two_sensors.mspct)
+#' autoplot(two_sensors.mspct, idfactor = "Spectra")
+#' autoplot(two_sensors.mspct, facets = TRUE)
+#' autoplot(two_sensors.mspct, facets = 1)
+#' autoplot(two_sensors.mspct, facets = 2)
 #'
 #' @family autoplot methods
 #'
@@ -587,6 +611,7 @@ autoplot.response_spct <-
            norm = "max",
            text.size = 2.5,
            idfactor = NULL,
+           facets = FALSE,
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
@@ -624,6 +649,7 @@ autoplot.response_spct <-
                                norm = norm,
                                text.size = text.size,
                                idfactor = idfactor,
+                               facets = facets,
                                ylim = ylim,
                                na.rm = na.rm,
                                ...)
@@ -638,6 +664,7 @@ autoplot.response_spct <-
                                annotations = annotations, norm = norm,
                                text.size = text.size,
                                idfactor = idfactor,
+                               facets = facets,
                                ylim = ylim,
                                na.rm = na.rm,
                                ...)
@@ -661,7 +688,11 @@ autoplot.response_spct <-
 #' @export
 #'
 autoplot.response_mspct <-
-  function(object, ..., range = NULL, plot.data = "as.is") {
+  function(object,
+           ...,
+           range = NULL,
+           plot.data = "as.is",
+           idfactor = TRUE) {
     # We trim the spectra to avoid unnecesary computaions later
     if (!is.null(range)) {
       object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
@@ -669,7 +700,7 @@ autoplot.response_mspct <-
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
     z <- switch(plot.data,
-                as.is = photobiology::rbindspct(object),
+                as.is = photobiology::rbindspct(object, idfactor = idfactor),
                 mean = photobiology::s_mean(object),
                 median = photobiology::s_median(object),
                 sum = photobiology::s_sum(object),
@@ -677,6 +708,6 @@ autoplot.response_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
-    autoplot(object = z, range = NULL, ...)
+    autoplot(object = z, range = NULL, idfactor = idfactor, ...)
   }
 

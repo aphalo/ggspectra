@@ -32,6 +32,9 @@
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
 #'   the factor is retrieved from metadata or if no metadata found, the
 #'   default "spct.idx" is tried.
+#' @param facets logical or integer Indicating if facets are to be created for
+#'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+#'   long form.
 #' @param ylim numeric y axis limits,
 #' @param na.rm logical.
 #' @param ... currently ignored.
@@ -69,7 +72,11 @@ cps_plot <- function(spct,
   }
   cps.cols <- names(spct)[grep("^cps", names(spct))]
   num.cps.cols <- length(cps.cols)
-  stopifnot(num.cps.cols == 1L || getMultipleWl(spct) <= 1L)
+  # if individual spectra have multiple columns we force facets
+  if (!as.logical(facets) && num.cps.cols > 1L && getMultipleWl(spct) > 1L) {
+    message("Usings facets because spectra contain multiple scans.")
+    facets <- TRUE
+  }
   #  other.cols <- setdiff(names(x), cps.cols)
   if (is.null(norm)) {
     # we will use the original data
@@ -125,8 +132,15 @@ cps_plot <- function(spct,
                            key_col = "scan",
                            value_col = "cps",
                            gather_cols = cps.cols)
-    setCpsSpct(spct, multiple.wl = length(cps.cols))
+    setCpsSpct(spct, multiple.wl = NULL) # guessed from data
     plot <- ggplot(spct, aes_(x = ~w.length, y = ~cps, linetype = ~scan))
+    temp <- find_idfactor(spct = spct,
+                          idfactor = idfactor,
+                          facets = facets,
+                          annotations = annotations,
+                          num.columns = num.cps.cols)
+    plot <- plot + temp$ggplot_comp
+    annotations <- temp$annotations
   } else {
     plot <- ggplot(spct, aes_(x = ~w.length, y = ~cps))
     temp <- find_idfactor(spct = spct,
@@ -237,6 +251,19 @@ cps_plot <- function(spct,
 #'
 #' @export
 #'
+#' @examples
+#'
+#' autoplot(white_led.cps_spct)
+#' autoplot(white_led.cps_spct, annotations = "")
+#'
+#' two_leds.mspct <-
+#'   cps_mspct(list("LED 1" = white_led.cps_spct,
+#'                  "LED 2" = white_led.cps_spct / 2))
+#' autoplot(two_leds.mspct)
+#' autoplot(two_leds.mspct, idfactor = "Spectra")
+#' autoplot(two_leds.mspct, facets = 1) # one column
+#' autoplot(two_leds.mspct, facets = 2) # two columns
+#'
 #' @family autoplot methods
 #'
 autoplot.cps_spct <-
@@ -298,11 +325,14 @@ autoplot.cps_spct <-
 #' @export
 #'
 autoplot.cps_mspct <-
-  function(object, ..., range = NULL, idfactor = NULL, facets = FALSE) {
+  function(object,
+           ...,
+           range = NULL,
+           idfactor = TRUE,
+           facets = FALSE) {
     # we convert the collection of spectra into a single spectrum object
     # containing multiple spectra in long form.
     z <- photobiology::rbindspct(object, idfactor = idfactor)
-    facets <- facets | getMultipleWl(z)
     autoplot(object = z, range = NULL, idfactor = idfactor, facets = facets, ...)
   }
 

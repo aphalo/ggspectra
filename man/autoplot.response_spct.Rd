@@ -22,12 +22,13 @@
   norm = "max",
   text.size = 2.5,
   idfactor = NULL,
+  facets = FALSE,
   ylim = c(NA, NA),
   object.label = deparse(substitute(object)),
   na.rm = TRUE
 )
 
-\method{autoplot}{response_mspct}(object, ..., range = NULL, plot.data = "as.is")
+\method{autoplot}{response_mspct}(object, ..., range = NULL, plot.data = "as.is", idfactor = TRUE)
 }
 \arguments{
 \item{object}{a response_spct object or a response_mspct object.}
@@ -77,6 +78,10 @@ corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
 the factor is retrieved from metadata or if no metadata found, the
 default "spct.idx" is tried.}
 
+\item{facets}{logical or integer Indicating if facets are to be created for
+the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+long form.}
+
 \item{ylim}{numeric y axis limits,}
 
 \item{object.label}{character The name of the object being plotted.}
@@ -103,6 +108,17 @@ Note that scales are expanded so as to make space for the annotations.
 
 autoplot(photodiode.spct)
 autoplot(photodiode.spct, unit.out = "photon")
+autoplot(photodiode.spct, annotations = "")
+
+two_sensors.mspct <-
+ response_mspct(list("Photodiode" = photodiode.spct,
+                     "Coupled charge device" = ccd.spct))
+two_sensors.mspct <- normalise(two_sensors.mspct)
+autoplot(two_sensors.mspct)
+autoplot(two_sensors.mspct, idfactor = "Spectra")
+autoplot(two_sensors.mspct, facets = TRUE)
+autoplot(two_sensors.mspct, facets = 1)
+autoplot(two_sensors.mspct, facets = 2)
 
 }
 \seealso{

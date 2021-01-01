@@ -33,7 +33,8 @@
   ...,
   range = NULL,
   plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
-  plot.data = "as.is"
+  plot.data = "as.is",
+  idfactor = TRUE
 )
 }
 \arguments{
@@ -120,7 +121,21 @@ The ggplot object returned can be further manipulated and added to.
 \examples{
 
 autoplot(yellow_gel.spct)
+autoplot(yellow_gel.spct, plot.qty = "transmittance")
+autoplot(yellow_gel.spct, plot.qty = "absorptance")
+autoplot(yellow_gel.spct, plot.qty = "absorbance")
 autoplot(yellow_gel.spct, pc.out = TRUE)
+autoplot(yellow_gel.spct, annotations = "")
+autoplot(yellow_gel.spct, annotations = c("+", "wls"))
+
+two_filters.mspct <-
+ filter_mspct(list("Yellow gel" = yellow_gel.spct,
+                   "Polyester film" = polyester.spct))
+autoplot(two_filters.mspct)
+autoplot(two_filters.mspct, idfactor = "Spectra")
+autoplot(two_filters.mspct, facets = TRUE)
+autoplot(two_filters.mspct, facets = 1)
+autoplot(two_filters.mspct, facets = 2)
 
 }
 \seealso{

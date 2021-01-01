@@ -4,7 +4,14 @@
 \alias{find_idfactor}
 \title{Find 'idfactor'}
 \usage{
-find_idfactor(spct, idfactor, annotations, facets = FALSE, ...)
+find_idfactor(
+  spct,
+  idfactor,
+  annotations,
+  facets = FALSE,
+  num.columns = 1L,
+  ...
+)
 }
 \arguments{
 \item{spct}{generic_spct or derived object}
@@ -21,6 +28,9 @@ aesthetic or use facets for the spectra.}
 
 \item{facets}{logical or numeric Flag indicating if facets are to be created
 when the data contains multiple spectra, if numeric the number of columns.}
+
+\item{num.columns}{numeric Number of data columns from multiple scans. Relevant
+only to \code{raw_spct} and \code{cps_spct} objects.}
 
 \item{...}{currently not used.}
 }

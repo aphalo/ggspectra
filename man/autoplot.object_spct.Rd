@@ -14,7 +14,7 @@
   plot.qty = "all",
   pc.out = FALSE,
   label.qty = NULL,
-  span = 61,
+  span = NULL,
   wls.target = "HM",
   annotations = NULL,
   time.format = "",
@@ -29,7 +29,15 @@
   na.rm = TRUE
 )
 
-\method{autoplot}{object_mspct}(object, ..., range = NULL, plot.qty = "all", facets = FALSE)
+\method{autoplot}{object_mspct}(
+  object,
+  ...,
+  range = NULL,
+  plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
+  facets = FALSE,
+  plot.data = "as.is",
+  idfactor = TRUE
+)
 }
 \arguments{
 \item{object}{an object_spct object}
@@ -90,6 +98,10 @@ long form.}
 \item{object.label}{character The name of the object being plotted.}
 
 \item{na.rm}{logical.}
+
+\item{plot.data}{character Data to plot. Default is "as.is" plotting one line
+per spectrum. When passing "mean", "median", "sum", "var", "sd", "se" as
+argument all the spectra must contain data at the same wavelength values.}
 }
 \value{
 a \code{ggplot} object.
@@ -105,10 +117,29 @@ The ggplot object returned can be further manipulated and added to.
   least to the range of expected values. Scales are further expanded so
   as to make space for the annotations. When all \code{"all"} quantities are
   plotted, a single set of spectra is accepted as input.
+
+A method for collections of object spectra of length > 1 is not yet
+  implemented for \code{plot.qty = "all"}.
 }
 \examples{
 
 autoplot(Ler_leaf.spct)
+autoplot(Ler_leaf.spct, plot.qty = "transmittance")
+autoplot(Ler_leaf.spct, plot.qty = "reflectance")
+autoplot(Ler_leaf.spct, plot.qty = "absorptance")
+autoplot(Ler_leaf.spct, annotations = "")
+
+two_leaves.mspct <-
+ object_mspct(list("Arabidopsis leaf 1" = Ler_leaf.spct,
+                   "Arabidopsis leaf 2" = Ler_leaf.spct))
+autoplot(two_leaves.mspct)
+autoplot(two_leaves.mspct, idfactor = "Spectra")
+autoplot(two_leaves.mspct, plot.qty = "transmittance")
+autoplot(two_leaves.mspct, plot.qty = "reflectance")
+autoplot(two_leaves.mspct, plot.qty = "absorptance")
+autoplot(two_leaves.mspct, facets = TRUE)
+autoplot(two_leaves.mspct, facets = 1)
+autoplot(two_leaves.mspct, facets = 2)
 
 }
 \seealso{

@@ -28,7 +28,7 @@
   na.rm = TRUE
 )
 
-\method{autoplot}{cps_mspct}(object, ..., range = NULL, idfactor = NULL, facets = FALSE)
+\method{autoplot}{cps_mspct}(object, ..., range = NULL, idfactor = TRUE, facets = FALSE)
 }
 \arguments{
 \item{object}{a cps_spct object.}
@@ -95,6 +95,20 @@ response_spct object.
 \note{
 Note that scales are expanded so as to make space for the annotations.
   The object returned is a ggplot objects, and can be further manipulated.
+}
+\examples{
+
+autoplot(white_led.cps_spct)
+autoplot(white_led.cps_spct, annotations = "")
+
+two_leds.mspct <-
+  cps_mspct(list("LED 1" = white_led.cps_spct,
+                 "LED 2" = white_led.cps_spct / 2))
+autoplot(two_leds.mspct)
+autoplot(two_leds.mspct, idfactor = "Spectra")
+autoplot(two_leds.mspct, facets = 1) # one column
+autoplot(two_leds.mspct, facets = 2) # two columns
+
 }
 \seealso{
 Other autoplot methods: 

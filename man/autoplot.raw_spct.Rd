@@ -28,7 +28,7 @@
   na.rm = TRUE
 )
 
-\method{autoplot}{raw_mspct}(object, ..., range = NULL, idfactor = NULL, facets = FALSE)
+\method{autoplot}{raw_mspct}(object, ..., range = NULL, idfactor = TRUE, facets = FALSE)
 }
 \arguments{
 \item{object}{a raw_spct object.}
@@ -75,6 +75,10 @@ corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
 the factor is retrieved from metadata or if no metadata found, the
 default "spct.idx" is tried.}
 
+\item{facets}{logical or integer Indicating if facets are to be created for
+the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+long form.}
+
 \item{ylim}{numeric y axis limits,}
 
 \item{object.label}{character The name of the object being plotted.}
@@ -92,6 +96,20 @@ raw_spct object.
 Note that scales are expanded so as to make space for the annotations.
 The object returned is a ggplot objects, and can be further manipulated.
 }
+\examples{
+
+autoplot(white_led.raw_spct)
+autoplot(white_led.raw_spct, annotations = "")
+
+two_leds.mspct <-
+  raw_mspct(list("LED 1" = white_led.raw_spct,
+                 "LED 2" = white_led.raw_spct))
+autoplot(two_leds.mspct)
+autoplot(two_leds.mspct, idfactor = "Spectra")
+autoplot(two_leds.mspct, facets = 1) # one column
+autoplot(two_leds.mspct, facets = 2) # two columns
+
+}
 \seealso{
 Other autoplot methods: 
 \code{\link{autoplot.calibration_spct}()},
@@ -105,4 +123,3 @@ Other autoplot methods:
 \code{\link{set_annotations_default}()}
 }
 \concept{autoplot methods}
-\keyword{hplot}

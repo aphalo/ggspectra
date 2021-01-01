@@ -16,6 +16,7 @@ O_plot(
   stacked,
   text.size,
   chroma.type,
+  facets,
   na.rm,
   ylim,
   ...

@@ -10,8 +10,8 @@ Track changes in packages 'ggrepel' (\>= 0.9.1), 'photobiology' (\>=
 0.10.6) and 'ggplot2' (\>= 3.3.3).
 
 -   Add `autoplot.cps_mspct()` and `autoplot.raw_mspct()` methods.
--   Add support for faceting to `autoplot()` methods for collections of
-    spectra.
+-   Add support for faceting to all `autoplot()` methods for collections
+    of spectra.
 -   Revise all autoplot() methods for collections of spectra adding
     support for `sum`, `var`, `sd`, and `se` as summaries.
 -   Update `decoration()` to track changes in 'ggrepel' (\> 0.9.0).
@@ -22,7 +22,7 @@ Track changes in packages 'ggrepel' (\>= 0.9.1), 'photobiology' (\>=
 ------------------------------------------------------------------------
 
 -   Although this update does not break any code, **the labels for peaks
-    and valleys maybe be at a slightly different position than with
+    and valleys can be at a slightly different position than with
     earlier versions**.
 
 ------------------------------------------------------------------------

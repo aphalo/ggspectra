@@ -22,12 +22,20 @@
   norm = NULL,
   text.size = 2.5,
   idfactor = NULL,
+  facets = FALSE,
   ylim = c(NA, NA),
   object.label = deparse(substitute(object)),
   na.rm = TRUE
 )
 
-\method{autoplot}{calibration_mspct}(object, ..., range = NULL, plot.data = "as.is")
+\method{autoplot}{calibration_mspct}(
+  object,
+  ...,
+  range = NULL,
+  idfactor = TRUE,
+  facets = FALSE,
+  plot.data = "as.is"
+)
 }
 \arguments{
 \item{object}{a calibration_spct object or a calibration_mspct object.}
@@ -76,6 +84,10 @@ default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
 to the spectra and the user needs to use 'ggplot2' functions to manually
 map an aesthetic or use facets for the spectra.}
 
+\item{facets}{logical or integer Indicating if facets are to be created for
+the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+long form.}
+
 \item{ylim}{numeric y axis limits,}
 
 \item{object.label}{character The name of the object being plotted.}
@@ -111,4 +123,3 @@ Other autoplot methods:
 \code{\link{set_annotations_default}()}
 }
 \concept{autoplot methods}
-\keyword{hplot}

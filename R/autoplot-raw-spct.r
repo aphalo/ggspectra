@@ -86,7 +86,11 @@ raw_plot <- function(spct,
 
   counts.cols <- names(spct)[grep("^counts", names(spct))]
   num.counts.cols <- length(counts.cols)
-  stopifnot(num.counts.cols == 1L || getMultipleWl(spct) <= 1L)
+  # if individual spectra have multiple columns we force facets
+  if (!as.logical(facets) && num.counts.cols > 1L && getMultipleWl(spct) > 1L) {
+    message("Usings facets because spectra contain multiple scans.")
+    facets <- TRUE
+  }
 #  other.cols <- setdiff(names(x), counts.cols)
   if (is.null(norm)) {
     # we will use the original data
@@ -111,7 +115,7 @@ raw_plot <- function(spct,
       } else {
         stop("'norm' should be numeric or character")
       }
-      spct[[col]] <-  spct[[col]] * scale.factor
+      spct[[col]] <- spct[[col]] * scale.factor
     }
   }
 
@@ -142,8 +146,15 @@ raw_plot <- function(spct,
                            key_col = "scan",
                            value_col = "counts",
                            gather_cols = counts.cols)
-    setRawSpct(spct, multiple.wl = num.counts.cols)
+    setRawSpct(spct, multiple.wl = NULL) # guessed from data
     plot <- ggplot(spct) + aes_(x = ~w.length, y = ~counts, linetype = ~scan)
+    temp <- find_idfactor(spct = spct,
+                          idfactor = idfactor,
+                          facets = facets,
+                          annotations = annotations,
+                          num.columns = num.counts.cols)
+    plot <- plot + temp$ggplot_comp
+    annotations <- temp$annotations
   } else {
     plot <- ggplot(spct) + aes_(x = ~w.length, y = ~counts)
     temp <- find_idfactor(spct = spct,
@@ -259,6 +270,9 @@ raw_plot <- function(spct,
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
 #'   the factor is retrieved from metadata or if no metadata found, the
 #'   default "spct.idx" is tried.
+#' @param facets logical or integer Indicating if facets are to be created for
+#'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+#'   long form.
 #' @param ylim numeric y axis limits,
 #' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.
@@ -267,7 +281,18 @@ raw_plot <- function(spct,
 #'
 #' @export
 #'
-#' @keywords hplot
+#' @examples
+#'
+#' autoplot(white_led.raw_spct)
+#' autoplot(white_led.raw_spct, annotations = "")
+#'
+#' two_leds.mspct <-
+#'   raw_mspct(list("LED 1" = white_led.raw_spct,
+#'                  "LED 2" = white_led.raw_spct))
+#' autoplot(two_leds.mspct)
+#' autoplot(two_leds.mspct, idfactor = "Spectra")
+#' autoplot(two_leds.mspct, facets = 1) # one column
+#' autoplot(two_leds.mspct, facets = 2) # two columns
 #'
 #' @family autoplot methods
 #'
@@ -334,11 +359,13 @@ autoplot.raw_spct <-
 #' @export
 #'
 autoplot.raw_mspct <-
-  function(object, ..., range = NULL, idfactor = NULL, facets = FALSE) {
+  function(object,
+           ..., range = NULL,
+           idfactor = TRUE,
+           facets = FALSE) {
     # we convert the collection of spectra into a single spectrum object
     # containing multiple spectra in long form.
     z <- photobiology::rbindspct(object, idfactor = idfactor)
-    facets <- facets | getMultipleWl(z)
     autoplot(object = z, range = NULL, idfactor = idfactor, facets = facets, ...)
   }
 
