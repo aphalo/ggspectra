@@ -34,6 +34,9 @@
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
 #'   the factor is retrieved from metadata or if no metadata found, the
 #'   default "spct.idx" is tried.
+#' @param facets logical or integer Indicating if facets are to be created for
+#'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+#'   long form.
 #' @param ylim numeric y axis limits,
 #' @param na.rm logical.
 #' @param ... currently ignored.
@@ -334,8 +337,8 @@ autoplot.raw_mspct <-
   function(object, ..., range = NULL, idfactor = NULL, facets = FALSE) {
     # we convert the collection of spectra into a single spectrum object
     # containing multiple spectra in long form.
-    z <- photobiology::rbindspct(object)
-    facets <- facets | getMultipleWl(z, idfactor = idfactor)
+    z <- photobiology::rbindspct(object, idfactor = idfactor)
+    facets <- facets | getMultipleWl(z)
     autoplot(object = z, range = NULL, idfactor = idfactor, facets = facets, ...)
   }
 

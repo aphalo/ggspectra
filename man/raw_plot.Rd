@@ -58,6 +58,10 @@ corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
 the factor is retrieved from metadata or if no metadata found, the
 default "spct.idx" is tried.}
 
+\item{facets}{logical or integer Indicating if facets are to be created for
+the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+long form.}
+
 \item{ylim}{numeric y axis limits,}
 
 \item{na.rm}{logical.}

@@ -1533,24 +1533,11 @@ autoplot.object_mspct <-
            ...,
            range = NULL,
            plot.qty = "all",
-           plot.data = "as.is",
            facets = FALSE) {
     # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
       object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
     }
-    # we convert the collection of spectra into a single spectrum object
-    # containing a summary spectrum or multiple spectra in long form.
-    ### can be enabled once methods are implemented in 'photobiology'
-    # z <- switch(plot.data,
-    #             as.is = photobiology::rbindspct(object),
-    #             mean = photobiology::s_mean(object),
-    #             median = photobiology::s_median(object),
-    #             sum = photobiology::s_sum(object),
-    #             var = photobiology::s_var(object),
-    #             sd = photobiology::s_sd(object),
-    #             se = photobiology::s_se(object)
-    # )
     z <- photobiology::rbindspct(object)
     facets <- facets | getMultipleWl(z)
     autoplot(object = z, range = NULL, plot.qty = plot.qty, facets = facets, ...)

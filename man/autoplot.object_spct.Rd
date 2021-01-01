@@ -29,14 +29,7 @@
   na.rm = TRUE
 )
 
-\method{autoplot}{object_mspct}(
-  object,
-  ...,
-  range = NULL,
-  plot.qty = "all",
-  plot.data = "as.is",
-  facets = FALSE
-)
+\method{autoplot}{object_mspct}(object, ..., range = NULL, plot.qty = "all", facets = FALSE)
 }
 \arguments{
 \item{object}{an object_spct object}
