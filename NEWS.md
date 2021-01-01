@@ -13,7 +13,7 @@ Track changes in packages 'ggrepel' (\>= 0.9.1), 'photobiology' (\>=
 -   Add support for faceting to all `autoplot()` methods for collections
     of spectra.
 -   Revise all autoplot() methods for collections of spectra adding
-    support for `sum`, `var`, `sd`, and `se` as summaries.
+    support for `sum`, `prod`, `var`, `sd`, and `se` as summaries.
 -   Update `decoration()` to track changes in 'ggrepel' (\> 0.9.0).
 -   Update `decoration()` to use `position_nudge()` and
     `position_nudge_repel()` to displace labels instead of "off-range"

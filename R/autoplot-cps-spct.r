@@ -263,6 +263,7 @@ cps_plot <- function(spct,
 #' autoplot(two_leds.mspct, idfactor = "Spectra")
 #' autoplot(two_leds.mspct, facets = 1) # one column
 #' autoplot(two_leds.mspct, facets = 2) # two columns
+#' autoplot(two_leds.mspct, plot.data = "mean")
 #'
 #' @family autoplot methods
 #'
@@ -322,6 +323,11 @@ autoplot.cps_spct <-
 
 #' @rdname autoplot.cps_spct
 #'
+#' @param plot.data character Data to plot. Default is "as.is" plotting one line
+#'   per spectrum. When passing "mean", "median", "sum", "prod", "var", "sd",
+#'   "se" as argument all the spectra must contain data at the same wavelength
+#'   values.
+#'
 #' @export
 #'
 autoplot.cps_mspct <-
@@ -329,10 +335,19 @@ autoplot.cps_mspct <-
            ...,
            range = NULL,
            idfactor = TRUE,
-           facets = FALSE) {
+           plot.data = "as.is") {
     # we convert the collection of spectra into a single spectrum object
-    # containing multiple spectra in long form.
-    z <- photobiology::rbindspct(object, idfactor = idfactor)
-    autoplot(object = z, range = NULL, idfactor = idfactor, facets = facets, ...)
+    # containing a summary spectrum or multiple spectra in long form.
+    z <- switch(plot.data,
+                as.is = photobiology::rbindspct(object, idfactor = idfactor),
+                mean = photobiology::s_mean(object),
+                median = photobiology::s_median(object),
+                sum = photobiology::s_sum(object),
+                prod = photobiology::s_prod(object),
+                var = photobiology::s_var(object),
+                sd = photobiology::s_sd(object),
+                se = photobiology::s_se(object)
+    )
+    autoplot(object = z, range = NULL, idfactor = idfactor, ...)
   }
 

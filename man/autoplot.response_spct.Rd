@@ -89,8 +89,9 @@ long form.}
 \item{na.rm}{logical.}
 
 \item{plot.data}{character Data to plot. Default is "as.is" plotting one line
-per spectrum. When passing "mean", "median", "sum", "var", "sd", "se" as
-argument all the spectra must contain data at the same wavelength values.}
+per spectrum. When passing "mean", "median", "sum", "prod", "var", "sd",
+"se" as argument all the spectra must contain data at the same wavelength
+values.}
 }
 \value{
 a \code{ggplot} object.

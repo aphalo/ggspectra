@@ -1137,8 +1137,9 @@ autoplot.filter_spct <-
 #' @rdname autoplot.filter_spct
 #'
 #' @param plot.data character Data to plot. Default is "as.is" plotting one line
-#'   per spectrum. When passing "mean", "median", "sum", "var", "sd", "se" as
-#'   argument all the spectra must contain data at the same wavelength values.
+#'   per spectrum. When passing "mean", "median", "sum", "prod", var", "sd",
+#'   "se" as argument all the spectra must contain data at the same wavelength
+#'   values.
 #'
 #' @export
 #'
@@ -1170,6 +1171,7 @@ autoplot.filter_mspct <-
                 mean = photobiology::s_mean(object),
                 median = photobiology::s_median(object),
                 sum = photobiology::s_sum(object),
+                prod = photobiology::s_prod(object),
                 var = photobiology::s_var(object),
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
@@ -1322,8 +1324,9 @@ autoplot.reflector_spct <-
 #' @rdname autoplot.reflector_spct
 #'
 #' @param plot.data character Data to plot. Default is "as.is" plotting one line
-#'   per spectrum. When passing "mean", "median", "sum", "var", "sd", "se" as
-#'   argument all the spectra must contain data at the same wavelength values.
+#'   per spectrum. When passing "mean", "median", "sum", "prod", "var", "sd",
+#'   "se" as argument all the spectra must contain data at the same wavelength
+#'   values.
 #'
 #' @export
 #'
@@ -1345,6 +1348,7 @@ autoplot.reflector_mspct <-
                 mean = photobiology::s_mean(object),
                 median = photobiology::s_median(object),
                 sum = photobiology::s_sum(object),
+                prod = photobiology::s_prod(object),
                 var = photobiology::s_var(object),
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
@@ -1426,9 +1430,6 @@ autoplot.reflector_mspct <-
 #'                    "Arabidopsis leaf 2" = Ler_leaf.spct))
 #' autoplot(two_leaves.mspct)
 #' autoplot(two_leaves.mspct, idfactor = "Spectra")
-#' autoplot(two_leaves.mspct, plot.qty = "transmittance")
-#' autoplot(two_leaves.mspct, plot.qty = "reflectance")
-#' autoplot(two_leaves.mspct, plot.qty = "absorptance")
 #' autoplot(two_leaves.mspct, facets = TRUE)
 #' autoplot(two_leaves.mspct, facets = 1)
 #' autoplot(two_leaves.mspct, facets = 2)
@@ -1575,8 +1576,9 @@ autoplot.object_spct <-
 #' @rdname autoplot.object_spct
 #'
 #' @param plot.data character Data to plot. Default is "as.is" plotting one line
-#'   per spectrum. When passing "mean", "median", "sum", "var", "sd", "se" as
-#'   argument all the spectra must contain data at the same wavelength values.
+#'   per spectrum. When passing "mean", "median", "sum", "prod", var", "sd",
+#'   "se" as argument all the spectra must contain data at the same wavelength
+#'   values.
 #'
 #' @export
 #'
@@ -1609,6 +1611,7 @@ autoplot.object_mspct <-
                 mean = photobiology::s_mean(object),
                 median = photobiology::s_median(object),
                 sum = photobiology::s_sum(object),
+                prod = photobiology::s_prod(object),
                 var = photobiology::s_var(object),
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)

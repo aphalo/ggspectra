@@ -87,10 +87,11 @@ decoration <- function(w.band,
                       span = span,
                       ignore_threshold = 0.02,
                       strict = strict,
-                      shape = 16))
+                      shape = 16,
+                      na.rm = na.rm))
   }
   if ("peak.labels" %in% annotations) {
-    nudge.y <- 0.07 * y.expanse
+    nudge.y <- 0.12 * y.expanse
     z <- c(z,
            stat_label_peaks(geom = "label_repel",
                             mapping = aes_(color = ~..BW.color..),
@@ -100,16 +101,14 @@ decoration <- function(w.band,
                             chroma.type = chroma.type,
                             label.fmt = "%.4g",
                             size = text.size,
-                            vjust = 0,
-                            hjust = 0.5,
                             position = ggrepel::position_nudge_repel(y = nudge.y),
-                            max.overlaps = 100,
+                            max.overlaps = Inf,
                             segment.colour = "black",
                             min.segment.length = 0,
-                            box.padding = unit(0.02, "lines"),
+                            box.padding = 0.5, # unit(0.02, "lines"),
                             direction = "x",
                             force = 1,
-                            force_pull = 1/4,
+                            force_pull = 0.1,
                             na.rm = na.rm),
            stat_peaks(geom = "point",
                       chroma.type = chroma.type,
@@ -117,7 +116,8 @@ decoration <- function(w.band,
                       span = span,
                       ignore_threshold = 0.02,
                       strict = strict,
-                      shape = 16))
+                      shape = 16,
+                      na.rm = na.rm))
   }
   if ("valleys" %in% annotations) {
     nudge.y <- -0.01 * y.expanse
@@ -140,10 +140,11 @@ decoration <- function(w.band,
                         strict = strict,
                         chroma.type = chroma.type,
                         color = "blue",
-                        shape = 16))
+                        shape = 16,
+                        na.rm = na.rm))
   }
   if ("valley.labels" %in% annotations) {
-    nudge.y <- -0.07 * y.expanse
+    nudge.y <- -0.12 * y.expanse
     z <- c(z,
            stat_label_valleys(geom = "label_repel",
                               mapping = aes_(color = ~..BW.color..),
@@ -153,16 +154,14 @@ decoration <- function(w.band,
                               chroma.type = chroma.type,
                               label.fmt = "%.4g",
                               size = text.size,
-                              vjust = 0,
-                              hjust = 0.5,
                               position = ggrepel::position_nudge_repel(y = nudge.y),
-                              max.overlaps = 100,
+                              max.overlaps = Inf,
                               segment.colour = "black",
                               min.segment.length = 0,
-                              box.padding = unit(0.02, "lines"),
+                              box.padding = 0.5, # unit(0.02, "lines"),
                               direction = "x",
                               force = 1,
-                              force_pull = 1/4,
+                              force_pull = 0.1,
                               na.rm = na.rm),
            stat_valleys(geom = "point",
                         span = span,
@@ -170,7 +169,8 @@ decoration <- function(w.band,
                         strict = strict,
                         chroma.type = chroma.type,
                         color = "blue",
-                        shape = 16))
+                        shape = 16,
+                        na.rm = na.rm))
   }
   if ("wls" %in% annotations) {
     nudge.x <- 0.005 * x.expanse
@@ -189,7 +189,8 @@ decoration <- function(w.band,
                          interpolate = TRUE,
                          chroma.type = chroma.type,
                          color = "black",
-                         shape = 16))
+                         shape = 16,
+                         na.rm = na.rm))
   }
   if ("wls.labels" %in% annotations) {
     nudge.x <- 0.1 * x.expanse
@@ -216,7 +217,8 @@ decoration <- function(w.band,
                          interpolate = TRUE,
                          chroma.type = chroma.type,
                          color = "black",
-                         shape = 16))
+                         shape = 16,
+                         na.rm = na.rm))
   }
   if ("colour.guide" %in% annotations) {
     z <- c(z,
@@ -482,7 +484,8 @@ set_annotations_default <- function(annotations = NULL) {
   if (!is.null(annotations)) {
     annotations.default <-
       getOption("photobiology.plot.annotations",
-                default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
+                default =
+                  c("boxes", "labels", "summaries", "colour.guide", "peaks"))
     annotations <- decode_annotations(annotations = annotations,
                                       annotations.default = annotations.default)
   }

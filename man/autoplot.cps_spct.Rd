@@ -28,7 +28,7 @@
   na.rm = TRUE
 )
 
-\method{autoplot}{cps_mspct}(object, ..., range = NULL, idfactor = TRUE, facets = FALSE)
+\method{autoplot}{cps_mspct}(object, ..., range = NULL, idfactor = TRUE, plot.data = "as.is")
 }
 \arguments{
 \item{object}{a cps_spct object.}
@@ -84,6 +84,11 @@ long form.}
 \item{object.label}{character The name of the object being plotted.}
 
 \item{na.rm}{logical.}
+
+\item{plot.data}{character Data to plot. Default is "as.is" plotting one line
+per spectrum. When passing "mean", "median", "sum", "prod", "var", "sd",
+"se" as argument all the spectra must contain data at the same wavelength
+values.}
 }
 \value{
 a \code{ggplot} object.
@@ -108,6 +113,7 @@ autoplot(two_leds.mspct)
 autoplot(two_leds.mspct, idfactor = "Spectra")
 autoplot(two_leds.mspct, facets = 1) # one column
 autoplot(two_leds.mspct, facets = 2) # two columns
+autoplot(two_leds.mspct, plot.data = "mean")
 
 }
 \seealso{

@@ -323,8 +323,9 @@ autoplot.calibration_spct <-
 #' @rdname autoplot.calibration_spct
 #'
 #' @param plot.data character Data to plot. Default is "as.is" plotting one line
-#'   per spectrum. When passing "mean", "median", "sum", "var", "sd", "se" as
-#'   argument all the spectra must contain data at the same wavelength values.
+#'   per spectrum. When passing "mean", "median", "sum", "prod", var", "sd",
+#'   "se" as argument all the spectra must contain data at the same wavelength
+#'   values.
 #'
 #' @export
 #'
@@ -346,6 +347,7 @@ autoplot.calibration_mspct <-
                 mean = photobiology::s_mean(object),
                 median = photobiology::s_median(object),
                 sum = photobiology::s_sum(object),
+                prod = photobiology::s_prod(object),
                 var = photobiology::s_var(object),
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)

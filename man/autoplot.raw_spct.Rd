@@ -28,7 +28,7 @@
   na.rm = TRUE
 )
 
-\method{autoplot}{raw_mspct}(object, ..., range = NULL, idfactor = TRUE, facets = FALSE)
+\method{autoplot}{raw_mspct}(object, ..., range = NULL, idfactor = TRUE, plot.data = "as.is")
 }
 \arguments{
 \item{object}{a raw_spct object.}
@@ -84,6 +84,11 @@ long form.}
 \item{object.label}{character The name of the object being plotted.}
 
 \item{na.rm}{logical.}
+
+\item{plot.data}{character Data to plot. Default is "as.is" plotting one line
+per spectrum. When passing "mean", "median", "sum", "prod", "var", "sd",
+"se" as argument all the spectra must contain data at the same wavelength
+values.}
 }
 \value{
 a \code{ggplot} object.

@@ -100,8 +100,9 @@ long form.}
 \item{na.rm}{logical.}
 
 \item{plot.data}{character Data to plot. Default is "as.is" plotting one line
-per spectrum. When passing "mean", "median", "sum", "var", "sd", "se" as
-argument all the spectra must contain data at the same wavelength values.}
+per spectrum. When passing "mean", "median", "sum", "prod", var", "sd",
+"se" as argument all the spectra must contain data at the same wavelength
+values.}
 }
 \value{
 a \code{ggplot} object.
@@ -134,9 +135,6 @@ two_leaves.mspct <-
                    "Arabidopsis leaf 2" = Ler_leaf.spct))
 autoplot(two_leaves.mspct)
 autoplot(two_leaves.mspct, idfactor = "Spectra")
-autoplot(two_leaves.mspct, plot.qty = "transmittance")
-autoplot(two_leaves.mspct, plot.qty = "reflectance")
-autoplot(two_leaves.mspct, plot.qty = "absorptance")
 autoplot(two_leaves.mspct, facets = TRUE)
 autoplot(two_leaves.mspct, facets = 1)
 autoplot(two_leaves.mspct, facets = 2)

@@ -624,8 +624,9 @@ autoplot.source_spct <-
 #' @rdname autoplot.source_spct
 #'
 #' @param plot.data character Data to plot. Default is "as.is" plotting one line
-#'   per spectrum. When passing "mean", "median", "sum", "var", "sd", "se" as
-#'   argument all the spectra must contain data at the same wavelength values.
+#'   per spectrum. When passing "mean", "median", "sum", "prod", var", "sd",
+#'   "se" as argument all the spectra must contain data at the same wavelength
+#'   values.
 #'
 #' @export
 #'
@@ -635,8 +636,8 @@ autoplot.source_mspct <-
            range = NULL,
            unit.out = getOption("photobiology.radiation.unit",
                                 default = "energy"),
-           plot.data = "as.is",
-           idfactor = TRUE) {
+           idfactor = TRUE,
+           plot.data = "as.is") {
     # We trim the spectra to avoid unnecesary computaions later
     if (!is.null(range)) {
       object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
@@ -659,10 +660,10 @@ autoplot.source_mspct <-
                 mean = photobiology::s_mean(object),
                 median = photobiology::s_median(object),
                 sum = photobiology::s_sum(object),
+                prod = photobiology::s_prod(object),
                 var = photobiology::s_var(object),
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
-
     )
     autoplot(object = z, range = NULL, idfactor = idfactor, ...)
   }
