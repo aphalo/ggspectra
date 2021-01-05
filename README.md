@@ -68,11 +68,11 @@ Installation of the most recent stable version from CRAN:
 install.packages("ggspectra")
 ```
 
-Installation of the current unstable version from Bitbucket:
+Installation of the current unstable version from GitHub:
 
 ``` r
 # install.packages("devtools")
-devtools::install_bitbucket("aphalo/ggspectra")
+devtools::install_github("aphalo/ggspectra")
 ```
 
 ## Documentation
@@ -106,7 +106,7 @@ Division of Plant Biology. ISBN 978-952-10-8363-1 (PDF),
 ## Contributing
 
 Pull requests, bug reports, and feature requests are welcome at
-(<https://bitbucket.org/aphalo/ggspectra>).
+(<https://github.com/aphalo/ggspectra>).
 
 ## Citation
 
@@ -137,6 +137,6 @@ citation("ggspectra")
 
 ## License
 
-© 2015-2020 Pedro J. Aphalo (<pedro.aphalo@helsinki.fi>). Released under
+© 2015-2021 Pedro J. Aphalo (<pedro.aphalo@helsinki.fi>). Released under
 the GPL, version 2 or greater. This software carries no warranty of any
 kind.

@@ -9,3 +9,4 @@ vignettes/figure
 ^README\.Rmd$
 ^README-.*\.png$
 ^.*\.sh$
+^\.github$

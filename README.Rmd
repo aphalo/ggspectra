@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 [![cran version](https://www.r-pkg.org/badges/version/ggspectra)](https://cran.r-project.org/package=ggspectra) 
 [![cran checks](https://cranchecks.info/badges/worst/ggspectra)](https://cran.r-project.org/web/checks/check_results_ggspectra.html)
 
+
 The goal of 'ggspectra' is to make it easy to plot radiation spectra and similar data, such and transmittance, absorbance and reflectance spectra, producing fully annotated publication- and presentation-ready plots. It is an extension to packages 'ggplot2' and 'photobiology', and part of the 'r4phototbiology' suite.
 
 Package 'ggspectra' provides stats, geoms, scales and functions to be used for plotting radiation-related spectra and annotating the plots with quantities derived from spectral data. All summary quantities implemented in 'photobiology' can be used for annotations including biologically effective irradiances and exposures.
@@ -57,11 +58,11 @@ Installation of the most recent stable version from CRAN:
 install.packages("ggspectra")
 ```
 
-Installation of the current unstable version from Bitbucket:
+Installation of the current unstable version from GitHub:
 
 ```{r bb-instalaltion, eval=FALSE}
 # install.packages("devtools")
-devtools::install_bitbucket("aphalo/ggspectra")
+devtools::install_github("aphalo/ggspectra")
 ```
 
 ## Documentation 
@@ -80,7 +81,7 @@ Aphalo, P. J., Albert, A., Björn, L. O., McLeod, A. R., Robson, T. M., & Rosenq
 
 ## Contributing
 
-Pull requests, bug reports, and feature requests are welcome at (https://bitbucket.org/aphalo/ggspectra).
+Pull requests, bug reports, and feature requests are welcome at (https://github.com/aphalo/ggspectra).
 
 ## Citation
 
@@ -92,6 +93,6 @@ citation("ggspectra")
 
 ## License
 
-© 2015-2020 Pedro J. Aphalo (pedro.aphalo@helsinki.fi). Released under the GPL, version 2 or greater. This software carries no warranty of any kind.
+© 2015-2021 Pedro J. Aphalo (pedro.aphalo@helsinki.fi). Released under the GPL, version 2 or greater. This software carries no warranty of any kind.
 
 

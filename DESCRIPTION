@@ -35,8 +35,8 @@ Suggests:
     knitr (>= 1.29),
     rmarkdown (>= 2.3)
 URL: https://docs.r4photobiology.info/ggspectra/,
-    https://bitbucket.org/aphalo/ggspectra/
-BugReports: https://bitbucket.org/aphalo/ggspectra/issues/
+    https://github.com/aphalo/ggspectra/
+BugReports: https://github.com/aphalo/ggspectra/issues/
 Encoding: UTF-8
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
