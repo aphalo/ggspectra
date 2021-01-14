@@ -91,7 +91,7 @@ decoration <- function(w.band,
                       na.rm = na.rm))
   }
   if ("peak.labels" %in% annotations) {
-    nudge.y <- 0.12 * y.expanse
+    nudge.y <- 0.06 * y.expanse
     z <- c(z,
            stat_label_peaks(geom = "label_repel",
                             mapping = aes_(color = ~..BW.color..),
@@ -105,8 +105,8 @@ decoration <- function(w.band,
                             max.overlaps = Inf,
                             segment.colour = "black",
                             min.segment.length = 0,
-                            box.padding = 0.5, # unit(0.02, "lines"),
-                            direction = "x",
+                            box.padding = unit(0.1, "lines"),
+                            direction = "both",
                             force = 1,
                             force_pull = 0.1,
                             na.rm = na.rm),
@@ -144,7 +144,7 @@ decoration <- function(w.band,
                         na.rm = na.rm))
   }
   if ("valley.labels" %in% annotations) {
-    nudge.y <- -0.12 * y.expanse
+    nudge.y <- -0.06 * y.expanse
     z <- c(z,
            stat_label_valleys(geom = "label_repel",
                               mapping = aes_(color = ~..BW.color..),
@@ -158,8 +158,8 @@ decoration <- function(w.band,
                               max.overlaps = Inf,
                               segment.colour = "black",
                               min.segment.length = 0,
-                              box.padding = 0.5, # unit(0.02, "lines"),
-                              direction = "x",
+                              box.padding = unit(0.1, "lines"),
+                              direction = "both",
                               force = 1,
                               force_pull = 0.1,
                               na.rm = na.rm),
