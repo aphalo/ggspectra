@@ -12,7 +12,7 @@ Track changes in packages 'ggrepel' (\>= 0.9.1), 'photobiology' (\>=
 -   Add `autoplot.cps_mspct()` and `autoplot.raw_mspct()` methods.
 -   Add support for faceting to all `autoplot()` methods for collections
     of spectra.
--   Revise all autoplot() methods for collections of spectra adding
+-   Revise all `autoplot()` methods for collections of spectra adding
     support for `sum`, `prod`, `var`, `sd`, and `se` as summaries.
 -   Update `decoration()` to track changes in 'ggrepel' (\> 0.9.0).
 -   Update `decoration()` to use `position_nudge()` and
@@ -87,8 +87,9 @@ only affect the text of labels.**
 # ggspectra 0.3.5
 
 -   Revise ggplot() methods so that the class and attributes of spectral
-    objects are retained in the "data" member of the "gg" object. This
-    allows use of methods specific to spectra in data transformations.
+    objects are retained in the `"data"` member of the `"gg"` object.
+    This allows use of methods specific to spectra in data
+    transformations.
 -   Track changes in 'photobiology' 0.9.30.
 
 # ggspectra 0.3.4
@@ -140,19 +141,23 @@ only affect the text of labels.**
 
 # ggspectra 0.3.0
 
+------------------------------------------------------------------------
+
 **Change the names of some the values calculated by the stats defined in
 'ggspectra' to avoid confusion with the names of 'ggplot2' aesthetics.
 This is a code breaking change!**
+
+------------------------------------------------------------------------
 
 Revise to track changes in 'photobiology' version 0.9.24 and 'ggplot2'
 3.0.0, which are now required.
 
 -   `stat_label_peaks()` and `stat_label_valleys()` now have a new
     parameter, `label.fill` which can be used to set the content of
-    `..x.label..` and `..y.label..` for labels not labelled as peaks or
+    `..x.label..` and `..y.label..` for labels not labeled as peaks or
     valleys. The earlier use of `""` is retained as default.
 -   Add `stat_find_wls()` and `stat_find_qtys()`, two new statistics
-    useful for highlighting and labelling features in spectra.
+    useful for highlighting and labeling features in spectra.
 -   Add parameter `ylim` to all `plot()` methods.
 -   Revise `plot()` methods to support objects with multiple spectra in
     long form.
@@ -162,7 +167,7 @@ Revise to track changes in 'photobiology' version 0.9.24 and 'ggplot2'
     factor used to identify multiple spectra, using as default the value
     stored in the attribute `"idfactor"` implemented in 'photobiology'
     0.9.21 and later.
--   Add autoplot() as an alias of `plot()` for spectra and collections
+-   Add `autoplot()` as an alias of `plot()` for spectra and collections
     of spectra.
 
 # ggspectra 0.2.4
@@ -207,30 +212,30 @@ expected/range. Add previously missing `ggplot()` method for class
 Track changes in package 'photobiology' 0.9.14. Add continuous scales
 with defaults suitable for spectral data, with support for automatic
 axis labels both as R-expressions and as LaTeX mark-up. Add utility
-functions for SI scale prefixes. Add utility functions for x-axis-labels
-and secondary x-axis. Add utility functions for y-axis-labels. Update
-User Guide (add examples of graphical comparison of multiple lists of
-wavebands).
+functions for SI scale prefixes. Add utility functions for
+*x*-axis-labels and secondary *x*-axis. Add utility functions for
+y-axis-labels. Update User Guide (add examples of graphical comparison
+of multiple lists of wavebands).
 
 # ggspectra 0.2.0
 
-Improve handling of annotations parameter in plot() methods. Add
-functions ggcolorchart() and black_or_white(). Add statistics
-stat_wb_box() and stat_wb_column() with "rect" as default geom and
-stat_wb_hbar() with "errorbarh" as default geom. Change default geom
-from "rect" to "text" in all the summary stats for spectra. Update stats
-with "text" as default geom to use an additional variable BW.color
-computed by black_or_white() as default mapping for color. As default
-geoms and color mapping have changed, this update can break existing
-code. Changes to plot() methods are backwards compatible but default
-color of some text labels is changed from "white" to "black" to improve
-readability, and fewer peaks and valleys are highlighted by default. In
-addition more ticks marks are used on the wavelength axis. Fix minor
-bugs in handling of color mapping. Update documentation.
+Improve handling of annotations parameter in `plot()` methods. Add
+functions `ggcolorchart()` and `black_or_white()`. Add statistics
+`stat_wb_box()` and `stat_wb_column()` with `"rect"` as default geom and
+`stat_wb_hbar()` with `"errorbarh"` as default geom. Change default geom
+from `"rect"` to `"text"` in all the summary stats for spectra. Update
+stats with "text" as default geom to use an additional variable
+`BW.color` computed by `black_or_white()` as default mapping for color.
+As default geoms and color mapping have changed, this update can break
+existing code. Changes to `plot()` methods are backwards compatible but
+default color of some text labels is changed from `"white"` to `"black"`
+to improve readability, and fewer peaks and valleys are highlighted by
+default. In addition more ticks marks are used on the wavelength axis.
+Fix minor bugs in handling of color mapping. Update documentation.
 
 # ggspectra 0.1.12
 
-Import ggplot2 in whole as only the most basic use of `plot()` methods
+Import 'ggplot2' in whole as only the most basic use of `plot()` methods
 would not require user access to 'ggplot2'. Add `stat_label_peaks()` and
 `stat_label_valleys()` which are designed to fully take advantage of
 `geom_text_repel()` and `geom_label_repel()` as revised in package
@@ -244,17 +249,17 @@ documentation and vignettes.
 
 # ggspectra 0.1.10
 
-Add code to maintain same stacking order under ggplot2 1.1.0, 2.0.0,
+Add code to maintain same stacking order under 'ggplot2' 1.1.0, 2.0.0,
 2.1.0, and 2.1.9000 in `plot.object_spct()`.
 
 # ggspectra 0.1.9
 
-Add support for na.rm to all `plot()` methods setting default to `TRUE`,
-and avoid triggering spurious warnings from internal code. Make default
-for parameter `label.qty` in plot methods dependent on whether data are
-expressed in absolute units or have been rescaled or normalized. Move
-from the 'User Guide' the sections on `plot()` methods creating a new
-vignette titled 'Plot Methods'.
+Add support for `na.rm` to all `plot()` methods setting default to
+`TRUE`, and avoid triggering spurious warnings from internal code. Make
+default for parameter `label.qty` in plot methods dependent on whether
+data are expressed in absolute units or have been *rescaled* or
+*normalized*. Move from the 'User Guide' the sections on `plot()`
+methods creating a new vignette titled 'Plot Methods'.
 
 # ggspectra 0.1.8
 
@@ -274,7 +279,7 @@ handle multiple `"cps"` columns. Add `text.size` parameter to all
 `plot()` methods. Can be used to control the size of the font used for
 text decorations related to wavebands, peaks and valleys. Increase
 slightly the default font size for plot decorations, and decrease the
-number of peaks and valleys labelled by the `plot()` methods. Fix
+number of *peaks* and *valleys* labelled by the `plot()` methods. Fix
 existing bug revealed by dplyr update. Fix bug in `decoration()`
 affecting `plot.object_spct()`. Fix other minor bugs.
 
@@ -305,7 +310,7 @@ without using any annotations. In other words, now all calculations work
 as expected with grouping and panels. Some aesthetics may require
 tweaking in the case of grouping.
 
-Tested with packages ggrepel and cowplot.
+Tested with packages 'ggrepel' and 'cowplot'.
 
 # ggspectra 0.1.2
 
