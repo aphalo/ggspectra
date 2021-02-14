@@ -18,6 +18,8 @@ Track changes in packages 'ggrepel' (\>= 0.9.1), 'photobiology' (\>=
 -   Update `decoration()` to use `position_nudge()` and
     `position_nudge_repel()` to displace labels instead of "off-range"
     justification.
+-   Improve handling of multiple spectra in long form by `ggplot()`
+    methods.
 
 ------------------------------------------------------------------------
 

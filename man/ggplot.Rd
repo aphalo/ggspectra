@@ -13,6 +13,7 @@
 \alias{ggplot.generic_mspct}
 \alias{ggplot.filter_mspct}
 \alias{ggplot.source_mspct}
+\alias{ggplot.object_mspct}
 \title{Create a new ggplot plot from spectral data.}
 \usage{
 \method{ggplot}{source_spct}(
@@ -83,6 +84,16 @@
   ...,
   range = NULL,
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
+  environment = parent.frame()
+)
+
+\method{ggplot}{object_mspct}(
+  data,
+  mapping = NULL,
+  ...,
+  range = NULL,
+  plot.qty = getOption("photobiology.object.qty", default = ifelse(length(data) > 1L,
+    "as.is", "all")),
   environment = parent.frame()
 )
 }

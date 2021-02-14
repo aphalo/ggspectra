@@ -91,13 +91,19 @@
 #' @name ggplot
 #'
 ggplot.source_spct <-
-  function(data, mapping = NULL, ..., range = NULL,
-           unit.out = getOption("photobiology.radiation.unit", default = "energy"),
+  function(data,
+           mapping = NULL,
+           ...,
+           range = NULL,
+           unit.out = getOption("photobiology.radiation.unit",
+                                default = "energy"),
            environment = parent.frame()) {
+
     if (!is.null(range)) {
       data <- trim_wl(data, range = range, use.hinges = TRUE, fill = NULL)
     }
-    if (is.null(mapping)) {
+    default.mapping <- is.null(mapping)
+    if (default.mapping) {
       if (unit.out == "energy") {
         data <- q2e(data, action = "replace")
         mapping <- aes_(~w.length, ~s.e.irrad)
@@ -110,11 +116,22 @@ ggplot.source_spct <-
     }
     # roundabout way of retaining the derived classes without calling any
     # private (not exported) method or function from 'ggplot2'
-    data.class <- class(data)
-    rmDerivedSpct(data)
-    p <- ggplot2::ggplot(data = data, mapping = mapping, ...,
+    data.tb <- data
+    removed <- rmDerivedSpct(data.tb)
+    p <- ggplot2::ggplot(data = data.tb, mapping = mapping, ...,
                          environment = environment)
-    class(p[["data"]]) <- data.class
+    class(p[["data"]]) <- c(removed, class(p[["data"]]))
+
+    # we also copy other attributes
+    p[["data"]] <- copy_attributes(data, p[["data"]])
+
+    if (default.mapping) {
+      # we look for multiple spectra in long form
+      num.spectra <- photobiology::getMultipleWl(p[["data"]])
+      if (num.spectra > 1) {
+        p + aes_(linetype = photobiology::getIdFactor(p[["data"]]))
+      }
+    }
     p
   }
 
@@ -129,7 +146,8 @@ ggplot.response_spct <-
     if (!is.null(range)) {
       data <- trim_wl(data, range = range, use.hinges = TRUE, fill = NULL)
     }
-    if (is.null(mapping)) {
+    default.mapping <- is.null(mapping)
+    if (default.mapping) {
       if (unit.out == "energy") {
         data <- q2e(data)
         mapping <- aes_(~w.length, ~s.e.response)
@@ -142,11 +160,22 @@ ggplot.response_spct <-
     }
     # roundabout way of retaining the derived classes without calling any
     # private (not exported) method or function from 'ggplot2'
-    data.class <- class(data)
-    rmDerivedSpct(data)
-    p <- ggplot2::ggplot(data = data, mapping = mapping, ...,
+    data.tb <- data
+    removed <- rmDerivedSpct(data.tb)
+    p <- ggplot2::ggplot(data = data.tb, mapping = mapping, ...,
                          environment = environment)
-    class(p[["data"]]) <- data.class
+    class(p[["data"]]) <- c(removed, class(p[["data"]]))
+
+    # we also copy other attributes
+    p[["data"]] <- copy_attributes(data, p[["data"]])
+
+    if (default.mapping) {
+      # we look for multiple spectra in long form
+      num.spectra <- photobiology::getMultipleWl(p[["data"]])
+      if (num.spectra > 1) {
+        p + aes_(linetype = photobiology::getIdFactor(p[["data"]]))
+      }
+    }
     p
   }
 
@@ -161,7 +190,8 @@ ggplot.filter_spct <-
     if (!is.null(range)) {
       data <- trim_wl(data, range = range, use.hinges = TRUE, fill = NULL)
     }
-    if (is.null(mapping)) {
+    default.mapping <- is.null(mapping)
+    if (default.mapping) {
       if (plot.qty == "transmittance") {
         data <- any2T(data, action = "replace")
         mapping <- aes_(~w.length, ~Tfr)
@@ -177,11 +207,22 @@ ggplot.filter_spct <-
     }
     # roundabout way of retaining the derived classes without calling any
     # private (not exported) method or function from 'ggplot2'
-    data.class <- class(data)
-    rmDerivedSpct(data)
-    p <- ggplot2::ggplot(data = data, mapping = mapping, ...,
+    data.tb <- data
+    removed <- rmDerivedSpct(data.tb)
+    p <- ggplot2::ggplot(data = data.tb, mapping = mapping, ...,
                          environment = environment)
-    class(p[["data"]]) <- data.class
+    class(p[["data"]]) <- c(removed, class(p[["data"]]))
+
+    # we also copy other attributes
+    p[["data"]] <- copy_attributes(data, p[["data"]])
+
+    if (default.mapping) {
+      # we look for multiple spectra in long form
+      num.spectra <- photobiology::getMultipleWl(p[["data"]])
+      if (num.spectra > 1) {
+        p + aes_(linetype = photobiology::getIdFactor(p[["data"]]))
+      }
+    }
     p
   }
 
@@ -198,16 +239,28 @@ ggplot.reflector_spct <-
     if (!is.null(range)) {
       data <- trim_wl(data, range = range, use.hinges = TRUE, fill = NULL)
     }
-    if (is.null(mapping)) {
+    default.mapping <- is.null(mapping)
+    if (default.mapping) {
       mapping <- aes_(~w.length, ~Rfr)
     }
     # roundabout way of retaining the derived classes without calling any
     # private (not exported) method or function from 'ggplot2'
-    data.class <- class(data)
-    rmDerivedSpct(data)
-    p <- ggplot2::ggplot(data = data, mapping = mapping, ...,
+    data.tb <- data
+    removed <- rmDerivedSpct(data.tb)
+    p <- ggplot2::ggplot(data = data.tb, mapping = mapping, ...,
                          environment = environment)
-    class(p[["data"]]) <- data.class
+    class(p[["data"]]) <- c(removed, class(p[["data"]]))
+
+    # we also copy other attributes
+    p[["data"]] <- copy_attributes(data, p[["data"]])
+
+    if (default.mapping) {
+      # we look for multiple spectra in long form
+      num.spectra <- photobiology::getMultipleWl(p[["data"]])
+      if (num.spectra > 1) {
+        p + aes_(linetype = photobiology::getIdFactor(p[["data"]]))
+      }
+    }
     p
   }
 
@@ -221,7 +274,8 @@ ggplot.cps_spct <-
     if (!is.null(range)) {
       data <- trim_wl(data, range = range, use.hinges = TRUE, fill = NULL)
     }
-    if (is.null(mapping)) {
+    default.mapping <- is.null(mapping)
+    if (default.mapping) {
       if ("cps" %in% names(data)) {
         mapping <- aes_(~w.length, ~cps)
       } else {
@@ -230,11 +284,22 @@ ggplot.cps_spct <-
     }
     # roundabout way of retaining the derived classes without calling any
     # private (not exported) method or function from 'ggplot2'
-    data.class <- class(data)
-    rmDerivedSpct(data)
-    p <- ggplot2::ggplot(data = data, mapping = mapping, ...,
+    data.tb <- data
+    removed <- rmDerivedSpct(data.tb)
+    p <- ggplot2::ggplot(data = data.tb, mapping = mapping, ...,
                          environment = environment)
-    class(p[["data"]]) <- data.class
+    class(p[["data"]]) <- c(removed, class(p[["data"]]))
+
+    # we also copy other attributes
+    p[["data"]] <- copy_attributes(data, p[["data"]])
+
+    if (default.mapping) {
+      # we look for multiple spectra in long form
+      num.spectra <- photobiology::getMultipleWl(p[["data"]])
+      if (num.spectra > 1) {
+        p + aes_(linetype = photobiology::getIdFactor(p[["data"]]))
+      }
+    }
     p
   }
 
@@ -248,7 +313,8 @@ ggplot.calibration_spct <-
     if (!is.null(range)) {
       data <- trim_wl(data, range = range, use.hinges = TRUE, fill = NULL)
     }
-    if (is.null(mapping)) {
+    default.mapping <- is.null(mapping)
+    if (default.mapping) {
       if ("irrad.mult" %in% names(data)) {
         mapping <- aes_(~w.length, ~irrad.mult)
       } else {
@@ -257,11 +323,22 @@ ggplot.calibration_spct <-
     }
     # roundabout way of retaining the derived classes without calling any
     # private (not exported) method or function from 'ggplot2'
-    data.class <- class(data)
-    rmDerivedSpct(data)
-    p <- ggplot2::ggplot(data = data, mapping = mapping, ...,
+    data.tb <- data
+    removed <- rmDerivedSpct(data.tb)
+    p <- ggplot2::ggplot(data = data.tb, mapping = mapping, ...,
                          environment = environment)
-    class(p[["data"]]) <- data.class
+    class(p[["data"]]) <- c(removed, class(p[["data"]]))
+
+    # we also copy other attributes
+    p[["data"]] <- copy_attributes(data, p[["data"]])
+
+    if (default.mapping) {
+      # we look for multiple spectra in long form
+      num.spectra <- photobiology::getMultipleWl(p[["data"]])
+      if (num.spectra > 1) {
+        p + aes_(linetype = photobiology::getIdFactor(p[["data"]]))
+      }
+    }
     p
   }
 
@@ -275,7 +352,8 @@ ggplot.raw_spct <-
     if (!is.null(range)) {
       data <- trim_wl(data, range = range, use.hinges = TRUE, fill = NULL)
     }
-    if (is.null(mapping)) {
+    default.mapping <- is.null(mapping)
+    if (default.mapping) {
       if ("counts" %in% names(data)) {
         mapping <- aes_(~w.length, ~counts)
       } else {
@@ -284,11 +362,22 @@ ggplot.raw_spct <-
     }
     # roundabout way of retaining the derived classes without calling any
     # private (not exported) method or function from 'ggplot2'
-    data.class <- class(data)
-    rmDerivedSpct(data)
-    p <- ggplot2::ggplot(data = data, mapping = mapping, ...,
+    data.tb <- data
+    removed <- rmDerivedSpct(data.tb)
+    p <- ggplot2::ggplot(data = data.tb, mapping = mapping, ...,
                          environment = environment)
-    class(p[["data"]]) <- data.class
+    class(p[["data"]]) <- c(removed, class(p[["data"]]))
+
+    # we also copy other attributes
+    p[["data"]] <- copy_attributes(data, p[["data"]])
+
+    if (default.mapping) {
+      # we look for multiple spectra in long form
+      num.spectra <- photobiology::getMultipleWl(p[["data"]])
+      if (num.spectra > 1) {
+        p + aes_(linetype = photobiology::getIdFactor(p[["data"]]))
+      }
+    }
     p
   }
 
@@ -297,7 +386,10 @@ ggplot.raw_spct <-
 #' @export
 #'
 ggplot.object_spct <-
-  function(data, mapping = NULL, ..., range = NULL,
+  function(data,
+           mapping = NULL,
+           ...,
+           range = NULL,
            plot.qty = getOption("photobiology.object.qty", default = "all"),
            environment = parent.frame()) {
     if (!is.null(range)) {
@@ -305,9 +397,14 @@ ggplot.object_spct <-
     }
     # If plotting a single variable, we use other methods
     if (plot.qty == "reflectance") {
-      return(ggplot(as.reflector_spct(data)))
+      return(ggplot(data = as.reflector_spct(data),
+                    mapping = mapping,
+                    ...))
     } else if (plot.qty %in% c("transmittance", "absorbance", "absorptance")) {
-      return(ggplot(as.filter_spct(data), plot.qty = plot.qty))
+      return(ggplot(data = as.filter_spct(data),
+                    mapping = mapping,
+                    plot.qty = plot.qty,
+                    ...))
     } else if (!plot.qty %in% c("all", "as.is")) {
       stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
     }
@@ -323,6 +420,10 @@ ggplot.object_spct <-
                            environment = environment)
       class(p[["data"]]) <- data.class
     } else {
+      num.spectra <- photobiology::getMultipleWl(data)
+      if (num.spectra > 1) {
+        stop("Multiple spectra in long form not supported.")
+      }
       # Attributes will be lost when melting the tibble
       data.attributes <- get_attributes(data)
       # Once molten it will not pass checks as object_spct
@@ -330,7 +431,9 @@ ggplot.object_spct <-
       # melt data into long form
       molten.data <-
         tidyr::gather_(data = data[ , c("w.length", "Tfr", "Afr", "Rfr")],
-                       key_col = "variable", value_col = "value", gather_cols = c("Tfr", "Afr", "Rfr"))
+                       key_col = "variable",
+                       value_col = "value",
+                       gather_cols = c("Tfr", "Afr", "Rfr"))
       # if not supplied create a mapping
       if (is.null(mapping)) {
         mapping <- aes_(~w.length, ~value)
@@ -352,7 +455,10 @@ ggplot.object_spct <-
 #' @export
 #'
 ggplot.generic_mspct <-
-  function(data, mapping = NULL, ..., range = NULL,
+  function(data,
+           mapping = NULL,
+           ...,
+           range = NULL,
            environment = parent.frame()) {
     if (!is.null(range)) {
       data <- trim_wl(data, range = range, use.hinges = TRUE, fill = NULL)
@@ -426,3 +532,26 @@ ggplot.source_mspct <-
            environment = environment)
   }
 
+#' @rdname ggplot
+#'
+#' @export
+#'
+ggplot.object_mspct <-
+  function(data,
+           mapping = NULL,
+           ...,
+           range = NULL,
+           plot.qty = getOption("photobiology.object.qty",
+                                default = ifelse(length(data) > 1L,
+                                                 "as.is", "all")),
+           environment = parent.frame()) {
+    if (!is.null(range)) {
+      data <- trim_wl(data, range = range, use.hinges = TRUE, fill = NULL)
+    }
+    spct <- rbindspct(data)
+    ggplot(data = spct,
+           mapping = mapping,
+           ...,
+           plot.qty = plot.qty,
+           environment = environment)
+  }
