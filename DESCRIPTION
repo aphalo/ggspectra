@@ -15,7 +15,6 @@ Description: Additional annotations, stats, geoms and scales for plotting
     stored in objects of classes defined in package 'photobiology'. Part of the 
     'r4photobiology' suite, Aphalo P. J. (2015) <doi:10.19232/uv4pb.2015.1.14>.
 License: GPL (>= 2)
-LazyData: TRUE
 LazyLoad: TRUE
 ByteCompile: TRUE
 Depends:
