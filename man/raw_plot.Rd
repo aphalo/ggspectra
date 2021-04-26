@@ -77,11 +77,10 @@ Plot method for spectra expressed as raw detector counts.
 \details{
 This function returns a ggplot object with an annotated plot of a
 raw_spct object.
-}
-\note{
-Note that scales are expanded so as to make space for the annotations.
-  The object returned is a ggplot objects, and can be further manipulated.
-  When spct has more than one column with spectral data, each of these
-  columns is normalized individually.
+
+Note that scales are expanded so as to make space for the annotations. The
+object returned is a ggplot objects, and can be further manipulated. When
+spct has more than one column with spectral data, each of these columns is
+normalized individually.
 }
 \keyword{internal}

@@ -217,14 +217,17 @@ cal_plot <- function(spct,
 #' object.
 #'
 #' @note Note that scales are expanded so as to make space for the annotations.
-#' The object returned is a ggplot objects, and can be further manipulated.
+#' The object returned is a ggplot object, and can be further manipulated.
+#'
+#' @inheritSection decoration Plot Annotations
+#' @inheritSection autotitle Title Annotations
 #'
 #' @param object a calibration_spct object or a calibration_mspct object.
 #' @param ... in the case of collections of spectra, additional arguments passed
 #'   to the plot methods for individual spectra, otherwise currently ignored.
 #' @param w.band a single waveband object or a list of waveband objects.
-#' @param range an R object on which range() returns a vector of length 2,
-#' with min annd max wavelengths (nm).
+#' @param range an R object on which range() returns a vector of length 2, with
+#'   min annd max wavelengths (nm).
 #' @param unit.out character IGNORED.
 #' @param pc.out logical, if TRUE use percents instead of fraction of one.
 #' @param label.qty character string giving the type of summary quantity to use
@@ -237,19 +240,21 @@ cal_plot <- function(spct,
 #'   \code{character} strings "half.maximum" and "half.range" are also accepted
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
-#' @param annotations a character vector ("summaries" is ignored).
-#' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
+#' @param annotations a character vector ("summaries" is ignored). For details
+#'   please see sections Plot Annotations and Title Annotations.
+#' @param time.format character Format as accepted by
+#'   \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
 #' @param norm numeric normalization wavelength (nm) or character string "max"
-#' for normalization at the wavelength of highest peak.
+#'   for normalization at the wavelength of highest peak.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
-#'   the factor is retrieved from metadata or if no metadata found, the
-#'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
-#'   to the spectra and the user needs to use 'ggplot2' functions to manually
-#'   map an aesthetic or use facets for the spectra.
+#'   the factor is retrieved from metadata or if no metadata found, the default
+#'   "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped to the
+#'   spectra and the user needs to use 'ggplot2' functions to manually map an
+#'   aesthetic or use facets for the spectra.
 #' @param facets logical or integer Indicating if facets are to be created for
 #'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
 #'   long form.

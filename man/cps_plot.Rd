@@ -75,10 +75,10 @@ a \code{ggplot} object.
 This function returns a ggplot object with an annotated plot of a
 cps_spct object.
 }
-\note{
-Note that scales are expanded so as to make space for the annotations.
-  The object returned is a ggplot object, and can be further manipulated.
-  When spct has more than one column with spectral data, each of these
-  columns is normalized individually.
+\details{
+Note that scales are expanded so as to make space for the annotations. The
+object returned is a ggplot object, and can be further manipulated. When spct
+has more than one column with spectral data, each of these columns is
+normalized individually.
 }
 \keyword{internal}

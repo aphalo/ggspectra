@@ -63,7 +63,8 @@ which wavelengths are to be searched and interpolated if need. The
 as arguments. A list with \code{numeric} and/or \code{character} values is
 also accepted.}
 
-\item{annotations}{a character vector.}
+\item{annotations}{a character vector. For details please see sections Plot
+Annotations and Title Annotations.}
 
 \item{time.format}{character Format as accepted by
 \code{\link[base]{strptime}}.}
@@ -101,17 +102,52 @@ a \code{ggplot} object.
 These methods return a ggplot object with an annotated plot of a source_spct
 object or of the spectra contained in a source_mspct object.
 }
+\details{
+Note that scales are expanded so as to make space for the annotations. The
+object returned is a ggplot object, and can be further manipulated and added
+to.
+}
 \note{
-Note that scales are expanded so as to make space for the annotations.
-  The object returned is a ggplot object, and can be further manipulated and
-  added to.
-
 If \code{idfactor = NULL}, the default for single spectra, the name of
   the factor is retrieved from metadata or if no metadata found, the default
   "spct.idx" is tried. The default for collections of spectra is to create
   a factor named "spct.idx", but if a different name is passed, it will be
   used instead.
 }
+\section{Plot Annotations}{
+ The recognized annotation names are: \code{"summaries"}, \code{"peaks"},
+  \code{"peak.labels"}, \code{"valleys"}, \code{"valley.labels"},
+  \code{"wls"}, \code{"wls.labels"}, \code{"colour.guide"},
+  \code{"color.guide"}, \code{"boxes"}, \code{"segments"}, \code{"labels"}.
+  In addition, \code{"+"} is interpreted as a request to add to the already
+  present default annotations, \code{"-"} as request to remove annotations
+  and \code{"="} or missing\code{"+"} and \code{"-"} as a request to reset
+  annotations to those requested. If used, \code{"+"}, \code{"-"} or
+  \code{"="} must be the first member of a character vector, and followed by
+  one or more of the names given above. To simultaneously add and remove
+  annotations one can pass a \code{list} containing \code{character} vectors
+  each assembled as described. The vectors are applied in the order they
+  appear in the list. To disable all annotations pass \code{""} or
+  \code{c("=", "")} as argument. Adding a variation of an annotation already
+  present, replaces the existing one automatically: e.g., adding
+  \code{"peak.labels"} replaces\code{"peaks"} if present.
+}
+
+\section{Title Annotations}{
+ metadata retrieved from object \code{object} is
+  paased to \code{ggplot2::ggtitle()} as arguments for \code{title},
+  \code{subtitle} and \code{caption}. The specification for the title is
+  passed as argument to \code{annotations}, and consists in the keyword
+  \code{title} with optional modifiers selecting the kind of metatdata to
+  use, separated by colons. Up to three keywords separated by colons are
+  accepted, and correspond to title, subtitle and caption. The recognized
+  keywords are: \code{"objt"}, \code{"class"}, \code{"what"}, \code{"when"},
+  \code{"where"}, \code{"how"}, \code{"inst.name"}, \code{"inst.sn"},
+  \code{"comment"} and \code{"none"} are recognized as modifiers to
+  \code{"title"}; \code{"none"} is a placeholder. Default is
+  \code{"title:objt"} or no title depending on the context.
+}
+
 \examples{
 
 autoplot(sun.spct)

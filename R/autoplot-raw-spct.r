@@ -5,10 +5,10 @@
 #' This function returns a ggplot object with an annotated plot of a
 #' raw_spct object.
 #'
-#' @note Note that scales are expanded so as to make space for the annotations.
-#'   The object returned is a ggplot objects, and can be further manipulated.
-#'   When spct has more than one column with spectral data, each of these
-#'   columns is normalized individually.
+#' Note that scales are expanded so as to make space for the annotations. The
+#' object returned is a ggplot objects, and can be further manipulated. When
+#' spct has more than one column with spectral data, each of these columns is
+#' normalized individually.
 #'
 #' @param spct a raw_spct object.
 #' @param w.band list of waveband objects.
@@ -238,8 +238,11 @@ raw_plot <- function(spct,
 #' This function returns a ggplot object with an annotated plot of a
 #' raw_spct object.
 #'
-#' @note Note that scales are expanded so as to make space for the annotations.
+#' Note that scales are expanded so as to make space for the annotations.
 #' The object returned is a ggplot objects, and can be further manipulated.
+#'
+#' @inheritSection decoration Plot Annotations
+#' @inheritSection autotitle Title Annotations
 #'
 #' @param object a raw_spct object.
 #' @param ... in the case of collections of spectra, additional arguments passed
@@ -259,7 +262,8 @@ raw_plot <- function(spct,
 #'   \code{character} strings "half.maximum" and "half.range" are also accepted
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
-#' @param annotations a character vector ("summaries" is ignored).
+#' @param annotations a character vector ("summaries" is ignored). For details
+#'   please see sections Plot Annotations and Title Annotations.
 #' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
 #' @param norm numeric normalization wavelength (nm) or character string "max"

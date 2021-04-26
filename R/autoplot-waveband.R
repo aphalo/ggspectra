@@ -3,8 +3,10 @@
 #' This function returns a ggplot object with an annotated plot of a
 #' \code{waveband} object.
 #'
-#' @note Note that scales are expanded so as to make space for the annotations.
-#'   The object returned is a ggplot object, and can be further manipulated.
+#' Note that scales are expanded so as to make space for the annotations. The
+#' object returned is a ggplot object, and can be further manipulated.
+#'
+#' @inheritSection decoration Plot Annotations
 #'
 #' @param object a waveband object.
 #' @param ... currently ignored.
@@ -23,7 +25,8 @@
 #'   also accepted.
 #' @param unit.in the type of unit we assume as reference "energy" or "photon"
 #'   based.
-#' @param annotations a character vector.
+#' @param annotations a character vector. For details please see section Plot
+#'   Annotations.
 #' @param wb.trim logical.
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
@@ -42,10 +45,13 @@
 #' wavelength range, changing the assumed reference irradiance, changes the
 #' responsivity according to Plank's law.
 #'
-#' This function creates a response_spct object from the waveband object and
-#' plots it. Unused arguments are passed along, which means that other plot
-#' aspects can be controlled by providing arguments for the plot method of the
-#' response_spct class.
+#' This function creates a \code{response_spct} object from the \code{waveband}
+#' object and plots it. Unused arguments are passed along, which means that
+#' other plot aspects can be controlled by providing arguments for the plot
+#' method of the \code{response_spct} class.
+#'
+#' @seealso \code{\link{autoplot.response_spct}},
+#'   \code{\link[photobiology]{waveband}}}.
 #'
 #' @keywords hplot
 #'

@@ -478,9 +478,12 @@ q_plot <- function(spct,
 #' These methods return a ggplot object with an annotated plot of a source_spct
 #' object or of the spectra contained in a source_mspct object.
 #'
-#' @note Note that scales are expanded so as to make space for the annotations.
-#'   The object returned is a ggplot object, and can be further manipulated and
-#'   added to.
+#' Note that scales are expanded so as to make space for the annotations. The
+#' object returned is a ggplot object, and can be further manipulated and added
+#' to.
+#'
+#' @inheritSection decoration Plot Annotations
+#' @inheritSection autotitle Title Annotations
 #'
 #' @param object a source_spct or a source_mspct object.
 #' @param ... in the case of collections of spectra, additional arguments passed
@@ -500,7 +503,8 @@ q_plot <- function(spct,
 #'   \code{character} strings "half.maximum" and "half.range" are also accepted
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
-#' @param annotations a character vector.
+#' @param annotations a character vector. For details please see sections Plot
+#'   Annotations and Title Annotations.
 #' @param time.format character Format as accepted by
 #'   \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.

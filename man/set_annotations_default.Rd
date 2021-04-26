@@ -16,7 +16,7 @@ defaults used by the \code{autoplot()} methods defined in this package..}
 \item{w.band}{a single waveband object or a list of waveband objects.}
 }
 \value{
-Previous value of option "photobiology.plot.annotations" returned
+Previous value of option "photobiology.plot.annotations", returned
   invisibly.
 }
 \description{
@@ -25,26 +25,9 @@ Set R options used when plotting spectra. Option
   parameter \code{annotations} and option "photobiology.plot.bands" is used
   as default argument to formal parameter \code{w.band} in all the
   \code{autoplot()} methods exported from package 'ggspectra'. These
-  convenience functions makes it easier to edit these two option which are
+  convenience functions make it easier to edit these two option which are
   stored as a vector of characters strings and a list of waveband objects,
   respectively.
-}
-\details{
-Vectors of character strings passed as argument to
-  \code{annotations} are parsed so that if the first member string is
-  \code{"+"}, the remaining members are added to the current default for
-  annotations; if it is \code{"-"} the remaining members are removed from the
-  current default for annotations; and if it is \code{"="} the remaining
-  members become the new default. If the first member is none of these three
-  strings, the whole vector becomes the new default. If \code{annotations} is
-  \code{NULL} the annotations are reset to the package defaults. When
-  removing annotations \code{"title*"}, \code{"peaks*"} and \code{"valleys*"}
-  will remove any variation of these annotations. The string \code{""} means
-  no annotations while \code{"reserve.space"} means no annotations but expand
-  y scale to reserve space for annotations. These two values take precedence
-  over any other values in the character vector. The order of the names of
-  annotations has no meaning: the vector is interpreted as a set except for
-  the three possible "operators" at position 1.
 }
 \note{
 The syntax used and behaviour are the same as for the
@@ -52,6 +35,40 @@ The syntax used and behaviour are the same as for the
   but instead of affecting a single plot, \code{set_annotations_default()}
   changes the default used for subsequent calls to \code{autoplot()}.
 }
+\section{Plot Annotations}{
+ The recognized annotation names are: \code{"summaries"}, \code{"peaks"},
+  \code{"peak.labels"}, \code{"valleys"}, \code{"valley.labels"},
+  \code{"wls"}, \code{"wls.labels"}, \code{"colour.guide"},
+  \code{"color.guide"}, \code{"boxes"}, \code{"segments"}, \code{"labels"}.
+  In addition, \code{"+"} is interpreted as a request to add to the already
+  present default annotations, \code{"-"} as request to remove annotations
+  and \code{"="} or missing\code{"+"} and \code{"-"} as a request to reset
+  annotations to those requested. If used, \code{"+"}, \code{"-"} or
+  \code{"="} must be the first member of a character vector, and followed by
+  one or more of the names given above. To simultaneously add and remove
+  annotations one can pass a \code{list} containing \code{character} vectors
+  each assembled as described. The vectors are applied in the order they
+  appear in the list. To disable all annotations pass \code{""} or
+  \code{c("=", "")} as argument. Adding a variation of an annotation already
+  present, replaces the existing one automatically: e.g., adding
+  \code{"peak.labels"} replaces\code{"peaks"} if present.
+}
+
+\section{Title Annotations}{
+ metadata retrieved from object \code{object} is
+  paased to \code{ggplot2::ggtitle()} as arguments for \code{title},
+  \code{subtitle} and \code{caption}. The specification for the title is
+  passed as argument to \code{annotations}, and consists in the keyword
+  \code{title} with optional modifiers selecting the kind of metatdata to
+  use, separated by colons. Up to three keywords separated by colons are
+  accepted, and correspond to title, subtitle and caption. The recognized
+  keywords are: \code{"objt"}, \code{"class"}, \code{"what"}, \code{"when"},
+  \code{"where"}, \code{"how"}, \code{"inst.name"}, \code{"inst.sn"},
+  \code{"comment"} and \code{"none"} are recognized as modifiers to
+  \code{"title"}; \code{"none"} is a placeholder. Default is
+  \code{"title:objt"} or no title depending on the context.
+}
+
 \seealso{
 Other autoplot methods: 
 \code{\link{autoplot.calibration_spct}()},

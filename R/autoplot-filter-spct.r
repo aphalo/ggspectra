@@ -954,20 +954,22 @@ O_plot <- function(spct,
 
 #' Create a complete ggplot for a filter spectrum.
 #'
-#' These methods return a ggplot object with an annotated plot of a
-#' filter_spct object or of the spectra contained in a filter_mspct
-#' object.
+#' These methods return a ggplot object with an annotated plot of a filter_spct
+#' object or of the spectra contained in a filter_mspct object.
 #'
-#' @note The ggplot object returned can be further manipulated and added to.
-#'   Except when no annotations are added, limits are set for the x-axis and
-#'   y-axis scales. The y scale limits are expanded to include all data, or at
-#'   least to the range of expected values. The plotting of absorbance is an
-#'   exception as the y-axis is not extended past 6 a.u. In the case of
-#'   absorbance, values larger than 6 a.u. are rarely meaningful due to stray
-#'   light during measurement. However, when transmittance values below the
-#'   detection limit are rounded to zero, and later converted into absorbance,
-#'   values Inf a.u. result, disrupting the plot. Scales are further expanded so
-#'   as to make space for the annotations.
+#' The ggplot object returned can be further manipulated and added to. Except
+#' when no annotations are added, limits are set for the x-axis and y-axis
+#' scales. The y scale limits are expanded to include all data, or at least to
+#' the range of expected values. The plotting of absorbance is an exception as
+#' the y-axis is not extended past 6 a.u. In the case of absorbance, values
+#' larger than 6 a.u. are rarely meaningful due to stray light during
+#' measurement. However, when transmittance values below the detection limit are
+#' rounded to zero, and later converted into absorbance, values Inf a.u. result,
+#' disrupting the plot. Scales are further expanded so as to make space for the
+#' annotations.
+#'
+#' @inheritSection decoration Plot Annotations
+#' @inheritSection autotitle Title Annotations
 #'
 #' @param object a filter_spct object or a filter_mspct object.
 #' @param ... in the case of collections of spectra, additional arguments passed
@@ -987,7 +989,8 @@ O_plot <- function(spct,
 #'   \code{character} strings "half.maximum" and "half.range" are also accepted
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
-#' @param annotations a character vector.
+#' @param annotations a character vector. For details please see sections Plot
+#'   Annotations and Title Annotations.
 #' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
 #' @param text.size numeric size of text in the plot decorations.
@@ -1185,11 +1188,14 @@ autoplot.filter_mspct <-
 #' reflector_spct object or of the spectra contained in a reflector_mspct
 #' object.
 #'
-#' @note The ggplot object returned can be further manipulated and added to.
-#'   Except when no annotations are added, limits are set for the x-axis and
-#'   y-axis scales. The y scale limits are expanded to include all data, or at
-#'   least to the range of expected values. Scales are further expanded so as to
-#'   make space for the annotations.
+#' The ggplot object returned can be further manipulated and added to. Except
+#' when no annotations are added, limits are set for the x-axis and y-axis
+#' scales. The y scale limits are expanded to include all data, or at least to
+#' the range of expected values. Scales are further expanded so as to make space
+#' for the annotations.
+#'
+#' @inheritSection decoration Plot Annotations
+#' @inheritSection autotitle Title Annotations
 #'
 #' @param object a reflector_spct object or a reflector_mspct object.
 #' @param ... in the case of collections of spectra, additional arguments passed
@@ -1209,7 +1215,8 @@ autoplot.filter_mspct <-
 #'   \code{character} strings "half.maximum" and "half.range" are also accepted
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
-#' @param annotations a character vector.
+#' @param annotations a character vector. For details please see sections Plot
+#'   Annotations and Title Annotations.
 #' @param time.format character Format as accepted by
 #'   \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
@@ -1361,12 +1368,15 @@ autoplot.reflector_mspct <-
 #' This function returns a ggplot object with an annotated plot of an
 #' object_spct object.
 #'
-#' @note The ggplot object returned can be further manipulated and added to.
-#'   Except when no annotations are added, limits are set for the x-axis and
-#'   y-axis scales. The y scale limits are expanded to include all data, or at
-#'   least to the range of expected values. Scales are further expanded so
-#'   as to make space for the annotations. When all \code{"all"} quantities are
-#'   plotted, a single set of spectra is accepted as input.
+#' The ggplot object returned can be further manipulated and added to. Except
+#' when no annotations are added, limits are set for the x-axis and y-axis
+#' scales. The y scale limits are expanded to include all data, or at least to
+#' the range of expected values. Scales are further expanded so as to make space
+#' for the annotations. When all \code{"all"} quantities are plotted, a single
+#' set of spectra is accepted as input.
+#'
+#' @inheritSection decoration Plot Annotations
+#' @inheritSection autotitle Title Annotations
 #'
 #' @param object an object_spct object
 #' @param ... in the case of collections of spectra, additional arguments passed
@@ -1387,7 +1397,8 @@ autoplot.reflector_mspct <-
 #'   \code{character} strings "half.maximum" and "half.range" are also accepted
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
-#' @param annotations a character vector
+#' @param annotations a character vector. For details please see sections Plot
+#'   Annotations and Title Annotations.
 #' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
 #' @param stacked logical

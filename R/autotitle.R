@@ -13,16 +13,18 @@
 #' @param default.title character vector The default used for \code{annotations
 #'   = "title"}.
 #'
-#' @details \code{autotitle()} retrieves from object \code{object} metadata and
-#'   passes it to \code{ggplot2::ggtitle()} as arguments for \code{title},
-#'   \code{subtitle} and \code{caption}. The specification for the tittle is
+#' @section Title Annotations: metadata retrieved from object \code{object} is
+#'   paased to \code{ggplot2::ggtitle()} as arguments for \code{title},
+#'   \code{subtitle} and \code{caption}. The specification for the title is
 #'   passed as argument to \code{annotations}, and consists in the keyword
 #'   \code{title} with optional modifiers selecting the kind of metatdata to
 #'   use, separated by colons. Up to three keywords separated by colons are
 #'   accepted, and correspond to title, subtitle and caption. The recognized
-#'   keywords are: "objt", "class", "what", "when", "where", "how", "inst.name",
-#'   "inst.sn", "comment" and "none" are recognized as modifiers to "title";
-#'   "none" is a placeholder.
+#'   keywords are: \code{"objt"}, \code{"class"}, \code{"what"}, \code{"when"},
+#'   \code{"where"}, \code{"how"}, \code{"inst.name"}, \code{"inst.sn"},
+#'   \code{"comment"} and \code{"none"} are recognized as modifiers to
+#'   \code{"title"}; \code{"none"} is a placeholder. Default is
+#'   \code{"title:objt"} or no title depending on the context.
 #'
 #' @return The return value of \code{ggplot2::labs()}.
 #'

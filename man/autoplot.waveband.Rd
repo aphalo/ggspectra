@@ -48,7 +48,8 @@ also accepted.}
 \item{unit.in}{the type of unit we assume as reference "energy" or "photon"
 based.}
 
-\item{annotations}{a character vector.}
+\item{annotations}{a character vector. For details please see section Plot
+Annotations.}
 
 \item{wb.trim}{logical.}
 
@@ -70,10 +71,11 @@ a \code{ggplot} object.
 This function returns a ggplot object with an annotated plot of a
 \code{waveband} object.
 }
+\details{
+Note that scales are expanded so as to make space for the annotations. The
+object returned is a ggplot object, and can be further manipulated.
+}
 \note{
-Note that scales are expanded so as to make space for the annotations.
-  The object returned is a ggplot object, and can be further manipulated.
-
 Effectiveness spectra are plotted expressing the spectral effectiveness
 either as $1 mol^{-1} nm$ photons of $1 J^{-1} nm$ which can selected through
 formal argument \code{unit.out}. The value of \code{unit.in} has no effect on
@@ -82,17 +84,38 @@ expression, which is enforced. In contrast, for wavebands which only define a
 wavelength range, changing the assumed reference irradiance, changes the
 responsivity according to Plank's law.
 
-This function creates a response_spct object from the waveband object and
-plots it. Unused arguments are passed along, which means that other plot
-aspects can be controlled by providing arguments for the plot method of the
-response_spct class.
+This function creates a \code{response_spct} object from the \code{waveband}
+object and plots it. Unused arguments are passed along, which means that
+other plot aspects can be controlled by providing arguments for the plot
+method of the \code{response_spct} class.
 }
+\section{Plot Annotations}{
+ The recognized annotation names are: \code{"summaries"}, \code{"peaks"},
+  \code{"peak.labels"}, \code{"valleys"}, \code{"valley.labels"},
+  \code{"wls"}, \code{"wls.labels"}, \code{"colour.guide"},
+  \code{"color.guide"}, \code{"boxes"}, \code{"segments"}, \code{"labels"}.
+  In addition, \code{"+"} is interpreted as a request to add to the already
+  present default annotations, \code{"-"} as request to remove annotations
+  and \code{"="} or missing\code{"+"} and \code{"-"} as a request to reset
+  annotations to those requested. If used, \code{"+"}, \code{"-"} or
+  \code{"="} must be the first member of a character vector, and followed by
+  one or more of the names given above. To simultaneously add and remove
+  annotations one can pass a \code{list} containing \code{character} vectors
+  each assembled as described. The vectors are applied in the order they
+  appear in the list. To disable all annotations pass \code{""} or
+  \code{c("=", "")} as argument. Adding a variation of an annotation already
+  present, replaces the existing one automatically: e.g., adding
+  \code{"peak.labels"} replaces\code{"peaks"} if present.
+}
+
 \examples{
 
 autoplot(waveband(c(400, 500)))
 
 }
 \seealso{
+
+
 Other autoplot methods: 
 \code{\link{autoplot.calibration_spct}()},
 \code{\link{autoplot.cps_spct}()},
