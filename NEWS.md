@@ -16,7 +16,7 @@ Track changes in packages 'ggrepel' (\>= 0.9.1), 'photobiology' (\>=
     support for `sum`, `prod`, `var`, `sd`, and `se` as summaries: i.e.,
     compute on-the-fly a summary spectrum from a collection of spectra
     and plot it.
--   Update `decoration()` to track changes in 'ggrepel' (\> 0.9.0).
+-   Update `decoration()` to track changes in 'ggrepel' (\>= 0.9.1).
 -   Update `decoration()` to use `position_nudge()` and
     `position_nudge_repel()` to displace labels instead of "off-range"
     justification.

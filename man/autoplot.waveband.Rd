@@ -114,7 +114,8 @@ autoplot(waveband(c(400, 500)))
 
 }
 \seealso{
-
+\code{\link{autoplot.response_spct}},
+  \code{\link[photobiology]{waveband}}.
 
 Other autoplot methods: 
 \code{\link{autoplot.calibration_spct}()},

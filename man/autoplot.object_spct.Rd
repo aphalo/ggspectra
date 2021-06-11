@@ -172,8 +172,6 @@ two_leaves.mspct <-
 autoplot(two_leaves.mspct)
 autoplot(two_leaves.mspct, idfactor = "Spectra")
 autoplot(two_leaves.mspct, facets = TRUE)
-autoplot(two_leaves.mspct, facets = 1)
-autoplot(two_leaves.mspct, facets = 2)
 
 }
 \seealso{

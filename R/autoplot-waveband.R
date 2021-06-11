@@ -51,7 +51,7 @@
 #' method of the \code{response_spct} class.
 #'
 #' @seealso \code{\link{autoplot.response_spct}},
-#'   \code{\link[photobiology]{waveband}}}.
+#'   \code{\link[photobiology]{waveband}}.
 #'
 #' @keywords hplot
 #'
