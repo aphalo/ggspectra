@@ -6,8 +6,8 @@ editor_options:
 
 # ggspectra 0.3.8
 
-Track changes in packages 'ggrepel' (\>= 0.9.1), 'photobiology' (\>=
-0.10.6) and 'ggplot2' (\>= 3.3.3).
+Track changes in packages 'ggrepel' (>= 0.9.1), 'photobiology' (>=
+0.10.6) and 'ggplot2' (>= 3.3.3).
 
 -   Add `autoplot.cps_mspct()` and `autoplot.raw_mspct()` methods.
 -   Add support for faceting to all `autoplot()` methods for collections
@@ -16,12 +16,12 @@ Track changes in packages 'ggrepel' (\>= 0.9.1), 'photobiology' (\>=
     support for `sum`, `prod`, `var`, `sd`, and `se` as summaries: i.e.,
     compute on-the-fly a summary spectrum from a collection of spectra
     and plot it.
--   Update `decoration()` to track changes in 'ggrepel' (\>= 0.9.1).
+-   Update `decoration()` to track changes in 'ggrepel' (>= 0.9.1).
 -   Update `decoration()` to use `position_nudge()` and
     `position_nudge_repel()` to displace labels instead of "off-range"
     justification.
 -   Improve handling of multiple spectra in long form by `ggplot()`
-    methods.
+    methods and by `autotitle()`.
 -   Add to the documentation of all `autoplot()` methods an explanation
     of how to modify the default plot annotations and tittles using
     arguments passed to parameter `annotations`.
@@ -36,7 +36,7 @@ Track changes in packages 'ggrepel' (\>= 0.9.1), 'photobiology' (\>=
 
 # ggspectra 0.3.7
 
--   Track and profit from updated 'photobiology' (\>= 0.10.4), with (\>=
+-   Track and profit from updated 'photobiology' (>= 0.10.4), with (>=
     0.10.5) now required.
 -   Use performance-optimized computation for colors from wavelengths.
 -   Improve `stat_wl_strip()` performance by simplifying data before
@@ -73,7 +73,7 @@ Track changes in packages 'ggrepel' (\>= 0.9.1), 'photobiology' (\>=
 
 -   Add support for computation of colors using other chromaticity
     coordinates than the color matching function (CMF) for human vision.
--   Revise for compatibility with 'dplyr' (\>= 1.0.0).
+-   Revise for compatibility with 'dplyr' (>= 1.0.0).
 -   Track changes in 'photobiology' 0.10.1.
 -   Fix two bugs in `ggplot()` method for class object_spct.
 -   Add `stat_spikes()`, useful for highlighting spikes.
@@ -101,7 +101,7 @@ only affect the text of labels.**
 
 # ggspectra 0.3.4
 
--   Update for code-breaking changes in 'tidyr' (\>= 1.0.0).
+-   Update for code-breaking changes in 'tidyr' (>= 1.0.0).
 
 # ggspectra 0.3.3-1
 
@@ -115,7 +115,7 @@ only affect the text of labels.**
 -   Add support for setting of the plot caption with autotitle() and as
     annotations in `autoplot()` methods. Make autotitle() a synonim of
     `ggtitle_spct()`, which is now deprecated.
--   Track changes in 'photobiology' (\>= 0.9.28) adding support fot
+-   Track changes in 'photobiology' (>= 0.9.28) adding support fot
     `"how.measured"` attribute in plot titles, subtitles and captions.
 -   Use a compute panel function instead of a compute group function in
     `stat_wb_label()`, `stat_wb_box()` and `stat_wl_strip()`, solving a
@@ -246,7 +246,7 @@ Import 'ggplot2' in whole as only the most basic use of `plot()` methods
 would not require user access to 'ggplot2'. Add `stat_label_peaks()` and
 `stat_label_valleys()` which are designed to fully take advantage of
 `geom_text_repel()` and `geom_label_repel()` as revised in package
-'ggrepel' (\>= 0.6.3). Change behaviour of `plot()` methods so that
+'ggrepel' (>= 0.6.3). Change behaviour of `plot()` methods so that
 "illegal" values such as negative spectral irradiances or transmittances
 are plotted by default. Fix several minor bugs affecting `plot()`
 methods with certain non-default sets of annotations. Improve
@@ -325,15 +325,15 @@ Add text explaining examples to User Guide.
 
 **Rename several stats and functions with more descriptive names.**
 
-`stat_color_guide()` -\> `stat_wl_strip()`
+`stat_color_guide()` -> `stat_wl_strip()`
 
-`stat_average()` -\> `stat_wl_summary()`
+`stat_average()` -> `stat_wl_summary()`
 
-`stat_waveband()` -\> `stat_wb_summary()`
+`stat_waveband()` -> `stat_wb_summary()`
 
-`color_guide()` -\> `wl_guide()`
+`color_guide()` -> `wl_guide()`
 
-`waveband_guide()` -\> `wb_guide()`
+`waveband_guide()` -> `wb_guide()`
 
 # ggspectra 0.1.1
 

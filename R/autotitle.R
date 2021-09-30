@@ -1,7 +1,7 @@
 #' Add title, subtitle and caption to a spectral plot
 #'
 #' Add a title, subtitle and caption to a spectral plot based on automatically
-#' extracted metadata stored from an spectral object.
+#' extracted metadata from an spectral object.
 #'
 #' @param object generic_spct The spectral object plotted.
 #' @param object.label character The name of the object being plotted.
@@ -44,7 +44,7 @@ autotitle <- function(object,
                       object.label = deparse(substitute(object)),
                       annotations = "title",
                       time.format = "",
-                      tz = lubridate::tz(getWhenMeasured(object)),
+                      tz = NULL,
                       default.title  = "title:objt") {
 
   get_title_text <- function(key) {
@@ -87,11 +87,28 @@ autotitle <- function(object,
   title.ann <- grep("^title", annotations, value = TRUE)
   if (length(title.ann) == 0) {
     return(NULL)
-  } else if(title.ann[1] == "title") {
+  } else if (getMultipleWl(object) > 1) {
+    warning("Multiple spectra in long form: title annotation not supported.")
+    # This could be improved!
+    return(NULL)
+  } else if (title.ann[1] == "title") {
     # default title
     title.ann <- default.title
   }
+
+  # we avoid calling tz() on lists as returned for multiple spectra
+  if (is.null(tz)) {
+    tz <- lubridate::tz(getWhenMeasured(object))
+  }
+
+  # length(title.ann) > 0 is guaranteed
+  if (getMultipleWl(object) > 1 && title.ann !=  "title:objt") {
+    title.ann <- "title:objt"
+    warning("Multiple spectra in long form: overriding requested title.")
+  }
+
   title.ann <- c(strsplit(title.ann[1], ":")[[1]][-1], "none", "none", "none")
+
   title <- get_title_text(title.ann[1])
   subtitle <- get_title_text(title.ann[2])
   caption <- get_title_text(title.ann[3])
