@@ -10,7 +10,7 @@ autotitle(
   object.label = deparse(substitute(object)),
   annotations = "title",
   time.format = "",
-  tz = lubridate::tz(getWhenMeasured(object)),
+  tz = NULL,
   default.title = "title:objt"
 )
 
@@ -19,7 +19,7 @@ ggtitle_spct(
   object.label = deparse(substitute(object)),
   annotations = "title",
   time.format = "",
-  tz = lubridate::tz(getWhenMeasured(object)),
+  tz = NULL,
   default.title = "title:objt"
 )
 }
@@ -44,7 +44,7 @@ The return value of \code{ggplot2::labs()}.
 }
 \description{
 Add a title, subtitle and caption to a spectral plot based on automatically
-extracted metadata stored from an spectral object.
+extracted metadata from an spectral object.
 }
 \note{
 Method renamed as \code{autotitle()} to better reflect its function;

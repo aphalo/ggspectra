@@ -98,7 +98,16 @@ autotitle <- function(object,
 
   # we avoid calling tz() on lists as returned for multiple spectra
   if (is.null(tz)) {
-    tz <- lubridate::tz(getWhenMeasured(object))
+    when.measured <- getWhenMeasured(object)
+    if (lubridate::is.instant(when.measured)) {
+      tz <- lubridate::tz(when.measured)
+      if (tz == "") {
+        # [2021-09-30] this may happen if the user uses lubridate::now()
+        tz <- Sys.timezone()
+      }
+    } else {
+      tz <- NA_character_
+    }
   }
 
   # length(title.ann) > 0 is guaranteed
