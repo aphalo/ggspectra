@@ -698,6 +698,7 @@ autoplot.response_mspct <-
            range = NULL,
            plot.data = "as.is",
            idfactor = TRUE) {
+    idfactor <- validate_idfactor(idfactor = idfactor)
     # We trim the spectra to avoid unnecesary computaions later
     if (!is.null(range)) {
       object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)

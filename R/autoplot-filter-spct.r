@@ -116,8 +116,8 @@ Afr_plot <- function(spct,
                         idfactor = idfactor,
                         facets = facets,
                         annotations = annotations)
-  plot <- plot + temp$ggplot_comp
-  annotations <- temp$annotations
+  plot <- plot + temp[["ggplot_comp"]]
+  annotations <- temp[["annotations"]]
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
@@ -127,9 +127,11 @@ Afr_plot <- function(spct,
       plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "black")
     }
     if (y.min < -0.005) {
-      plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
+      plot <- plot + geom_hline(yintercept = 0,
+                                linetype = "dashed", colour = "red")
     } else {
-      plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+      plot <- plot + geom_hline(yintercept = 0,
+                                linetype = "dashed", colour = "black")
     }
   }
 
@@ -321,20 +323,24 @@ T_plot <- function(spct,
                         idfactor = idfactor,
                         facets = facets,
                         annotations = annotations)
-  plot <- plot + temp$ggplot_comp
-  annotations <- temp$annotations
+  plot <- plot + temp[["ggplot_comp"]]
+  annotations <- temp[["annotations"]]
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
     if (y.max > 1.005) {
-      plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "red")
+      plot <- plot + geom_hline(yintercept = 1,
+                                linetype = "dashed", colour = "red")
     } else {
-      plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "black")
+      plot <- plot + geom_hline(yintercept = 1,
+                                linetype = "dashed", colour = "black")
     }
     if (y.min < -0.005) {
-      plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
+      plot <- plot + geom_hline(yintercept = 0,
+                                linetype = "dashed", colour = "red")
     } else {
-      plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+      plot <- plot + geom_hline(yintercept = 0,
+                                linetype = "dashed", colour = "black")
     }
   }
 
@@ -495,9 +501,8 @@ A_plot <- function(spct,
                         idfactor = idfactor,
                         facets = facets,
                         annotations = annotations)
-  plot <- plot + temp$ggplot_comp
-  plot <- plot + temp$ggplot_comp
-  annotations <- temp$annotations
+  plot <- plot + temp[["ggplot_comp"]]
+  annotations <- temp[["annotations"]]
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
@@ -693,9 +698,8 @@ R_plot <- function(spct,
                         idfactor = idfactor,
                         facets = facets,
                         annotations = annotations)
-  plot <- plot + temp$ggplot_comp
-  plot <- plot + temp$ggplot_comp
-  annotations <- temp$annotations
+  plot <- plot + temp[["ggplot_comp"]]
+  annotations <- temp[["annotations"]]
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
@@ -889,7 +893,7 @@ O_plot <- function(spct,
 #  setGenericSpct(molten.spct, multiple.wl = 3L * getMultipleWl(spct))
 
   plot <- ggplot(molten.spct, aes_(~w.length, ~value), na.rm = na.rm)
-  attributes(plot$data) <- c(attributes(plot$data), get_attributes(spct))
+  attributes(plot[["data"]]) <- c(attributes(plot[["data"]]), get_attributes(spct))
   if (stacked) {
     plot <- plot + geom_area(aes_(alpha = ~variable), fill = "black", colour = NA)
     plot <- plot + scale_alpha_manual(values = c(Tfr = 0.4,
@@ -903,9 +907,9 @@ O_plot <- function(spct,
   } else {
     plot <- plot + geom_line(aes_(linetype = ~variable))
     plot <- plot + scale_linetype(labels = c(Tfr = expression(T(lambda)),
-                                               Afr = expression(A(lambda)),
-                                               Rfr = expression(R(lambda))),
-                                    guide = guide_legend(title = NULL))
+                                             Afr = expression(A(lambda)),
+                                             Rfr = expression(R(lambda))),
+                                  guide = guide_legend(title = NULL))
   }
   plot <- plot + labs(x = "Wavelength (nm)", y = s.Rfr.label)
 
@@ -943,12 +947,18 @@ O_plot <- function(spct,
     x.limits <- range(spct)
   }
   if (pc.out) {
-    plot <- plot + scale_y_continuous(labels = scales::percent, breaks = y.breaks, limits = y.limits)
+    plot <- plot +
+      scale_y_continuous(labels = scales::percent,
+                         breaks = y.breaks,
+                         limits = y.limits)
   } else {
-    plot <- plot + scale_y_continuous(breaks = y.breaks, limits = y.limits)
+    plot <-
+      plot + scale_y_continuous(breaks = y.breaks,
+                                limits = y.limits)
   }
 
- plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
+ plot + scale_x_continuous(limits = x.limits,
+                           breaks = scales::pretty_breaks(n = 7))
 
 }
 
@@ -973,16 +983,16 @@ O_plot <- function(spct,
 #'
 #' @param object a filter_spct object or a filter_mspct object.
 #' @param ... in the case of collections of spectra, additional arguments passed
-#'   to the plot methods for individual spectra, otherwise currently ignored.
+#'   to the autoplot methods for individual spectra, otherwise currently ignored.
 #' @param w.band a single waveband object or a list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
-#'   min annd max wavelengths (nm).
+#'   min and max wavelengths (nm).
 #' @param plot.qty character string one of "transmittance" or "absorbance".
 #' @param pc.out logical, if TRUE use percents instead of fraction of one.
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
-#'   than all other elements within a window of width span centered at that
+#'   than all other elements within a window of width span centred at that
 #'   element.
 #' @param wls.target numeric vector indicating the spectral quantity values for
 #'   which wavelengths are to be searched and interpolated if need. The
@@ -1153,6 +1163,7 @@ autoplot.filter_mspct <-
            plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
            plot.data = "as.is",
            idfactor = TRUE) {
+    idfactor <- validate_idfactor(idfactor = idfactor)
     # We trim the spectra to avoid unnecesary computaions later
     if (!is.null(range)) {
       object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
@@ -1170,7 +1181,8 @@ autoplot.filter_mspct <-
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
     z <- switch(plot.data,
-                as.is = photobiology::rbindspct(object, idfactor = idfactor),
+                as.is = photobiology::rbindspct(object,
+                                                idfactor = idfactor),
                 mean = photobiology::s_mean(object),
                 median = photobiology::s_median(object),
                 sum = photobiology::s_sum(object),
@@ -1344,6 +1356,7 @@ autoplot.reflector_mspct <-
            plot.qty = getOption("photobiology.reflector.qty", default = "reflectance"),
            plot.data = "as.is",
            idfactor = TRUE) {
+    idfactor <- validate_idfactor(idfactor = idfactor)
     # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
       object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
@@ -1599,6 +1612,8 @@ autoplot.object_mspct <-
            facets = FALSE,
            plot.data = "as.is",
            idfactor = TRUE) {
+    idfactor <- validate_idfactor(idfactor = idfactor)
+    # NEEDS TO BE REVISED FOR facets = TRUE!!
     if (plot.qty == "all") {
       message("'plot.qty = \"all\"' not yet supported for collections.")
       plot.qty <- "transmittance"

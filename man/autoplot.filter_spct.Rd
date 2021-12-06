@@ -41,12 +41,12 @@
 \item{object}{a filter_spct object or a filter_mspct object.}
 
 \item{...}{in the case of collections of spectra, additional arguments passed
-to the plot methods for individual spectra, otherwise currently ignored.}
+to the autoplot methods for individual spectra, otherwise currently ignored.}
 
 \item{w.band}{a single waveband object or a list of waveband objects.}
 
 \item{range}{an R object on which range() returns a vector of length 2, with
-min annd max wavelengths (nm).}
+min and max wavelengths (nm).}
 
 \item{plot.qty}{character string one of "transmittance" or "absorbance".}
 
@@ -56,7 +56,7 @@ min annd max wavelengths (nm).}
 for labels, one of "mean", "total", "contribution", and "relative".}
 
 \item{span}{a peak is defined as an element in a sequence which is greater
-than all other elements within a window of width span centered at that
+than all other elements within a window of width span centred at that
 element.}
 
 \item{wls.target}{numeric vector indicating the spectral quantity values for

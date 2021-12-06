@@ -341,6 +341,7 @@ autoplot.calibration_mspct <-
            idfactor = TRUE,
            facets = FALSE,
            plot.data = "as.is") {
+    idfactor <- validate_idfactor(idfactor = idfactor)
     # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
       object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)

@@ -340,6 +340,7 @@ autoplot.cps_mspct <-
            range = NULL,
            idfactor = TRUE,
            plot.data = "as.is") {
+    idfactor <- validate_idfactor(idfactor = idfactor)
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
     z <- switch(plot.data,
