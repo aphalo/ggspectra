@@ -382,26 +382,35 @@ Plot accepting all defaults.
 ```{r}
 autoplot(two_suns.mspct)
 ```
+We can choose a different name for the factor identifying the spectra in the collection.
 
-Facets in one column, automatically.
+```{r}
+autoplot(two_suns.mspct, idfactor = "Spectra")
+```
+
+Facets in one column. As there is only one spectrum per panel, the summaries per waveband are shown.
 
 ```{r}
 autoplot(two_suns.mspct, facets = 1)
 ```
+In two columns with `facets = 2`.
 
-Plot using one panel per spectrum. Setting `idfactor = NA` suppresses the default mapping to `linetype`. 
-
-```{r, fig.width = 7, fig.height = 8}
-autoplot(two_suns.mspct, idfactor = NA) + 
-  facet_wrap(~spct.idx, ncol = 1)
+```{r}
+autoplot(two_suns.mspct, facets = 2)
 ```
 
-Plot as separate plots. This approach is specially useful with heterogeneous generic_mspct objects, although it works with any collection of spectra.
+Plot using one panel per spectrum, using ggplot2 syntax. Setting `idfactor = NA` suppresses the default mapping to `linetype`. (Plot not shown.)
+
+```{r, eval = FALSE}
+autoplot(two_suns.mspct, idfactor = NA) + 
+  facet_wrap(~spct.idx, ncol = 2)
+```
+
+Plot as separate plots. This approach is specially useful with heterogeneous `generic_mspct` objects, although it works with any collection of spectra.
 
 ```{r, fig.width = 7, fig.height = 8}
 multiplot(plotlist = mslply(mixed.mspct, autoplot))
 ```
-
 
 Using colors is slightly more involved as the identity scale is in use for color in annotations. For this same reason no color key in generated automatically. (In the case of more than two spectra it is easier to use `plyr::mapvalues` instead of several nested `ifelse` calls.)
 
@@ -410,7 +419,7 @@ autoplot(two_suns.mspct) +
   aes(color = ifelse(spct.idx == "sun1", "darkgreen", "darkred"))
 ```
 
-Plots created with `autoplot()` method are `ggplot` objects and can be customized, bearing in mind that any added layers will be plotted on top or existing layers.
+Plots created with `autoplot()` methods are `ggplot` objects and can be customized, bearing in mind that any added layers will be plotted on top or existing layers (that is unless we make use of methods from package 'gginnards' that allow insertion of layers at any position in a `ggplot` object).
 
 ```{r}
 autoplot(two_suns.mspct, annotations = c("color.guide", "valleys", "peaks"), span = 51)
@@ -423,7 +432,14 @@ autoplot(two_suns.mspct, annotations = c("-", "peaks")) +
   stat_peaks(span = NULL, color = "red") +
   stat_peaks(span = NULL, geom = "text", 
              label.fmt = "max at %3.1f nm",
-             vjust = -0.4, color = "red")
+             vjust = -0.5, hjust = 0,
+             color = "red", size = 3)
+```
+
+All the examples above of plotting collections of spectra were done with the defaults `plot.data = "as.is"`. We can also plot a row-wise summary (wavelength by wavelength) of the spectra in the collection, here the `mean` of the spectra. Currently implemented only for spectra with identical wavelength vectors and of the same class.
+
+```{r}
+autoplot(two_suns.mspct, plot.data = "mean")
 ```
 
 ## Ploting wavebands

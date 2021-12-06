@@ -180,11 +180,17 @@ mixed.mspct <- generic_mspct(list(sun = sun.spct, filter = polyester.spct))
 autoplot(two_suns.mspct)
 
 ## -----------------------------------------------------------------------------
+autoplot(two_suns.mspct, idfactor = "Spectra")
+
+## -----------------------------------------------------------------------------
 autoplot(two_suns.mspct, facets = 1)
 
-## ---- fig.width = 7, fig.height = 8-------------------------------------------
-autoplot(two_suns.mspct, idfactor = NA) + 
-  facet_wrap(~spct.idx, ncol = 1)
+## -----------------------------------------------------------------------------
+autoplot(two_suns.mspct, facets = 2)
+
+## ---- eval = FALSE------------------------------------------------------------
+#  autoplot(two_suns.mspct, idfactor = NA) +
+#    facet_wrap(~spct.idx, ncol = 2)
 
 ## ---- fig.width = 7, fig.height = 8-------------------------------------------
 multiplot(plotlist = mslply(mixed.mspct, autoplot))
@@ -201,7 +207,11 @@ autoplot(two_suns.mspct, annotations = c("-", "peaks")) +
   stat_peaks(span = NULL, color = "red") +
   stat_peaks(span = NULL, geom = "text", 
              label.fmt = "max at %3.1f nm",
-             vjust = -0.4, color = "red")
+             vjust = -0.5, hjust = 0,
+             color = "red", size = 3)
+
+## -----------------------------------------------------------------------------
+autoplot(two_suns.mspct, plot.data = "mean")
 
 ## -----------------------------------------------------------------------------
 autoplot(VIS())
