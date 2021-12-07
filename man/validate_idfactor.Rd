@@ -7,7 +7,9 @@
 validate_idfactor(idfactor)
 }
 \arguments{
-\item{idfactor}{A character string, NULL or NA}
+\item{idfactor}{character, logical, NULL or NA. If a \code{character} string,
+it is validated as an R name, while logical values, NULL and NA are
+returned unchanged.}
 }
 \description{
 Validate idfactor

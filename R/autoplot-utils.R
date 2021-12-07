@@ -1,6 +1,8 @@
 #' Validate idfactor
 #'
-#' @param idfactor A character string, NULL or NA
+#' @param idfactor character, logical, NULL or NA. If a \code{character} string,
+#'   it is validated as an R name, while logical values, NULL and NA are
+#'   returned unchanged.
 #'
 #' @keywords internal
 #'
