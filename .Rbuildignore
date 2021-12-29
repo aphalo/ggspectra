@@ -10,3 +10,4 @@ vignettes/figure
 ^README-.*\.png$
 ^.*\.sh$
 ^\.github$
+^CITATION\.cff$
