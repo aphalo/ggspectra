@@ -491,8 +491,12 @@ q_plot <- function(spct,
 #' @param w.band a single waveband object or a list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
 #'   min annd max wavelengths (nm).
+#' @param normalize logical or NULL Flag indicating is the spectrum is to be
+#'   normalized. If \code{NULL}, the default, if \code{object} is normalized,
+#'   the normalization is updated to be based on the values of \code{range}
+#'   and \code{unit.out}.
 #' @param unit.out character string indicating type of radiation units to use
-#'   for plotting: "photon" or its synomin "quantum", or "energy".
+#'   for plotting: "photon" or its synonym "quantum", or "energy".
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
@@ -537,22 +541,27 @@ q_plot <- function(spct,
 #'
 #' autoplot(sun.spct)
 #' autoplot(sun.spct, unit.out = "photon")
+#' autoplot(sun.spct, normalize = TRUE)
+#' autoplot(sun.spct, normalize = TRUE, unit.out = "photon")
 #'
 #' two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct / 2))
 #' autoplot(two_suns.mspct)
+#' autoplot(two_suns.mspct, plot.data = "mean")
 #' autoplot(two_suns.mspct, idfactor = "Spectra")
 #' autoplot(two_suns.mspct, facets = TRUE) # uses ggplot2's default
 #' autoplot(two_suns.mspct, facets = 1) # one column
 #' autoplot(two_suns.mspct, facets = 2) # two columns
+#' autoplot(two_suns.mspct, normalize = TRUE, facets = 2)
 #'
 #' @family autoplot methods
 #'
 autoplot.source_spct <-
   function(object, ...,
-           w.band=getOption("photobiology.plot.bands",
+           w.band = getOption("photobiology.plot.bands",
                             default = list(UVC(), UVB(), UVA(), PAR())),
-           range=NULL,
-           unit.out=getOption("photobiology.radiation.unit", default = "energy"),
+           range = NULL,
+           normalize = getOption("ggspectra.normalize", default=NULL),
+           unit.out = getOption("photobiology.radiation.unit", default = "energy"),
            label.qty = NULL,
            span = NULL,
            wls.target = "HM",
@@ -571,6 +580,11 @@ autoplot.source_spct <-
                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
     annotations <- decode_annotations(annotations,
                                       annotations.default)
+    # normalization needs to be redone if unit.out has changed
+    if ((is.null(normalize) && is_normalized(object)) ||
+        (!is.null(normalize) && normalize)) {
+      object <- normalize(x = object, range = range, unit.out = unit.out)
+    }
     if (is.null(label.qty)) {
       if (is_normalized(object) || is_scaled(object)) {
         label.qty = "contribution"
@@ -638,6 +652,7 @@ autoplot.source_mspct <-
   function(object,
            ...,
            range = NULL,
+           normalize = getOption("ggspectra.normalize", default=NULL),
            unit.out = getOption("photobiology.radiation.unit",
                                 default = "energy"),
            idfactor = TRUE,
@@ -647,13 +662,14 @@ autoplot.source_mspct <-
     if (!is.null(range)) {
       object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
     }
-    # conversion before binding and summaries
-    if (unit.out == "energy") {
-      data <- q2e(object, action = "replace")
-    } else if (unit.out %in% c("photon", "quantum")) {
-      data <- e2q(object, action = "replace")
-    } else {
-      stop("Invalid 'unit.out' argument value: '", unit.out, "'")
+    # We apply the normalization to the collection if it is to be bound
+    # otherwise normalization is applied to the summary
+    if (plot.data == "as.is") {
+      if ((is.null(normalize) && all(sapply(X = object, FUN = is_normalized))) ||
+          (!is.null(normalize) && normalize)) {
+        object <- normalize(object, unit.out = unit.out)
+        normalize <- FALSE
+      }
     }
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
@@ -670,7 +686,11 @@ autoplot.source_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
-    autoplot(object = z, range = NULL, idfactor = idfactor, ...)
+    autoplot(object = z,
+             range = NULL,
+             normalize = normalize,
+             idfactor = idfactor,
+             ...)
   }
 
 ## internal

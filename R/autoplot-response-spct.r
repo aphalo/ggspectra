@@ -541,6 +541,10 @@ q_rsp_plot <- function(spct,
 #' @param w.band a single waveband object or a list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
 #'   min annd max wavelengths (nm).
+#' @param normalize logical or NULL Flag indicating is the spectrum is to be
+#'   normalized. If \code{NULL}, the default, if \code{object} is normalized,
+#'   the normalization is updated to be based on the values of \code{range}
+#'   and \code{unit.out}.
 #' @param unit.out character string indicating type of radiation units to use
 #'   for plotting: "photon" or its synomin "quantum", or "energy".
 #' @param pc.out logical, if TRUE use percents instead of fraction of one
@@ -590,12 +594,12 @@ q_rsp_plot <- function(spct,
 #' two_sensors.mspct <-
 #'  response_mspct(list("Photodiode" = photodiode.spct,
 #'                      "Coupled charge device" = ccd.spct))
-#' two_sensors.mspct <- normalise(two_sensors.mspct)
-#' autoplot(two_sensors.mspct)
-#' autoplot(two_sensors.mspct, idfactor = "Spectra")
-#' autoplot(two_sensors.mspct, facets = TRUE)
-#' autoplot(two_sensors.mspct, facets = 1)
-#' autoplot(two_sensors.mspct, facets = 2)
+#' autoplot(two_sensors.mspct, normalize = TRUE)
+#' autoplot(two_sensors.mspct, normalize = TRUE, unit.out = "photon")
+#' autoplot(two_sensors.mspct, normalize = TRUE, idfactor = "Spectra")
+#' autoplot(two_sensors.mspct, normalize = TRUE, facets = TRUE)
+#' autoplot(two_sensors.mspct, normalize = TRUE, facets = 1)
+#' autoplot(two_sensors.mspct, normalize = TRUE, facets = 2)
 #'
 #' @family autoplot methods
 #'
@@ -604,6 +608,7 @@ autoplot.response_spct <-
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PAR())),
            range = NULL,
+           normalize = getOption("ggspectra.normalize", default=NULL),
            unit.out = getOption("photobiology.radiation.unit", default="energy"),
            pc.out = FALSE,
            label.qty = NULL,
@@ -624,6 +629,11 @@ autoplot.response_spct <-
                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
     annotations <- decode_annotations(annotations,
                                       annotations.default)
+    # normalization needs to be redone if unit.out has changed
+    if ((is.null(normalize) && is_normalized(object)) ||
+        (!is.null(normalize) && normalize)) {
+      object <- normalize(x = object, range = range, unit.out = unit.out)
+    }
     if (is.null(label.qty)) {
       if (is_normalized(object) || is_scaled(object)) {
         label.qty = "contribution"
@@ -696,12 +706,23 @@ autoplot.response_mspct <-
   function(object,
            ...,
            range = NULL,
+           normalize = getOption("ggspectra.normalize", default=NULL),
+           unit.out = getOption("photobiology.radiation.unit", default="energy"),
            plot.data = "as.is",
            idfactor = TRUE) {
     idfactor <- validate_idfactor(idfactor = idfactor)
     # We trim the spectra to avoid unnecesary computaions later
     if (!is.null(range)) {
       object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
+    }
+    # We apply the normalization to the collection if it is to be bound
+    # otherwise normalization is applied to the summary
+    if (plot.data == "as.is") {
+      if ((is.null(normalize) && all(sapply(X = object, FUN = is_normalized))) ||
+          (!is.null(normalize) && normalize)) {
+        object <- normalize(object, unit.out = unit.out)
+        normalize <- FALSE
+      }
     }
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
@@ -715,6 +736,7 @@ autoplot.response_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
-    autoplot(object = z, range = NULL, idfactor = idfactor, ...)
+    autoplot(object = z, range = NULL, idfactor = idfactor,
+             normalize = normalize, unit.out = unit.out, ...)
   }
 

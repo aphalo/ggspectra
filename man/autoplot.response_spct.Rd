@@ -11,6 +11,7 @@
   w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
     PAR())),
   range = NULL,
+  normalize = getOption("ggspectra.normalize", default = NULL),
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
   pc.out = FALSE,
   label.qty = NULL,
@@ -28,7 +29,15 @@
   na.rm = TRUE
 )
 
-\method{autoplot}{response_mspct}(object, ..., range = NULL, plot.data = "as.is", idfactor = TRUE)
+\method{autoplot}{response_mspct}(
+  object,
+  ...,
+  range = NULL,
+  normalize = getOption("ggspectra.normalize", default = NULL),
+  unit.out = getOption("photobiology.radiation.unit", default = "energy"),
+  plot.data = "as.is",
+  idfactor = TRUE
+)
 }
 \arguments{
 \item{object}{a response_spct object or a response_mspct object.}
@@ -40,6 +49,11 @@ to the plot methods for individual spectra, otherwise currently ignored.}
 
 \item{range}{an R object on which range() returns a vector of length 2, with
 min annd max wavelengths (nm).}
+
+\item{normalize}{logical or NULL Flag indicating is the spectrum is to be
+normalized. If \code{NULL}, the default, if \code{object} is normalized,
+the normalization is updated to be based on the values of \code{range}
+and \code{unit.out}.}
 
 \item{unit.out}{character string indicating type of radiation units to use
 for plotting: "photon" or its synomin "quantum", or "energy".}
@@ -149,12 +163,12 @@ autoplot(photodiode.spct, annotations = "")
 two_sensors.mspct <-
  response_mspct(list("Photodiode" = photodiode.spct,
                      "Coupled charge device" = ccd.spct))
-two_sensors.mspct <- normalise(two_sensors.mspct)
-autoplot(two_sensors.mspct)
-autoplot(two_sensors.mspct, idfactor = "Spectra")
-autoplot(two_sensors.mspct, facets = TRUE)
-autoplot(two_sensors.mspct, facets = 1)
-autoplot(two_sensors.mspct, facets = 2)
+autoplot(two_sensors.mspct, normalize = TRUE)
+autoplot(two_sensors.mspct, normalize = TRUE, unit.out = "photon")
+autoplot(two_sensors.mspct, normalize = TRUE, idfactor = "Spectra")
+autoplot(two_sensors.mspct, normalize = TRUE, facets = TRUE)
+autoplot(two_sensors.mspct, normalize = TRUE, facets = 1)
+autoplot(two_sensors.mspct, normalize = TRUE, facets = 2)
 
 }
 \seealso{

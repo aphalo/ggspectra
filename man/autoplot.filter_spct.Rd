@@ -11,6 +11,7 @@
   w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
     PAR())),
   range = NULL,
+  normalize = getOption("ggspectra.normalize", default = NULL),
   plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
   pc.out = FALSE,
   label.qty = NULL,
@@ -32,6 +33,7 @@
   object,
   ...,
   range = NULL,
+  normalize = getOption("ggspectra.normalize", default = NULL),
   plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
   plot.data = "as.is",
   idfactor = TRUE
@@ -47,6 +49,11 @@ to the autoplot methods for individual spectra, otherwise currently ignored.}
 
 \item{range}{an R object on which range() returns a vector of length 2, with
 min and max wavelengths (nm).}
+
+\item{normalize}{logical or NULL Flag indicating is the spectrum is to be
+normalized. If \code{NULL}, the default, if \code{object} is normalized,
+the normalization is updated to be based on the values of \code{range}
+and \code{plot.qty}.}
 
 \item{plot.qty}{character string one of "transmittance" or "absorbance".}
 

@@ -987,6 +987,10 @@ O_plot <- function(spct,
 #' @param w.band a single waveband object or a list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
 #'   min and max wavelengths (nm).
+#' @param normalize logical or NULL Flag indicating is the spectrum is to be
+#'   normalized. If \code{NULL}, the default, if \code{object} is normalized,
+#'   the normalization is updated to be based on the values of \code{range}
+#'   and \code{plot.qty}.
 #' @param plot.qty character string one of "transmittance" or "absorbance".
 #' @param pc.out logical, if TRUE use percents instead of fraction of one.
 #' @param label.qty character string giving the type of summary quantity to use
@@ -1052,6 +1056,7 @@ autoplot.filter_spct <-
            w.band = getOption("photobiology.plot.bands",
                             default = list(UVC(), UVB(), UVA(), PAR())),
            range = NULL,
+           normalize = getOption("ggspectra.normalize", default=NULL),
            plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
            pc.out = FALSE,
            label.qty = NULL,
@@ -1072,6 +1077,11 @@ autoplot.filter_spct <-
                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
     annotations <- decode_annotations(annotations,
                                       annotations.default)
+    # normalization needs to be redone if qty.out has changed
+    if ((is.null(normalize) && is_normalized(object)) ||
+        (!is.null(normalize) && normalize)) {
+      object <- normalize(x = object, range = range, qty.out = plot.qty)
+    }
     if (is.null(label.qty)) {
       if (is_normalized(object) || is_scaled(object)) {
         label.qty = "contribution"
@@ -1160,6 +1170,7 @@ autoplot.filter_mspct <-
   function(object,
            ...,
            range = NULL,
+           normalize = getOption("ggspectra.normalize", default=NULL),
            plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
            plot.data = "as.is",
            idfactor = TRUE) {
@@ -1168,15 +1179,14 @@ autoplot.filter_mspct <-
     if (!is.null(range)) {
       object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
     }
-    # conversion before binding or summaries
-    if (plot.qty == "transmittance") {
-      data <- any2T(object, action = "replace")
-    } else if (plot.qty == "absorptance") {
-      data <- any2Afr(object, action = "replace")
-    } else if (plot.qty == "absorbance") {
-      data <- any2A(object, action = "replace")
-    } else {
-      stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
+    # We apply the normalization to the collection if it is to be bound
+    # otherwise normalization is applied to the summary
+    if (plot.data == "as.is") {
+      if ((is.null(normalize) && all(sapply(X = object, FUN = is_normalized))) ||
+          (!is.null(normalize) && normalize)) {
+        object <- normalize(object, qty.out = plot.qty)
+        normalize <- FALSE
+      }
     }
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
@@ -1191,7 +1201,12 @@ autoplot.filter_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
-    autoplot(object = z, range = NULL, plot.qty = plot.qty, idfactor = idfactor, ...)
+    autoplot(object = z,
+             range = NULL,
+             normalize = normalize,
+             plot.qty = plot.qty,
+             idfactor = idfactor,
+             ...)
   }
 
 #' Create a complete ggplot for a reflector spectrum.
@@ -1215,6 +1230,10 @@ autoplot.filter_mspct <-
 #' @param w.band a single waveband object or a list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
 #'   min annd max wavelengths (nm).
+#' @param normalize logical or NULL Flag indicating is the spectrum is to be
+#'   normalized. If \code{NULL}, the default, if \code{object} is normalized,
+#'   the normalization is updated to be based on the values of \code{range}
+#'   and \code{plot.qty}.
 #' @param plot.qty character string (currently ignored).
 #' @param pc.out logical, if TRUE use percents instead of fraction of one.
 #' @param label.qty character string giving the type of summary quantity to use
@@ -1277,6 +1296,7 @@ autoplot.reflector_spct <-
            w.band=getOption("photobiology.plot.bands",
                             default = list(UVC(), UVB(), UVA(), PAR())),
            range = NULL,
+           normalize = getOption("ggspectra.normalize", default=NULL),
            plot.qty = getOption("photobiology.reflector.qty", default = "reflectance"),
            pc.out = FALSE,
            label.qty = NULL,
@@ -1297,6 +1317,11 @@ autoplot.reflector_spct <-
                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
     annotations <- decode_annotations(annotations,
                                       annotations.default)
+    # normalization needs to be redone if unit.out has changed
+    if ((is.null(normalize) && is_normalized(object)) ||
+        (!is.null(normalize) && normalize)) {
+      object <- normalize(x = object, range = range, qty.out = plot.qty)
+    }
     if (is.null(label.qty)) {
       if (is_normalized(object) || is_scaled(object)) {
         label.qty = "contribution"
@@ -1353,6 +1378,7 @@ autoplot.reflector_mspct <-
   function(object,
            ...,
            range = NULL,
+           normalize = getOption("ggspectra.normalize", default=NULL),
            plot.qty = getOption("photobiology.reflector.qty", default = "reflectance"),
            plot.data = "as.is",
            idfactor = TRUE) {
@@ -1360,6 +1386,15 @@ autoplot.reflector_mspct <-
     # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
       object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
+    }
+    # We apply the normalization to the collection if it is to be bound
+    # otherwise normalization is applied to the summary
+    if (plot.data == "as.is") {
+      if ((is.null(normalize) && all(sapply(X = object, FUN = is_normalized))) ||
+          (!is.null(normalize) && normalize)) {
+        object <- normalize(object, qty.out = plot.qty)
+        normalize <- FALSE
+      }
     }
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
@@ -1373,7 +1408,12 @@ autoplot.reflector_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
-    autoplot(object = z, range = NULL, plot.qty = plot.qty, idfactor = idfactor, ...)
+    autoplot(object = z,
+             range = NULL,
+             normalize = normalize,
+             plot.qty = plot.qty,
+             idfactor = idfactor,
+             ...)
   }
 
 #' Create a complete ggplot for a object spectrum.
@@ -1613,15 +1653,10 @@ autoplot.object_mspct <-
            plot.data = "as.is",
            idfactor = TRUE) {
     idfactor <- validate_idfactor(idfactor = idfactor)
-    # NEEDS TO BE REVISED FOR facets = TRUE!!
-    if (plot.qty == "all") {
-      message("'plot.qty = \"all\"' not yet supported for collections.")
-      plot.qty <- "transmittance"
-    }
-    # conversion needed as methods are not implemented for object_spct
+    # facets will be forced later for "all" with a warning
     if (plot.qty == "reflectance") {
       object <- as.reflector_mspct(object)
-    } else {
+    } else if (plot.qty != "all") {
       object <- as.filter_mspct(object)
     }
     # We trim the spectra to avoid unnecessary computations later

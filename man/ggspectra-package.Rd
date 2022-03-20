@@ -71,7 +71,7 @@ plot(polyester.spct, UV_bands(), range = UV(),
 }
 \references{
 Aphalo, Pedro J. (2015) The r4photobiology suite. UV4Plants Bulletin, 2015:1,
-21-29. \url{https://doi.org/10.19232/uv4pb.2015.1.14}.
+21-29. \doi{10.19232/uv4pb.2015.1.14}.
 
 \code{ggplot2} web site at \url{https://ggplot2.tidyverse.org/}\cr
 \code{ggplot2} source code at \url{https://github.com/tidyverse/ggplot2}\cr
