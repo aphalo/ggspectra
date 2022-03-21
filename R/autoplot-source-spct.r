@@ -558,7 +558,7 @@ q_plot <- function(spct,
 autoplot.source_spct <-
   function(object, ...,
            w.band = getOption("photobiology.plot.bands",
-                            default = list(UVC(), UVB(), UVA(), PAR())),
+                              default = list(UVC(), UVB(), UVA(), PAR())),
            range = NULL,
            normalize = getOption("ggspectra.normalize", default=NULL),
            unit.out = getOption("photobiology.radiation.unit", default = "energy"),
