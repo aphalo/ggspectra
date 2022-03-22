@@ -122,7 +122,17 @@
 <rect x='671.91' y='42.73' width='7.97' height='15.20' style='stroke-width: 1.07; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #090000;' />
 <rect x='679.88' y='42.73' width='3.99' height='15.20' style='stroke-width: 1.07; stroke: none; stroke-linecap: square; stroke-linejoin: miter; fill: #080000;' />
 <rect x='85.79' y='65.52' width='598.08' height='45.59' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: square; stroke-linejoin: miter; fill: #BB8200;' />
-<text x='384.83' y='89.62' text-anchor='middle' style='font-size: 7.11px; font-family: sans;' textLength='18.58px' lengthAdjust='spacingAndGlyphs'>]PAR[</text>
+<text x='384.83' y='84.50' text-anchor='middle' style='font-size: 7.11px; font-family: sans;' textLength='18.58px' lengthAdjust='spacingAndGlyphs'>]PAR[</text>
+<text x='384.83' y='94.74' text-anchor='middle' style='font-size: 7.11px; font-family: sans;' textLength='13.85px' lengthAdjust='spacingAndGlyphs'>1.11</text>
+<text transform='translate(65.28,96.88) rotate(-90)' style='font-size: 5.69px; font-family: sans;' textLength='3.80px' lengthAdjust='spacingAndGlyphs'>A</text>
+<text transform='translate(65.28,93.08) rotate(-90)' style='font-size: 7.11px; font-family: sans;' textLength='2.37px' lengthAdjust='spacingAndGlyphs'>(</text>
+<text transform='translate(65.28,90.71) rotate(-90)' style='font-size: 5.69px; font-family: sans;' textLength='2.90px' lengthAdjust='spacingAndGlyphs'>λ</text>
+<text transform='translate(65.28,87.81) rotate(-90)' style='font-size: 7.11px; font-family: sans;' textLength='2.36px' lengthAdjust='spacingAndGlyphs'>)</text>
+<polyline points='59.24,96.88 59.24,85.45 ' style='stroke-width: 0.75;' />
+<text transform='translate(78.44,97.48) rotate(-90)' style='font-size: 7.11px; font-family: sans;' textLength='2.37px' lengthAdjust='spacingAndGlyphs'>(</text>
+<text transform='translate(78.44,95.11) rotate(-90)' style='font-size: 5.69px; font-family: sans;' textLength='3.80px' lengthAdjust='spacingAndGlyphs'>A</text>
+<text transform='translate(78.44,91.32) rotate(-90)' style='font-size: 5.69px; font-family: sans;' textLength='4.11px' lengthAdjust='spacingAndGlyphs'>U</text>
+<text transform='translate(78.44,87.21) rotate(-90)' style='font-size: 7.11px; font-family: sans;' textLength='2.36px' lengthAdjust='spacingAndGlyphs'>)</text>
 <rect x='40.18' y='22.78' width='674.34' height='522.33' style='stroke-width: 1.07; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>

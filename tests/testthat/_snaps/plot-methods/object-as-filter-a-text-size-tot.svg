@@ -99,10 +99,23 @@
 <rect x='109.17' y='65.52' width='35.27' height='45.59' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: square; stroke-linejoin: miter; fill: #000000;' />
 <rect x='144.44' y='65.52' width='85.65' height='45.59' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: square; stroke-linejoin: miter; fill: #02000F;' />
 <rect x='230.09' y='65.52' width='302.30' height='45.59' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: square; stroke-linejoin: miter; fill: #735B57;' />
-<text x='94.06' y='90.60' text-anchor='middle' style='font-size: 9.96px; fill: #FFFFFF; font-family: sans;' textLength='23.80px' lengthAdjust='spacingAndGlyphs'>]UVC</text>
-<text x='126.81' y='90.60' text-anchor='middle' style='font-size: 9.96px; fill: #FFFFFF; font-family: sans;' textLength='20.48px' lengthAdjust='spacingAndGlyphs'>UVB</text>
-<text x='187.27' y='90.60' text-anchor='middle' style='font-size: 9.96px; fill: #FFFFFF; font-family: sans;' textLength='20.48px' lengthAdjust='spacingAndGlyphs'>UVA</text>
-<text x='381.24' y='90.60' text-anchor='middle' style='font-size: 9.96px; fill: #FFFFFF; font-family: sans;' textLength='20.48px' lengthAdjust='spacingAndGlyphs'>PAR</text>
+<text x='94.06' y='83.43' text-anchor='middle' style='font-size: 9.96px; fill: #FFFFFF; font-family: sans;' textLength='23.80px' lengthAdjust='spacingAndGlyphs'>]UVC</text>
+<text x='94.06' y='97.77' text-anchor='middle' style='font-size: 9.96px; fill: #FFFFFF; font-family: sans;' textLength='19.38px' lengthAdjust='spacingAndGlyphs'>4.85</text>
+<text x='126.81' y='83.43' text-anchor='middle' style='font-size: 9.96px; fill: #FFFFFF; font-family: sans;' textLength='20.48px' lengthAdjust='spacingAndGlyphs'>UVB</text>
+<text x='126.81' y='97.77' text-anchor='middle' style='font-size: 9.96px; fill: #FFFFFF; font-family: sans;' textLength='19.38px' lengthAdjust='spacingAndGlyphs'>2.86</text>
+<text x='187.27' y='83.43' text-anchor='middle' style='font-size: 9.96px; fill: #FFFFFF; font-family: sans;' textLength='20.48px' lengthAdjust='spacingAndGlyphs'>UVA</text>
+<text x='187.27' y='97.77' text-anchor='middle' style='font-size: 9.96px; fill: #FFFFFF; font-family: sans;' textLength='19.38px' lengthAdjust='spacingAndGlyphs'>2.21</text>
+<text x='381.24' y='83.43' text-anchor='middle' style='font-size: 9.96px; fill: #FFFFFF; font-family: sans;' textLength='20.48px' lengthAdjust='spacingAndGlyphs'>PAR</text>
+<text x='381.24' y='97.77' text-anchor='middle' style='font-size: 9.96px; fill: #FFFFFF; font-family: sans;' textLength='19.38px' lengthAdjust='spacingAndGlyphs'>1.37</text>
+<text transform='translate(58.44,96.88) rotate(-90)' style='font-size: 5.69px; font-family: sans;' textLength='3.80px' lengthAdjust='spacingAndGlyphs'>A</text>
+<text transform='translate(58.44,93.08) rotate(-90)' style='font-size: 7.11px; font-family: sans;' textLength='2.37px' lengthAdjust='spacingAndGlyphs'>(</text>
+<text transform='translate(58.44,90.71) rotate(-90)' style='font-size: 5.69px; font-family: sans;' textLength='2.90px' lengthAdjust='spacingAndGlyphs'>λ</text>
+<text transform='translate(58.44,87.81) rotate(-90)' style='font-size: 7.11px; font-family: sans;' textLength='2.36px' lengthAdjust='spacingAndGlyphs'>)</text>
+<polyline points='52.40,96.88 52.40,85.45 ' style='stroke-width: 0.75;' />
+<text transform='translate(71.60,97.48) rotate(-90)' style='font-size: 7.11px; font-family: sans;' textLength='2.37px' lengthAdjust='spacingAndGlyphs'>(</text>
+<text transform='translate(71.60,95.11) rotate(-90)' style='font-size: 5.69px; font-family: sans;' textLength='3.80px' lengthAdjust='spacingAndGlyphs'>A</text>
+<text transform='translate(71.60,91.32) rotate(-90)' style='font-size: 5.69px; font-family: sans;' textLength='4.11px' lengthAdjust='spacingAndGlyphs'>U</text>
+<text transform='translate(71.60,87.21) rotate(-90)' style='font-size: 7.11px; font-family: sans;' textLength='2.36px' lengthAdjust='spacingAndGlyphs'>)</text>
 <rect x='32.84' y='22.78' width='681.68' height='522.33' style='stroke-width: 1.07; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>

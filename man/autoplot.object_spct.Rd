@@ -11,6 +11,7 @@
   w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
     PAR())),
   range = NULL,
+  norm = "skip",
   plot.qty = "all",
   pc.out = FALSE,
   label.qty = NULL,
@@ -33,10 +34,12 @@
   object,
   ...,
   range = NULL,
+  norm = "update",
   plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
   facets = FALSE,
   plot.data = "as.is",
-  idfactor = TRUE
+  idfactor = TRUE,
+  na.rm = TRUE
 )
 }
 \arguments{
@@ -49,6 +52,13 @@ to the plot methods for individual spectra, otherwise currently ignored.}
 
 \item{range}{an R object on which range() returns a vector of length 2, with
 min annd max wavelengths (nm)}
+
+\item{norm}{numeric Normalization wavelength (nm) or character string "max",
+or "min" for normalization at the corresponding wavelength, "update" to
+update the normalization after modifying units of expression, quantity
+or range but respecting the previously used criterion, or "skip" to force
+return of \code{object} unchanged. Always skipped for
+\code{plot.qty == "all"}, which is the default.}
 
 \item{plot.qty}{character string, one of "all", "transmittance",
 "absorbance", "absorptance", or "reflectance".}
@@ -121,8 +131,10 @@ for the annotations. When all \code{"all"} quantities are plotted, a single
 set of spectra is accepted as input.
 }
 \note{
-A method for collections of object spectra of length > 1 is not yet
-  implemented for \code{plot.qty = "all"}.
+The method for collections of object spectra of length > 1 is
+  implemented for \code{plot.qty = "all"} using facets. Other plot
+  quantities are handled by the methods for \code{filter_spct} and
+  \code{reflector_spct} objects after on-the-fly conversion.
 }
 \section{Plot Annotations}{
  The recognized annotation names are: \code{"summaries"}, \code{"peaks"},
@@ -165,6 +177,7 @@ autoplot(Ler_leaf.spct, plot.qty = "transmittance")
 autoplot(Ler_leaf.spct, plot.qty = "reflectance")
 autoplot(Ler_leaf.spct, plot.qty = "absorptance")
 autoplot(Ler_leaf.spct, annotations = "")
+autoplot(Ler_leaf.spct, plot.qty = "transmittance", norm = "max")
 
 two_leaves.mspct <-
  object_mspct(list("Arabidopsis leaf 1" = Ler_leaf.spct,

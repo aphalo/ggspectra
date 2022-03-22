@@ -30,6 +30,9 @@ revised `normalize()` function in 'photobiology' (\>= 0.10.10) .
 -   Revise `autoplot()` method for `object_mspct` to force use of facets
     when `plot.qty = "all"` instead of forcing plotting of transmittance
     only.
+-   Revise `autoplot()` method for `object_mspct` to correctly handle
+    normalization of collections of spectra, one spectrum at a time,
+    correcting a bug.
 -   Add `autoplot.cps_mspct()` and `autoplot.raw_mspct()` methods.
 -   Add support for faceting to all `autoplot()` methods for collections
     of spectra.
@@ -48,13 +51,10 @@ revised `normalize()` function in 'photobiology' (\>= 0.10.10) .
 -   Although this update does not break any code, **the labels for peaks
     and valleys can be at a slightly different position than with
     earlier versions**.
--   Although this update does not break any code, **plots of spectra
-    normalized with 'photobiology' (\>= 0.10.7) will have the
-    normalization updated if the previous one did not match the plotted
-    quantity**. No change to the normalization present in the data can
-    be requested by passing `norm = "skip"` to the call to `autoplot()`.
-    Previous default behaviour can be restored by setting R option
-    `ggspectra.norm = "skip"`.
+-   Although this update does not break any code, plots of collections
+    of object spectra with normalization, will differ from earlier ones
+    as member spectra are now normalized individually (this corrects an
+    earlier bug!).
 
 ------------------------------------------------------------------------
 

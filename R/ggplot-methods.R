@@ -430,10 +430,10 @@ ggplot.object_spct <-
       rmDerivedSpct(data)
       # melt data into long form
       molten.data <-
-        tidyr::gather_(data = data[ , c("w.length", "Tfr", "Afr", "Rfr")],
-                       key_col = "variable",
-                       value_col = "value",
-                       gather_cols = c("Tfr", "Afr", "Rfr"))
+        tidyr::pivot_longer(data = data[ , c("w.length", "Tfr", "Afr", "Rfr")],
+                            cols = c("Tfr", "Afr", "Rfr"),
+                            names_to = "variable",
+                            values_to = "value")
       # if not supplied create a mapping
       if (is.null(mapping)) {
         mapping <- aes_(~w.length, ~value)

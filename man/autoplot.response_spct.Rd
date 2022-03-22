@@ -11,7 +11,7 @@
   w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
     PAR())),
   range = NULL,
-  norm = getOption("ggspectra.norm", default = "update"),
+  norm = getOption("ggspectra.norm", default = "max"),
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
   pc.out = FALSE,
   label.qty = NULL,
@@ -32,7 +32,7 @@
   object,
   ...,
   range = NULL,
-  norm = getOption("ggspectra.norm", default = "update"),
+  norm = getOption("ggspectra.norm", default = "max"),
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
   plot.data = "as.is",
   idfactor = TRUE,
@@ -154,15 +154,14 @@ to.
 autoplot(photodiode.spct)
 autoplot(photodiode.spct, unit.out = "photon")
 autoplot(photodiode.spct, annotations = "")
+autoplot(photodiode.spct, norm = "skip")
+autoplot(photodiode.spct, norm = 400)
 
 two_sensors.mspct <-
  response_mspct(list("Photodiode" = photodiode.spct,
                      "Coupled charge device" = ccd.spct))
-autoplot(two_sensors.mspct, normalize = TRUE)
 autoplot(two_sensors.mspct, normalize = TRUE, unit.out = "photon")
 autoplot(two_sensors.mspct, normalize = TRUE, idfactor = "Spectra")
-autoplot(two_sensors.mspct, normalize = TRUE, facets = TRUE)
-autoplot(two_sensors.mspct, normalize = TRUE, facets = 1)
 autoplot(two_sensors.mspct, normalize = TRUE, facets = 2)
 
 }

@@ -142,10 +142,10 @@ raw_plot <- function(spct,
   if (num.counts.cols > 1L) {
     # remove raw_spct class before melting as it invalidates expectations
     rmDerivedSpct(spct)
-    spct <- tidyr::gather_(data = spct,
-                           key_col = "scan",
-                           value_col = "counts",
-                           gather_cols = counts.cols)
+    spct <- tidyr::pivot_longer(data = spct,
+                                cols = tidyselect::all_of(counts.cols),
+                                names_to = "scan",
+                                values_to = "counts")
     setRawSpct(spct, multiple.wl = NULL) # guessed from data
     plot <- ggplot(spct) + aes_(x = ~w.length, y = ~counts, linetype = ~scan)
     temp <- find_idfactor(spct = spct,

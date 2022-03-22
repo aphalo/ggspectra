@@ -482,11 +482,11 @@ test_that("object_spct", {
   vdiffr::expect_doppelganger("object-text-size-stk",
                               autoplot(Ler_leaf.spct, stacked = FALSE, text.size = 3.5))
   vdiffr::expect_doppelganger("object-minus-peaks-stk",
-                              autoplot(Ler_leaf.spct, stacked = FALSE, span = 101, annotations = c("-", "peaks")))
+                              autoplot(Ler_leaf.spct, stacked = FALSE, span = 401, annotations = c("-", "peaks")))
   vdiffr::expect_doppelganger("object-peaks-valleys-stk",
-                              autoplot(Ler_leaf.spct, stacked = FALSE, span = 101, annotations = c("+", "peaks", "valleys")))
+                              autoplot(Ler_leaf.spct, stacked = FALSE, span = 401, annotations = c("+", "peaks", "valleys")))
   vdiffr::expect_doppelganger("object-plus-valleys-stk",
-                              autoplot(Ler_leaf.spct, stacked = FALSE, span = 101, annotations = c("+", "valleys")))
+                              autoplot(Ler_leaf.spct, stacked = FALSE, span = 401, annotations = c("+", "valleys")))
   vdiffr::expect_doppelganger("object-wb-vis-stk",
                               autoplot(Ler_leaf.spct, stacked = FALSE, w.band = VIS_bands()))
   vdiffr::expect_doppelganger("object-range-num-stk",

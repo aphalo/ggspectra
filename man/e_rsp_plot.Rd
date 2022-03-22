@@ -13,7 +13,6 @@ e_rsp_plot(
   span,
   wls.target,
   annotations,
-  norm,
   text.size,
   idfactor,
   facets,
@@ -46,9 +45,6 @@ as arguments. A list with \code{numeric} and/or \code{character} values is
 also accepted.}
 
 \item{annotations}{a character vector.}
-
-\item{norm}{numeric normalization wavelength (nm) or character string "max"
-for normalization at the wavelength of highest peak.}
 
 \item{text.size}{numeric size of text in the plot decorations.}
 

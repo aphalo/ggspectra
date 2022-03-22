@@ -28,6 +28,7 @@ Imports:
     dplyr (>= 1.0.2),
     lubridate (>= 1.7.9),
     tidyr (>= 1.0.2),
+    tidyselect(>= 1.1.2),
     tibble (>= 3.1.2)
 Suggests:
     rlang (>= 0.4.7),

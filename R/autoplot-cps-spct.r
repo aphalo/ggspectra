@@ -128,10 +128,10 @@ cps_plot <- function(spct,
   if (num.cps.cols > 1L) {
     # remove cps_spct class before melting as it invalidates expectations
     rmDerivedSpct(spct)
-    spct <- tidyr::gather_(data = spct,
-                           key_col = "scan",
-                           value_col = "cps",
-                           gather_cols = cps.cols)
+    spct <- tidyr::pivot_longer(data = spct,
+                                cols = tidyselect::all_of(cps.cols),
+                                names_to = "scan",
+                                values_to = "cps")
     setCpsSpct(spct, multiple.wl = NULL) # guessed from data
     plot <- ggplot(spct, aes_(x = ~w.length, y = ~cps, linetype = ~scan))
     temp <- find_idfactor(spct = spct,

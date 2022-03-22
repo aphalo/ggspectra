@@ -878,16 +878,16 @@ O_plot <- function(spct,
 
   # Once molten it will not pass checks as object_spct
   spct.tb <- spct
-  rmDerivedSpct(spct.tb)
+  photobiology::rmDerivedSpct(spct.tb)
   molten.spct <-
-    tidyr::gather_(data = spct.tb[ , c("w.length", "Tfr", "Afr", "Rfr")],
-                   key_col = "variable", value_col = "value", gather_cols = c("Tfr", "Afr", "Rfr"))
-  stack.levels <- c("Tfr", "Afr", "Rfr")
-  if (utils::compareVersion(
-    asNamespace("ggplot2")$`.__NAMESPACE__.`$spec[["version"]],
-    "2.1.0") > 0) {
-    stack.levels <- rev(stack.levels)
-  }
+    tidyr::pivot_longer(data = spct.tb[ , c("w.length", "Tfr", "Afr", "Rfr")],
+                        cols = c("Tfr", "Afr", "Rfr"),
+                        names_to = "variable",
+                        values_to = "value")
+  # molten.spct <-
+  #   tidyr::gather(data = spct.tb[ , c("w.length", "Tfr", "Afr", "Rfr")],
+  #                  key_col = "variable", value_col = "value", gathercols = c("Tfr", "Afr", "Rfr"))
+  stack.levels <- c("Rfr", "Afr", "Tfr")
   molten.spct[["variable"]] <-
     factor(molten.spct[["variable"]], levels = stack.levels)
 #  setGenericSpct(molten.spct, multiple.wl = 3L * getMultipleWl(spct))
@@ -1055,9 +1055,9 @@ O_plot <- function(spct,
 autoplot.filter_spct <-
   function(object, ...,
            w.band = getOption("photobiology.plot.bands",
-                            default = list(UVC(), UVB(), UVA(), PAR())),
+                              default = list(UVC(), UVB(), UVA(), PAR())),
            range = NULL,
-           norm = getOption("ggspectra.normalize",
+           norm = getOption("ggspectra.norm",
                             default = "update"),
            plot.qty = getOption("photobiology.filter.qty",
                                 default = "transmittance"),
@@ -1175,7 +1175,7 @@ autoplot.filter_mspct <-
   function(object,
            ...,
            range = NULL,
-           norm = getOption("ggspectra.normalize",
+           norm = getOption("ggspectra.norm",
                             default = "update"),
            plot.qty = getOption("photobiology.filter.qty",
                                 default = "transmittance"),
@@ -1456,6 +1456,12 @@ autoplot.reflector_mspct <-
 #' @param w.band a single waveband object or a list of waveband objects
 #' @param range an R object on which range() returns a vector of length 2, with
 #'   min annd max wavelengths (nm)
+#' @param norm numeric Normalization wavelength (nm) or character string "max",
+#'   or "min" for normalization at the corresponding wavelength, "update" to
+#'   update the normalization after modifying units of expression, quantity
+#'   or range but respecting the previously used criterion, or "skip" to force
+#'   return of \code{object} unchanged. Always skipped for
+#'   \code{plot.qty == "all"}, which is the default.
 #' @param plot.qty character string, one of "all", "transmittance",
 #'   "absorbance", "absorptance", or "reflectance".
 #' @param pc.out logical, if TRUE use percents instead of fraction of one
@@ -1493,8 +1499,10 @@ autoplot.reflector_mspct <-
 #'
 #' @return a \code{ggplot} object.
 #'
-#' @note A method for collections of object spectra of length > 1 is not yet
-#'   implemented for \code{plot.qty = "all"}.
+#' @note The method for collections of object spectra of length > 1 is
+#'   implemented for \code{plot.qty = "all"} using facets. Other plot
+#'   quantities are handled by the methods for \code{filter_spct} and
+#'   \code{reflector_spct} objects after on-the-fly conversion.
 #'
 #' @export
 #'
@@ -1507,6 +1515,7 @@ autoplot.reflector_mspct <-
 #' autoplot(Ler_leaf.spct, plot.qty = "reflectance")
 #' autoplot(Ler_leaf.spct, plot.qty = "absorptance")
 #' autoplot(Ler_leaf.spct, annotations = "")
+#' autoplot(Ler_leaf.spct, plot.qty = "transmittance", norm = "max")
 #'
 #' two_leaves.mspct <-
 #'  object_mspct(list("Arabidopsis leaf 1" = Ler_leaf.spct,
@@ -1523,6 +1532,7 @@ autoplot.object_spct <-
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PAR())),
            range = NULL,
+           norm = "skip",
            plot.qty = "all",
            pc.out = FALSE,
            label.qty = NULL,
@@ -1539,30 +1549,32 @@ autoplot.object_spct <-
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
-    annotations.default <-
-      getOption("photobiology.plot.annotations",
-                default = c("boxes", "labels", "colour.guide", "peaks"))
-    annotations <- decode_annotations(annotations,
-                                      annotations.default)
-    if (is.null(label.qty)) {
-      if (photobiology::is_normalized(object) ||
-          photobiology::is_scaled(object)) {
-        label.qty = "contribution"
-      } else {
-        label.qty = "average"
-      }
-    }
-    if (length(w.band) == 0) {
-      if (is.null(range)) {
-        w.band <- photobiology::waveband(object)
-      } else if (photobiology::is.waveband(range)) {
-        w.band <- range
-      } else {
-        w.band <-  photobiology::waveband(range, wb.name = "Total")
-      }
-    }
+
     if (is.null(plot.qty) || plot.qty == "all") {
-    out.ggplot <- O_plot(spct = object,
+      # stacked area plot
+      annotations.default <-
+        getOption("photobiology.plot.annotations",
+                  default = c("boxes", "labels", "colour.guide", "peaks"))
+      annotations <- decode_annotations(annotations,
+                                        annotations.default)
+      if (is.null(label.qty)) {
+        if (photobiology::is_normalized(object) ||
+            photobiology::is_scaled(object)) {
+          label.qty = "contribution"
+        } else {
+          label.qty = "average"
+        }
+      }
+      if (length(w.band) == 0) {
+        if (is.null(range)) {
+          w.band <- photobiology::waveband(object)
+        } else if (photobiology::is.waveband(range)) {
+          w.band <- range
+        } else {
+          w.band <-  photobiology::waveband(range, wb.name = "Total")
+        }
+      }
+      out.ggplot <- O_plot(spct = object,
                          w.band = w.band,
                          range = range,
                          pc.out = pc.out,
@@ -1577,82 +1589,43 @@ autoplot.object_spct <-
                          ylim = ylim,
                          na.rm = na.rm,
                          ...)
-    } else if (plot.qty == "transmittance") {
-      object <- photobiology::as.filter_spct(object)
-      out.ggplot <- T_plot(spct = object,
-                           w.band = w.band,
-                           range = range,
-                           pc.out = pc.out,
-                           label.qty = label.qty,
-                           span = span,
-                           wls.target = wls.target,
-                           annotations = annotations,
-                           text.size = text.size,
-                           chroma.type = chroma.type,
-                           idfactor = idfactor,
-                           facets = facets,
-                           ylim = ylim,
-                           na.rm = na.rm,
-                           ...)
-    } else if (plot.qty == "absorbance") {
-      object <- photobiology::as.filter_spct(object)
-      out.ggplot <- A_plot(spct = object,
-                           w.band = w.band,
-                           range = range,
-                           label.qty = label.qty,
-                           span = span,
-                           wls.target = wls.target,
-                           annotations = annotations,
-                           text.size = text.size,
-                           chroma.type = chroma.type,
-                           idfactor = idfactor,
-                           facets = facets,
-                           ylim = ylim,
-                           na.rm = na.rm,
-                           ...)
-    } else if (plot.qty == "absorptance") {
-      object <- photobiology::as.filter_spct(object)
-      out.ggplot <- Afr_plot(spct = object,
-                             w.band = w.band,
-                             range = range,
-                             pc.out = pc.out,
-                             label.qty = label.qty,
-                             span = span,
-                             wls.target = wls.target,
-                             annotations = annotations,
-                             text.size = text.size,
-                             chroma.type = chroma.type,
-                             idfactor = idfactor,
-                             facets = facets,
-                             ylim = ylim,
-                             na.rm = na.rm,
-                             ...)
-    } else if (plot.qty == "reflectance") {
-      object <- photobiology::as.reflector_spct(object)
-      out.ggplot <- R_plot(spct = object,
-                           w.band = w.band,
-                           range = range,
-                           pc.out = pc.out,
-                           label.qty = label.qty,
-                           span = span,
-                           wls.target = wls.target,
-                           annotations = annotations,
-                           text.size = text.size,
-                           chroma.type = chroma.type,
-                           idfactor = idfactor,
-                           facets = facets,
-                           ylim = ylim,
-                           na.rm = na.rm,
-                           ...)
-    } else {
-      stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
-    }
     out.ggplot +
       autotitle(object = object,
                 time.format = time.format,
                 tz = tz,
                 object.label = object.label,
                 annotations = annotations)
+    } else {
+      # Line plots for components: we convert object and call respective method
+      if (plot.qty == "reflectance") {
+        object <- photobiology::as.reflector_spct(object)
+      } else if (plot.qty %in%
+                   c("absorbance", "absorptance", "transmittance")) {
+        object <- photobiology::as.filter_spct(object)
+      } else {
+        stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
+      }
+      autoplot(object = object,
+               ...,
+               w.band = w.band,
+               range = range,
+               norm = norm,
+               plot.qty = plot.qty,
+               pc.out = pc.out,
+               label.qty = label.qty,
+               span = span,
+               wls.target = wls.target,
+               annotations = annotations,
+               time.format = time.format,
+               tz = tz,
+               text.size = text.size,
+               chroma.type = chroma.type,
+               idfactor = idfactor,
+               facets = facets,
+               ylim = ylim,
+               object.label = object.label,
+               na.rm = na.rm)
+    }
   }
 
 #' @rdname autoplot.object_spct
@@ -1668,10 +1641,12 @@ autoplot.object_mspct <-
   function(object,
            ...,
            range = NULL,
+           norm = "update",
            plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
            facets = FALSE,
            plot.data = "as.is",
-           idfactor = TRUE) {
+           idfactor = TRUE,
+           na.rm = TRUE) {
     idfactor <- validate_idfactor(idfactor = idfactor)
     # facets will be forced later for "all" with a warning
     if (plot.qty == "reflectance") {
@@ -1685,6 +1660,15 @@ autoplot.object_mspct <-
                                       range = range,
                                       use.hinges = TRUE,
                                       fill = NULL)
+    }
+    # We apply the normalization to the collection if it is to be bound
+    # otherwise normalization is applied to the "parallel-summary" spectrum
+    if (plot.data == "as.is" && plot.qty != "all") {
+      object <- photobiology::normalize(object,
+                                        norm = norm,
+                                        qty.out = plot.qty,
+                                        na.rm = na.rm)
+      norm <- "skip"
     }
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
@@ -1700,8 +1684,10 @@ autoplot.object_mspct <-
     )
     autoplot(object = z,
              range = NULL,
+             norm = norm,
              plot.qty = plot.qty,
              idfactor = idfactor,
              facets = facets,
+             na.rm = na.rm,
              ...)
   }
