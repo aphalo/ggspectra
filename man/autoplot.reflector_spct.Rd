@@ -11,7 +11,7 @@
   w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
     PAR())),
   range = NULL,
-  normalize = getOption("ggspectra.normalize", default = NULL),
+  norm = getOption("ggspectra.norm", default = "update"),
   plot.qty = getOption("photobiology.reflector.qty", default = "reflectance"),
   pc.out = FALSE,
   label.qty = NULL,
@@ -33,10 +33,11 @@
   object,
   ...,
   range = NULL,
-  normalize = getOption("ggspectra.normalize", default = NULL),
+  norm = getOption("ggspectra.normalize", default = "update"),
   plot.qty = getOption("photobiology.reflector.qty", default = "reflectance"),
   plot.data = "as.is",
-  idfactor = TRUE
+  idfactor = TRUE,
+  na.rm = TRUE
 )
 }
 \arguments{
@@ -50,10 +51,11 @@ to the plot methods for individual spectra, otherwise currently ignored.}
 \item{range}{an R object on which range() returns a vector of length 2, with
 min annd max wavelengths (nm).}
 
-\item{normalize}{logical or NULL Flag indicating is the spectrum is to be
-normalized. If \code{NULL}, the default, if \code{object} is normalized,
-the normalization is updated to be based on the values of \code{range}
-and \code{plot.qty}.}
+\item{norm}{numeric Normalization wavelength (nm) or character string "max",
+or "min" for normalization at the corresponding wavelength, "update" to
+update the normalization after modifying units of expression, quantity
+or range but respecting the previously used criterion, or "skip" to force
+return of \code{object} unchanged.}
 
 \item{plot.qty}{character string (currently ignored).}
 

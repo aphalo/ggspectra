@@ -541,10 +541,11 @@ q_rsp_plot <- function(spct,
 #' @param w.band a single waveband object or a list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
 #'   min annd max wavelengths (nm).
-#' @param normalize logical or NULL Flag indicating is the spectrum is to be
-#'   normalized. If \code{NULL}, the default, if \code{object} is normalized,
-#'   the normalization is updated to be based on the values of \code{range}
-#'   and \code{unit.out}.
+#' @param norm numeric Normalization wavelength (nm) or character string "max",
+#'   or "min" for normalization at the corresponding wavelength, "update" to
+#'   update the normalization after modifying units of expression, quantity
+#'   or range but respecting the previously used criterion, or "skip" to force
+#'   return of \code{object} unchanged.
 #' @param unit.out character string indicating type of radiation units to use
 #'   for plotting: "photon" or its synomin "quantum", or "energy".
 #' @param pc.out logical, if TRUE use percents instead of fraction of one
@@ -608,8 +609,10 @@ autoplot.response_spct <-
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PAR())),
            range = NULL,
-           normalize = getOption("ggspectra.normalize", default=NULL),
-           unit.out = getOption("photobiology.radiation.unit", default="energy"),
+           norm = getOption("ggspectra.norm",
+                            default = "update"),
+           unit.out = getOption("photobiology.radiation.unit",
+                                default = "energy"),
            pc.out = FALSE,
            label.qty = NULL,
            span = NULL,
@@ -617,7 +620,6 @@ autoplot.response_spct <-
            annotations = NULL,
            time.format = "",
            tz = "UTC",
-           norm = "max",
            text.size = 2.5,
            idfactor = NULL,
            facets = FALSE,
@@ -630,12 +632,14 @@ autoplot.response_spct <-
     annotations <- decode_annotations(annotations,
                                       annotations.default)
     # normalization needs to be redone if unit.out has changed
-    if ((is.null(normalize) && is_normalized(object)) ||
-        (!is.null(normalize) && normalize)) {
-      object <- normalize(x = object, range = range, unit.out = unit.out)
-    }
+    object <- photobiology::normalize(x = object,
+                                      range = range,
+                                      norm = norm,
+                                      unit.out = unit.out,
+                                      na.rm = na.rm)
     if (is.null(label.qty)) {
-      if (is_normalized(object) || is_scaled(object)) {
+      if (photobiology::is_normalized(object) ||
+          photobiology::is_scaled(object)) {
         label.qty = "contribution"
       } else {
         label.qty = "total"
@@ -643,11 +647,11 @@ autoplot.response_spct <-
     }
     if (length(w.band) == 0) {
       if (is.null(range)) {
-        w.band <- waveband(object)
-      } else if (is.waveband(range)) {
+        w.band <- photobiology::waveband(object)
+      } else if (photobiology::is.waveband(range)) {
         w.band <- range
       } else {
-        w.band <-  waveband(range, wb.name = "Total")
+        w.band <-  photobiology::waveband(range, wb.name = "Total")
       }
     }
 
@@ -660,7 +664,7 @@ autoplot.response_spct <-
                                span = span,
                                wls.target = wls.target,
                                annotations = annotations,
-                               norm = norm,
+                               norm = norm,              # read from object
                                text.size = text.size,
                                idfactor = idfactor,
                                facets = facets,
@@ -683,14 +687,14 @@ autoplot.response_spct <-
                                na.rm = na.rm,
                                ...)
     } else {
-      stop("Invalid 'unit.out' argument value: '", unit.out, "'")
+      stop("Invalid 'unit.out' argument: '", unit.out, "'")
     }
     out.ggplot +
       autotitle(object = object,
-                   time.format = time.format,
-                   tz = tz,
-                   object.label = object.label,
-                   annotations = annotations)
+                time.format = time.format,
+                tz = tz,
+                object.label = object.label,
+                annotations = annotations)
   }
 
 #' @rdname autoplot.response_spct
@@ -706,23 +710,28 @@ autoplot.response_mspct <-
   function(object,
            ...,
            range = NULL,
-           normalize = getOption("ggspectra.normalize", default=NULL),
+           norm = getOption("ggspectra.norm",
+                            default = "update"),
            unit.out = getOption("photobiology.radiation.unit", default="energy"),
            plot.data = "as.is",
-           idfactor = TRUE) {
+           idfactor = TRUE,
+           na.rm = TRUE) {
     idfactor <- validate_idfactor(idfactor = idfactor)
     # We trim the spectra to avoid unnecesary computaions later
     if (!is.null(range)) {
-      object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
+      object <- photobiology::trim_wl(object,
+                                      range = range,
+                                      use.hinges = TRUE,
+                                      fill = NULL)
     }
     # We apply the normalization to the collection if it is to be bound
-    # otherwise normalization is applied to the summary
+    # otherwise normalization is applied to the "parallel-summary" spectrum
     if (plot.data == "as.is") {
-      if ((is.null(normalize) && all(sapply(X = object, FUN = is_normalized))) ||
-          (!is.null(normalize) && normalize)) {
-        object <- normalize(object, unit.out = unit.out)
-        normalize <- FALSE
-      }
+      object <- photobiology::normalize(object,
+                                        norm = norm,
+                                        unit.out = unit.out,
+                                        na.rm = na.rm)
+      norm <- "skip"
     }
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
@@ -737,6 +746,6 @@ autoplot.response_mspct <-
                 se = photobiology::s_se(object)
     )
     autoplot(object = z, range = NULL, idfactor = idfactor,
-             normalize = normalize, unit.out = unit.out, ...)
+             norm = norm, unit.out = unit.out, na.rm = na.rm, ...)
   }
 

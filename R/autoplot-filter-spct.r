@@ -612,7 +612,7 @@ R_plot <- function(spct,
                    ylim,
                    na.rm,
                    ...) {
-  if (!is.reflector_spct(spct)) {
+  if (!photobiology::is.reflector_spct(spct)) {
     stop("R_plot() can only plot reflector_spct objects.")
   }
   if (is.null(ylim) || !is.numeric(ylim)) {
@@ -624,12 +624,12 @@ R_plot <- function(spct,
     spct[[c]] <- NULL
   }
   if (!is.null(range)) {
-    spct <- trim_wl(spct, range = range)
+    spct <- photobiology::trim_wl(spct, range = range)
   }
   if (!is.null(w.band)) {
-    w.band <- trim_wl(w.band, range = range(spct))
+    w.band <- photobiology::trim_wl(w.band, range = range(spct))
   }
-  Rfr.type <- getRfrType(spct)
+  Rfr.type <- photobiology::getRfrType(spct)
   if (length(Rfr.type) == 0) {
     Rfr.type <- "unknown"
   }
@@ -987,10 +987,11 @@ O_plot <- function(spct,
 #' @param w.band a single waveband object or a list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
 #'   min and max wavelengths (nm).
-#' @param normalize logical or NULL Flag indicating is the spectrum is to be
-#'   normalized. If \code{NULL}, the default, if \code{object} is normalized,
-#'   the normalization is updated to be based on the values of \code{range}
-#'   and \code{plot.qty}.
+#' @param norm numeric Normalization wavelength (nm) or character string "max",
+#'   or "min" for normalization at the corresponding wavelength, "update" to
+#'   update the normalization after modifying units of expression, quantity
+#'   or range but respecting the previously used criterion, or "skip" to force
+#'   return of \code{object} unchanged.
 #' @param plot.qty character string one of "transmittance" or "absorbance".
 #' @param pc.out logical, if TRUE use percents instead of fraction of one.
 #' @param label.qty character string giving the type of summary quantity to use
@@ -1056,8 +1057,10 @@ autoplot.filter_spct <-
            w.band = getOption("photobiology.plot.bands",
                             default = list(UVC(), UVB(), UVA(), PAR())),
            range = NULL,
-           normalize = getOption("ggspectra.normalize", default=NULL),
-           plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
+           norm = getOption("ggspectra.normalize",
+                            default = "update"),
+           plot.qty = getOption("photobiology.filter.qty",
+                                default = "transmittance"),
            pc.out = FALSE,
            label.qty = NULL,
            span = NULL,
@@ -1077,13 +1080,15 @@ autoplot.filter_spct <-
                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
     annotations <- decode_annotations(annotations,
                                       annotations.default)
-    # normalization needs to be redone if qty.out has changed
-    if ((is.null(normalize) && is_normalized(object)) ||
-        (!is.null(normalize) && normalize)) {
-      object <- normalize(x = object, range = range, qty.out = plot.qty)
-    }
+    # normalization needs to be redone if unit.out has changed
+    object <- photobiology::normalize(x = object,
+                                      range = range,
+                                      norm = norm,
+                                      qty.out = plot.qty,
+                                      na.rm = na.rm)
     if (is.null(label.qty)) {
-      if (is_normalized(object) || is_scaled(object)) {
+      if (photobiology::is_normalized(object) ||
+          photobiology::is_scaled(object)) {
         label.qty = "contribution"
       } else {
         label.qty = "average"
@@ -1091,11 +1096,11 @@ autoplot.filter_spct <-
     }
     if (length(w.band) == 0) {
       if (is.null(range)) {
-        w.band <- waveband(object)
-      } else if (is.waveband(range)) {
+        w.band <- photobiology::waveband(object)
+      } else if (photobiology::is.waveband(range)) {
         w.band <- range
       } else {
-        w.band <-  waveband(range, wb.name = "Total")
+        w.band <-  photobiology::waveband(range, wb.name = "Total")
       }
     }
 
@@ -1170,23 +1175,26 @@ autoplot.filter_mspct <-
   function(object,
            ...,
            range = NULL,
-           normalize = getOption("ggspectra.normalize", default=NULL),
-           plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
+           norm = getOption("ggspectra.normalize",
+                            default = "update"),
+           plot.qty = getOption("photobiology.filter.qty",
+                                default = "transmittance"),
            plot.data = "as.is",
-           idfactor = TRUE) {
+           idfactor = TRUE,
+           na.rm = TRUE) {
     idfactor <- validate_idfactor(idfactor = idfactor)
     # We trim the spectra to avoid unnecesary computaions later
     if (!is.null(range)) {
-      object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
+      object <- photobiology::trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
     }
     # We apply the normalization to the collection if it is to be bound
-    # otherwise normalization is applied to the summary
+    # otherwise normalization is applied to the "parallel-summary" spectrum
     if (plot.data == "as.is") {
-      if ((is.null(normalize) && all(sapply(X = object, FUN = is_normalized))) ||
-          (!is.null(normalize) && normalize)) {
-        object <- normalize(object, qty.out = plot.qty)
-        normalize <- FALSE
-      }
+      object <- photobiology::normalize(object,
+                                        norm = norm,
+                                        qty.out = plot.qty,
+                                        na.rm = na.rm)
+      norm <- "skip"
     }
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
@@ -1203,7 +1211,7 @@ autoplot.filter_mspct <-
     )
     autoplot(object = z,
              range = NULL,
-             normalize = normalize,
+             norm = norm,
              plot.qty = plot.qty,
              idfactor = idfactor,
              ...)
@@ -1230,10 +1238,11 @@ autoplot.filter_mspct <-
 #' @param w.band a single waveband object or a list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
 #'   min annd max wavelengths (nm).
-#' @param normalize logical or NULL Flag indicating is the spectrum is to be
-#'   normalized. If \code{NULL}, the default, if \code{object} is normalized,
-#'   the normalization is updated to be based on the values of \code{range}
-#'   and \code{plot.qty}.
+#' @param norm numeric Normalization wavelength (nm) or character string "max",
+#'   or "min" for normalization at the corresponding wavelength, "update" to
+#'   update the normalization after modifying units of expression, quantity
+#'   or range but respecting the previously used criterion, or "skip" to force
+#'   return of \code{object} unchanged.
 #' @param plot.qty character string (currently ignored).
 #' @param pc.out logical, if TRUE use percents instead of fraction of one.
 #' @param label.qty character string giving the type of summary quantity to use
@@ -1296,8 +1305,10 @@ autoplot.reflector_spct <-
            w.band=getOption("photobiology.plot.bands",
                             default = list(UVC(), UVB(), UVA(), PAR())),
            range = NULL,
-           normalize = getOption("ggspectra.normalize", default=NULL),
-           plot.qty = getOption("photobiology.reflector.qty", default = "reflectance"),
+           norm = getOption("ggspectra.norm",
+                            default = "update"),
+           plot.qty = getOption("photobiology.reflector.qty",
+                                default = "reflectance"),
            pc.out = FALSE,
            label.qty = NULL,
            span = NULL,
@@ -1318,12 +1329,14 @@ autoplot.reflector_spct <-
     annotations <- decode_annotations(annotations,
                                       annotations.default)
     # normalization needs to be redone if unit.out has changed
-    if ((is.null(normalize) && is_normalized(object)) ||
-        (!is.null(normalize) && normalize)) {
-      object <- normalize(x = object, range = range, qty.out = plot.qty)
-    }
+    object <- photobiology::normalize(x = object,
+                                      range = range,
+                                      norm = norm,
+                                      qty.out = plot.qty,
+                                      na.rm = na.rm)
     if (is.null(label.qty)) {
-      if (is_normalized(object) || is_scaled(object)) {
+      if (photobiology::is_normalized(object) ||
+          photobiology::is_scaled(object)) {
         label.qty = "contribution"
       } else {
         label.qty = "average"
@@ -1331,11 +1344,11 @@ autoplot.reflector_spct <-
     }
     if (length(w.band) == 0) {
       if (is.null(range)) {
-        w.band <- waveband(object)
-      } else if (is.waveband(range)) {
+        w.band <- photobiology::waveband(object)
+      } else if (photobiology::is.waveband(range)) {
         w.band <- range
       } else {
-        w.band <-  waveband(range, wb.name = "Total")
+        w.band <-  photobiology::waveband(range, wb.name = "Total")
       }
     }
     if (plot.qty == "reflectance") {
@@ -1378,23 +1391,29 @@ autoplot.reflector_mspct <-
   function(object,
            ...,
            range = NULL,
-           normalize = getOption("ggspectra.normalize", default=NULL),
-           plot.qty = getOption("photobiology.reflector.qty", default = "reflectance"),
+           norm = getOption("ggspectra.normalize",
+                            default = "update"),
+           plot.qty = getOption("photobiology.reflector.qty",
+                                default = "reflectance"),
            plot.data = "as.is",
-           idfactor = TRUE) {
+           idfactor = TRUE,
+           na.rm = TRUE) {
     idfactor <- validate_idfactor(idfactor = idfactor)
     # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
-      object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
+      object <- photobiology::trim_wl(object,
+                                      range = range,
+                                      use.hinges = TRUE,
+                                      fill = NULL)
     }
     # We apply the normalization to the collection if it is to be bound
-    # otherwise normalization is applied to the summary
+    # otherwise normalization is applied to the "parallel-summary" spectrum
     if (plot.data == "as.is") {
-      if ((is.null(normalize) && all(sapply(X = object, FUN = is_normalized))) ||
-          (!is.null(normalize) && normalize)) {
-        object <- normalize(object, qty.out = plot.qty)
-        normalize <- FALSE
-      }
+      object <- photobiology::normalize(object,
+                                        norm = norm,
+                                        qty.out = plot.qty,
+                                        na.rm = na.rm)
+      norm <- "skip"
     }
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
@@ -1410,7 +1429,7 @@ autoplot.reflector_mspct <-
     )
     autoplot(object = z,
              range = NULL,
-             normalize = normalize,
+             norm = norm,
              plot.qty = plot.qty,
              idfactor = idfactor,
              ...)
@@ -1526,7 +1545,8 @@ autoplot.object_spct <-
     annotations <- decode_annotations(annotations,
                                       annotations.default)
     if (is.null(label.qty)) {
-      if (is_normalized(object) || is_scaled(object)) {
+      if (photobiology::is_normalized(object) ||
+          photobiology::is_scaled(object)) {
         label.qty = "contribution"
       } else {
         label.qty = "average"
@@ -1534,11 +1554,11 @@ autoplot.object_spct <-
     }
     if (length(w.band) == 0) {
       if (is.null(range)) {
-        w.band <- waveband(object)
-      } else if (is.waveband(range)) {
+        w.band <- photobiology::waveband(object)
+      } else if (photobiology::is.waveband(range)) {
         w.band <- range
       } else {
-        w.band <-  waveband(range, wb.name = "Total")
+        w.band <-  photobiology::waveband(range, wb.name = "Total")
       }
     }
     if (is.null(plot.qty) || plot.qty == "all") {
@@ -1558,7 +1578,7 @@ autoplot.object_spct <-
                          na.rm = na.rm,
                          ...)
     } else if (plot.qty == "transmittance") {
-      object <- as.filter_spct(object)
+      object <- photobiology::as.filter_spct(object)
       out.ggplot <- T_plot(spct = object,
                            w.band = w.band,
                            range = range,
@@ -1575,7 +1595,7 @@ autoplot.object_spct <-
                            na.rm = na.rm,
                            ...)
     } else if (plot.qty == "absorbance") {
-      object <- as.filter_spct(object)
+      object <- photobiology::as.filter_spct(object)
       out.ggplot <- A_plot(spct = object,
                            w.band = w.band,
                            range = range,
@@ -1591,7 +1611,7 @@ autoplot.object_spct <-
                            na.rm = na.rm,
                            ...)
     } else if (plot.qty == "absorptance") {
-      object <- as.filter_spct(object)
+      object <- photobiology::as.filter_spct(object)
       out.ggplot <- Afr_plot(spct = object,
                              w.band = w.band,
                              range = range,
@@ -1608,7 +1628,7 @@ autoplot.object_spct <-
                              na.rm = na.rm,
                              ...)
     } else if (plot.qty == "reflectance") {
-      object <- as.reflector_spct(object)
+      object <- photobiology::as.reflector_spct(object)
       out.ggplot <- R_plot(spct = object,
                            w.band = w.band,
                            range = range,
@@ -1629,10 +1649,10 @@ autoplot.object_spct <-
     }
     out.ggplot +
       autotitle(object = object,
-                   time.format = time.format,
-                   tz = tz,
-                   object.label = object.label,
-                   annotations = annotations)
+                time.format = time.format,
+                tz = tz,
+                object.label = object.label,
+                annotations = annotations)
   }
 
 #' @rdname autoplot.object_spct
@@ -1655,13 +1675,16 @@ autoplot.object_mspct <-
     idfactor <- validate_idfactor(idfactor = idfactor)
     # facets will be forced later for "all" with a warning
     if (plot.qty == "reflectance") {
-      object <- as.reflector_mspct(object)
+      object <- photobiology::as.reflector_mspct(object)
     } else if (plot.qty != "all") {
-      object <- as.filter_mspct(object)
+      object <- photobiology::as.filter_mspct(object)
     }
     # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
-      object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
+      object <- photobiology::trim_wl(object,
+                                      range = range,
+                                      use.hinges = TRUE,
+                                      fill = NULL)
     }
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.

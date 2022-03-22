@@ -491,10 +491,11 @@ q_plot <- function(spct,
 #' @param w.band a single waveband object or a list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
 #'   min annd max wavelengths (nm).
-#' @param normalize logical or NULL Flag indicating is the spectrum is to be
-#'   normalized. If \code{NULL}, the default, if \code{object} is normalized,
-#'   the normalization is updated to be based on the values of \code{range}
-#'   and \code{unit.out}.
+#' @param norm numeric Normalization wavelength (nm) or character string "max",
+#'   or "min" for normalization at the corresponding wavelength, "update" to
+#'   update the normalization after modifying units of expression, quantity
+#'   or range but respecting the previously used criterion, or "skip" to force
+#'   return of \code{object} unchanged.
 #' @param unit.out character string indicating type of radiation units to use
 #'   for plotting: "photon" or its synonym "quantum", or "energy".
 #' @param label.qty character string giving the type of summary quantity to use
@@ -533,16 +534,17 @@ q_plot <- function(spct,
 #'
 #' @return a \code{ggplot} object.
 #'
-#' @export
+#' @seealso Function \code{\link[photobiology]{normalize}} which is used to
+#'   apply the normalization based on the argument passed to \code{norm}.
 #'
-#' @keywords hplot
+#' @export
 #'
 #' @examples
 #'
 #' autoplot(sun.spct)
 #' autoplot(sun.spct, unit.out = "photon")
-#' autoplot(sun.spct, normalize = TRUE)
-#' autoplot(sun.spct, normalize = TRUE, unit.out = "photon")
+#' autoplot(sun.spct, norm = "max")
+#' autoplot(sun.spct, norm = "max", unit.out = "photon")
 #'
 #' two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct / 2))
 #' autoplot(two_suns.mspct)
@@ -551,7 +553,7 @@ q_plot <- function(spct,
 #' autoplot(two_suns.mspct, facets = TRUE) # uses ggplot2's default
 #' autoplot(two_suns.mspct, facets = 1) # one column
 #' autoplot(two_suns.mspct, facets = 2) # two columns
-#' autoplot(two_suns.mspct, normalize = TRUE, facets = 2)
+#' autoplot(two_suns.mspct, norm = "max", facets = 2)
 #'
 #' @family autoplot methods
 #'
@@ -560,8 +562,10 @@ autoplot.source_spct <-
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PAR())),
            range = NULL,
-           normalize = getOption("ggspectra.normalize", default=NULL),
-           unit.out = getOption("photobiology.radiation.unit", default = "energy"),
+           norm = getOption("ggspectra.norm",
+                            default = "update"),
+           unit.out = getOption("photobiology.radiation.unit",
+                                default = "energy"),
            label.qty = NULL,
            span = NULL,
            wls.target = "HM",
@@ -581,10 +585,11 @@ autoplot.source_spct <-
     annotations <- decode_annotations(annotations,
                                       annotations.default)
     # normalization needs to be redone if unit.out has changed
-    if ((is.null(normalize) && is_normalized(object)) ||
-        (!is.null(normalize) && normalize)) {
-      object <- normalize(x = object, range = range, unit.out = unit.out)
-    }
+    object <- normalize(x = object,
+                        range = range,
+                        norm = norm,
+                        unit.out = unit.out,
+                        na.rm = na.rm)
     if (is.null(label.qty)) {
       if (is_normalized(object) || is_scaled(object)) {
         label.qty = "contribution"
@@ -652,24 +657,29 @@ autoplot.source_mspct <-
   function(object,
            ...,
            range = NULL,
-           normalize = getOption("ggspectra.normalize", default=NULL),
+           norm = getOption("ggspectra.normalize",
+                            default = "update"),
            unit.out = getOption("photobiology.radiation.unit",
                                 default = "energy"),
            idfactor = TRUE,
-           plot.data = "as.is") {
+           plot.data = "as.is",
+           na.rm = TRUE) {
     idfactor <- validate_idfactor(idfactor = idfactor)
     # We trim the spectra to avoid unnecesary computaions later
     if (!is.null(range)) {
-      object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
+      object <- photobiology::trim_wl(object,
+                                      range = range,
+                                      use.hinges = TRUE,
+                                      fill = NULL)
     }
     # We apply the normalization to the collection if it is to be bound
-    # otherwise normalization is applied to the summary
+    # otherwise normalization is applied to the "parallel-summary" spectrum
     if (plot.data == "as.is") {
-      if ((is.null(normalize) && all(sapply(X = object, FUN = is_normalized))) ||
-          (!is.null(normalize) && normalize)) {
-        object <- normalize(object, unit.out = unit.out)
-        normalize <- FALSE
-      }
+      object <- photobiology::normalize(object,
+                                        norm = norm,
+                                        unit.out = unit.out,
+                                        na.rm = na.rm)
+      norm <- "skip"
     }
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
@@ -688,8 +698,9 @@ autoplot.source_mspct <-
     )
     autoplot(object = z,
              range = NULL,
-             normalize = normalize,
+             norm = norm,
              idfactor = idfactor,
+             na.rm = na.rm,
              ...)
   }
 

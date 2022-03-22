@@ -4,45 +4,35 @@ editor_options:
     wrap: 72
 ---
 
-# ggspectra 0.3.9
-
--   Revise all `autoplot()` methods to support on-the-fly normalization.
--   Revise `autoplot()` methods for `source_spct`, `response_spct`,
-    `filter_spct`, and `reflector_spct` so that if the data are already
-    normalized, by default the normalization is updated according to
-    `unit.out` or `plot.qty`.
--   Revise `autoplot()` methods for `source_mspct`, `response_mspct`,
-    `filter_mspct`, and `reflector_mspct` so that if all member spectra
-    in a collection are already normalized, by default the normalization
-    is updated according to `unit.out` or `plot.qty`.
--   Revise `autoplot()` method for `object_mspct` to force use of facets
-    when `plot.qty = "all"` instead of forcing plotting of transmittance
-    only.
-
-------------------------------------------------------------------------
-
--   Although this update does not break any code, some plots of
-    normalized spectra will have the normalization updated if the
-    previous one did not match the plotted quantity. No change to the
-    normalization present in the data can be requested by passing
-    `normalize = FALSE` to the call to `autoplot()`. Old default
-    behaviour can be restored by setting R option
-    `ggspectra.normalize = FALSE`.
-
-------------------------------------------------------------------------
-
 # ggspectra 0.3.8
 
 Track changes in packages 'ggrepel' (\>= 0.9.1), 'photobiology' (\>=
-0.10.6) and 'ggplot2' (\>= 3.3.3).
+0.10.10) and 'ggplot2' (\>= 3.3.3). The updated code depends on the
+revised `normalize()` function in 'photobiology' (\>= 0.10.10) .
 
+-   Revise all `autoplot()` methods for collections of spectra adding
+    support for `sum`, `prod`, `var`, `sd`, and `se` as summaries: i.
+    e., compute on-the-fly a summary spectrum from a collection of
+    spectra and plot it.
+-   Revise all `autoplot()` methods for `source_spct`, `response_spct`,
+    `filter_spct`, `reflector_spct`, `source_mspct`, `response_mspct`,
+    `filter_mspct`, and `reflector_mspct` to support on-the-fly
+    normalization.
+-   Revise `autoplot()` methods for `source_spct`, `response_spct`,
+    `filter_spct`, `reflector_spct`, `source_mspct`, `response_mspct`,
+    `filter_mspct`, and `reflector_mspct` so that if the data are
+    already normalized, by default the normalization is updated
+    according to the arguments passed to `unit.out` or `plot.qty` and
+    `range`. (Update is possible only for objects normalized with
+    'photobiology' (\>= 0.10.7). For objects created with earlier
+    versions, the old behaviour of plotting spectra *as is* remains
+    unchanged.)
+-   Revise `autoplot()` method for `object_mspct` to force use of facets
+    when `plot.qty = "all"` instead of forcing plotting of transmittance
+    only.
 -   Add `autoplot.cps_mspct()` and `autoplot.raw_mspct()` methods.
 -   Add support for faceting to all `autoplot()` methods for collections
     of spectra.
--   Revise all `autoplot()` methods for collections of spectra adding
-    support for `sum`, `prod`, `var`, `sd`, and `se` as summaries: i.e.,
-    compute on-the-fly a summary spectrum from a collection of spectra
-    and plot it.
 -   Update `decoration()` to track changes in 'ggrepel' (\>= 0.9.1).
 -   Update `decoration()` to use `position_nudge()` and
     `position_nudge_repel()` to displace labels instead of "off-range"
@@ -58,6 +48,13 @@ Track changes in packages 'ggrepel' (\>= 0.9.1), 'photobiology' (\>=
 -   Although this update does not break any code, **the labels for peaks
     and valleys can be at a slightly different position than with
     earlier versions**.
+-   Although this update does not break any code, **plots of spectra
+    normalized with 'photobiology' (\>= 0.10.7) will have the
+    normalization updated if the previous one did not match the plotted
+    quantity**. No change to the normalization present in the data can
+    be requested by passing `norm = "skip"` to the call to `autoplot()`.
+    Previous default behaviour can be restored by setting R option
+    `ggspectra.norm = "skip"`.
 
 ------------------------------------------------------------------------
 

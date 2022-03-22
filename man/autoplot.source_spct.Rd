@@ -11,7 +11,7 @@
   w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
     PAR())),
   range = NULL,
-  normalize = NULL,
+  norm = getOption("ggspectra.norm", default = "update"),
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
   label.qty = NULL,
   span = NULL,
@@ -32,10 +32,11 @@
   object,
   ...,
   range = NULL,
-  normalize = getOption("ggspectra.normalize", default = NULL),
+  norm = getOption("ggspectra.normalize", default = "update"),
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
   idfactor = TRUE,
-  plot.data = "as.is"
+  plot.data = "as.is",
+  na.rm = TRUE
 )
 }
 \arguments{
@@ -49,10 +50,11 @@ to the plot methods for individual spectra, otherwise currently ignored.}
 \item{range}{an R object on which range() returns a vector of length 2, with
 min annd max wavelengths (nm).}
 
-\item{normalize}{logical or NULL Flag indicating is the spectrum is to be
-normalized. If \code{NULL}, the default, if \code{object} is normalized,
-the normalization is updated to be based on the values of \code{range}
-and \code{unit.out}.}
+\item{norm}{numeric Normalization wavelength (nm) or character string "max",
+or "min" for normalization at the corresponding wavelength, "update" to
+update the normalization after modifying units of expression, quantity
+or range but respecting the previously used criterion, or "skip" to force
+return of \code{object} unchanged.}
 
 \item{unit.out}{character string indicating type of radiation units to use
 for plotting: "photon" or its synonym "quantum", or "energy".}
@@ -159,8 +161,8 @@ If \code{idfactor = NULL}, the default for single spectra, the name of
 
 autoplot(sun.spct)
 autoplot(sun.spct, unit.out = "photon")
-autoplot(sun.spct, normalize = TRUE)
-autoplot(sun.spct, normalize = TRUE, unit.out = "photon")
+autoplot(sun.spct, norm = "max")
+autoplot(sun.spct, norm = "max", unit.out = "photon")
 
 two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct / 2))
 autoplot(two_suns.mspct)
@@ -169,10 +171,13 @@ autoplot(two_suns.mspct, idfactor = "Spectra")
 autoplot(two_suns.mspct, facets = TRUE) # uses ggplot2's default
 autoplot(two_suns.mspct, facets = 1) # one column
 autoplot(two_suns.mspct, facets = 2) # two columns
-autoplot(two_suns.mspct, normalize = TRUE, facets = 2)
+autoplot(two_suns.mspct, norm = "max", facets = 2)
 
 }
 \seealso{
+Function \code{\link[photobiology]{normalize}} which is used to
+  apply the normalization based on the argument passed to \code{norm}.
+
 Other autoplot methods: 
 \code{\link{autoplot.calibration_spct}()},
 \code{\link{autoplot.cps_spct}()},
@@ -185,4 +190,3 @@ Other autoplot methods:
 \code{\link{set_annotations_default}()}
 }
 \concept{autoplot methods}
-\keyword{hplot}

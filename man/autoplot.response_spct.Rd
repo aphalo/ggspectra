@@ -11,7 +11,7 @@
   w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
     PAR())),
   range = NULL,
-  normalize = getOption("ggspectra.normalize", default = NULL),
+  norm = getOption("ggspectra.norm", default = "update"),
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
   pc.out = FALSE,
   label.qty = NULL,
@@ -20,7 +20,6 @@
   annotations = NULL,
   time.format = "",
   tz = "UTC",
-  norm = "max",
   text.size = 2.5,
   idfactor = NULL,
   facets = FALSE,
@@ -33,10 +32,11 @@
   object,
   ...,
   range = NULL,
-  normalize = getOption("ggspectra.normalize", default = NULL),
+  norm = getOption("ggspectra.norm", default = "update"),
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
   plot.data = "as.is",
-  idfactor = TRUE
+  idfactor = TRUE,
+  na.rm = TRUE
 )
 }
 \arguments{
@@ -50,10 +50,9 @@ to the plot methods for individual spectra, otherwise currently ignored.}
 \item{range}{an R object on which range() returns a vector of length 2, with
 min annd max wavelengths (nm).}
 
-\item{normalize}{logical or NULL Flag indicating is the spectrum is to be
-normalized. If \code{NULL}, the default, if \code{object} is normalized,
-the normalization is updated to be based on the values of \code{range}
-and \code{unit.out}.}
+\item{norm}{numeric normalization wavelength (nm) or character string \code{"max"}
+for normalization at the wavelength of highest peak, or \code{NULL} for
+plotting the spectrum as is.}
 
 \item{unit.out}{character string indicating type of radiation units to use
 for plotting: "photon" or its synomin "quantum", or "energy".}
@@ -80,10 +79,6 @@ Annotations and Title Annotations.}
 \code{\link[base]{strptime}}.}
 
 \item{tz}{character Time zone to use for title and/or subtitle.}
-
-\item{norm}{numeric normalization wavelength (nm) or character string \code{"max"}
-for normalization at the wavelength of highest peak, or \code{NULL} for
-plotting the spectrum as is.}
 
 \item{text.size}{numeric size of text in the plot decorations.}
 
