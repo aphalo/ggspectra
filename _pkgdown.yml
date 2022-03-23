@@ -1,6 +1,9 @@
 destination: ../ggspectra-docs
 url: https://docs.r4photobiology.info/ggspectra/
 
+template:
+  bootstrap: 5
+
 reference:
   - title: Package overview
     contents:
