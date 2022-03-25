@@ -69,7 +69,12 @@ test_that("cps_spct", {
 
 test_that("source_spct", {
   set_annotations_default()
-  vdiffr::expect_doppelganger("source-default",
+  vdiffr::expect_doppelganger("source-default-scaled",
+                              autoplot(fscale(white_led.source_spct)))
+  vdiffr::expect_doppelganger("source-default-normalized",
+                              autoplot(normalize(white_led.source_spct)))
+
+    vdiffr::expect_doppelganger("source-default",
                               autoplot(white_led.source_spct))
   vdiffr::expect_doppelganger("source-ylim1",
                               autoplot(white_led.source_spct, ylim = c(NA, 1)))
@@ -103,6 +108,11 @@ test_that("source_spct", {
                               autoplot(white_led.source_spct, annotations = c("-", "summaries")))
   vdiffr::expect_doppelganger("source-plus-annotations",
                               autoplot(white_led.source_spct, annotations = c("+", "boundaries")))
+
+  vdiffr::expect_doppelganger("source-default-q-scaled",
+                              autoplot(fscale(white_led.source_spct), unit.out = "photon"))
+  vdiffr::expect_doppelganger("source-default-q-normalized",
+                              autoplot(normalize(white_led.source_spct), unit.out = "photon"))
 
   vdiffr::expect_doppelganger("source-default-q",
                               autoplot(white_led.source_spct, unit.out = "photon"))
@@ -229,6 +239,12 @@ test_that("source_mspct", {
 
 test_that("filter_spct", {
   set_annotations_default()
+  vdiffr::expect_doppelganger("filter-default-tot-scaled",
+                              autoplot(fscale(Ler_leaf_trns.spct, target = 0.06,
+                                              range = c(400,700), set.scaled = TRUE)))
+  vdiffr::expect_doppelganger("filter-default-tot-normalized",
+                              autoplot(normalize(Ler_leaf_trns.spct, norm = "max")))
+
   vdiffr::expect_doppelganger("filter-default-tot",
                               autoplot(Ler_leaf_trns.spct))
   vdiffr::expect_doppelganger("filter-default-tot-ylim",
@@ -255,6 +271,14 @@ test_that("filter_spct", {
                               autoplot(Ler_leaf_trns.spct, annotations = c("-", "summaries")))
   vdiffr::expect_doppelganger("filter-plus-annotations-tot",
                               autoplot(Ler_leaf_trns.spct, annotations = c("+", "boundaries")))
+
+  vdiffr::expect_doppelganger("filter-default-scaled",
+                              autoplot(fscale(Ler_leaf_trns_i.spct, target = 0.06,
+                                              range = c(400,700), set.scaled = TRUE)))
+  vdiffr::expect_doppelganger("filter-default-normalized",
+                              autoplot(normalize(Ler_leaf_trns_i.spct, norm = "max")))
+  vdiffr::expect_doppelganger("filter-default-norm-max",
+                              autoplot(Ler_leaf_trns_i.spct, norm = "max"))
 
   vdiffr::expect_doppelganger("filter-default",
                               autoplot(Ler_leaf_trns_i.spct))
@@ -319,6 +343,14 @@ test_that("filter_spct", {
                               autoplot(Ler_leaf_trns_i.spct, plot.qty = "absorptance", annotations = c("+", "boundaries")))
   vdiffr::expect_doppelganger("filter-plus-segments-apt",
                               autoplot(Ler_leaf_trns_i.spct, plot.qty = "absorptance", annotations = c("+", "segments")))
+
+  vdiffr::expect_doppelganger("filter-default-a-scaled",
+                              autoplot(fscale(Ler_leaf_trns_i.spct, target = 2, qty.out = "absorbance",
+                                              range = c(400,700), set.scaled = TRUE),
+                                       plot.qty = "absorbance", range = c(300, NA)))
+  vdiffr::expect_doppelganger("filter-default-a-normalized",
+                              autoplot(normalize(Ler_leaf_trns_i.spct, norm = "max"),
+                                       plot.qty = "absorbance", range = c(300, NA)))
 
   vdiffr::expect_doppelganger("filter-default-a",
                               autoplot(Ler_leaf_trns_i.spct, plot.qty = "absorbance", range = c(300, NA)))
@@ -408,6 +440,18 @@ test_that("filter_mspct", {
 
 test_that("reflector_spct", {
   set_annotations_default()
+  vdiffr::expect_doppelganger("reflector-default-tot-scaled",
+                              autoplot(fscale(Ler_leaf_rflt.spct, target = 0.06,
+                                              range = c(400,700), set.scaled = TRUE)))
+  vdiffr::expect_doppelganger("reflector-default-tot-normalized",
+                              autoplot(normalize(Ler_leaf_rflt.spct, norm = "max")))
+  vdiffr::expect_doppelganger("reflector-default-tot-norm-max",
+                              autoplot(Ler_leaf_rflt.spct, norm = "max"))
+  vdiffr::expect_doppelganger("reflector-default-tot-norm-update",
+                              autoplot(Ler_leaf_rflt.spct, norm = "update"))
+  vdiffr::expect_doppelganger("reflector-default-tot-norm-skip",
+                              autoplot(Ler_leaf_rflt.spct, norm = "skip"))
+
   vdiffr::expect_doppelganger("reflector-default-tot",
                               autoplot(Ler_leaf_rflt.spct))
   vdiffr::expect_doppelganger("reflector-default-tot-ylim",
@@ -593,7 +637,12 @@ test_that("object_spct_as_filter", {
 
 test_that("response_spct", {
   set_annotations_default()
-  vdiffr::expect_doppelganger("response-default",
+  vdiffr::expect_doppelganger("response-default-scaled",
+                              autoplot(fscale(ccd.spct, f = "mean", target = 1)))
+  vdiffr::expect_doppelganger("response-default-normalized",
+                              autoplot(ccd.spct, norm = 600))
+
+    vdiffr::expect_doppelganger("response-default",
                               autoplot(ccd.spct))
   vdiffr::expect_doppelganger("response-default-ylim",
                               autoplot(ccd.spct, ylim = c(-0.1, 1.2)))

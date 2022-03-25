@@ -286,16 +286,23 @@ T_plot <- function(spct,
       pc.out <- FALSE
     }
     scale.factor <- 1
-    s.Tfr.label <- bquote(.(Tfr.name)~~spectral~~transmittance~~T[lambda]^{.(Tfr.tag)}/T[lambda=.(norm)]^{int}~~("rel."))
+    s.Tfr.label <- bquote(.(Tfr.name)~~spectral~~transmittance~~k %*% T[lambda]^{.(Tfr.tag)}~~("rel."))
+    Tfr.label.total  <- paste("k %*% T^{", Tfr.tag,"}", sep = "")
+    Tfr.label.avg  <- paste("bar(k %*% T[lambda]^{", Tfr.tag, "})", sep = "")
+  } else if (is_normalized(spct)) {
+    if (pc.out) {
+      warning("Percent not supported for normalized spectral data.")
+      pc.out <- FALSE
+    }
+    scale.factor <- 1
+    norm <- round(getNormalization(spct)[["norm.wl"]], 1)
+    s.Tfr.label <- bquote(.(Tfr.name)~~spectral~~transmittance~~T[lambda]^{.(Tfr.tag)}/T[lambda==.(norm)]^{.(Tfr.tag)}~~("rel."))
     Tfr.label.total  <- paste("atop(T^{", Tfr.tag,
-                              "}, T[lambda = ", norm, "]^{", Tfr.tag, "}",
+                              "}, T[lambda == ", norm, "]^{", Tfr.tag, "}",
                               sep = "")
     Tfr.label.avg  <- paste("atop(bar(T[lambda]^{", Tfr.tag,
-                            "}), T[lambda = ", norm, "]^{", Tfr.tag, "}",
+                            "}), T[lambda == ", norm, "]^{", Tfr.tag, "}",
                             sep = "")
-  } else if (is_normalized(spct)) {
-    warning("Plotting of normalized transmittance not supported")
-    return(ggplot())
   } else if (!pc.out) {
     scale.factor <- 1
     s.Tfr.label <- bquote(.(Tfr.name)~~spectral~~transmittance~~T[lambda]^{.(Tfr.tag)}~~("/1"))
@@ -491,9 +498,24 @@ A_plot <- function(spct,
                      total = "Total",
                      unknown = "Unknown-type",
                      NA_character_)
-  s.A.label <- bquote(.(Tfr.name)~~spectral~~absorbance~~A[lambda]^{.(Tfr.tag)}~~(AU))
-  A.label.total  <- paste("atop(A^{", Tfr.tag, "}, (AU %*% nm))", sep = "")
-  A.label.avg  <- paste("atop(bar(A[lambda]^{", Tfr.tag, "}), (AU))", sep = "")
+  if (is_scaled(spct)) {
+    s.A.label <- bquote(.(Tfr.name)~~spectral~~absorbance~~k %*% A[lambda]^{.(Tfr.tag)}~~("rel."))
+    A.label.total  <- paste("k %*% A^{", Tfr.tag, "}", sep = "")
+    A.label.avg  <- paste("bar(k %*% A[lambda]^{", Tfr.tag, "})", sep = "")
+  } else if (is_normalized(spct)) {
+    norm <- round(getNormalization(spct)[["norm.wl"]], 1)
+    s.A.label <- bquote(.(Tfr.name)~~spectral~~absorbance~~A[lambda]^{.(Tfr.tag)}/A[lambda==.(norm)]^{.(Tfr.tag)}~~("rel."))
+    A.label.total  <- paste("atop(A^{", Tfr.tag,
+                              "}, A[lambda == ", norm, "]^{", Tfr.tag, "}",
+                              sep = "")
+    A.label.avg  <- paste("atop(bar(A[lambda]^{", Tfr.tag,
+                            "}), A[lambda == ", norm, "]^{", Tfr.tag, "}",
+                            sep = "")
+  } else {
+    s.A.label <- bquote(.(Tfr.name)~~spectral~~absorbance~~A[lambda]^{.(Tfr.tag)}~~(AU))
+    A.label.total  <- paste("atop(A^{", Tfr.tag, "}, (AU %*% nm))", sep = "")
+    A.label.avg  <- paste("atop(bar(A[lambda]^{", Tfr.tag, "}), (AU))", sep = "")
+  }
 
   if (label.qty == "total") {
     A.label <- A.label.total
@@ -673,7 +695,21 @@ R_plot <- function(spct,
                      unknown = "Unknown-type",
                      NA_character_)
 
-  if (!pc.out) {
+  if (is_scaled(spct)) {
+    scale.factor <- 1
+    s.Rfr.label <- bquote(.(Rfr.name)~~spectral~~reflectance~~k %*% R[lambda]^{.(Rfr.tag)}~~("rel."))
+    Rfr.label.total  <- paste("k %*% R^{", Rfr.tag, "}", sep = "")
+    Rfr.label.avg  <- paste("bar(k %*% R[lambda]^{", Rfr.tag, "})", sep = "")
+  } else if (is_normalized(spct)) {
+    norm <- round(getNormalization(spct)[["norm.wl"]], 1)
+    s.Rfr.label <- bquote(.(Rfr.name)~~spectral~~reflectance~~R[lambda]^{.(Rfr.tag)}/R[lambda==.(norm)]^{.(Rfr.tag)}~~("rel."))
+    Rfr.label.total  <- paste("atop(R^{", Rfr.tag,
+                            "}, R[lambda == ", norm, "]^{", Rfr.tag, "})",
+                            sep = "")
+    Rfr.label.avg  <- paste("atop(bar(R[lambda]^{", Rfr.tag,
+                          "}), R[lambda == ", norm, "]^{", Rfr.tag, "})",
+                          sep = "")
+  } else  if (!pc.out) {
     scale.factor <- 1
       s.Rfr.label <- bquote(.(Rfr.name)~~spectral~~reflectance~~R[lambda]^{.(Rfr.tag)}~~("/1"))
       Rfr.label.total  <- paste("atop(R^{", Rfr.tag, "}, (\"/1\"))", sep = "")

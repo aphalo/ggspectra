@@ -78,22 +78,16 @@ e_rsp_plot <- function(spct,
   }
 
   if (is_scaled(spct)) {
-    s.rsp.label <- expression(Spectral~~energy~~response~~R[E](lambda)~~(relative~~units))
-    rsp.label.total <- "atop(R[E], (relative~~units))"
-    rsp.label.avg <- "atop(bar(R[E](lambda)), (relative~~units))"
+    s.rsp.label <- expression(Spectral~~energy~~response~~k %*% R[E~lambda]~~("rel."))
+    rsp.label.total <- "atop(k %*% R[E], (\"rel.\"))"
+    rsp.label.avg <- "atop(bar(k %*% R[E~lambda]), (\"rel.\"))"
   } else if (is_normalized(spct)) {
     norm.ls <- photobiology::getNormalization(spct)
-    if (!is.na(norm.ls[["norm.wl"]])) {
-      norm.wl <- signif(norm.ls[["norm.wl"]], digits = 4)
-      s.rsp.label <-
-        bquote(Spectral~~energy~~response~~R[E]( italic(lambda) )/R[E]( .(norm.wl))~~(.(multiplier.label)))
-      rsp.label.total  <- bquote(atop(integral(R[E](lambda), min, max), (.(multiplier.label))))
-      rsp.label.avg  <- bquote(atop(bar(R[E](lambda)/R[E](lambda = .(norm.wl))), (.(multiplier.label))))
-    } else {
-      s.rsp.label <- expression(Spectral~~energy~~response~~R[E](lambda)~~(relative~~units))
-      rsp.label.total <- "atop(R[E], (relative~~units))"
-      rsp.label.avg <- "atop(bar(R[E](lambda)), (relative~~units))"
-    }
+    norm.wl <- round(norm.ls[["norm.wl"]], digits = 1)
+    s.rsp.label <-
+      bquote(Spectral~~energy~~response~~R[E~lambda]/R[E~lambda==.(norm.wl)]~~(.(multiplier.label)))
+    rsp.label.total  <- bquote(atop(integral(R[E]/R[E~lambda==.(norm.wl)], min, max), (.(multiplier.label))))
+    rsp.label.avg  <- bquote(atop(bar(R[E~lambda]/R[E](lambda==.(norm.wl))), (.(multiplier.label))))
   } else {
     time.unit <- getTimeUnit(spct)
     if (!length(time.unit)) {
@@ -101,32 +95,32 @@ e_rsp_plot <- function(spct,
     }
     time.unit.char <- duration2character(time.unit)
     if (time.unit.char=="second") {
-      s.rsp.label <- expression(Spectral~~energy~~response~~R[E](lambda)~~(resp.~~unit~~s^{-1}~nm^{-1}))
+      s.rsp.label <- expression(Spectral~~energy~~response~~R[E~lambda]~~(resp.~~unit~~s^{-1}~nm^{-1}))
       rsp.label.total  <- "atop(R[E], (resp.~~unit~~s^{-1}))"
-      rsp.label.avg  <- "atop(bar(R[E](lambda)), (resp.~~unit~~s^{-1}~nm^{-1}))"
+      rsp.label.avg  <- "atop(bar(R[E~lambda]), (resp.~~unit~~s^{-1}~nm^{-1}))"
     } else if (time.unit.char=="day") {
-      s.rsp.label <- expression(Spectral~~energy~~response~~R[E](lambda)~~(resp.~~unit~~d^{-1}~nm^{-1}))
+      s.rsp.label <- expression(Spectral~~energy~~response~~R[E~lambda]~~(resp.~~unit~~d^{-1}~nm^{-1}))
       rsp.label.total  <- "atop(R[E], (resp.~~unit~~d^{-1}))"
-      rsp.label.avg  <- "atop(bar(R[E](lambda)), (resp.~~unit~~d^{-1}~nm^{-1}))"
+      rsp.label.avg  <- "atop(bar(R[E~lambda]), (resp.~~unit~~d^{-1}~nm^{-1}))"
     } else if (time.unit.char=="hour") {
-      s.rsp.label <- expression(Spectral~~energy~~response~~R[E](lambda)~~(resp.~~unit~~h^{-1}~nm^{-1}))
+      s.rsp.label <- expression(Spectral~~energy~~response~~R[E~lambda]~~(resp.~~unit~~h^{-1}~nm^{-1}))
       rsp.label.total  <- "atop(R[E], (resp.~~unit~~h^{-1}))"
-      rsp.label.avg  <- "atop(bar(R[E](lambda)), (resp.~~unit~~h^{-1}~nm^{-1}))"
+      rsp.label.avg  <- "atop(bar(R[E~lambda]), (resp.~~unit~~h^{-1}~nm^{-1}))"
     } else if (time.unit.char=="duration") {
-      s.rsp.label <- expression(Spectral~~energy~~response~~R[E](lambda)~~(resp.~~unit~nm^{-1}))
+      s.rsp.label <- expression(Spectral~~energy~~response~~R[E~lambda]~~(resp.~~unit~nm^{-1}))
       rsp.label.total  <- "atop(R[E], (resp.~~unit))"
-      rsp.label.avg  <- "atop(bar(R[E](lambda)), (resp.~~unit~nm^{-1}))"
+      rsp.label.avg  <- "atop(bar(R[E~lambda]), (resp.~~unit~nm^{-1}))"
       exposure.label <- paste("Length of time:",
                               ifelse(lubridate::is.duration(time.unit),
                                      as.character(time.unit), "unknown"))
     } else if (time.unit.char=="exposure") {
-      s.rsp.label <- expression(Spectral~~energy~~response~~R[E](lambda)~~(resp.~~unit~nm^{-1}))
+      s.rsp.label <- expression(Spectral~~energy~~response~~R[E~lambda]~~(resp.~~unit~nm^{-1}))
       rsp.label.total  <- "atop(R[E], (resp.~~unit))"
-      rsp.label.avg  <- "atop(bar(R[E](lambda)), (resp.~~unit~nm^{-1}))"
+      rsp.label.avg  <- "atop(bar(R[E~lambda]), (resp.~~unit~nm^{-1}))"
     } else {
-      s.rsp.label <- expression(Spectral~~energy~~response~~R[E](lambda)~~(arbitrary~~units))
+      s.rsp.label <- expression(Spectral~~energy~~response~~R[E~lambda]~~(arbitrary~~units))
       rsp.label.total <- "atop(R[E], (arbitrary~~units))"
-      rsp.label.avg <- "atop(bar(R[E](lambda)), (arbitrary~~units))"
+      rsp.label.avg <- "atop(bar(R[E~lambda]), (arbitrary~~units))"
     }
   }
 
@@ -144,13 +138,13 @@ e_rsp_plot <- function(spct,
   } else if (label.qty %in% c("average", "mean")) {
     rsp.label <- "bar(R[E](lambda))"
   } else if (label.qty == "contribution") {
-    rsp.label <- "atop(Contribution~~to~~total, R[E]~~(fraction))"
+    rsp.label <- "atop(Contribution~~to~~total, R[E]~~(\"/1\"))"
   } else if (label.qty == "contribution.pc") {
-    rsp.label <- "atop(Contribution~~to~~total, R[E]~~(percent))"
+    rsp.label <- "atop(Contribution~~to~~total, R[E]~~(\"%\"))"
   } else if (label.qty == "relative") {
-    rsp.label <- "atop(Relative~~to~~sum, R[E]~~(fraction))"
+    rsp.label <- "atop(Relative~~to~~sum, R[E]~~(\"/1\"))"
   } else if (label.qty == "relative.pc") {
-    rsp.label <- "atop(Relative~~to~~sum, R[E]~~(percent))"
+    rsp.label <- "atop(Relative~~to~~sum, R[E]~~(\"%\"))"
   } else {
     rsp.label <- ""
   }
@@ -301,22 +295,16 @@ q_rsp_plot <- function(spct,
   }
 
   if (is_scaled(spct)) {
-    s.rsp.label <- expression(Spectral~~photon~~response~~R[Q](lambda)~~(relative~~units))
-    rsp.label.total <- "atop(R[Q], (relative~~units))"
-    rsp.label.avg <- "atop(bar(R[Q](lambda)), (relative~~units))"
+    s.rsp.label <- expression(Spectral~~photon~~response~~k %*% R[Q~lambda]~~("rel."))
+    rsp.label.total <- "atop(k %*% R[Q], (\"rel.\"))"
+    rsp.label.avg <- "atop(bar(k %*% R[Q~lambda]), (\"rel.\"))"
   } else if (is_normalized(spct)) {
     norm.ls <- photobiology::getNormalization(spct)
-    if (!is.na(norm.ls[["norm.wl"]])) {
-      norm.wl <- signif(norm.ls[["norm.wl"]], digits = 4)
+      norm.wl <- round(norm.ls[["norm.wl"]], digits = 1)
       s.rsp.label <-
-        bquote(Spectral~~photon~~response~~R[Q]( italic(lambda) )/R[Q]( .(norm.wl))~~(.(multiplier.label)))
-      rsp.label.total  <- bquote(atop(integral(R[Q](lambda), min, max), (.(multiplier.label))))
-      rsp.label.avg  <- bquote(atop(bar(R[Q](lambda)/R[Q](lambda = .(norm.wl))), (.(multiplier.label))))
-    } else {
-      s.rsp.label <- expression(Spectral~~photon~~response~~R[Q](lambda)~~(relative~~units))
-      rsp.label.total <- "atop(R[Q], (relative~~units))"
-      rsp.label.avg <- "atop(bar(R[Q](lambda)), (relative~~units))"
-    }
+        bquote(Spectral~~photon~~response~~R[Q~lambda]/R[Q~lambda==.(norm.wl)]~~(.(multiplier.label)))
+      rsp.label.total  <- bquote(atop(integral(R[Q~lambda], min, max), (.(multiplier.label))))
+      rsp.label.avg  <- bquote(atop(bar(R[Q~lambda]/R[Q~lambda==.(norm.wl)]), (.(multiplier.label))))
   } else {
     time.unit <- getTimeUnit(spct)
     if (!length(time.unit)) {
@@ -324,32 +312,32 @@ q_rsp_plot <- function(spct,
     }
     time.unit.char <- duration2character(time.unit)
     if (time.unit.char=="second") {
-      s.rsp.label <- expression(Spectral~~photon~~response~~R[Q](lambda)~~(resp.~~unit~~s^{-1}~nm^{-1}))
+      s.rsp.label <- expression(Spectral~~photon~~response~~R[Q~lambda]~~(resp.~~unit~~s^{-1}~nm^{-1}))
       rsp.label.total  <- "atop(R[Q], (resp.~~unit~~s^{-1}))"
-      rsp.label.avg  <- "atop(bar(R[Q](lambda)), (resp.~~unit~~s^{-1}~nm^{-1}))"
+      rsp.label.avg  <- "atop(bar(R[Q~lambda]), (resp.~~unit~~s^{-1}~nm^{-1}))"
     } else if (time.unit.char=="day") {
-      s.rsp.label <- expression(Spectral~~photon~~response~~R[Q](lambda)~~(resp.~~unit~~d^{-1}~nm^{-1}))
+      s.rsp.label <- expression(Spectral~~photon~~response~~R[Q~lambda]~~(resp.~~unit~~d^{-1}~nm^{-1}))
       rsp.label.total  <- "atop(R[Q], (resp.~~unit~~d^{-1}))"
-      rsp.label.avg  <- "atop(bar(R[Q](lambda)), (resp.~~unit~~d^{-1}~nm^{-1}))"
+      rsp.label.avg  <- "atop(bar(R[Q~lambda]), (resp.~~unit~~d^{-1}~nm^{-1}))"
     } else if (time.unit.char=="hour") {
-      s.rsp.label <- expression(Spectral~~photon~~response~~R[Q](lambda)~~(resp.~~unit~~h^{-1}~nm^{-1}))
+      s.rsp.label <- expression(Spectral~~photon~~response~~R[Q~lambda]~~(resp.~~unit~~h^{-1}~nm^{-1}))
       rsp.label.total  <- "atop(R[Q], (resp.~~unit~~h^{-1}))"
-      rsp.label.avg  <- "atop(bar(R[Q](lambda)), (resp.~~unit~~h^{-1}~nm^{-1}))"
+      rsp.label.avg  <- "atop(bar(R[Q~lambda]), (resp.~~unit~~h^{-1}~nm^{-1}))"
     } else if (time.unit.char=="duration") {
-      s.rsp.label <- expression(Spectral~~photon~~response~~R[Q](lambda)~~(resp.~~unit~nm^{-1}))
+      s.rsp.label <- expression(Spectral~~photon~~response~~R[Q~lambda]~~(resp.~~unit~nm^{-1}))
       rsp.label.total  <- "atop(R[Q], (resp.~~unit))"
-      rsp.label.avg  <- "atop(bar(R[Q](lambda)), (resp.~~unit~nm^{-1}))"
+      rsp.label.avg  <- "atop(bar(R[Q~lambda]), (resp.~~unit~nm^{-1}))"
       exposure.label <- paste("Length of time:",
                               ifelse(lubridate::is.duration(time.unit),
                                      as.character(time.unit), "unknown"))
     } else if (time.unit.char=="exposure") {
-      s.rsp.label <- expression(Spectral~~photon~~response~~R[Q](lambda)~~(resp.~~unit~nm^{-1}))
+      s.rsp.label <- expression(Spectral~~photon~~response~~R[Q~lambda]~~(resp.~~unit~nm^{-1}))
       rsp.label.total  <- "atop(R[Q], (resp.~~unit))"
-      rsp.label.avg  <- "atop(bar(R[Q](lambda)), (resp.~~unit~nm^{-1}))"
+      rsp.label.avg  <- "atop(bar(R[Q~lambda]), (resp.~~unit~nm^{-1}))"
     } else {
-      s.rsp.label <- expression(Spectral~~photon~~response~~R[Q](lambda)~~(arbitrary~~units))
+      s.rsp.label <- expression(Spectral~~photon~~response~~R[Q~lambda]~~(arbitrary~~units))
       rsp.label.total <- "atop(R[Q], (arbitrary~~units))"
-      rsp.label.avg <- "atop(bar(R[Q](lambda)), (arbitrary~~units))"
+      rsp.label.avg <- "atop(bar(R[Q~lambda]), (arbitrary~~units))"
     }
   }
 
@@ -367,13 +355,13 @@ q_rsp_plot <- function(spct,
   } else if (label.qty %in% c("average", "mean")) {
     rsp.label <- "bar(R[Q](lambda))"
   } else if (label.qty == "contribution") {
-    rsp.label <- "atop(Contribution~~to~~total, R[Q]~~(fraction))"
+    rsp.label <- "atop(Contribution~~to~~total, R[Q]~~(\"/1\"))"
   } else if (label.qty == "contribution.pc") {
-    rsp.label <- "atop(Contribution~~to~~total, R[Q]~~(percent))"
+    rsp.label <- "atop(Contribution~~to~~total, R[Q]~~(\"%\"))"
   } else if (label.qty == "relative") {
-    rsp.label <- "atop(Relative~~to~~sum, R[Q]~~(fraction))"
+    rsp.label <- "atop(Relative~~to~~sum, R[Q]~~(\"/1\"))"
   } else if (label.qty == "relative.pc") {
-    rsp.label <- "atop(Relative~~to~~sum, R[Q]~~(percent))"
+    rsp.label <- "atop(Relative~~to~~sum, R[Q]~~(\"%\"))"
   } else {
     rsp.label <- ""
   }
