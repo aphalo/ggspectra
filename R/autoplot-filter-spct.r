@@ -66,34 +66,45 @@ Afr_plot <- function(spct,
   if (!is.null(range)) {
     spct <- trim_wl(spct, range = range)
   }
-   if (!is.null(w.band)) {
+  if (!is.null(w.band)) {
     w.band <- trim_wl(w.band, range = range(spct))
   }
-#  setGenericSpct(spct, multiple.wl = getMultipleWl(spct)) # so that we can assign variable Afr
 
-  if (!pc.out) {
+  if (is_scaled(spct)) {
+    if (pc.out) {
+      warning("Percent not supported for scaled spectral data.")
+      pc.out <- FALSE
+    }
     scale.factor <- 1
-    s.Afr.label <- expression(Spectral~~absorptance~~italic(A)(lambda)~~(fraction))
-    Afr.label.total  <- "atop(italic(A), (fraction))"
-    Afr.label.avg  <- "atop(bar(italic(A)(lambda)), (fraction))"
+    s.Afr.label <- expression(Spectral~~absorptance~~italic(A)[lambda]~~("rel."))
+    Afr.label.total  <- "atop(italic(A), (rel))"
+    Afr.label.avg  <- "atop(bar(italic(A)[lambda]), (rel))"
+  } else if (is_normalized(spct)) {
+    warning("Plotting of normalized absorptance not supported")
+    return(ggplot())
   } else if (pc.out) {
     scale.factor <- 100
-    s.Afr.label <- expression(Spectral~~absorptance~~italic(A)(lambda)~~(percent))
+    s.Afr.label <- expression(Spectral~~absorptance~~italic(A)[lambda]~~("%"))
     Afr.label.total  <- "atop(italic(A), (total %*% 100))"
-    Afr.label.avg  <- "atop(bar(italic(A)(lambda)), (percent))"
+    Afr.label.avg  <- "atop(bar(italic(A)[lambda]), (\"%\"))"
+  } else {
+    scale.factor <- 1
+    s.Afr.label <- expression(Spectral~~absorptance~~italic(A)[lambda]~~("/1"))
+    Afr.label.total  <- "atop(italic(A), (\"/1\"))"
+    Afr.label.avg  <- "atop(bar(italic(A)[lambda]), (\"/1\"))"
   }
   if (label.qty == "total") {
     Afr.label <- Afr.label.total
   } else if (label.qty %in% c("average", "mean")) {
     Afr.label <- Afr.label.avg
   } else if (label.qty == "contribution") {
-    Afr.label <- "atop(Contribution~~to~~total, italic(A)~~(fraction))"
+    Afr.label <- "atop(Contribution~~to~~total, italic(A)~~(\"/1\"))"
   } else if (label.qty == "contribution.pc") {
-    Afr.label <- "atop(Contribution~~to~~total, italic(A)~~(percent))"
+    Afr.label <- "atop(Contribution~~to~~total, italic(A)~~(\"%\"))"
   } else if (label.qty == "relative") {
-    Afr.label <- "atop(Relative~~to~~sum, italic(A)~~(fraction))"
+    Afr.label <- "atop(Relative~~to~~sum, italic(A)~~(\"/1\"))"
   } else if (label.qty == "relative.pc") {
-    Afr.label <- "atop(Relative~~to~~sum, italic(A)~~(percent))"
+    Afr.label <- "atop(Relative~~to~~sum, italic(A)~~(\"%\"))"
   } else {
     Afr.label <- ""
   }
@@ -258,49 +269,56 @@ T_plot <- function(spct,
   if (!length(Tfr.type)) {
     Tfr.type <- "unknown"
   }
-  if (!pc.out) {
-    scale.factor <- 1
-    if (Tfr.type == "internal") {
-      s.Tfr.label <- expression(Internal~~spectral~~transmittance~~T[int](lambda)~~(fraction))
-      Tfr.label.total  <- "atop(T[int], (fraction))"
-      Tfr.label.avg  <- "atop(bar(T[int](lambda)), (fraction))"
-    } else if (Tfr.type == "total") {
-      s.Tfr.label <- expression(Total~~spectral~~transmittance~~T[tot](lambda)~~(fraction))
-      Tfr.label.total  <- "atop(T[tot], (total))"
-      Tfr.label.avg  <- "atop(bar(T[tot](lambda)), (fraction))"
-    }  else {
-      s.Tfr.label <- expression(Spectral~~transmittance~~T(lambda)~~(fraction))
-      Tfr.label.total  <- "atop(T, (total))"
-      Tfr.label.avg  <- "atop(bar(T(lambda)), (fraction))"
+  Tfr.tag <- switch(Tfr.type,
+                     internal = "int",
+                     total = "tot",
+                    unknown = "",
+                     NA_character_)
+  Tfr.name <- switch(Tfr.type,
+                    internal = "Internal",
+                    total = "Total",
+                    unknown = "Unknown-type",
+                    NA_character_)
+
+  if (is_scaled(spct)) {
+    if (pc.out) {
+      warning("Percent not supported for scaled spectral data.")
+      pc.out <- FALSE
     }
+    scale.factor <- 1
+    s.Tfr.label <- bquote(.(Tfr.name)~~spectral~~transmittance~~T[lambda]^{.(Tfr.tag)}/T[lambda=.(norm)]^{int}~~("rel."))
+    Tfr.label.total  <- paste("atop(T^{", Tfr.tag,
+                              "}, T[lambda = ", norm, "]^{", Tfr.tag, "}",
+                              sep = "")
+    Tfr.label.avg  <- paste("atop(bar(T[lambda]^{", Tfr.tag,
+                            "}), T[lambda = ", norm, "]^{", Tfr.tag, "}",
+                            sep = "")
+  } else if (is_normalized(spct)) {
+    warning("Plotting of normalized transmittance not supported")
+    return(ggplot())
+  } else if (!pc.out) {
+    scale.factor <- 1
+    s.Tfr.label <- bquote(.(Tfr.name)~~spectral~~transmittance~~T[lambda]^{.(Tfr.tag)}~~("/1"))
+    Tfr.label.total  <- paste("atop(T^{", Tfr.tag, "} (\"/1\"))", sep = "")
+    Tfr.label.avg  <- paste("atop(bar(T[lambda]^{", Tfr.tag, "}), (\"/1\"))", sep = "")
   } else if (pc.out) {
     scale.factor <- 100
-    if (Tfr.type == "internal") {
-      s.Tfr.label <- expression(Internal~~spectral~~transmittance~~T[int](lambda)~~(percent))
-      Tfr.label.total  <- "atop(T[int], (total %*% 100))"
-      Tfr.label.avg  <- "atop(bar(T[int](lambda)), (percent))"
-    } else if (Tfr.type == "total") {
-      s.Tfr.label <- expression(Total~~spectral~~transmittance~~T[tot](lambda)~~(percent))
-      Tfr.label.total  <- "atop(T[tot], (total %*% 100))"
-      Tfr.label.avg  <- "atop(bar(T[tot](lambda)), (percent))"
-    }  else {
-      s.Tfr.label <- expression(Spectral~~transmittance~~T(lambda)~~(percent))
-      Tfr.label.total  <- "atop(T, (total  %*% 100))"
-      Tfr.label.avg  <- "atop(bar(T(lambda)), (percent))"
-    }
+    s.Tfr.label <- bquote(.(Tfr.name)~~spectral~~transmittance~~T[lambda]^{.(Tfr.tag)}~~("%"))
+    Tfr.label.total  <- paste("atop(T^{", Tfr.tag, "}, (total %*% 100))", sep = "")
+    Tfr.label.avg  <- paste("atop(bar(T[lambda]^{",  Tfr.tag, "}), (\"%\"))", sep = "")
   }
   if (label.qty == "total") {
     Tfr.label <- Tfr.label.total
   } else if (label.qty %in% c("average", "mean")) {
     Tfr.label <- Tfr.label.avg
   } else if (label.qty == "contribution") {
-    Tfr.label <- "atop(Contribution~~to~~total, T~~(fraction))"
+    Tfr.label <- "atop(Contribution~~to~~total, T~~(\"/1\"))"
   } else if (label.qty == "contribution.pc") {
-    Tfr.label <- "atop(Contribution~~to~~total, T~~(percent))"
+    Tfr.label <- "atop(Contribution~~to~~total, T~~(\"%\"))"
   } else if (label.qty == "relative") {
-    Tfr.label <- "atop(Relative~~to~~sum, T~~(fraction))"
+    Tfr.label <- "atop(Relative~~to~~sum, T~~(\"/1\"))"
   } else if (label.qty == "relative.pc") {
-    Tfr.label <- "atop(Relative~~to~~sum, T~~(percent))"
+    Tfr.label <- "atop(Relative~~to~~sum, T~~(\"%\"))"
   } else {
     Tfr.label <- ""
   }
@@ -463,22 +481,32 @@ A_plot <- function(spct,
   if (!length(Tfr.type)) {
     Tfr.type <- "unknown"
   }
-  s.A.label <- expression(Spectral~~absorbance~~A(lambda)~~(AU))
-  A.label.total  <- "atop(A, (AU %*% nm))"
-  A.label.avg  <- "atop(bar(A(lambda)), (AU))"
+  Tfr.tag <- switch(Tfr.type,
+                    internal = "int",
+                    total = "tot",
+                    unknown = "",
+                    NA_character_)
+  Tfr.name <- switch(Tfr.type,
+                     internal = "Internal",
+                     total = "Total",
+                     unknown = "Unknown-type",
+                     NA_character_)
+  s.A.label <- bquote(.(Tfr.name)~~spectral~~absorbance~~A[lambda]^{.(Tfr.tag)}~~(AU))
+  A.label.total  <- paste("atop(A^{", Tfr.tag, "}, (AU %*% nm))", sep = "")
+  A.label.avg  <- paste("atop(bar(A[lambda]^{", Tfr.tag, "}), (AU))", sep = "")
 
   if (label.qty == "total") {
     A.label <- A.label.total
   } else if (label.qty %in% c("average", "mean")) {
     A.label <- A.label.avg
   } else if (label.qty == "contribution") {
-    A.label <- "atop(Contribution~~to~~total, A~~(fraction))"
+    A.label <- "atop(Contribution~~to~~total, A~~(\"/1\"))"
   } else if (label.qty == "contribution.pc") {
-    A.label <- "atop(Contribution~~to~~total, A~~(percent))"
+    A.label <- "atop(Contribution~~to~~total, A~~(\"%\"))"
   } else if (label.qty == "relative") {
-    A.label <- "atop(Relative~~to~~sum, A~~(fraction))"
+    A.label <- "atop(Relative~~to~~sum, A~~(\"/1\"))"
   } else if (label.qty == "relative.pc") {
-    A.label <- "atop(Relative~~to~~sum, A~~(percent))"
+    A.label <- "atop(Relative~~to~~sum, A~~(\"%\"))"
   } else {
     A.label <- ""
   }
@@ -633,49 +661,41 @@ R_plot <- function(spct,
   if (length(Rfr.type) == 0) {
     Rfr.type <- "unknown"
   }
+
+  Rfr.tag <- switch(Rfr.type,
+                    specular = "spc",
+                    total = "tot",
+                    unknown = "",
+                    NA_character_)
+  Rfr.name <- switch(Rfr.type,
+                     specular = "Specular",
+                     total = "Total",
+                     unknown = "Unknown-type",
+                     NA_character_)
+
   if (!pc.out) {
     scale.factor <- 1
-    if (Rfr.type == "specular") {
-      s.Rfr.label <- expression(Specular~~spectral~~reflectance~~R[spc](lambda)~~(fraction))
-      Rfr.label.total  <- "atop(R[spc], (fraction))"
-      Rfr.label.avg  <- "atop(bar(R[spc](lambda)), (fraction))"
-    } else if (Rfr.type == "total") {
-      s.Rfr.label <- expression(Total~~spectral~~reflectance~~R[tot](lambda)~~(fraction))
-      Rfr.label.total  <- "atop(R[tot], (total))"
-      Rfr.label.avg  <- "atop(bar(R[tot](lambda)), (fraction))"
-    }  else {
-      s.Rfr.label <- expression(Total~~spectral~~reflectance~~R(lambda)~~(fraction))
-      Rfr.label.total  <- "atop(R, (total))"
-      Rfr.label.avg  <- "atop(bar(R(lambda)), (fraction))"
-    }
+      s.Rfr.label <- bquote(.(Rfr.name)~~spectral~~reflectance~~R[lambda]^{.(Rfr.tag)}~~("/1"))
+      Rfr.label.total  <- paste("atop(R^{", Rfr.tag, "}, (\"/1\"))", sep = "")
+      Rfr.label.avg  <- paste("atop(bar(R[lambda]^{", Rfr.tag, "}), (\"/1\"))", sep = "")
   } else if (pc.out) {
     scale.factor <- 100
-    if (Rfr.type == "specular") {
-      s.Rfr.label <- expression(Specular~~spectral~~reflectance~~R[spc](lambda)~~(percent))
-      Rfr.label.total  <- "atop(R[spc], (total %*% 100))"
-      Rfr.label.avg  <- "atop(bar(R[spc](lambda)), (percent))"
-    } else if (Rfr.type == "total") {
-      s.Rfr.label <- expression(Total~~spectral~~reflectance~~R[tot](lambda)~~(percent))
-      Rfr.label.total  <- "atop(R[tot], (total %*% 100))"
-      Rfr.label.avg  <- "atop(bar(R[tot](lambda)), (percent))"
-    }  else {
-      s.Rfr.label <- expression(Total~~spectral~~reflectance~~R(lambda)~~(percent))
-      Rfr.label.total  <- "atop(R, (total  %*% 100))"
-      Rfr.label.avg  <- "atop(bar(R(lambda)), (percent))"
-    }
+      s.Rfr.label <- bquote(.(Rfr.name)~~spectral~~reflectance~~R[lambda]^{.(Rfr.tag)}~~("%"))
+      Rfr.label.total  <- paste("atop(R^{", Rfr.tag, "}, (total %*% 100))", sep = "")
+      Rfr.label.avg  <- paste("atop(bar(R[lambda]^{", Rfr.tag, "}), (\"%\"))", sep = "")
   }
   if (label.qty == "total") {
     Rfr.label <- Rfr.label.total
   } else if (label.qty %in% c("average", "mean")) {
     Rfr.label <- Rfr.label.avg
   } else if (label.qty == "contribution") {
-    Rfr.label <- "atop(Contribution~~to~~total, R~~(fraction))"
+    Rfr.label <- "atop(Contribution~~to~~total, R~~(\"/1\"))"
   } else if (label.qty == "contribution.pc") {
-    Rfr.label <- "atop(Contribution~~to~~total, R~~(percent))"
+    Rfr.label <- "atop(Contribution~~to~~total, R~~(\"%\"))"
   } else if (label.qty == "relative") {
-    Rfr.label <- "atop(Relative~~to~~sum, R~~(fraction))"
+    Rfr.label <- "atop(Relative~~to~~sum, R~~(\"/1\"))"
   } else if (label.qty == "relative.pc") {
-    Rfr.label <- "atop(Relative~~to~~sum, R~~(percent))"
+    Rfr.label <- "atop(Relative~~to~~sum, R~~(\"%\"))"
   } else {
     Rfr.label <- ""
   }
@@ -846,7 +866,7 @@ O_plot <- function(spct,
 #    warning("Internal transmittance converted to total transmittance")
     spct <- convertTfrType(spct, Tfr.type = "total")
   }
-  s.Rfr.label <- expression(atop(Spectral~~reflectance~R(lambda)~~absorptance~~A(lambda), and~~transmittance~T(lambda)))
+  s.Rfr.label <- expression(atop(Spectral~~reflectance~R[lambda]~~absorptance~~A[lambda], and~~transmittance~T[lambda]))
   spct[["Afr"]] <- 1.0 - spct[["Tfr"]] - spct[["Rfr"]]
   if (any((spct[["Afr"]]) < -0.01)) {
     message("Bad data or fluorescence.")
@@ -900,15 +920,15 @@ O_plot <- function(spct,
                                                  Rfr = 0.25,
                                                  Afr = 0.55),
                                       breaks = c("Rfr", "Afr", "Tfr"),
-                                      labels = c(Tfr = expression(T(lambda)),
-                                                 Afr = expression(A(lambda)),
-                                                 Rfr = expression(R(lambda))),
+                                      labels = c(Tfr = expression(T[lambda]),
+                                                 Afr = expression(A[lambda]),
+                                                 Rfr = expression(R[lambda])),
                                       guide = guide_legend(title = NULL))
   } else {
     plot <- plot + geom_line(aes_(linetype = ~variable))
-    plot <- plot + scale_linetype(labels = c(Tfr = expression(T(lambda)),
-                                             Afr = expression(A(lambda)),
-                                             Rfr = expression(R(lambda))),
+    plot <- plot + scale_linetype(labels = c(Tfr = expression(T[lambda]),
+                                             Afr = expression(A[lambda]),
+                                             Rfr = expression(R[lambda])),
                                   guide = guide_legend(title = NULL))
   }
   plot <- plot + labs(x = "Wavelength (nm)", y = s.Rfr.label)

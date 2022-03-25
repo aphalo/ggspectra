@@ -33,6 +33,9 @@ revised `normalize()` function in 'photobiology' (\>= 0.10.10) .
 -   Revise `autoplot()` method for `object_mspct` to correctly handle
     normalization of collections of spectra, one spectrum at a time,
     correcting a bug.
+-   Revise `autoplot()` methods for `filter_spct`, `reflector_spct` and
+    `object_spct` to use shorter *y*-axis labels. In the case of
+    absorbance indicate "internal" or "total" in the axis label.
 -   Add `autoplot.cps_mspct()` and `autoplot.raw_mspct()` methods.
 -   Add support for faceting to all `autoplot()` methods for collections
     of spectra.
