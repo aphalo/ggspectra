@@ -55,12 +55,28 @@ theme_set(theme_bw(10))
 
 ## Plotting spectra
 
-The most automatic way of plotting spectral data stored in one of the classes defined in package `photobiology` is to use the `autoplot()` methods (for compatibility
-with versions < 0.9.25 `plot()` remains as a deprecated name for the same methods). As `autoplot()` methods defined by 'ggplot2' they take advantage of all the data and metadata stored in objects of the special classes used to store spectra. This allows the automatic construction of axis labels as quantities and units are well defined.
+The most automatic way of plotting spectral data stored in one of the classes
+defined in package `photobiology` is to use the `autoplot()` methods (for
+compatibility with versions < 0.9.25 `plot()` remains as a deprecated name for
+the same methods). As `autoplot()` methods defined by 'ggplot2' they take
+advantage of all the data and metadata stored in objects of the special classes
+used to store spectra. This allows the automatic construction of axis labels as
+quantities and units are well defined.
 
-### Simple plots
+### Single spectra
 
-Here we use the same example `source_spct` object from package 'photobiology' used in the User Guide 1. In contrast to the examples in the User Guide 1, here we obtain with a very simple statement a complete annotated plot of the solar spectrum at ground level.
+Here we use the same example `source_spct` object from package 'photobiology'
+used in _User Guide 1_. In contrast to the examples in the User Guide 1, here
+we obtain with a very simple statement an annotated plot of the solar spectrum
+at ground level. The plotting of objects of all the classes defined in package
+'photobiology' is similar except to those objects of the base class 
+`generic_spct`. Function `spct_classes()` lists them.
+
+```{r}
+spct_classes()
+```
+
+The simplest call to `autoplot()`, using default arguments for all parameters is:
 
 ```{r}
 autoplot(sun.spct)
@@ -80,9 +96,19 @@ autoplot(two_suns.spct)
 ```
 Collections of spectra can be plotted also automatically. See next section for examples.
 
-## Ploting collections of spectra
+### Ploting collections of spectra
 
-`autoplot()` methods are available for collections of spectra. We use in the examples a simple collection of two spectra. The output and acceptable arguments are the same as those in the `autoplot()` methods for multiple spectra in long form described above.
+In addition to `autoplot()` methods for individual spectra, `autoplot()` methods
+are available for collections of spectra. We use in the examples a simple
+collection of two spectra. The output and acceptable arguments are the same as
+those in the `autoplot()` methods for multiple spectra in long form described
+above. The plotting of objects of all the classes for collections of spectra
+defined in package 'photobiology' is similar except to those objects of the base
+class `generic_mspct`. Function `mspct_classes()` lists them.
+
+```{r}
+mspct_classes()
+``` 
 
 ```{r}
 two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct / 2))
@@ -94,6 +120,7 @@ Plot accepting all defaults.
 ```{r}
 autoplot(two_suns.mspct)
 ```
+
 We can choose a different name for the factor identifying the spectra in the collection.
 
 ```{r}
