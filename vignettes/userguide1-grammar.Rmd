@@ -17,7 +17,7 @@ editor_options:
 
 ## Introduction
 
-Package `ggspectra` extends `ggplot2` with stats, geoms, scales and
+Package 'ggspectra' extends 'ggplot2' with stats, geoms, scales and
 annotations suitable for light spectra. It also defines `ggplot()` and
 `autoplot()` methods specialized for the classes defined in package
 `photobiology` for storing different types of spectral data. The
@@ -25,19 +25,22 @@ annotations suitable for light spectra. It also defines `ggplot()` and
 Methods'.
 
 The new elements can be freely combined with methods and functions
-defined in packages `ggplot2`, `scales`, `ggrepel` and `cowplot`.
+defined in packages 'ggplot2', 'scales' and extensions like 'ggrepel', 'cowplot',
+'ggpp', 'gginnards' and 'patchwork'.
 
-### What are `plot` specializations for?
+### What are `autoplot()` method specializations for?
 
-The `plot` specializations produce fully annotated plots as `ggplot`
-objects, which can be further manipulated if so desired. They use the
-metadata stored in spectral objects of classes defined in package
-'photobiology' to automatically generate suitable axis labels, scales
-and annotations. (Please, see vignette "Plot methods" for details.)
+The `autoplot()` generic method is defined in package 'ggplot2'. Package
+'ggspectra' provides specializations of this method that construct fully
+annotated plots as ggplot objects, which can be further manipulated if so
+desired. These methods use the metadata stored in spectral objects of classes
+defined in package 'photobiology' to automatically generate suitable axis
+labels, scales and annotations. (Please, see vignette "Autoplot methods" for
+details.)
 
 ### What are `ggplot` specializations for?
 
-The `ggplot` specializations set default `aes` according to the type of
+The `ggplot()` specializations set default `aes` according to the type of
 spectral object. They also add support for `unit.out` arguments allowing
 on-the-fly conversion of units of expression or spectral quantities.
 These are only defaults and can be overridden by explicit use of `aes()`
@@ -55,84 +58,29 @@ aesthetic mapping fulfils the expectations. Package 'ggpmisc' contains
 some equivalent *stats* which do not assume that *x* is mapped to
 wavelength, accepting `numeric` and *datetime* values.
 
-+------------+-----------------+--------------------------------------+
-| *stat*     | default *geom*  | other uses                           |
-|            | (used for)      |                                      |
-+:===========+:================+:=====================================+
-| `s         | point           | wavelength label, spectral quantity  |
-| tat_peaks` | (highlight      | label                                |
-|            | maxima)         |                                      |
-+------------+-----------------+--------------------------------------+
-| `sta       | point           | wavelength label, spectral quantity  |
-| t_valleys` | (highlight      | label                                |
-|            | minima)         |                                      |
-+------------+-----------------+--------------------------------------+
-| `stat_la   | text            | spectral quantity label (support     |
-| bel_peaks` | (wavelength     | 'ggrepel')                           |
-|            | label)          |                                      |
-+------------+-----------------+--------------------------------------+
-| `stat_labe | text            | spectral quantity label (support     |
-| l_valleys` | (wavelength     | 'ggrepel')                           |
-|            | label)          |                                      |
-+------------+-----------------+--------------------------------------+
-| `stat      | point           | wavelength label, spectral quantity  |
-| _find_wls` | (highlight wls  | label                                |
-|            | at qty)         |                                      |
-+------------+-----------------+--------------------------------------+
-| `stat_     | point           | wavelength label, spectral quantity  |
-| find_qtys` | (highlight qty  | label                                |
-|            | at wl)          |                                      |
-+------------+-----------------+--------------------------------------+
-| `s         | color, fill     |                                      |
-| tat_color` |                 |                                      |
-+------------+-----------------+--------------------------------------+
-| `stat      | text (waveband  | rect (showing range of waveband and  |
-| _wb_label` | name)           | its color)                           |
-+------------+-----------------+--------------------------------------+
-| `stat      | text (y         | label(s) with waveband integral      |
-| _wb_total` | integral)       |                                      |
-+------------+-----------------+--------------------------------------+
-| `sta       | text (y mean)   | label(s) with waveband mean          |
-| t_wb_mean` |                 |                                      |
-+------------+-----------------+--------------------------------------+
-| `stat_w    | text (y mean)   | label with wavelength *range* mean   |
-| l_summary` |                 |                                      |
-+------------+-----------------+--------------------------------------+
-| `s         | text            | label(s) with waveband integral /    |
-| tat_wb_con | (contribution)  | whole spectrum integral              |
-| tribution` |                 |                                      |
-+------------+-----------------+--------------------------------------+
-| `stat_wb   | text (relative) | label(s) with waveband integral /    |
-| _relative` |                 | sum of integrals of all wavebands    |
-+------------+-----------------+--------------------------------------+
-| `stat_w    | text (energy    | rect (showing range of waveband and  |
-| b_e_irrad` | irradiance)     | its color)                           |
-+------------+-----------------+--------------------------------------+
-| `stat_w    | text (photon    | rect (showing range of waveband and  |
-| b_q_irrad` | irradiance)     | its color)                           |
-+------------+-----------------+--------------------------------------+
-| `stat_wb   | text (spectral  | rect (showing range of waveband and  |
-| _e_sirrad` | energy          | its color)                           |
-|            | irradiance)     |                                      |
-+------------+-----------------+--------------------------------------+
-| `stat_wb   | text (spectral  | rect (showing range of waveband and  |
-| _q_sirrad` | photon          | its color)                           |
-|            | irradiance)     |                                      |
-+------------+-----------------+--------------------------------------+
-| `stat      | rect (fill of   | text (label with waveband name)      |
-| _wl_strip` | wavelength or   |                                      |
-|            | waveband)       |                                      |
-+------------+-----------------+--------------------------------------+
-| `st        | rect (fill of   |                                      |
-| at_wb_box` | waveband)       |                                      |
-+------------+-----------------+--------------------------------------+
-| `sta       | errorbarh       |                                      |
-| t_wb_hbar` | (color of       |                                      |
-|            | waveband)       |                                      |
-+------------+-----------------+--------------------------------------+
-| `stat_     | rect (fill of   |                                      |
-| wb_column` | waveband)       |                                      |
-+------------+-----------------+--------------------------------------+
+| *stat*                   | default *geom* (used for)             | other uses                                                          |
+|:----------------|:----------------|:------------------------------------|
+| `s tat_peaks`            | point (highlight maxima)              | wavelength label, spectral quantity label                           |
+| `sta t_valleys`          | point (highlight minima)              | wavelength label, spectral quantity label                           |
+| `stat_la bel_peaks`      | text (wavelength label)               | spectral quantity label (support 'ggrepel')                         |
+| `stat_labe l_valleys`    | text (wavelength label)               | spectral quantity label (support 'ggrepel')                         |
+| `stat _find_wls`         | point (highlight wls at qty)          | wavelength label, spectral quantity label                           |
+| `stat_ find_qtys`        | point (highlight qty at wl)           | wavelength label, spectral quantity label                           |
+| `s tat_color`            | color, fill                           |                                                                     |
+| `stat _wb_label`         | text (waveband name)                  | rect (showing range of waveband and its color)                      |
+| `stat _wb_total`         | text (y integral)                     | label(s) with waveband integral                                     |
+| `sta t_wb_mean`          | text (y mean)                         | label(s) with waveband mean                                         |
+| `stat_w l_summary`       | text (y mean)                         | label with wavelength *range* mean                                  |
+| `s tat_wb_con tribution` | text (contribution)                   | label(s) with waveband integral / whole spectrum integral           |
+| `stat_wb _relative`      | text (relative)                       | label(s) with waveband integral / sum of integrals of all wavebands |
+| `stat_w b_e_irrad`       | text (energy irradiance)              | rect (showing range of waveband and its color)                      |
+| `stat_w b_q_irrad`       | text (photon irradiance)              | rect (showing range of waveband and its color)                      |
+| `stat_wb _e_sirrad`      | text (spectral energy irradiance)     | rect (showing range of waveband and its color)                      |
+| `stat_wb _q_sirrad`      | text (spectral photon irradiance)     | rect (showing range of waveband and its color)                      |
+| `stat _wl_strip`         | rect (fill of wavelength or waveband) | text (label with waveband name)                                     |
+| `st at_wb_box`           | rect (fill of waveband)               |                                                                     |
+| `sta t_wb_hbar`          | errorbarh (color of waveband)         |                                                                     |
+| `stat_ wb_column`        | rect (fill of waveband)               |                                                                     |
 
 ### What is `geom_spct` useful for?
 
@@ -151,7 +99,7 @@ a variable containing wavelength data (nm) is mapped to the *x*
 numbers to the plot of a spectrum.
 
 | *scale*                          | unit.exponent | name                 | labels         | breaks             |
-|:---------------------------------|:--------------|:---------------------|:---------------|:-------------------|
+|:-----------------|:-------------|:-------------|:-------------|:-------------|
 | scale_y\_cps_continuous          | 0             | cps_label()          | SI_pl_format() |                    |
 | scale_y\_counts_continuous       | 3             | counts_label()       | SI_pl_format() |                    |
 | scale_y\_counts_tg_continuous    | 3             | counts_label()       | SI_tg_format() |                    |
@@ -189,7 +137,7 @@ plot. The difference with `ggtitle()` from package 'ggplot2' is that
 `autotitle()` automatically retrieves metadata from an spectral object
 based on *keys*. It is used internally by all `autoplot()` methods
 defined in package 'ggspectra' and allowed syntax and key values are
-described in *User Guide 2: Plot Methods* together with plot
+described in *User Guide 2: Autoplot Methods* together with plot
 annotations.
 
 ## Set up

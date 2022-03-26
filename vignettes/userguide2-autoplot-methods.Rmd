@@ -43,6 +43,7 @@ options(warnPartialMatchArgs = FALSE)
 We bind two spectra into an object to be used later to demonstrate grouping.
 
 ```{r}
+two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct * 2))
 two_suns.spct <- rbindspct(list(sun1 = sun.spct, sun2 = sun.spct * 2))
 ```
 
@@ -55,7 +56,9 @@ theme_set(theme_bw(10))
 ## Plotting spectra
 
 The most automatic way of plotting spectral data stored in one of the classes defined in package `photobiology` is to use the `autoplot()` methods (for compatibility
-with versions < 0.9.25 `plot()` remains as an additional name for the same methods). As `autoplot()` methods defined by 'ggplot2' they take advantage of all the data and metadata stored in objects of the special classes used to store spectra. This allows the automatic construction of axis labels as quantities and units are well defined.
+with versions < 0.9.25 `plot()` remains as a deprecated name for the same methods). As `autoplot()` methods defined by 'ggplot2' they take advantage of all the data and metadata stored in objects of the special classes used to store spectra. This allows the automatic construction of axis labels as quantities and units are well defined.
+
+### Simple plots
 
 Here we use the same example `source_spct` object from package 'photobiology' used in the User Guide 1. In contrast to the examples in the User Guide 1, here we obtain with a very simple statement a complete annotated plot of the solar spectrum at ground level.
 
@@ -75,10 +78,64 @@ If a single object contains multiple spectra in long form, they are all plotted.
 ```{r}
 autoplot(two_suns.spct)
 ```
+Collections of spectra can be plotted also automatically. See next section for examples.
 
-Although the defaults provide a useful plot, the `autoplot()` methods accepts arguments for several parameters that allow to tweak the looks and contents of the plots without explicit manipulation of the spectral data.
+## Ploting collections of spectra
 
+`autoplot()` methods are available for collections of spectra. We use in the examples a simple collection of two spectra. The output and acceptable arguments are the same as those in the `autoplot()` methods for multiple spectra in long form described above.
+
+```{r}
+two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct / 2))
+mixed.mspct <- generic_mspct(list(sun = sun.spct, filter = polyester.spct))
+```
+
+Plot accepting all defaults.
+
+```{r}
+autoplot(two_suns.mspct)
+```
+We can choose a different name for the factor identifying the spectra in the collection.
+
+```{r}
+autoplot(two_suns.mspct, idfactor = "Spectra")
+```
+
+Facets in one column. As there is only one spectrum per panel, the summaries per waveband are shown.
+
+```{r}
+autoplot(two_suns.mspct, facets = 1)
+```
+In two columns with `facets = 2`.
+
+```{r}
+autoplot(two_suns.mspct, facets = 2)
+```
+
+Plot as separate plots. This approach is specially useful with heterogeneous `generic_mspct` objects, although it works with any collection of spectra.
+
+```{r, fig.width = 7, fig.height = 8}
+multiplot(plotlist = mslply(mixed.mspct, autoplot))
+```
+
+All the examples above of plotting collections of spectra were done with the defaults `plot.data = "as.is"`. We can also plot a row-wise summary (wavelength by wavelength) of the spectra in the collection, here the `mean` of the spectra. Currently implemented only for spectra with identical wavelength vectors and of the same class.
+
+```{r}
+autoplot(two_suns.mspct, plot.data = "mean")
+```
+
+### Normalized and scaled spectra
+
+In the case the spectra plotted have been previously normalized or scaled, the _y_-axis label will reflect this. In the case of normalized spectral data, and transmittance, reflectance and absorptance spectra expression as percent is supported. Finally, it is possible to normalize spectra on-the-fly by passing an argument to parameter `norm`. The default for `norm` varies with the type spectrum.
+
+```{r}
+autoplot(sun.spct, norm = "max")
+```
+```{r}
+autoplot(sun.spct, norm = 400, pc.out = TRUE)
+```
 ### Summary quantities in labels
+
+Although the defaults provide a useful plot, the `autoplot()` methods accepts arguments for several parameters that allow to tweak the looks and contents of the plots without explicit manipulation of the spectral data. Numerical summaries can be added automatically to plots only when a single spectrum is plotted per plot panel.
 
 In this first example we pass `"mean"` as argument to `label.qty`, to print means instead of integrals in the labels. Note that the units and quantity labels for the waveband summaries have also changed.
 
@@ -119,6 +176,7 @@ Which annotations are included by default can be changed by setting R option `"p
 | "title"    | none                |               |
 | "title:_type_" |   none | |
 | "title:_type_:_type_" |   none | |
+| "title:_type_:_type_:_type_" |   none | |
 
 Titles come in different flavours. Package 'ggplot2' supports titles, subtitles and captions. The `"title"` as argument to parameter `annotation` of `autoplot()` methods and of function `autotitle()` takes up to three optional modifiers separated by colons that can be used to specify the contents of the _automatic_ title, subtitle and caption. Currently supported modifiers are shown in the table below. If the metadata item is not stored in the plotted spectral object, the title or subtitle will show `NA`. See the documentation of packages 'photobiology' and 'ooacquire' for information on how to set and unset attributes of spectral objects. To add an arbitrary title and/or subtitle to a plot, use either function `ggtitle()` or function `labs()` from package 'ggplot2'.
 
@@ -140,10 +198,10 @@ For example `"title:objt"`, the default for `"title"`, adds a title with the nam
 We can add an annotation to the defaults. 
 ```{r}
 autoplot(sun.spct, 
-     annotations = c("+", "title:when:where"))
+     annotations = c("+", "title:objt:when:where"))
 ```
 
-We use "none" as a _filler_.
+We use "none" as a _filler_ so that only subtitle and caption are added to the plot.
 
 ```{r}
 autoplot(sun.spct, 
@@ -250,6 +308,7 @@ autoplot(sun.spct, w.band = CIE())
 autoplot(sun.spct, w.band = NULL)
 ```
 The _whole range_ is the range plotted, which is controlled by the argument passed to `range`. 
+
 ```{r}
 autoplot(sun.spct, w.band = NULL, range = c(400,700))
 ```
@@ -339,6 +398,7 @@ In the case of raw instrument counts data, if the spectral object contains an in
 autoplot(white_led.raw_spct, annotations = c("+", "boundaries"))
 ```
 
+**Changes in 'dplyr' have broken the next two examples.**
 Both `raw_spct` and `cps_spct` objects contain multiple data columns when integration time bracketing has been used during data acquisition. In such cases, if one wants to plot only one of the raw spectra, method `select()` from package 'dplyr' should be used instead of subscripting (`[ ]`) so as to preserve the metadata. In addition renaming of the variable is needed as shown below when a single column is extracted.
 
 ```{r, eval=FALSE}
@@ -351,14 +411,6 @@ autoplot(dplyr::select(white_led.raw_spct, w.length, counts_1, counts_3),
      annotations = c("+", "boundaries"))
 ```
 
-By defaulf color definitions are generated using the color matching function, `"CMF"`, for human vision. It is possible to pass a different definition as a `chroma_spct` object or a character name. Bees have trichromic vision, but see green, blue and ultraviolet (GBU) instead of red, green and blue (RGB). The luminance is matched to wavelengths, but the colors shifted so that green becomes red, blue becomes green, and ultraviolet becomes blue. Here instead of removing or adding specific annotations from/to the default, we set them using `"="` as the first string.
-
-```{r}
-autoplot(sun.spct, 
-         chroma.type = beesxyzCMF.spct,
-          annotations = c("=", "color.guide"))
-```
-
 ### Handling of off-range data
 
 If the supplied data include off-range values such as negative irradiance or fractional transmittance, reflectance, or absorptance outside the zero to one range the exceeded boundary is highlighted in red.
@@ -368,49 +420,7 @@ If the supplied data include off-range values such as negative irradiance or fra
 autoplot(yellow_gel.spct - 0.01, annotations = c("+", "boundaries"))
 ```
 
-## Ploting collections of spectra
-
-`autoplot()` methods are available for collections of spectra. We use in the examples a simple collection of two spectra. The output and acceptable arguments are the same as those in the `autoplot()` methods for multiple spectra in long form described above.
-
-```{r}
-two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct / 2))
-mixed.mspct <- generic_mspct(list(sun = sun.spct, filter = polyester.spct))
-```
-
-Plot accepting all defaults.
-
-```{r}
-autoplot(two_suns.mspct)
-```
-We can choose a different name for the factor identifying the spectra in the collection.
-
-```{r}
-autoplot(two_suns.mspct, idfactor = "Spectra")
-```
-
-Facets in one column. As there is only one spectrum per panel, the summaries per waveband are shown.
-
-```{r}
-autoplot(two_suns.mspct, facets = 1)
-```
-In two columns with `facets = 2`.
-
-```{r}
-autoplot(two_suns.mspct, facets = 2)
-```
-
-Plot using one panel per spectrum, using ggplot2 syntax. Setting `idfactor = NA` suppresses the default mapping to `linetype`. (Plot not shown.)
-
-```{r, eval = FALSE}
-autoplot(two_suns.mspct, idfactor = NA) + 
-  facet_wrap(~spct.idx, ncol = 2)
-```
-
-Plot as separate plots. This approach is specially useful with heterogeneous `generic_mspct` objects, although it works with any collection of spectra.
-
-```{r, fig.width = 7, fig.height = 8}
-multiplot(plotlist = mslply(mixed.mspct, autoplot))
-```
+## Editing plots and adding layers
 
 Using colors is slightly more involved as the identity scale is in use for color in annotations. For this same reason no color key in generated automatically. (In the case of more than two spectra it is easier to use `plyr::mapvalues` instead of several nested `ifelse` calls.)
 
@@ -421,10 +431,6 @@ autoplot(two_suns.mspct) +
 
 Plots created with `autoplot()` methods are `ggplot` objects and can be customized, bearing in mind that any added layers will be plotted on top or existing layers (that is unless we make use of methods from package 'gginnards' that allow insertion of layers at any position in a `ggplot` object).
 
-```{r}
-autoplot(two_suns.mspct, annotations = c("color.guide", "valleys", "peaks"), span = 51)
-```
-
 Here we replace the default peaks annotations with a custom one, but still take advantage of other defaults like nice axis labels and other annotations.
 
 ```{r}
@@ -434,12 +440,6 @@ autoplot(two_suns.mspct, annotations = c("-", "peaks")) +
              label.fmt = "max at %3.1f nm",
              vjust = -0.5, hjust = 0,
              color = "red", size = 3)
-```
-
-All the examples above of plotting collections of spectra were done with the defaults `plot.data = "as.is"`. We can also plot a row-wise summary (wavelength by wavelength) of the spectra in the collection, here the `mean` of the spectra. Currently implemented only for spectra with identical wavelength vectors and of the same class.
-
-```{r}
-autoplot(two_suns.mspct, plot.data = "mean")
 ```
 
 ## Ploting wavebands
