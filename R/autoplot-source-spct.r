@@ -70,10 +70,16 @@ e_plot <- function(spct,
     w.band <- trim_wl(w.band, range = range(spct))
   }
   duration.label <- NA
-  if (is_normalized(spct) || is_scaled(spct)) {
-    s.irrad.label <- "Spectral~~energy~~exposure~~E(lambda)~~(relative~~units)"
-    irrad.label.total <- "atop(E, (relative~~units))"
-    irrad.label.avg <- "atop(bar(E(lambda)), (relative~~units))"
+  if (is_scaled(spct)) {
+    s.irrad.label <- "Spectral~~energy~~exposure~~k %*% E[lambda]~~(\"rel.\")"
+    irrad.label.total <- "atop(k %*% E, (\"rel.\"))"
+    irrad.label.avg <- "atop(bar(E[lambda]), (\"rel.\"))"
+    scale.factor <- 1
+  } else  if (is_normalized(spct)) {
+    norm <- round(getNormalization(spct)[["norm.wl"]], digits = 1)
+    s.irrad.label <- bquote(Spectral~~energy~~exposure~~E[lambda]/E[lambda==.(norm)]~~("rel."))
+    irrad.label.total <- "atop(E, (\"rel.\"))"
+    irrad.label.avg <- bquote(atop(bar(E[lambda]), E[lambda==.(norm)]))
     scale.factor <- 1
   } else {
     time.unit <- getTimeUnit(spct)
@@ -82,37 +88,37 @@ e_plot <- function(spct,
     }
     time.unit.char <- duration2character(time.unit)
     if (time.unit.char == "second")  {
-      s.irrad.label <- "Spectral~~energy~~irradiance~~E(lambda)~~(W~m^{-2}~nm^{-1})"
+      s.irrad.label <- "Spectral~~energy~~irradiance~~E[lambda]~~(W~m^{-2}~nm^{-1})"
       irrad.label.total  <- "atop(E, (W~m^{-2}))"
-      irrad.label.avg  <- "atop(bar(E(lambda)), (W~m^{-2}~nm^{-1}))"
+      irrad.label.avg  <- "atop(bar(E[lambda]), (W~m^{-2}~nm^{-1}))"
       scale.factor <- 1
     } else if (time.unit.char == "day") {
-      s.irrad.label <- "Spectral~~energy~~exposure~~E(lambda)~~(MJ~d^{-1}~m^{-2}~nm^{-1})"
+      s.irrad.label <- "Spectral~~energy~~exposure~~E[lambda]~~(MJ~d^{-1}~m^{-2}~nm^{-1})"
       irrad.label.total <- "atop(E, (MJ~d^{-1}~m^{-2}))"
-      irrad.label.avg <- "atop(bar(E(lambda)), (MJ~d^{-1}~m^{-2}~nm^{-1}))"
+      irrad.label.avg <- "atop(bar(E[lambda]), (MJ~d^{-1}~m^{-2}~nm^{-1}))"
       scale.factor <- 1e-6
     } else if (time.unit.char == "hour") {
-      s.irrad.label <- "Spectral~~energy~~exposure~~E(lambda)~~(kJ~h^{-1}~m^{-2}~nm^{-1})"
+      s.irrad.label <- "Spectral~~energy~~exposure~~E[lambda]~~(kJ~h^{-1}~m^{-2}~nm^{-1})"
       irrad.label.total <- "atop(E, (kJ~h^{-1}~m^{-2}))"
-      irrad.label.avg <- "atop(bar(E(lambda)), (kJ~h^{-1}~m^{-2}~nm^{-1}))"
+      irrad.label.avg <- "atop(bar(E[lambda]), (kJ~h^{-1}~m^{-2}~nm^{-1}))"
       scale.factor <- 1e-3
     } else if (time.unit.char == "duration") {
-      s.irrad.label <- "Spectral~~energy~~fluence~~E(lambda)~~(kJ~m^{-2}~nm^{-1})"
+      s.irrad.label <- "Spectral~~energy~~fluence~~E[lambda]~~(kJ~m^{-2}~nm^{-1})"
       irrad.label.total <- "atop(E, (kJ~m^{-2}))"
-      irrad.label.avg <- "atop(bar(E(lambda)), (kJ~m^{-2}~nm^{-1}))"
+      irrad.label.avg <- "atop(bar(E[lambda]), (kJ~m^{-2}~nm^{-1}))"
       duration.label <- paste("Length of exposure:",
                               ifelse(lubridate::is.duration(time.unit),
                               as.character(time.unit), "unknown"))
       scale.factor <- 1e-3
     } else if (time.unit.char == "exposure") {
-      s.irrad.label <- "Spectral~~energy~~fluence~~E(lambda)~~(J~m^{-2}~nm^{-1})"
+      s.irrad.label <- "Spectral~~energy~~fluence~~E[lambda]~~(J~m^{-2}~nm^{-1})"
       irrad.label.total <- "atop(E, (J~m^{-2}))"
-      irrad.label.avg <- "atop(bar(E(lambda)), (J~m^{-2}~nm^{-1}))"
+      irrad.label.avg <- "atop(bar(E[lambda]), (J~m^{-2}~nm^{-1}))"
       scale.factor <- 1
     } else {
-      s.irrad.label <- "Spectral~~energy~~exposure~~E(lambda)~~(arbitrary~~units)"
+      s.irrad.label <- "Spectral~~energy~~exposure~~E[lambda]~~(arbitrary~~units)"
       irrad.label.total <- "atop(E, (arbitrary~~units))"
-      irrad.label.avg <- "atop(bar(E(lambda)), (arbitrary~~units))"
+      irrad.label.avg <- "atop(bar(E[lambda]), (arbitrary~~units))"
       scale.factor <- 1
     }
   }
@@ -121,21 +127,21 @@ e_plot <- function(spct,
   } else if (label.qty %in% c("average", "mean")) {
     irrad.label <- irrad.label.avg
   }  else if (label.qty == "contribution") {
-    irrad.label <- "atop(Contribution~~to~~total, E~~(fraction))"
+    irrad.label <- "atop(Contribution~~to~~total, E~~(\"/1\"))"
   } else if (label.qty == "contribution.pc") {
-    irrad.label <- "atop(Contribution~~to~~total, E~~(percent))"
+    irrad.label <- "atop(Contribution~~to~~total, E~~(\"%\"))"
   } else if (label.qty == "relative") {
-    irrad.label <- "atop(Relative~~to~~sum, E~~(fraction))"
+    irrad.label <- "atop(Relative~~to~~sum, E~~(\"/1\"))"
   } else if (label.qty == "relative.pc") {
-    irrad.label <- "atop(Relative~~to~~sum, E~~(percent))"
+    irrad.label <- "atop(Relative~~to~~sum, E~~(\"%\"))"
   } else {
     irrad.label <- ""
   }
   if (is_effective(spct)) {
-    s.irrad.label <- sub("E", "E[eff]", s.irrad.label, fixed = TRUE)
-    irrad.label <- sub("E", "E[eff]", irrad.label, fixed = TRUE)
-    irrad.label.total <- sub("E", "E[eff]", irrad.label.total, fixed = TRUE)
-    irrad.label.avg <- sub("E", "E[eff]", irrad.label.avg, fixed = TRUE)
+    s.irrad.label <- sub("E[lambda]", "E[lambda]^{eff}", s.irrad.label, fixed = TRUE)
+    irrad.label <- sub("E", "E^{eff}", irrad.label, fixed = TRUE)
+    irrad.label.total <- sub("E", "E^{eff}", irrad.label.total, fixed = TRUE)
+    irrad.label.avg <- sub("E[lambda]", "E[lambda]^{eff}", irrad.label.avg, fixed = TRUE)
   }
   s.irrad.label <- parse(text = s.irrad.label)
   spct[["s.e.irrad"]] <- spct[["s.e.irrad"]] * scale.factor
@@ -308,10 +314,16 @@ q_plot <- function(spct,
   }
 
   duration.label <- NA
-  if (is_normalized(spct) || is_scaled(spct)) {
-    s.irrad.label <- "Spectral~~photon~~exposure~~Q(lambda)~~(relative~~units)"
-    irrad.label.total <- "atop(Q, (relative~~units))"
-    irrad.label.avg <- "atop(bar(Q(lambda)), (relative~~units))"
+  if (is_scaled(spct)) {
+    s.irrad.label <- "Spectral~~photon~~exposure~~k %*% Q[lambda]~~(\"rel.\")"
+    irrad.label.total <- "atop(k %*% Q, (\"rel.\"))"
+    irrad.label.avg <- "atop(bar(Q[lambda]), (\"rel.\"))"
+    scale.factor <- 1
+  } else  if (is_normalized(spct)) {
+    norm <- round(getNormalization(spct)[["norm.wl"]], digits = 1)
+    s.irrad.label <- bquote(Spectral~~photon~~exposure~~Q[lambda]/Q[lambda==.(norm)]~~("rel."))
+    irrad.label.total <- "atop(Q, (\"rel.\"))"
+    irrad.label.avg <- bquote(atop(bar(Q[lambda]), Q[lambda==.(norm)]))
     scale.factor <- 1
   } else {
     time.unit <- getTimeUnit(spct)
@@ -320,37 +332,37 @@ q_plot <- function(spct,
     }
     time.unit.char <- duration2character(time.unit)
     if (time.unit.char=="second") {
-      s.irrad.label <- "Spectral~~photon~~irradiance~~Q(lambda)~~(mu*mol~s^{-1}~m^{-2}~nm^{-1})"
+      s.irrad.label <- "Spectral~~photon~~irradiance~~Q[lambda]~~(mu*mol~s^{-1}~m^{-2}~nm^{-1})"
       irrad.label.total  <- "atop(Q, (mu*mol~s^{-1}~m^{-2}))"
-      irrad.label.avg  <- "atop(bar(Q(lambda)), (mu*mol~s^{-1}~m^{-2}~nm^{-1}))"
+      irrad.label.avg  <- "atop(bar(Q[lambda]), (mu*mol~s^{-1}~m^{-2}~nm^{-1}))"
       scale.factor <- 1e6
     } else if (time.unit.char=="day") {
-      s.irrad.label <- "Spectral~~photon~~exposure~~Q(lambda)~~(mol~d^{-1}~m^{-2}~nm^{-1})"
+      s.irrad.label <- "Spectral~~photon~~exposure~~Q[lambda]~~(mol~d^{-1}~m^{-2}~nm^{-1})"
       irrad.label.total <- "atop(Q, (mol~d^{-1}~m^{-2}))"
-      irrad.label.avg <- "atop(bar(Q(lambda)), (mol~d^{-1}~m^{-2}~nm^{-1}))"
+      irrad.label.avg <- "atop(bar(Q[lambda]), (mol~d^{-1}~m^{-2}~nm^{-1}))"
       scale.factor <- 1
     } else if (time.unit.char=="hour") {
-      s.irrad.label <- "Spectral~~photon~~exposure~~Q(lambda)~~(mmol~h^{-1}~m^{-2}~nm^{-1})"
+      s.irrad.label <- "Spectral~~photon~~exposure~~Q[lambda]~~(mmol~h^{-1}~m^{-2}~nm^{-1})"
       irrad.label.total <- "atop(Q, (mmol~h^{-1}~m^{-2}))"
-      irrad.label.avg <- "atop(bar(Q(lambda)), (mmol~h^{-1}~m^{-2}~nm^{-1}))"
+      irrad.label.avg <- "atop(bar(Q[lambda]), (mmol~h^{-1}~m^{-2}~nm^{-1}))"
       scale.factor <- 1e3
     } else if (time.unit.char=="duration" || lubridate::is.duration(time.unit)) {
-      s.irrad.label <- "Spectral~~photon~~fluence~~Q(lambda)~~(mol~m^{-2}~nm^{-1})"
+      s.irrad.label <- "Spectral~~photon~~fluence~~Q[lambda]~~(mol~m^{-2}~nm^{-1})"
       irrad.label.total <- "atop(Q, (mol~m^{-2}))"
-      irrad.label.avg <- "atop(bar(Q(lambda)), (mol~m^{-2}~nm^{-1}))"
+      irrad.label.avg <- "atop(bar(Q[lambda]), (mol~m^{-2}~nm^{-1}))"
       duration.label <- paste("Length of exposure:",
                               ifelse(lubridate::is.duration(time.unit),
                                      as.character(time.unit), "unknown"))
       scale.factor <- 1
     } else if (time.unit.char=="exposure" || lubridate::is.duration(time.unit)) {
-      s.irrad.label <- "Spectral~~photon~~fluence~~Q(lambda)~~(mol~m^{-2}~nm^{-1})"
+      s.irrad.label <- "Spectral~~photon~~fluence~~Q[lambda]~~(mol~m^{-2}~nm^{-1})"
       irrad.label.total <- "atop(Q, (mol~m^{-2}))"
-      irrad.label.avg <- "atop(bar(Q(lambda)), (mol~m^{-2}~nm^{-1}))"
+      irrad.label.avg <- "atop(bar(Q[lambda]), (mol~m^{-2}~nm^{-1}))"
       scale.factor <- 1
     } else {
-      s.irrad.label <- "Spectral~~photon~~exposure~~Q(lambda)~~(arbitrary~~units)"
+      s.irrad.label <- "Spectral~~photon~~exposure~~Q[lambda]~~(arbitrary~~units)"
       irrad.label.total <- "atop(Q, (arbitrary~~units))"
-      irrad.label.avg <- "atop(bar(Q(lambda)), (arbitrary~~units))"
+      irrad.label.avg <- "atop(bar(Q[lambda]), (arbitrary~~units))"
       scale.factor <- 1
     }
   }
@@ -359,21 +371,21 @@ q_plot <- function(spct,
   } else if (label.qty %in% c("average", "mean")) {
     irrad.label <- irrad.label.avg
   } else if (label.qty == "contribution") {
-    irrad.label <- "atop(Contribution~~to~~total, Q~~(fraction))"
+    irrad.label <- "atop(Contribution~~to~~total, Q~~(\"/1\"))"
   } else if (label.qty == "contribution.pc") {
-    irrad.label <- "atop(Contribution~~to~~total, Q~~(percent))"
+    irrad.label <- "atop(Contribution~~to~~total, Q~~(\"%\"))"
   } else if (label.qty == "relative") {
-    irrad.label <- "atop(Relative~~to~~sum, Q~~(fraction))"
+    irrad.label <- "atop(Relative~~to~~sum, Q~~(\"/1\"))"
   } else if (label.qty == "relative.pc") {
-    irrad.label <- "atop(Relative~~to~~sum, Q~~(percent))"
+    irrad.label <- "atop(Relative~~to~~sum, Q~~(\"%\"))"
   } else {
     irrad.label <- ""
   }
   if (is_effective(spct)) {
-    s.irrad.label <- sub("Q", "Q[eff]", s.irrad.label, fixed = TRUE)
-    irrad.label <- sub("Q", "Q[eff]", irrad.label, fixed = TRUE)
-    irrad.label.total <- sub("Q", "Q[eff]", irrad.label.total, fixed = TRUE)
-    irrad.label.avg <- sub("Q", "Q[eff]", irrad.label.avg, fixed = TRUE)
+    s.irrad.label <- sub("Q[lambda]", "Q[lambda]^{eff}", s.irrad.label, fixed = TRUE)
+    irrad.label <- sub("Q", "Q^{eff}", irrad.label, fixed = TRUE)
+    irrad.label.total <- sub("Q", "Q^{eff}", irrad.label.total, fixed = TRUE)
+    irrad.label.avg <- sub("Q[lambda]", "Q[lambda]^{eff}", irrad.label.avg, fixed = TRUE)
   }
   s.irrad.label <- parse(text = s.irrad.label)
   spct[["s.q.irrad"]] <- spct[["s.q.irrad"]] * scale.factor
