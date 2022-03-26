@@ -36,6 +36,7 @@
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
   plot.data = "as.is",
   idfactor = TRUE,
+  object.label = deparse(substitute(object)),
   na.rm = TRUE
 )
 }

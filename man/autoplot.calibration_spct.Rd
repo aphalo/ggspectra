@@ -34,7 +34,9 @@
   range = NULL,
   idfactor = TRUE,
   facets = FALSE,
-  plot.data = "as.is"
+  plot.data = "as.is",
+  object.label = deparse(substitute(object)),
+  na.rm = TRUE
 )
 }
 \arguments{

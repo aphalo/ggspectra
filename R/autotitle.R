@@ -47,6 +47,14 @@ autotitle <- function(object,
                       tz = NULL,
                       default.title  = "title:objt") {
 
+  if (!is.character(object.label)) {
+    if (is.name(object.label)) {
+      object.label <- as.character(object.label)
+    } else {
+      object.label <- paste("anonymous '", class(object)[1], "'", sep = "")
+    }
+  }
+
   get_title_text <- function(key) {
     switch(key,
            objt = object.label,

@@ -13,6 +13,7 @@
   range = NULL,
   norm = getOption("ggspectra.norm", default = "update"),
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
+  pc.out = FALSE,
   label.qty = NULL,
   span = NULL,
   wls.target = "HM",
@@ -34,8 +35,10 @@
   range = NULL,
   norm = getOption("ggspectra.normalize", default = "update"),
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
+  pc.out = FALSE,
   idfactor = TRUE,
   plot.data = "as.is",
+  object.label = deparse(substitute(object)),
   na.rm = TRUE
 )
 }
@@ -58,6 +61,9 @@ return of \code{object} unchanged.}
 
 \item{unit.out}{character string indicating type of radiation units to use
 for plotting: "photon" or its synonym "quantum", or "energy".}
+
+\item{pc.out}{logical, if TRUE use percent instead of fraction of one for
+normalized spectral data.}
 
 \item{label.qty}{character string giving the type of summary quantity to use
 for labels, one of "mean", "total", "contribution", and "relative".}

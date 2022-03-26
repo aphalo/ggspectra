@@ -8,6 +8,7 @@ q_plot(
   spct,
   w.band,
   range,
+  pc.out,
   label.qty,
   span,
   wls.target,
@@ -28,6 +29,9 @@ q_plot(
 
 \item{range}{an R object on which range() returns a vector of length 2, with
 min annd max wavelengths (nm).}
+
+\item{pc.out}{logical, if TRUE use percent instead of fraction of one for
+normalized spectral data.}
 
 \item{label.qty}{character string giving the type of summary quantity to use
 for labels, one of "mean", "total", "contribution", and "relative".}

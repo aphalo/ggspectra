@@ -39,6 +39,7 @@
   facets = FALSE,
   plot.data = "as.is",
   idfactor = TRUE,
+  object.label = deparse(substitute(object)),
   na.rm = TRUE
 )
 }

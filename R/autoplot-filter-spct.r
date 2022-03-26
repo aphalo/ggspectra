@@ -1137,6 +1137,9 @@ autoplot.filter_spct <-
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
+
+    force(object.label)
+
     annotations.default <-
       getOption("photobiology.plot.annotations",
                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
@@ -1243,7 +1246,11 @@ autoplot.filter_mspct <-
                                 default = "transmittance"),
            plot.data = "as.is",
            idfactor = TRUE,
+           object.label = deparse(substitute(object)),
            na.rm = TRUE) {
+
+    force(object.label)
+
     idfactor <- validate_idfactor(idfactor = idfactor)
     # We trim the spectra to avoid unnecesary computaions later
     if (!is.null(range)) {
@@ -1276,6 +1283,8 @@ autoplot.filter_mspct <-
              norm = norm,
              plot.qty = plot.qty,
              idfactor = idfactor,
+             object.label = object.label,
+             na.rm = na.rm,
              ...)
   }
 
@@ -1389,6 +1398,9 @@ autoplot.reflector_spct <-
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
+
+    force(object.label)
+
     annotations.default <-
       getOption("photobiology.plot.annotations",
                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
@@ -1438,10 +1450,10 @@ autoplot.reflector_spct <-
     }
     out.ggplot +
       autotitle(object = object,
-                   time.format = time.format,
-                   tz = tz,
-                   object.label = object.label,
-                   annotations = annotations)
+                time.format = time.format,
+                tz = tz,
+                object.label = object.label,
+                annotations = annotations)
   }
 
 #' @rdname autoplot.reflector_spct
@@ -1463,7 +1475,11 @@ autoplot.reflector_mspct <-
                                 default = "reflectance"),
            plot.data = "as.is",
            idfactor = TRUE,
+           object.label = deparse(substitute(object)),
            na.rm = TRUE) {
+
+    force(object.label)
+
     idfactor <- validate_idfactor(idfactor = idfactor)
     # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
@@ -1498,6 +1514,8 @@ autoplot.reflector_mspct <-
              norm = norm,
              plot.qty = plot.qty,
              idfactor = idfactor,
+             object.label = object.label,
+             na.rm = na.rm,
              ...)
   }
 
@@ -1620,6 +1638,8 @@ autoplot.object_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
+    force(object.label)
+
     if (is.null(plot.qty) || plot.qty == "all") {
       # stacked area plot
       annotations.default <-
@@ -1716,7 +1736,11 @@ autoplot.object_mspct <-
            facets = FALSE,
            plot.data = "as.is",
            idfactor = TRUE,
+           object.label = deparse(substitute(object)),
            na.rm = TRUE) {
+
+    force(object.label)
+
     idfactor <- validate_idfactor(idfactor = idfactor)
     # facets will be forced later for "all" with a warning
     if (plot.qty == "reflectance") {
@@ -1758,6 +1782,7 @@ autoplot.object_mspct <-
              plot.qty = plot.qty,
              idfactor = idfactor,
              facets = facets,
+             object.label = object.label,
              na.rm = na.rm,
              ...)
   }

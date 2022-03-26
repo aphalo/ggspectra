@@ -37,6 +37,7 @@
   plot.qty = getOption("photobiology.reflector.qty", default = "reflectance"),
   plot.data = "as.is",
   idfactor = TRUE,
+  object.label = deparse(substitute(object)),
   na.rm = TRUE
 )
 }

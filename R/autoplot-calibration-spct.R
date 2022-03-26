@@ -294,6 +294,9 @@ autoplot.calibration_spct <-
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
+
+    force(object.label)
+
     annotations.default <-
       getOption("photobiology.plot.annotations",
                 default = c("boxes", "labels", "colour.guide", "peaks"))
@@ -346,7 +349,12 @@ autoplot.calibration_mspct <-
            range = NULL,
            idfactor = TRUE,
            facets = FALSE,
-           plot.data = "as.is") {
+           plot.data = "as.is",
+           object.label = deparse(substitute(object)),
+           na.rm = TRUE) {
+
+    force(object.label)
+
     idfactor <- validate_idfactor(idfactor = idfactor)
     # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
@@ -364,6 +372,11 @@ autoplot.calibration_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
-    autoplot(object = z, range = NULL, idfactor = idfactor, facets = facets, ...)
+    autoplot(object = z,
+             range = NULL,
+             idfactor = idfactor,
+             facets = facets,
+             object.label = object.label,
+             ...)
   }
 

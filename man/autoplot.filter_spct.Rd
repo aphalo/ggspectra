@@ -37,6 +37,7 @@
   plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
   plot.data = "as.is",
   idfactor = TRUE,
+  object.label = deparse(substitute(object)),
   na.rm = TRUE
 )
 }

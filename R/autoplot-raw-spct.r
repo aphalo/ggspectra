@@ -322,6 +322,9 @@ autoplot.raw_spct <-
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
+
+    force(object.label)
+
     annotations.default <-
       getOption("photobiology.plot.annotations",
                 default = c("boxes", "labels", "colour.guide",
@@ -377,7 +380,11 @@ autoplot.raw_mspct <-
                             default = "skip"),
            idfactor = TRUE,
            plot.data = "as.is",
+           object.label = deparse(substitute(object)),
            na.rm = TRUE) {
+
+    force(object.label)
+
     idfactor <- validate_idfactor(idfactor = idfactor)
     # We trim the spectra to avoid unnecesary computaions later
     if (!is.null(range)) {
@@ -407,6 +414,12 @@ autoplot.raw_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
-    autoplot(object = z, range = NULL, idfactor = idfactor, ...)
+    autoplot(object = z,
+             range = NULL,
+             norm = norm,
+             idfactor = idfactor,
+             object.label,
+             na.rm = na.rm,
+             ...)
   }
 

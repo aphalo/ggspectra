@@ -10,7 +10,8 @@
 #' @param w.band list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
 #'   min annd max wavelengths (nm).
-#' @param pc.out logical, if TRUE use percents instead of fraction of one.
+#' @param pc.out logical, if TRUE use percent instead of fraction of one for
+#'   normalized spectral data.
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
@@ -230,7 +231,8 @@ e_rsp_plot <- function(spct,
 #' @param w.band list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
 #'   min annd max wavelengths (nm).
-#' @param pc.out logical, if TRUE use percents instead of fraction of one.
+#' @param pc.out logical, if TRUE use percent instead of fraction of one for
+#'   normalized spectral data.
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
@@ -555,6 +557,9 @@ autoplot.response_spct <-
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
+
+    force(object.label)
+
     annotations.default <-
       getOption("photobiology.plot.annotations",
                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
@@ -644,7 +649,11 @@ autoplot.response_mspct <-
            unit.out = getOption("photobiology.radiation.unit", default="energy"),
            plot.data = "as.is",
            idfactor = TRUE,
+           object.label = deparse(substitute(object)),
            na.rm = TRUE) {
+
+    force(object.label)
+
     idfactor <- validate_idfactor(idfactor = idfactor)
     # We trim the spectra to avoid unnecesary computaions later
     if (!is.null(range)) {
@@ -674,7 +683,13 @@ autoplot.response_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
-    autoplot(object = z, range = NULL, idfactor = idfactor,
-             norm = norm, unit.out = unit.out, na.rm = na.rm, ...)
+    autoplot(object = z,
+             range = NULL,
+             idfactor = idfactor,
+             norm = norm,
+             unit.out = unit.out,
+             object.label = object.label,
+             na.rm = na.rm,
+             ...)
   }
 

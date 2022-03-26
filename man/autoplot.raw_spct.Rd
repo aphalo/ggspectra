@@ -35,6 +35,7 @@
   norm = getOption("ggspectra.norm", default = "skip"),
   idfactor = TRUE,
   plot.data = "as.is",
+  object.label = deparse(substitute(object)),
   na.rm = TRUE
 )
 }
