@@ -546,8 +546,11 @@ q_plot <- function(spct,
 #'
 #' @return a \code{ggplot} object.
 #'
-#' @seealso Function \code{\link[photobiology]{normalize}} which is used to
-#'   apply the normalization based on the argument passed to \code{norm}.
+#' @seealso \code{\link[photobiology]{normalize}},
+#'   \code{\link[photobiology]{source_spct}},
+#'   \code{\link[photobiology]{waveband}},
+#'   \code{\link[photobiologyWavebands]{photobiologyWavebands-package}} and
+#'   \code{\link[ggplot2]{autoplot}}
 #'
 #' @export
 #'

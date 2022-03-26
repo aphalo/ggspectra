@@ -19,7 +19,7 @@
   annotations = NULL,
   time.format = "",
   tz = "UTC",
-  norm = NULL,
+  norm = "skip",
   text.size = 2.5,
   idfactor = NULL,
   facets = FALSE,
@@ -28,7 +28,15 @@
   na.rm = TRUE
 )
 
-\method{autoplot}{cps_mspct}(object, ..., range = NULL, idfactor = TRUE, plot.data = "as.is")
+\method{autoplot}{cps_mspct}(
+  object,
+  ...,
+  range = NULL,
+  norm = getOption("ggspectra.norm", default = "skip"),
+  idfactor = TRUE,
+  plot.data = "as.is",
+  na.rm = TRUE
+)
 }
 \arguments{
 \item{object}{a cps_spct object.}
@@ -43,7 +51,8 @@ min annd max wavelengths (nm).}
 
 \item{unit.out}{character IGNORED.}
 
-\item{pc.out}{logical, if TRUE use percents instead of fraction of one}
+\item{pc.out}{logical, if TRUE use percent instead of fraction of one for
+normalized spectral data.}
 
 \item{label.qty}{character string giving the type of summary quantity to use
 for labels, one of "mean", "total", "contribution", and "relative".}
@@ -65,8 +74,9 @@ please see sections Plot Annotations and Title Annotations.}
 
 \item{tz}{character Time zone to use for title and/or subtitle.}
 
-\item{norm}{numeric normalization wavelength (nm) or character string "max"
-for normalization at the wavelength of highest peak.}
+\item{norm}{numeric normalization wavelength (nm) or character string
+\code{"max"} for normalization at the wavelength of highest peak or
+\code{"skip"} for no change to exisitng normalization in \code{object}.}
 
 \item{text.size}{numeric size of text in the plot decorations.}
 
@@ -139,6 +149,7 @@ object returned is a ggplot objects, and can be further manipulated.
 \examples{
 
 autoplot(white_led.cps_spct)
+autoplot(white_led.cps_spct, norm = "max")
 autoplot(white_led.cps_spct, annotations = "")
 
 two_leds.mspct <-
@@ -152,6 +163,12 @@ autoplot(two_leds.mspct, plot.data = "mean")
 
 }
 \seealso{
+\code{\link[photobiology]{normalize}},
+  \code{\link[photobiology]{cps_spct}},
+  \code{\link[photobiology]{waveband}},
+  \code{\link[photobiologyWavebands]{photobiologyWavebands-package}} and
+  \code{\link[ggplot2]{autoplot}}
+
 Other autoplot methods: 
 \code{\link{autoplot.calibration_spct}()},
 \code{\link{autoplot.filter_spct}()},

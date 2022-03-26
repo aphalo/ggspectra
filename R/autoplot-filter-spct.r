@@ -1083,6 +1083,12 @@ O_plot <- function(spct,
 #'
 #' @return a \code{ggplot} object.
 #'
+#' @seealso \code{\link[photobiology]{normalize}},
+#'   \code{\link[photobiology]{filter_spct}},
+#'   \code{\link[photobiology]{waveband}},
+#'   \code{\link[photobiologyWavebands]{photobiologyWavebands-package}} and
+#'   \code{\link[ggplot2]{autoplot}}
+#'
 #' @export
 #'
 #' @keywords hplot
@@ -1335,9 +1341,13 @@ autoplot.filter_mspct <-
 #'
 #' @return a \code{ggplot} object.
 #'
-#' @export
+#' @seealso \code{\link[photobiology]{normalize}},
+#'   \code{\link[photobiology]{reflector_spct}},
+#'   \code{\link[photobiology]{waveband}},
+#'   \code{\link[photobiologyWavebands]{photobiologyWavebands-package}} and
+#'   \code{\link[ggplot2]{autoplot}}
 #'
-#' @keywords hplot
+#' @export
 #'
 #' @examples
 #'
@@ -1562,7 +1572,11 @@ autoplot.reflector_mspct <-
 #'
 #' @export
 #'
-#' @keywords hplot
+#' @seealso \code{\link[photobiology]{normalize}},
+#'   \code{\link[photobiology]{object_spct}},
+#'   \code{\link[photobiology]{waveband}},
+#'   \code{\link[photobiologyWavebands]{photobiologyWavebands-package}} and
+#'   \code{\link[ggplot2]{autoplot}}
 #'
 #' @examples
 #'

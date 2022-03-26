@@ -183,6 +183,12 @@ autoplot(two_filters.mspct, facets = 2)
 
 }
 \seealso{
+\code{\link[photobiology]{normalize}},
+  \code{\link[photobiology]{filter_spct}},
+  \code{\link[photobiology]{waveband}},
+  \code{\link[photobiologyWavebands]{photobiologyWavebands-package}} and
+  \code{\link[ggplot2]{autoplot}}
+
 Other autoplot methods: 
 \code{\link{autoplot.calibration_spct}()},
 \code{\link{autoplot.cps_spct}()},

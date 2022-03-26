@@ -69,19 +69,20 @@ e_rsp_plot <- function(spct,
 
   exposure.label <- NA
 
-  if (!pc.out) {
-    multiplier.label <- "rel."
-    scale.factor <- 1
-  } else {
-    multiplier.label <- "%"
-    scale.factor <- 100
-  }
-
   if (is_scaled(spct)) {
+    if (pc.out) {
+      warning("Percent scale supported only for normalized cps_spct objects.")
+      pc.out <- FALSE
+    }
     s.rsp.label <- expression(Spectral~~energy~~response~~k %*% R[E~lambda]~~("rel."))
     rsp.label.total <- "atop(k %*% R[E], (\"rel.\"))"
     rsp.label.avg <- "atop(bar(k %*% R[E~lambda]), (\"rel.\"))"
   } else if (is_normalized(spct)) {
+    if (!pc.out) {
+      multiplier.label <- "rel."
+    } else {
+      multiplier.label <- "%"
+    }
     norm.ls <- photobiology::getNormalization(spct)
     norm.wl <- round(norm.ls[["norm.wl"]], digits = 1)
     s.rsp.label <-
@@ -89,6 +90,10 @@ e_rsp_plot <- function(spct,
     rsp.label.total  <- bquote(atop(integral(R[E]/R[E~lambda==.(norm.wl)], min, max), (.(multiplier.label))))
     rsp.label.avg  <- bquote(atop(bar(R[E~lambda]/R[E](lambda==.(norm.wl))), (.(multiplier.label))))
   } else {
+    if (pc.out) {
+      warning("Percent scale supported only for normalized cps_spct objects.")
+      pc.out <- FALSE
+    }
     time.unit <- getTimeUnit(spct)
     if (!length(time.unit)) {
       time.unit <- "unkonwn"
@@ -123,8 +128,6 @@ e_rsp_plot <- function(spct,
       rsp.label.avg <- "atop(bar(R[E~lambda]), (arbitrary~~units))"
     }
   }
-
-  spct[["s.e.response"]] <- spct[["s.e.response"]] * scale.factor
 
   y.min <- ifelse(!is.na(ylim[1]),
                   ylim[1],
@@ -286,19 +289,20 @@ q_rsp_plot <- function(spct,
 
   exposure.label <- NA
 
-  if (!pc.out) {
-    multiplier.label <- "rel."
-    scale.factor <- 1
-  } else {
-    multiplier.label <- "%"
-    scale.factor <- 100
-  }
-
   if (is_scaled(spct)) {
+    if (pc.out) {
+      warning("Percent scale supported only for normalized cps_spct objects.")
+      pc.out <- FALSE
+    }
     s.rsp.label <- expression(Spectral~~photon~~response~~k %*% R[Q~lambda]~~("rel."))
     rsp.label.total <- "atop(k %*% R[Q], (\"rel.\"))"
     rsp.label.avg <- "atop(bar(k %*% R[Q~lambda]), (\"rel.\"))"
   } else if (is_normalized(spct)) {
+    if (!pc.out) {
+      multiplier.label <- "rel."
+     } else {
+      multiplier.label <- "%"
+    }
     norm.ls <- photobiology::getNormalization(spct)
       norm.wl <- round(norm.ls[["norm.wl"]], digits = 1)
       s.rsp.label <-
@@ -306,6 +310,10 @@ q_rsp_plot <- function(spct,
       rsp.label.total  <- bquote(atop(integral(R[Q~lambda], min, max), (.(multiplier.label))))
       rsp.label.avg  <- bquote(atop(bar(R[Q~lambda]/R[Q~lambda==.(norm.wl)]), (.(multiplier.label))))
   } else {
+    if (pc.out) {
+      warning("Percent scale supported only for normalized cps_spct objects.")
+      pc.out <- FALSE
+    }
     time.unit <- getTimeUnit(spct)
     if (!length(time.unit)) {
       time.unit <- "unkonwn"
@@ -340,8 +348,6 @@ q_rsp_plot <- function(spct,
       rsp.label.avg <- "atop(bar(R[Q~lambda]), (arbitrary~~units))"
     }
   }
-
-  spct[["s.q.response"]] <- spct[["s.q.response"]] * scale.factor
 
   y.min <- ifelse(!is.na(ylim[1]),
                   ylim[1],
@@ -413,6 +419,12 @@ q_rsp_plot <- function(spct,
                              na.rm = TRUE )
   }
 
+  if (abs(y.max - 1) < 0.02 && abs(y.min) < 0.02) {
+    y.breaks <- c(0, 0.25, 0.5, 0.75, 1)
+  } else {
+    y.breaks <- scales::pretty_breaks(n = 5)
+  }
+
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "summaries",
                          "colour.guide", "reserve.space"), annotations)) > 0L) {
@@ -423,11 +435,15 @@ q_rsp_plot <- function(spct,
     x.limits <- range(spct)
   }
 
-  if ((abs(y.min) < 5e-2) && (abs(y.max - 1) < 5.e-2)) {
+  if (pc.out) {
     plot <- plot +
-      scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
+      scale_y_continuous(labels = scales::percent,
+                         breaks = y.breaks,
+                         limits = y.limits)
   } else {
-    plot <- plot + scale_y_continuous(limits = y.limits)
+    plot <-
+      plot + scale_y_continuous(breaks = y.breaks,
+                                limits = y.limits)
   }
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 }
@@ -457,7 +473,8 @@ q_rsp_plot <- function(spct,
 #'   return of \code{object} unchanged.
 #' @param unit.out character string indicating type of radiation units to use
 #'   for plotting: "photon" or its synomin "quantum", or "energy".
-#' @param pc.out logical, if TRUE use percents instead of fraction of one
+#' @param pc.out logical, if TRUE use percent instead of fraction of one for
+#'   normalized spectral data.
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
@@ -493,7 +510,11 @@ q_rsp_plot <- function(spct,
 #'
 #' @export
 #'
-#' @keywords hplot
+#' @seealso \code{\link[photobiology]{normalize}},
+#'   \code{\link[photobiology]{response_spct}},
+#'   \code{\link[photobiology]{waveband}},
+#'   \code{\link[photobiologyWavebands]{photobiologyWavebands-package}} and
+#'   \code{\link[ggplot2]{autoplot}}
 #'
 #' @examples
 #'

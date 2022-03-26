@@ -6,18 +6,20 @@ editor_options:
 
 # ggspectra 0.3.8
 
-Track changes in packages 'ggrepel' (\>= 0.9.1), 'photobiology' (\>=
-0.10.10) and 'ggplot2' (\>= 3.3.3). The updated code depends on the
-revised `normalize()` function in 'photobiology' (\>= 0.10.10) .
+This update brings many improvements to `autoplot()` methods. These
+include enhanced capabilities for handling of normalized and scaled
+spectral data, as well as cosmetic tweaks to labels. It also tracks
+changes in packages 'ggrepel' (\>= 0.9.1), 'photobiology' (\>= 0.10.10)
+and 'ggplot2' (\>= 3.3.3) and deprecation of functions in 'tidyr' (\>=
+1.0.0). The updated code depends on the revised `normalize()` function
+in 'photobiology' (\>= 0.10.10).
 
 -   Revise all `autoplot()` methods for collections of spectra adding
-    support for `sum`, `prod`, `var`, `sd`, and `se` as summaries: i.
+    support for `sum`, `prod`, `var`, `sd`, and `se` as summaries, i.
     e., compute on-the-fly a summary spectrum from a collection of
     spectra and plot it.
--   Revise all `autoplot()` methods for `source_spct`, `response_spct`,
-    `filter_spct`, `reflector_spct`, `source_mspct`, `response_mspct`,
-    `filter_mspct`, and `reflector_mspct` to support on-the-fly
-    normalization.
+-   Revise all `autoplot()` methods to support on-the-fly normalization
+    internaly using `photobiology::normalize()`\`.
 -   Revise `autoplot()` methods for `source_spct`, `response_spct`,
     `filter_spct`, `reflector_spct`, `source_mspct`, `response_mspct`,
     `filter_mspct`, and `reflector_mspct` so that if the data are
@@ -33,9 +35,8 @@ revised `normalize()` function in 'photobiology' (\>= 0.10.10) .
 -   Revise `autoplot()` method for `object_mspct` to correctly handle
     normalization of collections of spectra, one spectrum at a time,
     correcting a bug.
--   Revise `autoplot()` methods for `filter_spct`, `reflector_spct` and
-    `object_spct` to use shorter *y*-axis labels. In the case of
-    absorbance indicate "internal" or "total" in the axis label.
+-   Revise all `autoplot()` methods to generate shorter *y*-axis labels
+    also improving reporting of scaling and normalization when needed.
 -   Add `autoplot.cps_mspct()` and `autoplot.raw_mspct()` methods.
 -   Add support for faceting to all `autoplot()` methods for collections
     of spectra.
@@ -51,8 +52,12 @@ revised `normalize()` function in 'photobiology' (\>= 0.10.10) .
 
 ------------------------------------------------------------------------
 
--   Although this update does not break any code, **the labels for peaks
-    and valleys can be at a slightly different position than with
+-   Although this update should not break any code, **the *y*-axis
+    labels in plots returned by `autoplot()`** methods have changed, in
+    most cases only cosmetically to shorten them. In a few cases more
+    significant edits correct problems.
+-   Although this update should not break any code, **the labels for
+    peaks and valleys can be at a slightly different position than with
     earlier versions**.
 -   Although this update does not break any code, plots of collections
     of object spectra with normalization, will differ from earlier ones

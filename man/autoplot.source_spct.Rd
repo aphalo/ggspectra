@@ -175,8 +175,11 @@ autoplot(two_suns.mspct, norm = "max", facets = 2)
 
 }
 \seealso{
-Function \code{\link[photobiology]{normalize}} which is used to
-  apply the normalization based on the argument passed to \code{norm}.
+\code{\link[photobiology]{normalize}},
+  \code{\link[photobiology]{source_spct}},
+  \code{\link[photobiology]{waveband}},
+  \code{\link[photobiologyWavebands]{photobiologyWavebands-package}} and
+  \code{\link[ggplot2]{autoplot}}
 
 Other autoplot methods: 
 \code{\link{autoplot.calibration_spct}()},

@@ -148,6 +148,12 @@ The object returned is a ggplot object, and can be further manipulated.
 }
 
 \seealso{
+\code{\link[photobiology]{normalize}},
+  \code{\link[photobiology]{calibration_spct}},
+  \code{\link[photobiology]{waveband}},
+  \code{\link[photobiologyWavebands]{photobiologyWavebands-package}} and
+  \code{\link[ggplot2]{autoplot}}
+
 Other autoplot methods: 
 \code{\link{autoplot.cps_spct}()},
 \code{\link{autoplot.filter_spct}()},

@@ -264,6 +264,12 @@ cal_plot <- function(spct,
 #'
 #' @return a \code{ggplot} object.
 #'
+#' @seealso \code{\link[photobiology]{normalize}},
+#'   \code{\link[photobiology]{calibration_spct}},
+#'   \code{\link[photobiology]{waveband}},
+#'   \code{\link[photobiologyWavebands]{photobiologyWavebands-package}} and
+#'   \code{\link[ggplot2]{autoplot}}
+#'
 #' @export
 #'
 #' @family autoplot methods

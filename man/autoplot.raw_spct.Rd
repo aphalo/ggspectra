@@ -19,7 +19,7 @@
   annotations = NULL,
   time.format = "",
   tz = "UTC",
-  norm = NULL,
+  norm = "skip",
   text.size = 2.5,
   idfactor = NULL,
   facets = FALSE,
@@ -28,7 +28,15 @@
   na.rm = TRUE
 )
 
-\method{autoplot}{raw_mspct}(object, ..., range = NULL, idfactor = TRUE, plot.data = "as.is")
+\method{autoplot}{raw_mspct}(
+  object,
+  ...,
+  range = NULL,
+  norm = getOption("ggspectra.norm", default = "skip"),
+  idfactor = TRUE,
+  plot.data = "as.is",
+  na.rm = TRUE
+)
 }
 \arguments{
 \item{object}{a raw_spct object.}
@@ -43,7 +51,8 @@ with min annd max wavelengths (nm).}
 
 \item{unit.out}{character IGNORED.}
 
-\item{pc.out}{logical, if TRUE use percents instead of fraction of one.}
+\item{pc.out}{logical, if TRUE use percent instead of fraction of one for
+normalized spectral data.}
 
 \item{label.qty}{character string giving the type of summary quantity to use
 for labels, one of "mean", "total", "contribution", and "relative".}
@@ -151,6 +160,12 @@ autoplot(two_leds.mspct, facets = 2) # two columns
 
 }
 \seealso{
+\code{\link[photobiology]{normalize}},
+  \code{\link[photobiology]{raw_spct}},
+  \code{\link[photobiology]{waveband}},
+  \code{\link[photobiologyWavebands]{photobiologyWavebands-package}} and
+  \code{\link[ggplot2]{autoplot}}
+
 Other autoplot methods: 
 \code{\link{autoplot.calibration_spct}()},
 \code{\link{autoplot.cps_spct}()},

@@ -26,8 +26,6 @@
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
 #' @param annotations a character vector.
-#' @param norm numeric normalization wavelength (nm) or character string "max"
-#'   for normalization at the wavelength of highest peak.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
@@ -53,7 +51,7 @@ raw_plot <- function(spct,
                      span,
                      wls.target,
                      annotations,
-                     norm,
+                     relative,
                      text.size,
                      idfactor,
                      facets,
@@ -91,51 +89,33 @@ raw_plot <- function(spct,
     message("Usings facets because spectra contain multiple scans.")
     facets <- TRUE
   }
-#  other.cols <- setdiff(names(x), counts.cols)
-  if (is.null(norm)) {
-    # we will use the original data
-    scale.factor <- 1
-  } else {
-    for (col in counts.cols) {
-      if (is.character(norm)) {
-        if (norm %in% c("max", "maximum")) {
-          idx <- which.max(spct[[col]])
-        } else {
-          warning("Invalid character '", norm, "'value in 'norm'")
-          return(ggplot())
-        }
-        scale.factor <- 1 / as.numeric(spct[idx, col])
-        norm <- as.numeric(spct[idx, "w.length"])
-      } else if (is.numeric(norm) && norm >= min(spct) && norm <= max(spct)) {
-        scale.factor <- 1 / interpolate_spct(spct, norm)[[col]]
-      } else if (is.numeric(norm)) {
-        warning("'norm = ", norm, "' value outside spectral data range of ",
-                round(min(spct)), " to ", round(max(spct)), " (nm)")
-        return(ggplot())
-      } else {
-        stop("'norm' should be numeric or character")
-      }
-      spct[[col]] <- spct[[col]] * scale.factor
-    }
-  }
 
-  if (scale.factor != 1) {
-    if (!pc.out) {
-      multiplier.label <- "rel."
-      #      scale.factor <- 1 * scale.factor
-    } else {
-      multiplier.label <- "%"
-      scale.factor <- 100 * scale.factor
-    }
-    if (is.numeric(norm)) {
-      norm <- signif(norm, digits = 4)
+  if (is_scaled(spct)) {
+    if (pc.out) {
+      warning("Percent scale supported only for normalized cps_spct objects.")
+      pc.out <- FALSE
     }
     s.counts.label <-
-      bquote(Pixel~~response~~N( italic(lambda) )/N( .(norm))~~(.(multiplier.label)))
+      expression(Pixel~~response~~k %*% N[lambda]~~("rel."))
+    counts.label <- ""
+  } else if (is_normalized(spct)) {
+    norm.ls <- photobiology::getNormalization(spct)
+    norm.wl <- round(norm.ls[["norm.wl"]], digits = 1)
+    if (pc.out) {
+      multiplier.label <- "%"
+    } else {
+      multiplier.label <- "/1"
+    }
+    s.counts.label <-
+      bquote(Pixel~~response~~N[lambda]/N[lambda == .(norm.wl)]~~(.(multiplier.label)))
     counts.label <- ""
   } else {
+    if (pc.out) {
+      warning("Percent scale supported only for normalized cps_spct objects.")
+      pc.out <- FALSE
+    }
     s.counts.label <-
-      expression(Pixel~~response~~N(lambda)~~(counts))
+      expression(Pixel~~response~~N[lambda]~~(counts))
     counts.label <- ""
   }
 
@@ -216,6 +196,12 @@ raw_plot <- function(spct,
                             text.size = text.size,
                             na.rm = TRUE)
 
+  if (abs(y.max - 1) < 0.02 && abs(y.min) < 0.02) {
+    y.breaks <- c(0, 0.25, 0.5, 0.75, 1)
+  } else {
+    y.breaks <- scales::pretty_breaks(n = 5)
+  }
+
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels",
                          "summaries", "colour.guide", "reserve.space"),
@@ -227,7 +213,16 @@ raw_plot <- function(spct,
     x.limits <- range(spct)
   }
 
-  plot <- plot + scale_y_continuous(limits = y.limits)
+  if (pc.out) {
+    plot <- plot +
+      scale_y_continuous(labels = scales::percent,
+                         breaks = y.breaks,
+                         limits = y.limits)
+  } else {
+    plot <-
+      plot + scale_y_continuous(breaks = y.breaks,
+                                limits = y.limits)
+  }
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 
 }
@@ -251,7 +246,8 @@ raw_plot <- function(spct,
 #' @param range an R object on which range() returns a vector of length 2,
 #' with min annd max wavelengths (nm).
 #' @param unit.out character IGNORED.
-#' @param pc.out logical, if TRUE use percents instead of fraction of one.
+#' @param pc.out logical, if TRUE use percent instead of fraction of one for
+#'   normalized spectral data.
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
@@ -283,6 +279,12 @@ raw_plot <- function(spct,
 #'
 #' @return a \code{ggplot} object.
 #'
+#' @seealso \code{\link[photobiology]{normalize}},
+#'   \code{\link[photobiology]{raw_spct}},
+#'   \code{\link[photobiology]{waveband}},
+#'   \code{\link[photobiologyWavebands]{photobiologyWavebands-package}} and
+#'   \code{\link[ggplot2]{autoplot}}
+#'
 #' @export
 #'
 #' @examples
@@ -313,7 +315,7 @@ autoplot.raw_spct <-
            annotations = NULL,
            time.format = "",
            tz = "UTC",
-           norm = NULL,
+           norm = "skip",
            text.size = 2.5,
            idfactor = NULL,
            facets = FALSE,
@@ -371,9 +373,28 @@ autoplot.raw_mspct <-
   function(object,
            ...,
            range = NULL,
+           norm = getOption("ggspectra.norm",
+                            default = "skip"),
            idfactor = TRUE,
-           plot.data = "as.is") {
+           plot.data = "as.is",
+           na.rm = TRUE) {
     idfactor <- validate_idfactor(idfactor = idfactor)
+    # We trim the spectra to avoid unnecesary computaions later
+    if (!is.null(range)) {
+      object <- photobiology::trim_wl(object,
+                                      range = range,
+                                      use.hinges = TRUE,
+                                      fill = NULL)
+    }
+    # We apply the normalization to the collection if it is to be bound
+    # otherwise normalization is applied to the "parallel-summary" spectrum
+    if (plot.data == "as.is") {
+      object <- photobiology::normalize(object,
+                                        range = NULL,
+                                        norm = norm,
+                                        na.rm = na.rm)
+      norm <- "skip"
+    }
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
     z <- switch(plot.data,
