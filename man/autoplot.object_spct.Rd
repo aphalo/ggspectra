@@ -175,15 +175,12 @@ The method for collections of object spectra of length > 1 is
 
 autoplot(Ler_leaf.spct)
 autoplot(Ler_leaf.spct, plot.qty = "transmittance")
-autoplot(Ler_leaf.spct, plot.qty = "reflectance")
-autoplot(Ler_leaf.spct, plot.qty = "absorptance")
 autoplot(Ler_leaf.spct, annotations = "")
 autoplot(Ler_leaf.spct, plot.qty = "transmittance", norm = "max")
 
 two_leaves.mspct <-
  object_mspct(list("Arabidopsis leaf 1" = Ler_leaf.spct,
                    "Arabidopsis leaf 2" = Ler_leaf.spct))
-autoplot(two_leaves.mspct)
 autoplot(two_leaves.mspct, idfactor = "Spectra")
 autoplot(two_leaves.mspct, facets = TRUE)
 

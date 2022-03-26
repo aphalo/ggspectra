@@ -331,6 +331,15 @@ autoplot.raw_spct <-
                             "peaks", "boundaries"))
     annotations <- decode_annotations(annotations,
                                       annotations.default)
+    # avoid warning in 'photobiology' (== 0.10.10)
+    if (is.character(norm) && norm == "update" && !is_normalized(object)) {
+      norm <- "skip"
+    }
+    # normalization skipping is handled by normalize()
+    object <- photobiology::normalize(x = object,
+                                      range = range,
+                                      norm = norm,
+                                      na.rm = na.rm)
     if (length(w.band) == 0) {
       if (is.null(range)) {
         w.band <- waveband(object)

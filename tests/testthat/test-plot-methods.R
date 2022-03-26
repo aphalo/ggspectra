@@ -73,10 +73,10 @@ test_that("source_spct", {
                               autoplot(fscale(white_led.source_spct)))
   vdiffr::expect_doppelganger("source-default-normalized",
                               autoplot(normalize(white_led.source_spct)))
-  vdiffr::expect_doppelganger("source-default-normalized",
+  vdiffr::expect_doppelganger("source-default-norm-550",
                               autoplot(white_led.source_spct, norm = 550))
 
-    vdiffr::expect_doppelganger("source-default",
+  vdiffr::expect_doppelganger("source-default",
                               autoplot(white_led.source_spct))
   vdiffr::expect_doppelganger("source-ylim1",
                               autoplot(white_led.source_spct, ylim = c(NA, 1)))

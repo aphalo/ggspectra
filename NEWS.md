@@ -19,7 +19,7 @@ in 'photobiology' (\>= 0.10.10).
     e., compute on-the-fly a summary spectrum from a collection of
     spectra and plot it.
 -   Revise all `autoplot()` methods to support on-the-fly normalization
-    internaly using `photobiology::normalize()`\`.
+    internally using `photobiology::normalize()`\`.
 -   Revise `autoplot()` methods for `source_spct`, `response_spct`,
     `filter_spct`, `reflector_spct`, `source_mspct`, `response_mspct`,
     `filter_mspct`, and `reflector_mspct` so that if the data are
@@ -37,6 +37,8 @@ in 'photobiology' (\>= 0.10.10).
     correcting a bug.
 -   Revise all `autoplot()` methods to generate shorter *y*-axis labels
     also improving reporting of scaling and normalization when needed.
+-   Revise all `autoplot()` methods to fix bug leading to bad object
+    name in plot title due to delayed evaluation.
 -   Add `autoplot.cps_mspct()` and `autoplot.raw_mspct()` methods.
 -   Add support for faceting to all `autoplot()` methods for collections
     of spectra.

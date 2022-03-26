@@ -303,6 +303,10 @@ autoplot.cps_spct <-
                 default = c("boxes", "labels", "colour.guide", "peaks"))
     annotations <- decode_annotations(annotations,
                                       annotations.default)
+    # avoid warning in 'photobiology' (== 0.10.10)
+    if (is.character(norm) && norm == "update" && !is_normalized(object)) {
+      norm <- "skip"
+    }
     # normalization skipping is handled by normalize()
     object <- photobiology::normalize(x = object,
                                       range = range,

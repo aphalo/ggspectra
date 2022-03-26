@@ -1145,6 +1145,10 @@ autoplot.filter_spct <-
                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
     annotations <- decode_annotations(annotations,
                                       annotations.default)
+    # avoid warning in 'photobiology' (== 0.10.10)
+    if (is.character(norm) && norm == "update" && !is_normalized(object)) {
+      norm <- "skip"
+    }
     # normalization needs to be redone if unit.out has changed
     object <- photobiology::normalize(x = object,
                                       range = range,
@@ -1406,6 +1410,10 @@ autoplot.reflector_spct <-
                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
     annotations <- decode_annotations(annotations,
                                       annotations.default)
+    # avoid warning in 'photobiology' (== 0.10.10)
+    if (is.character(norm) && norm == "update" && !is_normalized(object)) {
+      norm <- "skip"
+    }
     # normalization needs to be redone if unit.out has changed
     object <- photobiology::normalize(x = object,
                                       range = range,
@@ -1600,15 +1608,12 @@ autoplot.reflector_mspct <-
 #'
 #' autoplot(Ler_leaf.spct)
 #' autoplot(Ler_leaf.spct, plot.qty = "transmittance")
-#' autoplot(Ler_leaf.spct, plot.qty = "reflectance")
-#' autoplot(Ler_leaf.spct, plot.qty = "absorptance")
 #' autoplot(Ler_leaf.spct, annotations = "")
 #' autoplot(Ler_leaf.spct, plot.qty = "transmittance", norm = "max")
 #'
 #' two_leaves.mspct <-
 #'  object_mspct(list("Arabidopsis leaf 1" = Ler_leaf.spct,
 #'                    "Arabidopsis leaf 2" = Ler_leaf.spct))
-#' autoplot(two_leaves.mspct)
 #' autoplot(two_leaves.mspct, idfactor = "Spectra")
 #' autoplot(two_leaves.mspct, facets = TRUE)
 #'
