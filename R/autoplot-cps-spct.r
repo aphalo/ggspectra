@@ -53,6 +53,7 @@ cps_plot <- function(spct,
                      idfactor,
                      facets,
                      ylim,
+                     object.label,
                      na.rm,
                      ...) {
   if (!is.cps_spct(spct)) {
@@ -335,6 +336,7 @@ autoplot.cps_spct <-
              idfactor = idfactor,
              facets = facets,
              ylim = ylim,
+             object.label = object.label,
              na.rm = na.rm,
              ...) +
       autotitle(object = object,
@@ -361,6 +363,7 @@ autoplot.cps_mspct <-
            unit.out = NULL,
            pc.out = FALSE,
            idfactor = TRUE,
+           facets = FALSE,
            plot.data = "as.is",
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
@@ -402,6 +405,7 @@ autoplot.cps_mspct <-
                norm = norm,
                pc.out = pc.out,
                idfactor = idfactor,
+               facets = facets,
                object.label = object.label,
                na.rm = na.rm,
                ...)
@@ -413,6 +417,7 @@ autoplot.cps_mspct <-
                norm = norm,
                pc.out = pc.out,
                idfactor = idfactor,
+               facets = facets,
                object.label = object.label,
                na.rm = na.rm,
                ...)

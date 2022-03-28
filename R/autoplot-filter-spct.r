@@ -1248,8 +1248,10 @@ autoplot.filter_mspct <-
                             default = "update"),
            plot.qty = getOption("photobiology.filter.qty",
                                 default = "transmittance"),
+           pc.out = FALSE,
            plot.data = "as.is",
            idfactor = TRUE,
+           facets = FALSE,
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
@@ -1282,14 +1284,32 @@ autoplot.filter_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
-    autoplot(object = z,
-             range = NULL,
-             norm = norm,
-             plot.qty = plot.qty,
-             idfactor = idfactor,
-             object.label = object.label,
-             na.rm = na.rm,
-             ...)
+    col.name <- c(transmittance = "Tfr", absorptance = "Afr", absorbance = "A")
+    if (is.filter_spct(z) && col.name[plot.qty] %in% names(z)) {
+      autoplot(object = z,
+               range = NULL,
+               norm = norm,
+               plot.qty = plot.qty,
+               pc.out = pc.out,
+               idfactor = idfactor,
+               facets = facets,
+               object.label = object.label,
+               na.rm = na.rm,
+               ...)
+    } else {
+      Tfr.type <- getTfrType(z)
+      z <- as.generic_spct(z)
+      autoplot(object = z,
+               y.name = paste(col.name[plot.qty], plot.data, sep = "."),
+               range = NULL,
+               norm = norm,
+               pc.out = pc.out,
+               idfactor = idfactor,
+               facets = facets,
+               object.label = object.label,
+               na.rm = na.rm,
+               ...)
+    }
   }
 
 #' Create a complete ggplot for a reflector spectrum.
@@ -1481,8 +1501,10 @@ autoplot.reflector_mspct <-
                             default = "update"),
            plot.qty = getOption("photobiology.reflector.qty",
                                 default = "reflectance"),
+           pc.out = FALSE,
            plot.data = "as.is",
            idfactor = TRUE,
+           facets = FALSE,
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
@@ -1517,14 +1539,30 @@ autoplot.reflector_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
-    autoplot(object = z,
-             range = NULL,
-             norm = norm,
-             plot.qty = plot.qty,
-             idfactor = idfactor,
-             object.label = object.label,
-             na.rm = na.rm,
-             ...)
+    if (is.reflector_spct(z) && "Rfr" %in% names(z)) {
+      autoplot(object = z,
+               range = NULL,
+               norm = norm,
+               plot.qty = plot.qty,
+               pc.out = pc.out,
+               idfactor = idfactor,
+               facets = facets,
+               object.label = object.label,
+               na.rm = na.rm,
+               ...)
+    } else {
+      z <- as.generic_spct(z)
+      autoplot(object = z,
+               y.name = paste("Rfr", plot.data, sep = "."),
+               range = NULL,
+               norm = norm,
+               pc.out = pc.out,
+               idfactor = idfactor,
+               facets = facets,
+               object.label = object.label,
+               na.rm = na.rm,
+               ...)
+    }
   }
 
 #' Create a complete ggplot for a object spectrum.
@@ -1737,10 +1775,11 @@ autoplot.object_mspct <-
            ...,
            range = NULL,
            norm = "update",
-           plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
-           facets = FALSE,
+           plot.qty = getOption("photobiology.filter.qty", default = "all"),
+           pc.out = FALSE,
            plot.data = "as.is",
            idfactor = TRUE,
+           facets = plot.qty == "all",
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
@@ -1781,13 +1820,43 @@ autoplot.object_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
-    autoplot(object = z,
-             range = NULL,
-             norm = norm,
-             plot.qty = plot.qty,
-             idfactor = idfactor,
-             facets = facets,
-             object.label = object.label,
-             na.rm = na.rm,
-             ...)
+    col.name <- c(transmittance = "Tfr", absorptance = "Afr", reflectance = "Rfr")
+    if ((is.object_spct(z) && all(col.name %in% names(z))) ||
+        (is.filter_spct(z) && any(c("Tfr", "Afr", "A")) %in% names(z)) ||
+        (is.reflector_spct(z) && "Rfr" %in% names(z)))  {
+      autoplot(object = z,
+               range = NULL,
+               norm = norm,
+               plot.qty = plot.qty,
+               pc.out = pc.out,
+               idfactor = idfactor,
+               facets = facets,
+               object.label = object.label,
+               na.rm = na.rm,
+               ...)
+    } else if (is.filter_spct(z) && !any(col.name %in% names(z))) {
+      z <- as.generic_spct(z)
+      autoplot(object = z,
+               y.name = paste(col.name[plot.qty], plot.data, sep = "."),
+               range = NULL,
+               norm = norm,
+               pc.out = pc.out,
+               idfactor = idfactor,
+               facets = facets,
+               object.label = object.label,
+               na.rm = na.rm,
+               ...)
+    } else if (is.reflector_spct(z) && !"Rfr" %in% names(z)) {
+      z <- as.generic_spct(z)
+      autoplot(object = z,
+               y.name = paste("Rfr", plot.data, sep = "."),
+               range = NULL,
+               norm = norm,
+               pc.out = pc.out,
+               idfactor = idfactor,
+               facets = facets,
+               object.label = object.label,
+               na.rm = na.rm,
+               ...)
+    }
   }

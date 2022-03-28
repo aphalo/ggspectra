@@ -35,8 +35,10 @@
   range = NULL,
   norm = getOption("ggspectra.normalize", default = "update"),
   plot.qty = getOption("photobiology.reflector.qty", default = "reflectance"),
+  pc.out = FALSE,
   plot.data = "as.is",
   idfactor = TRUE,
+  facets = FALSE,
   object.label = deparse(substitute(object)),
   na.rm = TRUE
 )

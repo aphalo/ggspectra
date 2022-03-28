@@ -744,6 +744,7 @@ autoplot.source_mspct <-
                                 default = "energy"),
            pc.out = FALSE,
            idfactor = TRUE,
+           facets = FALSE,
            plot.data = "as.is",
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
@@ -790,6 +791,7 @@ autoplot.source_mspct <-
                unit.out = unit.out,
                pc.out = pc.out,
                idfactor = idfactor,
+               facets = facets,
                object.label = object.label,
                na.rm = na.rm,
                ...)
@@ -801,6 +803,7 @@ autoplot.source_mspct <-
                norm = norm,
                pc.out = pc.out,
                idfactor = idfactor,
+               facets = facets,
                object.label = object.label,
                na.rm = na.rm,
                ...)

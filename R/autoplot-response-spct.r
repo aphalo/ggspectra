@@ -653,6 +653,7 @@ autoplot.response_mspct <-
            unit.out = getOption("photobiology.radiation.unit", default="energy"),
            pc.out = FALSE,
            plot.data = "as.is",
+           facets = FALSE,
            idfactor = TRUE,
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
@@ -695,6 +696,7 @@ autoplot.response_mspct <-
                norm = norm,
                unit.out = unit.out,
                pc.out = pc.out,
+               facets = facets,
                idfactor = idfactor,
                object.label = object.label,
                na.rm = na.rm,
@@ -706,6 +708,7 @@ autoplot.response_mspct <-
                range = NULL,
                norm = norm,
                pc.out = pc.out,
+               facets = facets,
                idfactor = idfactor,
                object.label = object.label,
                na.rm = na.rm,

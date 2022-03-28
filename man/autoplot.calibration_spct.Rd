@@ -11,7 +11,7 @@
   w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
     PAR())),
   range = NULL,
-  unit.out = "counts",
+  unit.out = "ignored",
   pc.out = FALSE,
   label.qty = "mean",
   span = NULL,
@@ -32,9 +32,12 @@
   object,
   ...,
   range = NULL,
+  unit.out = "ignored",
+  norm = getOption("ggspectra.normalize", default = "skip"),
+  pc.out = FALSE,
+  plot.data = "as.is",
   idfactor = TRUE,
   facets = FALSE,
-  plot.data = "as.is",
   object.label = deparse(substitute(object)),
   na.rm = TRUE
 )

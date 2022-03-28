@@ -35,10 +35,11 @@
   ...,
   range = NULL,
   norm = "update",
-  plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
-  facets = FALSE,
+  plot.qty = getOption("photobiology.filter.qty", default = "all"),
+  pc.out = FALSE,
   plot.data = "as.is",
   idfactor = TRUE,
+  facets = plot.qty == "all",
   object.label = deparse(substitute(object)),
   na.rm = TRUE
 )

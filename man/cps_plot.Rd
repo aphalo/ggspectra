@@ -17,6 +17,7 @@ cps_plot(
   idfactor,
   facets,
   ylim,
+  object.label,
   na.rm,
   ...
 )

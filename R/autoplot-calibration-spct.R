@@ -24,8 +24,12 @@
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
 #' @param annotations a character vector
-#' @param norm numeric normalization wavelength (nm) or character string "max"
-#'   for normalization at the wavelength of highest peak.
+#' @param norm numeric Normalization wavelength (nm) or character string "max",
+#'   or "min" for normalization at the corresponding wavelength, "update" to
+#'   update the normalization after modifying units of expression, quantity
+#'   or range but respecting the previously used criterion, or "skip" to force
+#'   return of \code{object} unchanged. Always skipped for
+#'   \code{plot.qty == "all"}, which is the default.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
@@ -228,6 +232,12 @@ cal_plot <- function(spct,
 #' @param w.band a single waveband object or a list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
 #'   min annd max wavelengths (nm).
+#' @param norm numeric Normalization wavelength (nm) or character string "max",
+#'   or "min" for normalization at the corresponding wavelength, "update" to
+#'   update the normalization after modifying units of expression, quantity
+#'   or range but respecting the previously used criterion, or "skip" to force
+#'   return of \code{object} unchanged. Always skipped for
+#'   \code{plot.qty == "all"}, which is the default.
 #' @param unit.out character IGNORED.
 #' @param pc.out logical, if TRUE use percents instead of fraction of one.
 #' @param label.qty character string giving the type of summary quantity to use
@@ -279,7 +289,7 @@ autoplot.calibration_spct <-
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PAR())),
            range = NULL,
-           unit.out = "counts",
+           unit.out = "ignored",
            pc.out = FALSE,
            label.qty = "mean",
            span = NULL,
@@ -347,9 +357,13 @@ autoplot.calibration_mspct <-
   function(object,
            ...,
            range = NULL,
+           unit.out = "ignored",
+           norm = getOption("ggspectra.normalize",
+                            default = "skip"),
+           pc.out = FALSE,
+           plot.data = "as.is",
            idfactor = TRUE,
            facets = FALSE,
-           plot.data = "as.is",
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
@@ -372,11 +386,30 @@ autoplot.calibration_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
-    autoplot(object = z,
-             range = NULL,
-             idfactor = idfactor,
-             facets = facets,
-             object.label = object.label,
-             ...)
+    if (is.calibration_spct(z) && "irrad.mult" %in% names(z)) {
+      autoplot(object = z,
+               range = NULL,
+               unit.out = unit.out,
+               norm = norm,
+               pc.out = pc.out,
+               idfactor = idfactor,
+               facets = facets,
+               object.label = object.label,
+               na.rm = na.rm,
+               ...)
+    } else {
+      z <- as.generic_spct(z)
+      autoplot(object = z,
+               y.name = paste("irrad.mult", plot.data, sep = "."),
+               range = NULL,
+               unit.out = unit.out,
+               norm = norm,
+               pc.out = pc.out,
+               idfactor = idfactor,
+               facets = facets,
+               object.label = object.label,
+               na.rm = na.rm,
+               ...)
+    }
   }
 

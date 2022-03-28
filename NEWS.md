@@ -14,10 +14,6 @@ and 'ggplot2' (\>= 3.3.3) and deprecation of functions in 'tidyr' (\>=
 1.0.0). The updated code depends on the revised `normalize()` function
 in 'photobiology' (\>= 0.10.10).
 
--   Revise all `autoplot()` methods for collections of spectra adding
-    support for `sum`, `prod`, `var`, `sd`, and `se` as summaries, i.
-    e., compute on-the-fly a summary spectrum from a collection of
-    spectra and plot it.
 -   Revise all `autoplot()` methods to support on-the-fly normalization
     internally using `photobiology::normalize()`\`.
 -   Revise `autoplot()` methods for `source_spct`, `response_spct`,
@@ -42,6 +38,10 @@ in 'photobiology' (\>= 0.10.10).
 -   Add `autoplot.cps_mspct()` and `autoplot.raw_mspct()` methods.
 -   Add support for faceting to all `autoplot()` methods for collections
     of spectra.
+-   Revise all `autoplot()` methods for collections of spectra adding
+    support for `sum`, `prod`, `var`, `sd`, and `se` as summaries. *The
+    support for these summaries depends on* `autoplot.generic_spct()`
+    *which is still experimental and subject to change.*
 -   Update `decoration()` to track changes in 'ggrepel' (\>= 0.9.1).
 -   Update `decoration()` to use `position_nudge()` and
     `position_nudge_repel()` to displace labels instead of "off-range"
@@ -50,7 +50,8 @@ in 'photobiology' (\>= 0.10.10).
     methods and by `autotitle()`.
 -   Add to the documentation of all `autoplot()` methods an explanation
     of how to modify the default plot annotations and tittles using
-    arguments passed to parameter `annotations`.
+    arguments passed to parameter `annotations`. Also add *see also*
+    links to related help pages.
 
 ------------------------------------------------------------------------
 

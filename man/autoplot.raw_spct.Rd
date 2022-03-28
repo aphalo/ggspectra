@@ -36,6 +36,7 @@
   unit.out = "counts",
   pc.out = FALSE,
   idfactor = TRUE,
+  facets = FALSE,
   plot.data = "as.is",
   object.label = deparse(substitute(object)),
   na.rm = TRUE
