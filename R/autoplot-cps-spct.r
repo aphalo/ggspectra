@@ -56,7 +56,7 @@ cps_plot <- function(spct,
                      na.rm,
                      ...) {
   if (!is.cps_spct(spct)) {
-    stop("cps_plot() can only plot response_spct objects.")
+    stop("cps_plot() can only plot cps_spct objects.")
   }
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
@@ -280,7 +280,8 @@ autoplot.cps_spct <-
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PAR())),
            range = NULL,
-           unit.out = "cps",
+           norm = "skip",
+           unit.out = NULL,
            pc.out = FALSE,
            label.qty = "mean",
            span = NULL,
@@ -288,7 +289,6 @@ autoplot.cps_spct <-
            annotations = NULL,
            time.format = "",
            tz = "UTC",
-           norm = "skip",
            text.size = 2.5,
            idfactor = NULL,
            facets = FALSE,
@@ -325,11 +325,12 @@ autoplot.cps_spct <-
     cps_plot(spct = object,
              w.band = w.band,
              range = range,
+             norm = norm,
+             pc.out = pc.out,
              label.qty = label.qty,
              span = span,
              wls.target = wls.target,
-             pc.out = pc.out,
-             annotations = annotations, norm = norm,
+             annotations = annotations,
              text.size = text.size,
              idfactor = idfactor,
              facets = facets,
@@ -356,8 +357,9 @@ autoplot.cps_mspct <-
   function(object,
            ...,
            range = NULL,
-           norm = getOption("ggspectra.norm",
-                            default = "skip"),
+           norm = "skip",
+           unit.out = NULL,
+           pc.out = FALSE,
            idfactor = TRUE,
            plot.data = "as.is",
            object.label = deparse(substitute(object)),
@@ -394,12 +396,26 @@ autoplot.cps_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
-    autoplot(object = z,
-             range = NULL,
-             norm = norm,
-             idfactor = idfactor,
-             object.label = object.label,
-             na.rm = na.rm,
-             ...)
+    if (is.cps_spct(z) && any(c("cps", "cps_1") %in% names(z))) {
+      autoplot(object = z,
+               range = NULL,
+               norm = norm,
+               pc.out = pc.out,
+               idfactor = idfactor,
+               object.label = object.label,
+               na.rm = na.rm,
+               ...)
+    } else {
+      z <- as.generic_spct(z)
+      autoplot(object = z,
+               y.name = paste("cps", plot.data, sep = "."),
+               range = NULL,
+               norm = norm,
+               pc.out = pc.out,
+               idfactor = idfactor,
+               object.label = object.label,
+               na.rm = na.rm,
+               ...)
+    }
   }
 

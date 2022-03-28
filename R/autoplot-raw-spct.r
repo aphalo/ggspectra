@@ -387,6 +387,8 @@ autoplot.raw_mspct <-
            range = NULL,
            norm = getOption("ggspectra.norm",
                             default = "skip"),
+           unit.out = "counts",
+           pc.out = FALSE,
            idfactor = TRUE,
            plot.data = "as.is",
            object.label = deparse(substitute(object)),
@@ -423,12 +425,27 @@ autoplot.raw_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
-    autoplot(object = z,
-             range = NULL,
-             norm = norm,
-             idfactor = idfactor,
-             object.label,
-             na.rm = na.rm,
-             ...)
+    if (is.raw_spct(z) && any(c("counts", "counts_1") %in% names(z))) {
+      autoplot(object = z,
+               range = NULL,
+               norm = norm,
+               unit.out = unit.out,
+               pc.out = pc.out,
+               idfactor = idfactor,
+               object.label = object.label,
+               na.rm = na.rm,
+               ...)
+    } else {
+      z <- as.generic_spct(z)
+      autoplot(object = z,
+               y.name = paste("counts", plot.data, sep = "."),
+               range = NULL,
+               norm = norm,
+               pc.out = pc.out,
+               idfactor = idfactor,
+               object.label = object.label,
+               na.rm = na.rm,
+               ...)
+    }
   }
 

@@ -1,0 +1,73 @@
+#' Deprecated plot methods
+#'
+#' These \code{plot()} methods return a ggplot object with an annotated plot of
+#' an object of a class derived from \code{generic_spct}, of a class derived
+#' from \code{generic_mspct} or of an object of class \code{waveband} for which
+#' an \code{autoplot()} method exists. They are implemented as wrappers of
+#' \code{autoplot()}. The generic for \code{plot()} is defined by base R and
+#' specializations for objects of diverse classes are provided various packages
+#' and R itself. The generic for \code{autoplot()} is defined by package
+#' 'ggplot2'.
+#'
+#' @section Deprecation warning!:
+#' These \code{plot()} specializatioms are provided for backwards
+#' compatibility, but all new or updated code should call \code{autoplot()}
+#' instead of \code{plot()} on objects of spectral and waveband classes defined
+#' in package 'photobiology'.
+#'
+#' These methods add support for \code{plot()} specializations as these
+#' specialization were provided by package 'ggspectra' years ago, before
+#' 'ggplot2' had an \code{autoplot()} generic. As these methods return ggplots
+#' autoplot is a more suitable name for them.
+#'
+#' @param x An R object derived from class \code{generic_spct} or derived
+#'   from class \code{generic_mspct}.
+#' @param ... Named arguments passed to \code{autoplot()} methods.
+#'
+#' @seealso \code{\link{autoplot.calibration_spct}},  \code{\link{autoplot.cps_spct}},
+#'  \code{\link{autoplot.filter_spct}}, \code{\link{autoplot.raw_spct}},
+#'   \code{\link{autoplot.response_spct}},  \code{\link{autoplot.source_spct}} and
+#'    \code{\link{autoplot.waveband}}.
+#'
+#' @return a \code{ggplot} object.
+#'
+#' @examples
+#'
+#' plot(sun.spct) # deprecated syntax, to be avoided
+#' autoplot(sun.spct) # current syntax, to be used
+#'
+#' @export
+#'
+#' @family autoplot functions
+#'
+#' @rdname plot
+#'
+plot.generic_spct <- function(x, ...) {
+  message("Deprecated: Please use 'autoplot()' instead of 'plot()' for spectra.")
+  autoplot(object = x,
+           object.label = deparse(substitute(x)),
+           ...)
+}
+
+#' @rdname plot
+#'
+#' @export
+#'
+plot.generic_mspct <- function(x,
+                               ...) {
+  message("Deprecated: Please use 'autoplot()' instead of 'plot()' for spectra.")
+  autoplot(object = x,
+           object.label = deparse(substitute(x)),
+           ...)
+}
+
+#' @rdname plot
+#'
+#' @export
+#'
+plot.waveband <- function(x, ...) {
+  message("Deprecated: Please use 'autoplot()' instead of 'plot()' for 'waveband' objects.")
+  autoplot(object = x,
+           object.label = deparse(substitute(x)),
+           ...)
+}

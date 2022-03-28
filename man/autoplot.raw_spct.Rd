@@ -33,6 +33,8 @@
   ...,
   range = NULL,
   norm = getOption("ggspectra.norm", default = "skip"),
+  unit.out = "counts",
+  pc.out = FALSE,
   idfactor = TRUE,
   plot.data = "as.is",
   object.label = deparse(substitute(object)),

@@ -34,6 +34,7 @@
   range = NULL,
   norm = getOption("ggspectra.norm", default = "max"),
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
+  pc.out = FALSE,
   plot.data = "as.is",
   idfactor = TRUE,
   object.label = deparse(substitute(object)),

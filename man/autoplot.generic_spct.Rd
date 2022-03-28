@@ -3,20 +3,171 @@
 \name{autoplot.generic_spct}
 \alias{autoplot.generic_spct}
 \alias{autoplot.generic_mspct}
-\title{Warn if autoplot method is called for generic_spct}
+\title{Create a complete ggplot for generic spectral data.}
 \usage{
-\method{autoplot}{generic_spct}(object, ...)
+\method{autoplot}{generic_spct}(
+  object,
+  ...,
+  y.name,
+  ymin.name = NULL,
+  ymax.name = NULL,
+  ylab = ggplot2::waiver(),
+  w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
+    PAR())),
+  range = NULL,
+  label.qty = "none",
+  span = NULL,
+  wls.target = "HM",
+  annotations = NULL,
+  time.format = "",
+  tz = "UTC",
+  text.size = 2.5,
+  idfactor = NULL,
+  facets = FALSE,
+  ylim = c(NA, NA),
+  object.label = deparse(substitute(object)),
+  na.rm = TRUE
+)
 
 \method{autoplot}{generic_mspct}(object, ...)
 }
+\arguments{
+\item{object}{a cps_spct object.}
+
+\item{...}{in the case of collections of spectra, additional arguments passed
+to the plot methods for individual spectra, otherwise currently ignored.}
+
+\item{y.name, ymin.name, ymax.name}{character Names of the columns to be mapped
+to the y aesthetic.}
+
+\item{ylab}{character or expression The y-axis label.}
+
+\item{w.band}{a single waveband object or a list of waveband objects.}
+
+\item{range}{an R object on which range() returns a vector of length 2, with
+min annd max wavelengths (nm).}
+
+\item{label.qty}{character string giving the type of summary quantity to use
+for labels, one of "mean", "total", "contribution", and "relative".}
+
+\item{span}{a peak is defined as an element in a sequence which is greater
+than all other elements within a window of width span centered at that
+element.}
+
+\item{wls.target}{numeric vector indicating the spectral quantity values for
+which wavelengths are to be searched and interpolated if need. The
+\code{character} strings "half.maximum" and "half.range" are also accepted
+as arguments. A list with \code{numeric} and/or \code{character} values is
+also accepted.}
+
+\item{annotations}{a character vector ("summaries" is ignored). For details
+please see sections Plot Annotations and Title Annotations.}
+
+\item{time.format}{character Format as accepted by \code{\link[base]{strptime}}.}
+
+\item{tz}{character Time zone to use for title and/or subtitle.}
+
+\item{text.size}{numeric size of text in the plot decorations.}
+
+\item{idfactor}{character Name of an index column in data holding a
+\code{factor} with each spectrum in a long-form multispectrum object
+corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
+the factor is retrieved from metadata or if no metadata found, the
+default "spct.idx" is tried.}
+
+\item{facets}{logical or integer Indicating if facets are to be created for
+the levels of \code{idfactor} when \code{spct} contain multiple spectra in
+long form.}
+
+\item{ylim}{numeric y axis limits,}
+
+\item{object.label}{character The name of the object being plotted.}
+
+\item{na.rm}{logical.}
+}
 \value{
-an empty \code{ggplot} object, triggering a warning.
+a \code{ggplot} object.
+
+A \code{ggplot} object.
 }
 \description{
+This function returns a ggplot object with an annotated plot of a
+generic_spct object.
+}
+\details{
 No automatic plot method is possible for objects of class \code{generic_spct}
-as this class is meant to be used only as a pure base class for derivation.
-As \code{generic_mspct} objects can contain an assortment of objects
-including \code{generic_spct} and classes derived from \code{generic_spct}
-the spectra are unlikely be suitable for plotting in the same ggplot.
+as this class is meant to be mainly used only as a pure base class for
+derivation. A method is provided for \code{generic_spct} but not for
+\code{generic_mspct} as \code{generic_mspct} objects can contain an
+assortment of objects including \code{generic_spct} and classes derived from
+\code{generic_spct} making the spectra are unlikely be suitable for plotting
+in the same ggplot.
+
+Contrary to other autoplot methods, the method for \code{generic_spct} does
+not supply defaults to several of its parameters and cannot be used simply by
+calling it with the spectrum as argument. There are also limitations on which
+annotations are accepted. On-the-fly normalization is not supported.
+}
+\note{
+Scales are expanded so as to make space for the annotations if these
+  are present. The object returned is a ggplot object, and can be further
+  manipulated.
+}
+\section{Plot Annotations}{
+ The recognized annotation names are: \code{"summaries"}, \code{"peaks"},
+  \code{"peak.labels"}, \code{"valleys"}, \code{"valley.labels"},
+  \code{"wls"}, \code{"wls.labels"}, \code{"colour.guide"},
+  \code{"color.guide"}, \code{"boxes"}, \code{"segments"}, \code{"labels"}.
+  In addition, \code{"+"} is interpreted as a request to add to the already
+  present default annotations, \code{"-"} as request to remove annotations
+  and \code{"="} or missing\code{"+"} and \code{"-"} as a request to reset
+  annotations to those requested. If used, \code{"+"}, \code{"-"} or
+  \code{"="} must be the first member of a character vector, and followed by
+  one or more of the names given above. To simultaneously add and remove
+  annotations one can pass a \code{list} containing \code{character} vectors
+  each assembled as described. The vectors are applied in the order they
+  appear in the list. To disable all annotations pass \code{""} or
+  \code{c("=", "")} as argument. Adding a variation of an annotation already
+  present, replaces the existing one automatically: e.g., adding
+  \code{"peak.labels"} replaces\code{"peaks"} if present.
+}
+
+\section{Title Annotations}{
+ metadata retrieved from object \code{object} is
+  paased to \code{ggplot2::ggtitle()} as arguments for \code{title},
+  \code{subtitle} and \code{caption}. The specification for the title is
+  passed as argument to \code{annotations}, and consists in the keyword
+  \code{title} with optional modifiers selecting the kind of metatdata to
+  use, separated by colons. Up to three keywords separated by colons are
+  accepted, and correspond to title, subtitle and caption. The recognized
+  keywords are: \code{"objt"}, \code{"class"}, \code{"what"}, \code{"when"},
+  \code{"where"}, \code{"how"}, \code{"inst.name"}, \code{"inst.sn"},
+  \code{"comment"} and \code{"none"} are recognized as modifiers to
+  \code{"title"}; \code{"none"} is a placeholder. Default is
+  \code{"title:objt"} or no title depending on the context.
+}
+
+\examples{
+
+sun.generic_spct <- as.generic_spct(sun.spct)
+autoplot(sun.generic_spct, y.name = "s.q.irrad")
+autoplot(sun.generic_spct, y.name = "s.q.irrad",
+         annotations = "")
+autoplot(sun.generic_spct, y.name = "s.q.irrad",
+         annotations = "title:objt:when",
+         ylab = s.q.irrad_label(unit.exponent = 0))
+autoplot(sun.generic_spct, y.name = "s.e.irrad",
+         annotations = "colour.guide")
+autoplot(sun.generic_spct, y.name = "s.q.irrad",
+         ylim = c(-1e-6, 4e-6))
+
+}
+\seealso{
+\code{\link[photobiology]{normalize}},
+  \code{\link[photobiology]{generic_spct}},
+  \code{\link[photobiology]{waveband}},
+  \code{\link[photobiologyWavebands]{photobiologyWavebands-package}},
+  \code{\link[ggplot2]{scale_continuous}} and
+  \code{\link[ggplot2]{autoplot}}
 }
 \keyword{internal}

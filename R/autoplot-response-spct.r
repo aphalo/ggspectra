@@ -651,6 +651,7 @@ autoplot.response_mspct <-
            norm = getOption("ggspectra.norm",
                             default = "max"),
            unit.out = getOption("photobiology.radiation.unit", default="energy"),
+           pc.out = FALSE,
            plot.data = "as.is",
            idfactor = TRUE,
            object.label = deparse(substitute(object)),
@@ -659,7 +660,7 @@ autoplot.response_mspct <-
     force(object.label)
 
     idfactor <- validate_idfactor(idfactor = idfactor)
-    # We trim the spectra to avoid unnecesary computaions later
+    # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
       object <- photobiology::trim_wl(object,
                                       range = range,
@@ -687,13 +688,28 @@ autoplot.response_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
-    autoplot(object = z,
-             range = NULL,
-             idfactor = idfactor,
-             norm = norm,
-             unit.out = unit.out,
-             object.label = object.label,
-             na.rm = na.rm,
-             ...)
+    col.name <- c(photon = "s.q.response", energy = "s.e.response")
+    if (is.response_spct(z) && any(col.name %in% names(z))) {
+      autoplot(object = z,
+               range = NULL,
+               norm = norm,
+               unit.out = unit.out,
+               pc.out = pc.out,
+               idfactor = idfactor,
+               object.label = object.label,
+               na.rm = na.rm,
+               ...)
+    } else {
+      z <- as.generic_spct(z)
+      autoplot(object = z,
+               y.name = paste(col.name[unit.out], plot.data, sep = "."),
+               range = NULL,
+               norm = norm,
+               pc.out = pc.out,
+               idfactor = idfactor,
+               object.label = object.label,
+               na.rm = na.rm,
+               ...)
+    }
   }
 

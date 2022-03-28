@@ -11,7 +11,8 @@
   w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
     PAR())),
   range = NULL,
-  unit.out = "cps",
+  norm = "skip",
+  unit.out = NULL,
   pc.out = FALSE,
   label.qty = "mean",
   span = NULL,
@@ -19,7 +20,6 @@
   annotations = NULL,
   time.format = "",
   tz = "UTC",
-  norm = "skip",
   text.size = 2.5,
   idfactor = NULL,
   facets = FALSE,
@@ -32,7 +32,9 @@
   object,
   ...,
   range = NULL,
-  norm = getOption("ggspectra.norm", default = "skip"),
+  norm = "skip",
+  unit.out = NULL,
+  pc.out = FALSE,
   idfactor = TRUE,
   plot.data = "as.is",
   object.label = deparse(substitute(object)),
@@ -49,6 +51,10 @@ to the plot methods for individual spectra, otherwise currently ignored.}
 
 \item{range}{an R object on which range() returns a vector of length 2, with
 min annd max wavelengths (nm).}
+
+\item{norm}{numeric normalization wavelength (nm) or character string
+\code{"max"} for normalization at the wavelength of highest peak or
+\code{"skip"} for no change to exisitng normalization in \code{object}.}
 
 \item{unit.out}{character IGNORED.}
 
@@ -74,10 +80,6 @@ please see sections Plot Annotations and Title Annotations.}
 \item{time.format}{character Format as accepted by \code{\link[base]{strptime}}.}
 
 \item{tz}{character Time zone to use for title and/or subtitle.}
-
-\item{norm}{numeric normalization wavelength (nm) or character string
-\code{"max"} for normalization at the wavelength of highest peak or
-\code{"skip"} for no change to exisitng normalization in \code{object}.}
 
 \item{text.size}{numeric size of text in the plot decorations.}
 

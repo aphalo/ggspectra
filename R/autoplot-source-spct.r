@@ -782,14 +782,29 @@ autoplot.source_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
-    autoplot(object = z,
-             range = NULL,
-             norm = norm,
-             pc.out = pc.out,
-             idfactor = idfactor,
-             object.label = object.label,
-             na.rm = na.rm,
-             ...)
+    col.name <- c(photon = "s.q.irrad", energy = "s.e.irrad")
+    if (is.source_spct(z) && any(col.name %in% names(z))) {
+      autoplot(object = z,
+               range = NULL,
+               norm = norm,
+               unit.out = unit.out,
+               pc.out = pc.out,
+               idfactor = idfactor,
+               object.label = object.label,
+               na.rm = na.rm,
+               ...)
+    } else {
+      z <- as.generic_spct(z)
+      autoplot(object = z,
+               y.name = paste(col.name[unit.out], plot.data, sep = "."),
+               range = NULL,
+               norm = norm,
+               pc.out = pc.out,
+               idfactor = idfactor,
+               object.label = object.label,
+               na.rm = na.rm,
+               ...)
+    }
   }
 
 ## internal
