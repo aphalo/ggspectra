@@ -677,6 +677,10 @@ autoplot.response_mspct <-
                                         na.rm = na.rm)
       norm <- "skip"
     }
+    # we ensure the units are correct
+    object <- switch(unit.out,
+                     photon = e2q(object, action = "replace"),
+                     energy = q2e(object, action = "replace"))
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
     z <- switch(plot.data,

@@ -237,6 +237,32 @@ test_that("source_mspct", {
                               autoplot(two_leds.mspct, annotations = ""))
   vdiffr::expect_doppelganger("source-mspct-reserve-space",
                               autoplot(two_leds.mspct, annotations = "reserve.space"))
+  vdiffr::expect_doppelganger("source-mspct-mean",
+                              autoplot(two_leds.mspct, plot.data = "mean"))
+  vdiffr::expect_doppelganger("source-mspct-median",
+                              autoplot(two_leds.mspct, plot.data = "median"))
+  vdiffr::expect_doppelganger("source-mspct-sum",
+                              autoplot(two_leds.mspct, plot.data = "sum"))
+  # triggers warning
+  # vdiffr::expect_doppelganger("source-mspct-sum",
+  #                             autoplot(two_leds.mspct, plot.data = "prod"))
+  testthat::expect_warning(autoplot(two_leds.mspct, plot.data = "prod"))
+  vdiffr::expect_doppelganger("source-mspct-se",
+                              autoplot(two_leds.mspct, plot.data = "se"))
+  vdiffr::expect_doppelganger("source-mspct-se-ylab",
+                              autoplot(two_leds.mspct, plot.data = "se", ylab = "Standard error of the mean"))
+  vdiffr::expect_doppelganger("source-mspct-var",
+                              autoplot(two_leds.mspct, plot.data = "var"))
+  vdiffr::expect_doppelganger("source-mspct-var-ylab",
+                              autoplot(two_leds.mspct, plot.data = "var", ylab = "Variance"))
+  vdiffr::expect_doppelganger("source-mspct-mean-e",
+                              autoplot(two_leds.mspct, plot.data = "mean", unit.out = "energy"))
+  vdiffr::expect_doppelganger("source-mspct-median-e",
+                              autoplot(two_leds.mspct, plot.data = "median", unit.out = "energy"))
+  vdiffr::expect_doppelganger("source-mspct-mean-p",
+                              autoplot(two_leds.mspct, plot.data = "mean", unit.out = "photon"))
+  vdiffr::expect_doppelganger("source-mspct-median-p",
+                              autoplot(two_leds.mspct, plot.data = "median", unit.out = "photon"))
 })
 
 test_that("filter_spct", {
@@ -438,6 +464,37 @@ test_that("filter_mspct", {
                               autoplot(two_leaves.mspct, annotations = ""))
   vdiffr::expect_doppelganger("filter-mspct-reserve-space",
                               autoplot(two_leaves.mspct, annotations = "reserve.space"))
+  vdiffr::expect_doppelganger("filter-mspct-mean",
+                              autoplot(two_leaves.mspct, plot.data = "mean"))
+  vdiffr::expect_doppelganger("filter-mspct-median",
+                              autoplot(two_leaves.mspct, plot.data = "median"))
+  # triggers warning
+  # vdiffr::expect_doppelganger("filter-mspct-sum",
+  #                             autoplot(two_leaves.mspct, plot.data = "sum"))
+  testthat::expect_warning(autoplot(two_leaves.mspct, plot.data = "sum"))
+  vdiffr::expect_doppelganger("filter-mspct-sum",
+                               autoplot(two_leaves.mspct, plot.data = "prod"))
+  vdiffr::expect_doppelganger("filter-mspct-se",
+                              autoplot(two_leaves.mspct, plot.data = "se"))
+  vdiffr::expect_doppelganger("filter-mspct-se-ylab",
+                              autoplot(two_leaves.mspct, plot.data = "se", ylab = "Standard error of the mean"))
+  vdiffr::expect_doppelganger("filter-mspct-var",
+                              autoplot(two_leaves.mspct, plot.data = "var"))
+  vdiffr::expect_doppelganger("filter-mspct-var-ylab",
+                              autoplot(two_leaves.mspct, plot.data = "var", ylab = "Variance"))
+  vdiffr::expect_doppelganger("filter-mspct-mean-Tfr",
+                              autoplot(two_leaves.mspct, plot.data = "mean", plot.qty = "transmittance"))
+  vdiffr::expect_doppelganger("filter-mspct-median-Tfr",
+                              autoplot(two_leaves.mspct, plot.data = "median", plot.qty = "transmittance"))
+  # Bug in photobiology::rowwise_filter()
+  # vdiffr::expect_doppelganger("filter-mspct-mean-Afr",
+  #                             autoplot(two_leaves.mspct, plot.data = "mean", plot.qty = "absorptance"))
+  # vdiffr::expect_doppelganger("filter-mspct-median-Afr",
+  #                             autoplot(two_leaves.mspct, plot.data = "median", plot.qty = "absorptance"))
+  vdiffr::expect_doppelganger("filter-mspct-mean-A",
+                              autoplot(two_leaves.mspct, plot.data = "mean", plot.qty = "absorbance"))
+  vdiffr::expect_doppelganger("filter-mspct-median-A",
+                              autoplot(two_leaves.mspct, plot.data = "median", plot.qty = "absorbance"))
 })
 
 test_that("reflector_spct", {
@@ -494,6 +551,28 @@ test_that("reflector_mspct", {
                               autoplot(two_leaves_Rfr.mspct, annotations = ""))
   vdiffr::expect_doppelganger("reflector-mspct-reserve-space",
                               autoplot(two_leaves_Rfr.mspct, annotations = "reserve.space"))
+  vdiffr::expect_doppelganger("reflector-mspct-mean",
+                              autoplot(two_leaves_Rfr.mspct, plot.data = "mean"))
+  vdiffr::expect_doppelganger("reflector-mspct-median",
+                              autoplot(two_leaves_Rfr.mspct, plot.data = "median"))
+  # triggers warning
+  # vdiffr::expect_doppelganger("reflector-mspct-sum",
+  #                             autoplot(two_leaves_Rfr.mspct, plot.data = "sum"))
+  testthat::expect_warning(autoplot(two_leaves_Rfr.mspct, plot.data = "sum"))
+  vdiffr::expect_doppelganger("reflector-mspct-sum",
+                              autoplot(two_leaves_Rfr.mspct, plot.data = "prod"))
+  vdiffr::expect_doppelganger("reflector-mspct-se",
+                              autoplot(two_leaves_Rfr.mspct, plot.data = "se"))
+  vdiffr::expect_doppelganger("reflector-mspct-se-ylab",
+                              autoplot(two_leaves_Rfr.mspct, plot.data = "se", ylab = "Standard error of the mean"))
+  vdiffr::expect_doppelganger("reflector-mspct-var",
+                              autoplot(two_leaves_Rfr.mspct, plot.data = "var"))
+  vdiffr::expect_doppelganger("reflector-mspct-var-ylab",
+                              autoplot(two_leaves_Rfr.mspct, plot.data = "var", ylab = "Variance"))
+  vdiffr::expect_doppelganger("reflector-mspct-mean-Tfr",
+                              autoplot(two_leaves_Rfr.mspct, plot.data = "mean", plot.qty = "reflectance"))
+  vdiffr::expect_doppelganger("reflector-mspct-median-Tfr",
+                              autoplot(two_leaves_Rfr.mspct, plot.data = "median", plot.qty = "reflectance"))
 })
 
 test_that("object_spct", {
@@ -770,6 +849,31 @@ test_that("response_mspct", {
                               autoplot(two_ccds.mspct, annotations = ""))
   vdiffr::expect_doppelganger("response-mspct-reserve-space",
                               autoplot(two_ccds.mspct, annotations = "reserve.space"))
+  vdiffr::expect_doppelganger("response-mspct-mean",
+                              autoplot(two_ccds.mspct, plot.data = "mean"))
+  vdiffr::expect_doppelganger("response-mspct-median",
+                              autoplot(two_ccds.mspct, plot.data = "median"))
+  vdiffr::expect_doppelganger("response-mspct-sum",
+                              autoplot(two_ccds.mspct, plot.data = "sum"))
+  # vdiffr::expect_doppelganger("response-mspct-sum",
+  #                             autoplot(two_ccds.mspct, plot.data = "prod"))
+  testthat::expect_warning(autoplot(two_ccds.mspct, plot.data = "prod"))
+  vdiffr::expect_doppelganger("response-mspct-se",
+                              autoplot(two_ccds.mspct, plot.data = "se"))
+  vdiffr::expect_doppelganger("response-mspct-se-ylab",
+                              autoplot(two_ccds.mspct, plot.data = "se", ylab = "Standard error of the mean"))
+  vdiffr::expect_doppelganger("response-mspct-var",
+                              autoplot(two_ccds.mspct, plot.data = "var"))
+  vdiffr::expect_doppelganger("response-mspct-var-ylab",
+                              autoplot(two_ccds.mspct, plot.data = "var", ylab = "Variance"))
+  vdiffr::expect_doppelganger("response-mspct-mean-e",
+                              autoplot(two_ccds.mspct, plot.data = "mean", unit.out = "energy"))
+  vdiffr::expect_doppelganger("response-mspct-mean-p",
+                              autoplot(two_ccds.mspct, plot.data = "mean", unit.out = "photon"))
+  vdiffr::expect_doppelganger("response-mspct-median-e",
+                              autoplot(two_ccds.mspct, plot.data = "median", unit.out = "energy"))
+  vdiffr::expect_doppelganger("response-mspct-median-p",
+                              autoplot(two_ccds.mspct, plot.data = "median", unit.out = "photon"))
 })
 
 test_that("waveband", {

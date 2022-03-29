@@ -1271,6 +1271,12 @@ autoplot.filter_mspct <-
                                         na.rm = na.rm)
       norm <- "skip"
     }
+    # we convert spectra to the quantity to be plotted
+    object <- switch(plot.qty,
+                     transmittance = any2T(object, action = "replace"),
+                     absorbance = any2A(object, action = "replace"),
+                     # we need to discard T´Rfr if present
+                     absorptance = msmsply(any2Afr(object, action = "replace"), `[`, i = TRUE, j =  c("w.length", "Afr")))
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
     z <- switch(plot.data,
