@@ -15,7 +15,7 @@ and 'ggplot2' (\>= 3.3.3) and deprecation of functions in 'tidyr' (\>=
 in 'photobiology' (\>= 0.10.10).
 
 -   Revise all `autoplot()` methods to support on-the-fly normalization
-    internally using `photobiology::normalize()`\`.
+    internally using `photobiology::normalize()`.
 -   Revise `autoplot()` methods for `source_spct`, `response_spct`,
     `filter_spct`, `reflector_spct`, `source_mspct`, `response_mspct`,
     `filter_mspct`, and `reflector_mspct` so that if the data are

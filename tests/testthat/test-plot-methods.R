@@ -486,7 +486,7 @@ test_that("filter_mspct", {
                               autoplot(two_leaves.mspct, plot.data = "mean", plot.qty = "transmittance"))
   vdiffr::expect_doppelganger("filter-mspct-median-Tfr",
                               autoplot(two_leaves.mspct, plot.data = "median", plot.qty = "transmittance"))
-  # Bug in photobiology::rowwise_filter()
+  # Bug in photobiology::rowwise_filter() (fixed in photobiology >= 0.10.11)
   # vdiffr::expect_doppelganger("filter-mspct-mean-Afr",
   #                             autoplot(two_leaves.mspct, plot.data = "mean", plot.qty = "absorptance"))
   # vdiffr::expect_doppelganger("filter-mspct-median-Afr",
