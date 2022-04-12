@@ -1,5 +1,5 @@
 # -----------------------------------------------------------
-# CITATION file created with {cffr} R package, v0.2.1
+# CITATION file created with {cffr} R package, v0.2.2
 # See also: https://docs.ropensci.org/cffr/
 # -----------------------------------------------------------
  
@@ -8,7 +8,7 @@ message: 'To cite package "ggspectra" in publications use:'
 type: software
 license: GPL-2.0-or-later
 title: 'ggspectra: Extensions to ''ggplot2'' for Radiation Spectra'
-version: 0.3.8.9000
+version: 0.3.8
 doi: 10.19232/uv4pb.2015.1.14
 abstract: Additional annotations, stats, geoms and scales for plotting "light" spectra
   with 'ggplot2', together with specializations of ggplot() and autoplot() methods
@@ -37,7 +37,7 @@ preferred-citation:
 repository: https://CRAN.R-project.org/package=ggspectra
 repository-code: https://github.com/aphalo/ggspectra/issues/
 url: https://docs.r4photobiology.info/ggspectra/
-date-released: '2022-03-21'
+date-released: '2022-04-05'
 contact:
 - family-names: Aphalo
   given-names: Pedro J.
@@ -67,7 +67,7 @@ references:
     orcid: https://orcid.org/0000-0003-3385-972X
   year: '2022'
   url: https://CRAN.R-project.org/package=photobiology
-  version: '>= 0.10.6'
+  version: '>= 0.10.10'
 - type: software
   title: ggplot2
   abstract: 'ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics'
@@ -188,6 +188,20 @@ references:
   year: '2022'
   url: https://CRAN.R-project.org/package=tidyr
   version: '>= 1.0.2'
+- type: software
+  title: tidyselect
+  abstract: 'tidyselect: Select from a Set of Strings'
+  notes: Imports
+  authors:
+  - family-names: Henry
+    given-names: Lionel
+    email: lionel@rstudio.com
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+  year: '2022'
+  url: https://CRAN.R-project.org/package=tidyselect
+  version: '>= 1.1.2'
 - type: software
   title: tibble
   abstract: 'tibble: Simple Data Frames'
