@@ -137,6 +137,6 @@ citation("ggspectra")
 
 ## License
 
-© 2015-2021 Pedro J. Aphalo (<pedro.aphalo@helsinki.fi>). Released under
+© 2015-2022 Pedro J. Aphalo (<pedro.aphalo@helsinki.fi>). Released under
 the GPL, version 2 or greater. This software carries no warranty of any
 kind.

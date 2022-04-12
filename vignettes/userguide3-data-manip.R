@@ -72,9 +72,10 @@ ggplot(sun.spct) +
   geom_line(data = . %>% smooth_spct(method = "supsmu"), 
             colour = "red", size = 1.2) +
   stat_peaks(data = . %>% smooth_spct(method = "supsmu"),
-             size = 3, span = NULL) +
+             colour = "red", size = 3, span = NULL) +
   stat_peaks(data = . %>% smooth_spct(method = "supsmu"),
-             geom = "vline", linetype = "dotted", span = NULL)
+             geom = "vline", colour = "red", 
+             linetype = "dotted", span = NULL)
 
 ## -----------------------------------------------------------------------------
 ggplot(sun.spct) + 

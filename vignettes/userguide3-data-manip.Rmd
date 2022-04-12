@@ -18,7 +18,7 @@ Package `ggspectra` extends `ggplot2` with stats, geoms, scales and annotations 
 
 The new elements can be freely combined with methods and functions defined in packages 'ggplot2', `scales`, `ggrepel`, `cowplot` and other extensions to 'ggplot2'.
 
-This third part of the User Guide describes how to combine manipulation of spectral data with plotting. This streamlined coding is made possible by the enhancement implemented in 'ggspectra' (>= 0.3.5). In addition, some of the examples make use of methods available only in 'photobiology' (>= 0.9.30).
+This third part of the User Guide describes how to combine manipulation of spectral data with plotting. This streamlined coding is made possible by the enhancement implemented in 'ggspectra' (>= 0.3.5). In addition, some of the examples make use of methods available only in 'photobiology' (>= 0.10.0).
 
 In 'ggspectra' (>= 0.3.5) the data member of `gg` (ggplot) objects remains as an object of the classes for spectral data defined in 'photobiology' instead of being converted into a plain `data.frame`. This makes it possible data manipulations in layers to be done with methods specific to spectral data.
 
@@ -48,7 +48,7 @@ two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct / 2))
 ```
 
 We bind the two spectra in the collection into a single spectral object. This object
-includes an indexing factor, by default names `spct.idx`. We use this new object to 
+includes an indexing factor, by default named `spct.idx`. We use this new object to 
 later on demonstrate grouping in ggplots.
 
 ```{r}
@@ -63,10 +63,11 @@ theme_set(theme_bw())
 
 ## Visualizing the effect of methods
 
-As from version 0.3.5 the class of the spectral object stored by `ggplot()` is
-no longer stripped, data transformations in layers can use methods from package
-'photobiology' that expect spectral objects as input. A simple example of
-spectral data smoothing follows.
+The class of the spectral objects stored by calls to `ggplot()` methods specific to them is
+no longer stripped, neither are other attributes used by package 'photobiology'. Consequently, transformations in layers using default `data` can use methods from package
+'photobiology'. 
+
+A simple example passing spectral data to each layer function follows. This approach was previously the only available.
 
 ```{r, eval=FALSE}
 ggplot() + 
@@ -76,7 +77,7 @@ ggplot() +
             colour = "red", size = 1.2)
 ```
 
-Can be now simplified because `.` refers to a `data` member of class `source_spct` while the automatic mapping remains valid because `smooth_spct()` returns a new `source_spct` object with the same column names as `sun.spct`. 
+The code can be simplified usinf `.` to refer to the default data in the ggplot object. This is possible because the argument passed to `data` in the call to `ggplot2()` is not converted into a "plain" data frame. In this case, it remains as an object of class `source_spct`. The mapping to aesthetics remains valid because `smooth_spct()` returns a new `source_spct` object with the same column names as `sun.spct`, which was passed as argument to `data`. 
 
 ```{r}
 ggplot(sun.spct) + 
@@ -85,7 +86,7 @@ ggplot(sun.spct) +
             colour = "red", size = 1.2)
 ```
 
-The easiest way of plotting photon spectral irradiance instead of spectral energy irradiance is to temporarily change the default radiation unit.
+The easiest approach to plotting photon spectral irradiance instead of spectral energy irradiance is to temporarily change the default radiation unit. An alternative approach is to replace the first two lines in the code chunk below by: `ggplot(sun.spct, unit.out = "photon")`.)
 
 ```{r}
 photon_as_default()
@@ -135,18 +136,21 @@ ggplot(sun.spct) +
   geom_line(data = . %>% smooth_spct(method = "supsmu"), 
             colour = "red", size = 1.2) +
   stat_peaks(data = . %>% smooth_spct(method = "supsmu"),
-             size = 3, span = NULL) +
+             colour = "red", size = 3, span = NULL) +
   stat_peaks(data = . %>% smooth_spct(method = "supsmu"),
-             geom = "vline", linetype = "dotted", span = NULL)
+             geom = "vline", colour = "red", 
+             linetype = "dotted", span = NULL)
 ```
 
-We can easily highlight a wavelength region.
+We can easily highlight a wavelength range by overplotting the line in a different color.
 
 ```{r}
 ggplot(sun.spct) + 
   geom_line() + 
   geom_line(data = . %>% trim_wl(range = PAR()), colour = "red")
 ```
+
+We can highlight a range of wavelengths by plotting the points using colors matching human color vision.
 
 ```{r}
 ggplot(sun.spct) + 
@@ -165,4 +169,6 @@ ggplot(sun.spct) +
   geom_line() + 
   scale_fill_identity()
 ```
-Some of the methods from 'photobiology' are also defined for `data.frame` and can be used as summary functions with data that are not radiation spectra, such as any `data` _seen_ by layer functions including `stat_summary()`.
+
+Some of the methods from 'photobiology' are also defined for `data.frame` and can be used as summary functions with data that are not radiation spectra, such as any `data` _seen_ by layer functions including `stat_summary()`. Furthermore, on-the-fly summaries and transformation can be used in any ggplot layer function and with any suitable function acepting data frames as input.
+

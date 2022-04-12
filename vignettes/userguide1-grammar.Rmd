@@ -60,27 +60,27 @@ wavelength, accepting `numeric` and *datetime* values.
 
 | *stat*                   | default *geom* (used for)             | other uses                                                          |
 |:----------------|:----------------|:------------------------------------|
-| `s tat_peaks`            | point (highlight maxima)              | wavelength label, spectral quantity label                           |
-| `sta t_valleys`          | point (highlight minima)              | wavelength label, spectral quantity label                           |
-| `stat_la bel_peaks`      | text (wavelength label)               | spectral quantity label (support 'ggrepel')                         |
-| `stat_labe l_valleys`    | text (wavelength label)               | spectral quantity label (support 'ggrepel')                         |
-| `stat _find_wls`         | point (highlight wls at qty)          | wavelength label, spectral quantity label                           |
-| `stat_ find_qtys`        | point (highlight qty at wl)           | wavelength label, spectral quantity label                           |
-| `s tat_color`            | color, fill                           |                                                                     |
-| `stat _wb_label`         | text (waveband name)                  | rect (showing range of waveband and its color)                      |
-| `stat _wb_total`         | text (y integral)                     | label(s) with waveband integral                                     |
-| `sta t_wb_mean`          | text (y mean)                         | label(s) with waveband mean                                         |
-| `stat_w l_summary`       | text (y mean)                         | label with wavelength *range* mean                                  |
-| `s tat_wb_con tribution` | text (contribution)                   | label(s) with waveband integral / whole spectrum integral           |
-| `stat_wb _relative`      | text (relative)                       | label(s) with waveband integral / sum of integrals of all wavebands |
-| `stat_w b_e_irrad`       | text (energy irradiance)              | rect (showing range of waveband and its color)                      |
-| `stat_w b_q_irrad`       | text (photon irradiance)              | rect (showing range of waveband and its color)                      |
-| `stat_wb _e_sirrad`      | text (spectral energy irradiance)     | rect (showing range of waveband and its color)                      |
-| `stat_wb _q_sirrad`      | text (spectral photon irradiance)     | rect (showing range of waveband and its color)                      |
-| `stat _wl_strip`         | rect (fill of wavelength or waveband) | text (label with waveband name)                                     |
-| `st at_wb_box`           | rect (fill of waveband)               |                                                                     |
-| `sta t_wb_hbar`          | errorbarh (color of waveband)         |                                                                     |
-| `stat_ wb_column`        | rect (fill of waveband)               |                                                                     |
+| `stat_peaks`            | point (highlight maxima)              | wavelength label, spectral quantity label                           |
+| `stat_valleys`          | point (highlight minima)              | wavelength label, spectral quantity label                           |
+| `stat_label_peaks`      | text (wavelength label)               | spectral quantity label (support 'ggrepel')                         |
+| `stat_label_valleys`    | text (wavelength label)               | spectral quantity label (support 'ggrepel')                         |
+| `stat_find_wls`         | point (highlight wls at qty)          | wavelength label, spectral quantity label                           |
+| `stat_find_qtys`        | point (highlight qty at wl)           | wavelength label, spectral quantity label                           |
+| `stat_color`            | color, fill                           |                                                                     |
+| `stat_wb_label`         | text (waveband name)                  | rect (showing range of waveband and its color)                      |
+| `stat_wb_total`         | text (y integral)                     | label(s) with waveband integral                                     |
+| `stat_wb_mean`          | text (y mean)                         | label(s) with waveband mean                                         |
+| `stat_wl_summary`       | text (y mean)                         | label with wavelength *range* mean                                  |
+| `stat_wb_contribution` | text (contribution)                   | label(s) with waveband integral / whole spectrum integral           |
+| `stat_wb_relative`      | text (relative)                       | label(s) with waveband integral / sum of integrals of all wavebands |
+| `stat_wb_e_irrad`       | text (energy irradiance)              | rect (showing range of waveband and its color)                      |
+| `stat_wb_q_irrad`       | text (photon irradiance)              | rect (showing range of waveband and its color)                      |
+| `stat_wb_e_sirrad`      | text (spectral energy irradiance)     | rect (showing range of waveband and its color)                      |
+| `stat_wb_q_sirrad`      | text (spectral photon irradiance)     | rect (showing range of waveband and its color)                      |
+| `stat_wl_strip`         | rect (fill of wavelength or waveband) | text (label with waveband name)                                     |
+| `stat_wb_box`           | rect (fill of waveband)               |                                                                     |
+| `stat_wb_hbar`          | errorbarh (color of waveband)         |                                                                     |
+| `stat_wb_column`        | rect (fill of waveband)               |                                                                     |
 
 ### What is `geom_spct` useful for?
 

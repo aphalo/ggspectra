@@ -78,18 +78,18 @@ e_plot <- function(spct,
       warning("Percent scale supported only for normalized source_spct objects.")
       pc.out <- FALSE
     }
-    s.irrad.label <- "Spectral~~energy~~exposure~~k %*% E[lambda]~~(\"rel.\")"
+    s.irrad.label <- "Spectral~~energy~~irradiance~~k %*% E[lambda]~~(\"rel.\")"
     irrad.label.total <- "atop(k %*% E, (\"rel.\"))"
     irrad.label.avg <- "atop(bar(E[lambda]), (\"rel.\"))"
     scale.factor <- 1
-  } else  if (is_normalized(spct)) {
+  } else if (is_normalized(spct)) {
     if (!pc.out) {
       multiplier.label <- "rel."
     } else {
       multiplier.label <- "%"
     }
     norm <- round(getNormalization(spct)[["norm.wl"]], digits = 1)
-    s.irrad.label <- bquote(Spectral~~energy~~exposure~~E[lambda]/E[lambda==.(norm)]~~(.(multiplier.label)))
+    s.irrad.label <- bquote(Spectral~~energy~~irradiance~~E[lambda]/E[lambda==.(norm)]~~(.(multiplier.label)))
     irrad.label.total <- "atop(E, (\"rel.\"))"
     irrad.label.avg <- bquote(atop(bar(E[lambda]), E[lambda==.(norm)]))
     scale.factor <- 1
@@ -132,7 +132,7 @@ e_plot <- function(spct,
       irrad.label.avg <- "atop(bar(E[lambda]), (J~m^{-2}~nm^{-1}))"
       scale.factor <- 1
     } else {
-      s.irrad.label <- "Spectral~~energy~~exposure~~E[lambda]~~(arbitrary~~units)"
+      s.irrad.label <- "Spectral~~energy~~fluence~~E[lambda]~~(arbitrary~~units)"
       irrad.label.total <- "atop(E, (arbitrary~~units))"
       irrad.label.avg <- "atop(bar(E[lambda]), (arbitrary~~units))"
       scale.factor <- 1

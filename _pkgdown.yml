@@ -89,16 +89,10 @@ reference:
 
 navbar:
   structure:
-    left:
-    - home
-    - intro
-    - reference
-    - articles
-    - tutorials
-    - news
-    right: github
+    left:  [intro, reference, articles, tutorials, news]
+    right: [search, github]
   components:
-    home:
+    intro:
       icon: fas fa-home fa-lg
       href: index.html
     reference:
@@ -121,13 +115,18 @@ navbar:
     tutorials:
       text: Resources
       menu:
-      - text: R for Photobiology packages
+      - text: Using R for Photobiology Blog
         href: https://www.r4photobiology.info/
-      - text: A handbook of methods
-        href: https://doi.org/10.31885/9789521083631
-      - text: Photobiological Sciences Online
-        href: http://photobiology.info/
+      - text: R for Photobiology Suite documentation
+        href: https://www.r4photobiology.info/package-status/
       - text: More on 'ggplot2'
         href: https://ggplot2.tidyverse.org/
       - text: Other 'ggplot2' extensions
         href: https://exts.ggplot2.tidyverse.org/
+      - text: ------
+      - text: Book 'Learn R - As a Language'
+        href: https://www.learnr-book.info/
+      - text: A handbook of methods
+        href: https://doi.org/10.31885/9789521083631
+      - text: Photobiological Sciences Online
+        href: http://photobiology.info/
