@@ -121,14 +121,14 @@ StatWlSummary <-
                      integ.df[["y.label"]] <- sprintf(label.fmt, integ.df[["y"]])
                      integ.df
                    },
-                   default_aes = ggplot2::aes(label = ..y.label..,
-                                              x = ..x..,
-                                              xmin = ..wb.xmin..,
-                                              xmax = ..wb.xmax..,
-                                              y = ..y..,
-                                              ymax = ..y..,
-                                              ymin = 0 * ..y..,
-                                              yintercept = ..y..),
+                   default_aes = ggplot2::aes(label = after_stat(y.label),
+                                              x = after_stat(x),
+                                              xmin = after_stat(wb.xmin),
+                                              xmax = after_stat(wb.xmax),
+                                              y = after_stat(y),
+                                              ymax = after_stat(y),
+                                              ymin = 0 * after_stat(y),
+                                              yintercept = after_stat(y)),
                    required_aes = c("x", "y")
   )
 

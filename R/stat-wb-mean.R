@@ -233,14 +233,14 @@ StatWbMean <-
                      integ.df[["y.label"]] <- sprintf(label.fmt, integ.df[["wb.ymean"]] * label.mult)
                      integ.df
                    },
-                   default_aes = ggplot2::aes(label = ..y.label..,
-                                              xmin = ..wb.xmin..,
-                                              xmax = ..wb.xmax..,
-                                              ymax = ..wb.ymean..,
+                   default_aes = ggplot2::aes(label = after_stat(y.label),
+                                              xmin = after_stat(wb.xmin),
+                                              xmax = after_stat(wb.xmax),
+                                              ymax = after_stat(wb.ymean),
                                               ymin = 0,
-                                              yintercept = ..wb.ymean..,
-                                              fill = ..wb.color..,
-                                              color = ..BW.color..),
+                                              yintercept = after_stat(wb.ymean),
+                                              fill = after_stat(wb.color),
+                                              color = after_stat(BW.color)),
                    required_aes = c("x", "y")
   )
 

@@ -224,10 +224,10 @@ StatPeaks <-
                                    wl.color = photobiology::fast_color_of_wl(x, chroma.type = chroma.type),
                                    BW.color = black_or_white(wl.color))
                    },
-                   default_aes = ggplot2::aes(label = stat(x.label),
-                                              fill = stat(wl.color),
-                                              xintercept = stat(x),
-                                              yintercept = stat(y)),
+                   default_aes = ggplot2::aes(label = after_stat(x.label),
+                                              fill = after_stat(wl.color),
+                                              xintercept = after_stat(x),
+                                              yintercept = after_stat(y)),
                    required_aes = c("x", "y")
   )
 
@@ -301,9 +301,9 @@ StatValleys <-
                                    wl.color = photobiology::fast_color_of_wl(x, chroma.type = chroma.type),
                                    BW.color = black_or_white(wl.color))
                    },
-                   default_aes = ggplot2::aes(label = stat(x.label),
-                                              fill = stat(wl.color),
-                                              xintercept = stat(x),
-                                              yintercept = stat(y)),
+                   default_aes = ggplot2::aes(label = after_stat(x.label),
+                                              fill = after_stat(wl.color),
+                                              xintercept = after_stat(x),
+                                              yintercept = after_stat(y)),
                    required_aes = c("x", "y")
   )

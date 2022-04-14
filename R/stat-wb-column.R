@@ -174,11 +174,11 @@ wb_col_compute_group <-
 StatWbColumn <-
   ggplot2::ggproto("StatWbColumn", ggplot2::Stat,
                    compute_group = wb_col_compute_group,
-                   default_aes = ggplot2::aes(xmin = ..wb.xmin..,
-                                              xmax = ..wb.xmax..,
-                                              ymax = ..wb.ymean..,
-                                              ymin = ..yzero.., # a numeric constant is ignored!!
-                                              fill = ..wb.color..),
+                   default_aes = ggplot2::aes(xmin = after_stat(wb.xmin),
+                                              xmax = after_stat(wb.xmax),
+                                              ymax = after_stat(wb.ymean),
+                                              ymin = after_stat(yzero), # a numeric constant is ignored!!
+                                              fill = after_stat(wb.color)),
                    required_aes = c("x", "y")
   )
 

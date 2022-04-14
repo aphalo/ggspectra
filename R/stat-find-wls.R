@@ -124,13 +124,13 @@ stat_find_wls <- function(mapping = NULL,
 StatFindWls <-
   ggplot2::ggproto("StatFindWls", ggplot2::Stat,
                    compute_group = function(data,
-                                            scales,
-                                            target,
-                                            interpolate,
-                                            chroma.type,
-                                            label.fmt,
-                                            x.label.fmt,
-                                            y.label.fmt) {
+                                              scales,
+                                              target,
+                                              interpolate,
+                                              chroma.type,
+                                              label.fmt,
+                                              x.label.fmt,
+                                              y.label.fmt) {
                      wls.df <- photobiology::wls_at_target(data,
                                                            x.var.name = "x",
                                                            y.var.name = "y",
@@ -143,10 +143,10 @@ StatFindWls <-
                                    wl.color = photobiology::fast_color_of_wl(x, chroma.type = chroma.type),
                                    BW.color = black_or_white(wl.color))
                    },
-                   default_aes = ggplot2::aes(label = stat(x.label),
-                                              fill = stat(wl.color),
-                                              xintercept = stat(x),
-                                              yintercept = stat(y),
+                   default_aes = ggplot2::aes(label = after_stat(x.label),
+                                              fill = after_stat(wl.color),
+                                              xintercept = after_stat(x),
+                                              yintercept = after_stat(y),
                                               hjust = 0.5,
                                               vjust = 0.5),
                    required_aes = c("x", "y")
@@ -273,20 +273,21 @@ stat_find_qtys <- function(mapping = NULL,
   )
 }
 
+
 #' @rdname gg2spectra-ggproto
 #'
 #' @export
 #'
 StatFindQty <-
   ggplot2::ggproto("StatFindQty", ggplot2::Stat,
-                   compute_group = function(data,
-                                            scales,
-                                            target,
-                                            interpolate,
-                                            chroma.type,
-                                            label.fmt,
-                                            x.label.fmt,
-                                            y.label.fmt) {
+                   compute_group =   function(data,
+                                              scales,
+                                              target,
+                                              interpolate,
+                                              chroma.type,
+                                              label.fmt,
+                                              x.label.fmt,
+                                              y.label.fmt) {
                      # By swapping the column names, we obtain qty values instead of wls
                      if (is.numeric(target)) {
                        target <- target[target >= min(data[["x"]], na.rm = TRUE) &
@@ -321,10 +322,10 @@ StatFindQty <-
                      }
                      rows.df
                    },
-                   default_aes = ggplot2::aes(label = ..y.label..,
-                                              fill = ..wl.color..,
-                                              xintercept = ..x..,
-                                              yintercept = ..y..,
+                   default_aes = ggplot2::aes(label = after_stat(y.label),
+                                              fill = after_stat(wl.color),
+                                              xintercept = after_stat(x),
+                                              yintercept = after_stat(y),
                                               hjust = 0.5,
                                               vjust = 0.5),
                    required_aes = c("x", "y")

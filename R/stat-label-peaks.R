@@ -207,8 +207,8 @@ StatLabelPeaks <-
                                                    sprintf(y.label.fmt, out.df[["y"]]),
                                                    label.fill)
                      out.df[["wl.color"]] <- ifelse(out.df[["is_peak"]],
-                                                 photobiology::fast_color_of_wl(out.df[["x"]], chroma.type = chroma.type),
-                                                 rgb(1, 1, 1, 0))
+                                                    photobiology::fast_color_of_wl(out.df[["x"]], chroma.type = chroma.type),
+                                                    rgb(1, 1, 1, 0))
                      out.df[["BW.color"]] <- ifelse(out.df[["is_peak"]],
                                                     black_or_white(out.df[["wl.color"]]),
                                                     rgb(0, 0, 0, 0))
@@ -216,15 +216,15 @@ StatLabelPeaks <-
                      out.df[["lab.vjust"]] <- -0.2
                      out.df
                    },
-                   default_aes = ggplot2::aes(label = stat(x.label),
-                                              fill = stat(wl.color),
-                                              color = stat(BW.color),
+                   default_aes = ggplot2::aes(label = after_stat(x.label),
+                                              fill = after_stat(wl.color),
+                                              color = after_stat(BW.color),
                                               segment.color = "black",
-                                              xintercept = stat(x),
-                                              yintercept = stat(y)#,
+                                              xintercept = after_stat(x),
+                                              yintercept = after_stat(y)#,
                                               # hjust = stat(lab.hjust),
                                               # vjust = stat(lab.vjust)
-                                              ),
+                   ),
                    required_aes = c("x", "y")
   )
 
@@ -270,16 +270,16 @@ stat_label_valleys <- function(mapping = NULL,
 #'
 StatLabelValleys <-
   ggplot2::ggproto("StatLabelValleys", ggplot2::Stat,
-                   compute_group = function(data,
-                                            scales,
-                                            span,
-                                            ignore_threshold,
-                                            strict,
-                                            chroma.type,
-                                            label.fmt,
-                                            x.label.fmt,
-                                            y.label.fmt,
-                                            label.fill) {
+                   compute_group =   function(data,
+                                              scales,
+                                              span,
+                                              ignore_threshold,
+                                              strict,
+                                              chroma.type,
+                                              label.fmt,
+                                              x.label.fmt,
+                                              y.label.fmt,
+                                              label.fill) {
                      if (!is.character(label.fill)) {
                        as.character(label.fill)
                      }
@@ -311,12 +311,12 @@ StatLabelValleys <-
                      out.df[["lab.vjust"]] <- 1.2
                      out.df
                    },
-                   default_aes = ggplot2::aes(label = stat(x.label),
-                                              fill = stat(wl.color),
-                                              color = stat(BW.color),
+                   default_aes = ggplot2::aes(label = after_stat(x.label),
+                                              fill = after_stat(wl.color),
+                                              color = after_stat(BW.color),
                                               segment.color = "black",
-                                              xintercept = stat(x),
-                                              yintercept = stat(y)#,
+                                              xintercept = after_stat(x),
+                                              yintercept = after_stat(y)#,
  #                                             hjust = stat(lab.hjust),
  #                                             vjust = stat(lab.vjust)
                                               ),

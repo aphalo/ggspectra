@@ -90,7 +90,7 @@ StatColor <-
       dplyr::mutate(data,
                     wl.color = photobiology::fast_color_of_wl(x, chroma.type = chroma.type))
     },
-    default_aes = ggplot2::aes(color = ..wl.color..,
-                               fill = ..wl.color..),
+    default_aes = ggplot2::aes(color = after_stat(wl.color),
+                               fill = after_stat(wl.color)),
     required_aes = c("x", "y")
   )

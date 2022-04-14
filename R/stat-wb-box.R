@@ -178,10 +178,10 @@ StatWbBox <-
 
                      integ.df
                    },
-                   default_aes = ggplot2::aes(xmin = stat(wb.xmin),
-                                              xmax = stat(wb.xmax),
-                                              ymin = stat(ymin),
-                                              ymax = stat(ymax),
-                                              fill = stat(wb.color)),
+                   default_aes = ggplot2::aes(xmin = after_stat(wb.xmin),
+                                              xmax = after_stat(wb.xmax),
+                                              ymin = after_stat(ymin),
+                                              ymax = after_stat(ymax),
+                                              fill = after_stat(wb.color)),
                    required_aes = c("x", "y")
   )

@@ -280,14 +280,14 @@ StatWbSIrrad <-
                      integ.df[["y.label"]] <- sprintf(label.fmt, integ.df[["wb.yeff"]] * label.mult)
                      integ.df
                    },
-                   default_aes = ggplot2::aes(label = ..y.label..,
-                                              xmin = ..wb.xmin..,
-                                              xmax = ..wb.xmax..,
+                   default_aes = ggplot2::aes(label = after_stat(y.label),
+                                              xmin = after_stat(wb.xmin),
+                                              xmax = after_stat(wb.xmax),
                                               ymin = 0,
-                                              ymax = ..wb.ymean..,
-                                              yintercept = ..wb.ymean..,
-                                              fill = ..wb.color..,
-                                              color = ..BW.color..),
+                                              ymax = after_stat(wb.ymean),
+                                              yintercept = after_stat(wb.ymean),
+                                              fill = after_stat(wb.color),
+                                              color = after_stat(BW.color)),
                    required_aes = c("x", "y")
   )
 
