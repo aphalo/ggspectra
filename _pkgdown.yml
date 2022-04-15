@@ -62,6 +62,7 @@ reference:
     - autoplot.filter_spct
     - autoplot.reflector_spct
     - autoplot.object_spct
+    - autoplot.generic_spct
     - autoplot.waveband
     - autotitle
     - set_annotations_default
