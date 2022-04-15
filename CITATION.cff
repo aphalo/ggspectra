@@ -102,7 +102,7 @@ references:
     orcid: https://orcid.org/0000-0002-9415-4582
   year: '2022'
   url: https://CRAN.R-project.org/package=ggplot2
-  version: '>= 3.3.2'
+  version: '>= 3.3.4'
 - type: software
   title: photobiologyWavebands
   abstract: 'photobiologyWavebands: Waveband Definitions for UV, VIS, and IR Radiation'
@@ -127,7 +127,7 @@ references:
     given-names: Dana
   year: '2022'
   url: https://CRAN.R-project.org/package=scales
-  version: '>= 1.1.1'
+  version: '>= 1.2.0'
 - type: software
   title: ggrepel
   abstract: 'ggrepel: Automatically Position Non-Overlapping Text Labels with ''ggplot2'''
@@ -140,26 +140,6 @@ references:
   year: '2022'
   url: https://CRAN.R-project.org/package=ggrepel
   version: '>= 0.9.1'
-- type: software
-  title: dplyr
-  abstract: 'dplyr: A Grammar of Data Manipulation'
-  notes: Imports
-  authors:
-  - family-names: Wickham
-    given-names: Hadley
-    email: hadley@rstudio.com
-    orcid: https://orcid.org/0000-0003-4757-117X
-  - family-names: François
-    given-names: Romain
-    orcid: https://orcid.org/0000-0002-2444-4226
-  - family-names: Henry
-    given-names: Lionel
-  - family-names: Müller
-    given-names: Kirill
-    orcid: https://orcid.org/0000-0002-1416-3412
-  year: '2022'
-  url: https://CRAN.R-project.org/package=dplyr
-  version: '>= 1.0.2'
 - type: software
   title: lubridate
   abstract: 'lubridate: Make Dealing with Dates a Little Easier'
@@ -174,7 +154,7 @@ references:
     given-names: Hadley
   year: '2022'
   url: https://CRAN.R-project.org/package=lubridate
-  version: '>= 1.7.9'
+  version: '>= 1.8.0'
 - type: software
   title: tidyr
   abstract: 'tidyr: Tidy Messy Data'
@@ -187,7 +167,7 @@ references:
     given-names: Maximilian
   year: '2022'
   url: https://CRAN.R-project.org/package=tidyr
-  version: '>= 1.0.2'
+  version: '>= 1.2.0'
 - type: software
   title: tidyselect
   abstract: 'tidyselect: Select from a Set of Strings'
@@ -215,7 +195,7 @@ references:
     email: hadley@rstudio.com
   year: '2022'
   url: https://CRAN.R-project.org/package=tibble
-  version: '>= 3.1.2'
+  version: '>= 3.1.5'
 - type: software
   title: rlang
   abstract: 'rlang: Functions for Base Types and Core R and ''Tidyverse'' Features'
@@ -229,7 +209,7 @@ references:
     email: hadley@rstudio.com
   year: '2022'
   url: https://CRAN.R-project.org/package=rlang
-  version: '>= 0.4.7'
+  version: '>= 1.0.2'
 - type: software
   title: knitr
   abstract: 'knitr: A General-Purpose Package for Dynamic Report Generation in R'
@@ -241,7 +221,7 @@ references:
     orcid: https://orcid.org/0000-0003-0645-5666
   year: '2022'
   url: https://CRAN.R-project.org/package=knitr
-  version: '>= 1.29'
+  version: '>= 1.38'
 - type: software
   title: rmarkdown
   abstract: 'rmarkdown: Dynamic Documents for R'
@@ -281,7 +261,27 @@ references:
     orcid: https://orcid.org/0000-0003-3925-190X
   year: '2022'
   url: https://CRAN.R-project.org/package=rmarkdown
-  version: '>= 2.3'
+  version: '>= 2.13'
+- type: software
+  title: dplyr
+  abstract: 'dplyr: A Grammar of Data Manipulation'
+  notes: Suggests
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+    orcid: https://orcid.org/0000-0003-4757-117X
+  - family-names: François
+    given-names: Romain
+    orcid: https://orcid.org/0000-0002-2444-4226
+  - family-names: Henry
+    given-names: Lionel
+  - family-names: Müller
+    given-names: Kirill
+    orcid: https://orcid.org/0000-0002-1416-3412
+  year: '2022'
+  url: https://CRAN.R-project.org/package=dplyr
+  version: '>= 1.0.6'
 identifiers:
 - type: url
   value: https://github.com/aphalo/ggspectra/
