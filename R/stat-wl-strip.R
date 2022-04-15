@@ -119,10 +119,10 @@ StatColorGuide <-
                      names(z)[1] <- "x"
                      z
                     },
-                   default_aes = ggplot2::aes(xmin = ..wl.low..,
-                                              xmax = ..wl.high..,
-                                              label = as.character(..wb.f..),
-                                              fill = ..wb.color..),
+                   default_aes = ggplot2::aes(xmin = after_stat(wl.low),
+                                              xmax = after_stat(wl.high),
+                                              label = as.character(after_stat(wb.f)),
+                                              fill = after_stat(wb.color)),
                    required_aes = c("x")
   )
 

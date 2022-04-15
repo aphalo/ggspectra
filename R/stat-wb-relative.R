@@ -204,13 +204,14 @@ StatWbRelative <-
 #                     print(integ.df)
                      integ.df
                    },
-                   default_aes = ggplot2::aes(label = ..y.label..,
-                                              xmin = ..xmin..,
-                                              xmax = ..xmax..,
-                                              ymin = ..y.. - (..ymax.. - ..ymin..) * 0.03,
-                                              ymax = ..y.. + (..ymax.. - ..ymin..) * 0.03,
-                                              yintercept = ..ymean..,
-                                              fill = ..wb.color..,
-                                              color = ..BW.color..),
+                   default_aes =
+                     ggplot2::aes(label = after_stat(y.label),
+                                  xmin = after_stat(xmin),
+                                  xmax = after_stat(xmax),
+                                  ymin = after_stat(y) - (after_stat(ymax) - after_stat(ymin)) * 0.03,
+                                  ymax = after_stat(y) + (after_stat(ymax) - after_stat(ymin)) * 0.03,
+                                  yintercept = after_stat(ymean),
+                                  fill = after_stat(wb.color),
+                                  color = after_stat(BW.color)),
                    required_aes = c("x", "y")
   )

@@ -170,21 +170,22 @@ StatSpikes <-
                      force(z.threshold)
                      force(max.spike.width)
                      spikes.df <-
-                       data[photobiology::find_spikes(data$y,
+                       data[photobiology::find_spikes(data[["y"]],
                                                       x.is.delta = FALSE,
                                                       z.threshold = z.threshold,
                                                       max.spike.width = max.spike.width),
                             , drop = FALSE]
-                     dplyr::mutate(spikes.df,
-                                   x.label = sprintf(x.label.fmt, x),
-                                   y.label = sprintf(y.label.fmt, y),
-                                   wl.color = photobiology::fast_color_of_wl(x, chroma.type = chroma.type),
-                                   BW.color = black_or_white(wl.color))
+                     spikes.df[["x.label"]] <- sprintf(x.label.fmt, spikes.df[["x"]])
+                     spikes.df[["y.label"]] <- sprintf(y.label.fmt, spikes.df[["y"]])
+                     spikes.df[["wl.color"]] <-
+                       photobiology::fast_color_of_wl(spikes.df[["x"]], chroma.type = chroma.type)
+                     spikes.df[["BW.color"]] <-  black_or_white(spikes.df[["wl.color"]])
+                     spikes.df
                    },
-                   default_aes = ggplot2::aes(label = stat(x.label),
-                                              fill = stat(wl.color),
-                                              xintercept = stat(x),
-                                              yintercept = stat(y),
+                   default_aes = ggplot2::aes(label = after_stat(x.label),
+                                              fill = after_stat(wl.color),
+                                              xintercept = after_stat(x),
+                                              yintercept = after_stat(y),
                                               hjust = 0.5,
                                               vjust = 0.5),
                    required_aes = c("x", "y")

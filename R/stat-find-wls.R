@@ -124,29 +124,30 @@ stat_find_wls <- function(mapping = NULL,
 StatFindWls <-
   ggplot2::ggproto("StatFindWls", ggplot2::Stat,
                    compute_group = function(data,
-                                            scales,
-                                            target,
-                                            interpolate,
-                                            chroma.type,
-                                            label.fmt,
-                                            x.label.fmt,
-                                            y.label.fmt) {
+                                              scales,
+                                              target,
+                                              interpolate,
+                                              chroma.type,
+                                              label.fmt,
+                                              x.label.fmt,
+                                              y.label.fmt) {
                      wls.df <- photobiology::wls_at_target(data,
                                                            x.var.name = "x",
                                                            y.var.name = "y",
                                                            target = target,
                                                            interpolate = interpolate,
                                                            na.rm = FALSE)
-                     dplyr::mutate(wls.df,
-                                   x.label = sprintf(x.label.fmt, x),
-                                   y.label = sprintf(y.label.fmt, y),
-                                   wl.color = photobiology::fast_color_of_wl(x, chroma.type = chroma.type),
-                                   BW.color = black_or_white(wl.color))
+                     wls.df[["x.label"]] <- sprintf(x.label.fmt, wls.df[["x"]])
+                     wls.df[["y.label"]] <- sprintf(y.label.fmt, wls.df[["y"]])
+                     wls.df[["wl.color"]] <-
+                       photobiology::fast_color_of_wl(wls.df[["x"]], chroma.type = chroma.type)
+                     wls.df[["BW.color"]] <-  black_or_white(wls.df[["wl.color"]])
+                     wls.df
                    },
-                   default_aes = ggplot2::aes(label = stat(x.label),
-                                              fill = stat(wl.color),
-                                              xintercept = stat(x),
-                                              yintercept = stat(y),
+                   default_aes = ggplot2::aes(label = after_stat(x.label),
+                                              fill = after_stat(wl.color),
+                                              xintercept = after_stat(x),
+                                              yintercept = after_stat(y),
                                               hjust = 0.5,
                                               vjust = 0.5),
                    required_aes = c("x", "y")
@@ -273,6 +274,7 @@ stat_find_qtys <- function(mapping = NULL,
   )
 }
 
+
 #' @rdname gg2spectra-ggproto
 #'
 #' @export
@@ -293,38 +295,38 @@ StatFindQty <-
                                           target <= max(data[["x"]], na.rm = TRUE)]
                      }
                      if (length(target) == 0L) {
-                       # if target is NULL or an out-of-range then return an empty tibble
+                       # if target is NULL or an out-of-range then return an empty data frame
                        rows.df <-
-                         tibble::tibble(x = numeric(), y = numeric(),
-                                        x.label = character(),
-                                        y.label = character(),
-                                        color = character(),
-                                        BW.color = character())
+                         data.frame(x = numeric(),
+                                    y = numeric(),
+                                    x.label = character(),
+                                    y.label = character(),
+                                    color = character(),
+                                    BW.color = character())
                      } else {
-                       rows.df <- NULL
+                       rows.df <- data.frame()
                        for (t in target) {
                          rows.df <-
-                           dplyr::bind_rows(rows.df,
-                                            photobiology::find_wls(data,
-                                                                   .fun = `<=`,
-                                                                   target = t,
-                                                                   interpolate = interpolate,
-                                                                   col.name.x = "y",
-                                                                   col.name = "x"))
+                           rbind(rows.df,
+                                 photobiology::find_wls(data,
+                                                        .fun = `<=`,
+                                                        target = t,
+                                                        interpolate = interpolate,
+                                                        col.name.x = "y",
+                                                        col.name = "x"))
                        }
-                       rows.df <-
-                         dplyr::mutate(rows.df,
-                                       x.label = sprintf(x.label.fmt, x),
-                                       y.label = sprintf(y.label.fmt, y),
-                                       wl.color = photobiology::fast_color_of_wl(x, chroma.type = chroma.type),
-                                       BW.color = black_or_white(wl.color))
+                       rows.df[["x.label"]] <- sprintf(x.label.fmt, rows.df[["x"]])
+                       rows.df[["y.label"]] <- sprintf(y.label.fmt, rows.df[["y"]])
+                       rows.df[["wl.color"]] <-
+                         photobiology::fast_color_of_wl(rows.df[["x"]], chroma.type = chroma.type)
+                       rows.df[["BW.color"]] <-  black_or_white(rows.df[["wl.color"]])
                      }
                      rows.df
                    },
-                   default_aes = ggplot2::aes(label = ..y.label..,
-                                              fill = ..wl.color..,
-                                              xintercept = ..x..,
-                                              yintercept = ..y..,
+                   default_aes = ggplot2::aes(label = after_stat(y.label),
+                                              fill = after_stat(wl.color),
+                                              xintercept = after_stat(x),
+                                              yintercept = after_stat(y),
                                               hjust = 0.5,
                                               vjust = 0.5),
                    required_aes = c("x", "y")

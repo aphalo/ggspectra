@@ -161,11 +161,11 @@ StatWbLabel <-
 #                     print(integ.df)
                      integ.df
                    },
-                   default_aes = ggplot2::aes(label = ..wb.label..,
-                                              y = ..y..,
-                                              xmin = ..wb.xmin..,
-                                              xmax = ..wb.xmax..,
-                                              fill = ..wb.color..,
-                                              color = ..BW.color..),
+                   default_aes = ggplot2::aes(label = after_stat(wb.label),
+                                              y = after_stat(y),
+                                              xmin = after_stat(wb.xmin),
+                                              xmax = after_stat(wb.xmax),
+                                              fill = after_stat(wb.color),
+                                              color = after_stat(BW.color)),
                    required_aes = c("x")
   )

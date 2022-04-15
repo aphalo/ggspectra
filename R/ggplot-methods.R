@@ -424,7 +424,7 @@ ggplot.object_spct <-
       if (num.spectra > 1) {
         stop("Multiple spectra in long form not supported.")
       }
-      # Attributes will be lost when melting the tibble
+      # Attributes will be lost when melting the tibble or data frame
       data.attributes <- get_attributes(data)
       # Once molten it will not pass checks as object_spct
       rmDerivedSpct(data)

@@ -174,11 +174,12 @@ StatWbHbar <-
                      }
                      integ.df
                    },
-                   default_aes = ggplot2::aes(xmin = ..wb.xmin..,
-                                              xmax = ..wb.xmax..,
-                                              yintercept = ..wb.ymean..,
-                                              height = (..wb.ymax.. - ..wb.ymin..) * 2e-2,
-                                              color = ..wb.color..),
+                   default_aes =
+                     ggplot2::aes(xmin = after_stat(wb.xmin),
+                                  xmax = after_stat(wb.xmax),
+                                  yintercept = after_stat(wb.ymean),
+                                  height = (after_stat(wb.ymax) - after_stat(wb.ymin)) * 2e-2,
+                                  color = after_stat(wb.color)),
                    required_aes = c("x", "y")
   )
 

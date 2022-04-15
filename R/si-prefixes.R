@@ -1,23 +1,23 @@
 # internal data used by functions in this file
 #
 exp_pfix.df <-
-  tibble::tibble(exponents =
-                   c(-24, -21, -18, -15, -12, -9, -6, -3, -2, -1, 0,
-                     1, 2, 3, 6, 9, 12, 15, 18, 21, 24),
-                 ascii =
-                   c("y", "z", "a", "f", "p", "n", "u", "m", "c", "d", "",
-                     "da", "h", "k", "M", "G", "T", "P", "E", "Z", "Y"),
-                 utf8 =
-                   c("y", "z", "a", "f", "p", "n", "\u03bc", "m", "c", "d", "",
-                     "da", "h", "k", "M", "G", "T", "P", "E", "Z", "Y"),
-                 latex =
-                   c("y", "z", "a", "f", "p", "n", "$\\mu$", "m", "c", "d", "",
-                     "da", "h", "k", "M", "G", "T", "P", "E", "Z", "Y"),
-                 names =
-                   c("yopto", "zepto", "atto", "fempto",
-                     "pico", "nano", "micro", "milli", "centi", "deci", "",
-                     "deca", "hecto", "kilo", "mega", "giga", "tera",
-                     "peta", "exa", "zetta", "yotta"))
+  data.frame(exponents =
+               c(-24, -21, -18, -15, -12, -9, -6, -3, -2, -1, 0,
+                 1, 2, 3, 6, 9, 12, 15, 18, 21, 24),
+             ascii =
+               c("y", "z", "a", "f", "p", "n", "u", "m", "c", "d", "",
+                 "da", "h", "k", "M", "G", "T", "P", "E", "Z", "Y"),
+             utf8 =
+               c("y", "z", "a", "f", "p", "n", "\u03bc", "m", "c", "d", "",
+                 "da", "h", "k", "M", "G", "T", "P", "E", "Z", "Y"),
+             latex =
+               c("y", "z", "a", "f", "p", "n", "$\\mu$", "m", "c", "d", "",
+                 "da", "h", "k", "M", "G", "T", "P", "E", "Z", "Y"),
+             names =
+               c("yopto", "zepto", "atto", "fempto",
+                 "pico", "nano", "micro", "milli", "centi", "deci", "",
+                 "deca", "hecto", "kilo", "mega", "giga", "tera",
+                 "peta", "exa", "zetta", "yotta"))
 
 #' SI unit prefixes
 #'
