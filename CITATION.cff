@@ -37,7 +37,7 @@ preferred-citation:
 repository: https://CRAN.R-project.org/package=ggspectra
 repository-code: https://github.com/aphalo/ggspectra/issues/
 url: https://docs.r4photobiology.info/ggspectra/
-date-released: '2022-04-05'
+date-released: '2022-04-15'
 contact:
 - family-names: Aphalo
   given-names: Pedro J.
@@ -197,20 +197,6 @@ references:
   url: https://CRAN.R-project.org/package=tibble
   version: '>= 3.1.5'
 - type: software
-  title: rlang
-  abstract: 'rlang: Functions for Base Types and Core R and ''Tidyverse'' Features'
-  notes: Suggests
-  authors:
-  - family-names: Henry
-    given-names: Lionel
-    email: lionel@rstudio.com
-  - family-names: Wickham
-    given-names: Hadley
-    email: hadley@rstudio.com
-  year: '2022'
-  url: https://CRAN.R-project.org/package=rlang
-  version: '>= 1.0.2'
-- type: software
   title: knitr
   abstract: 'knitr: A General-Purpose Package for Dynamic Report Generation in R'
   notes: Suggests
@@ -263,25 +249,33 @@ references:
   url: https://CRAN.R-project.org/package=rmarkdown
   version: '>= 2.13'
 - type: software
-  title: dplyr
-  abstract: 'dplyr: A Grammar of Data Manipulation'
+  title: rlang
+  abstract: 'rlang: Functions for Base Types and Core R and ''Tidyverse'' Features'
   notes: Suggests
   authors:
+  - family-names: Henry
+    given-names: Lionel
+    email: lionel@rstudio.com
   - family-names: Wickham
     given-names: Hadley
     email: hadley@rstudio.com
-    orcid: https://orcid.org/0000-0003-4757-117X
-  - family-names: François
-    given-names: Romain
-    orcid: https://orcid.org/0000-0002-2444-4226
-  - family-names: Henry
-    given-names: Lionel
-  - family-names: Müller
-    given-names: Kirill
-    orcid: https://orcid.org/0000-0002-1416-3412
   year: '2022'
-  url: https://CRAN.R-project.org/package=dplyr
-  version: '>= 1.0.6'
+  url: https://CRAN.R-project.org/package=rlang
+  version: '>= 1.0.2'
+- type: software
+  title: magrittr
+  abstract: 'magrittr: A Forward-Pipe Operator for R'
+  notes: Suggests
+  authors:
+  - family-names: Bache
+    given-names: Stefan Milton
+    email: stefan@stefanbache.dk
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+  year: '2022'
+  url: https://CRAN.R-project.org/package=magrittr
+  version: '>= 2.0.3'
 identifiers:
 - type: url
   value: https://github.com/aphalo/ggspectra/
