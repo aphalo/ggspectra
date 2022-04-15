@@ -1,5 +1,5 @@
 ## -----------------------------------------------------------------------------
-library(dplyr)
+library(ggplot2)
 library(photobiologyWavebands)
 library(ggspectra)
 library(ggrepel)

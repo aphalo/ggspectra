@@ -61,8 +61,8 @@ install.packages("ggspectra")
 Installation of the current unstable version from GitHub:
 
 ```{r bb-instalaltion, eval=FALSE}
-# install.packages("devtools")
-devtools::install_github("aphalo/ggspectra")
+# install.packages("remotes")
+remotes::install_github("aphalo/ggspectra")
 ```
 
 ## Documentation 

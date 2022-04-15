@@ -1,6 +1,5 @@
 ## ---- message=FALSE-----------------------------------------------------------
 library(ggplot2)
-library(dplyr)
 library(scales)
 library(photobiology)
 library(photobiologyWavebands)

@@ -22,15 +22,27 @@ This third part of the User Guide describes how to combine manipulation of spect
 
 In 'ggspectra' (>= 0.3.5) the data member of `gg` (ggplot) objects remains as an object of the classes for spectral data defined in 'photobiology' instead of being converted into a plain `data.frame`. This makes it possible data manipulations in layers to be done with methods specific to spectral data.
 
+The examples in this vignette depend conditionally on packages 'rlang' and 
+'magrittr'. If these packages are not avialble when the vignette is built, the
+code chunks that require them are not evaluated.
+
 ## Set up 
 
 ```{r}
 library(ggplot2)
-library(dplyr)
-library(rlang)
 library(photobiology)
 library(photobiologyWavebands)
 library(ggspectra)
+# if suggested packages are available
+magrittr_installed <- requireNamespace("magrittr", quietly = TRUE)
+rlang_installed <- requireNamespace("rlang", quietly = TRUE)
+eval_chunks <- magrittr_installed && rlang_installed
+if (eval_chunks) {
+  library(magrittr)
+  library(rlang)
+} else {
+  message("Please, install packages 'rlang' and 'magrittr'.")
+}
 ```
 
 ```{r, include=FALSE, echo=FALSE}
@@ -79,7 +91,7 @@ ggplot() +
 
 The code can be simplified usinf `.` to refer to the default data in the ggplot object. This is possible because the argument passed to `data` in the call to `ggplot2()` is not converted into a "plain" data frame. In this case, it remains as an object of class `source_spct`. The mapping to aesthetics remains valid because `smooth_spct()` returns a new `source_spct` object with the same column names as `sun.spct`, which was passed as argument to `data`. 
 
-```{r}
+```{r, eval = eval_chunks}
 ggplot(sun.spct) + 
   geom_line() + 
   geom_line(data = . %>% smooth_spct(method = "supsmu"), 
@@ -88,7 +100,7 @@ ggplot(sun.spct) +
 
 The easiest approach to plotting photon spectral irradiance instead of spectral energy irradiance is to temporarily change the default radiation unit. An alternative approach is to replace the first two lines in the code chunk below by: `ggplot(sun.spct, unit.out = "photon")`.)
 
-```{r}
+```{r, eval = eval_chunks}
 photon_as_default()
 ggplot(sun.spct) + 
   geom_line() + 
@@ -115,7 +127,7 @@ sun.spct %>%
 ```
 
 However, when using different transformations in different layers we need to apply them at each layer. 
-```{r}
+```{r, eval = eval_chunks}
 ggplot(sun.spct) + 
   geom_line() + 
   geom_line(data = . %>% smooth_spct(method = "custom"), 
@@ -128,7 +140,7 @@ ggplot(sun.spct) +
 
 Of course, this approach works both with _geoms_ and _stats_, but one should remember that these layer functions do not "see" the original data object, but instead a new data frame containing the mapped variables in columns named according to _aesthetics_. The next example demostrates this and illustrates that smoothing displaces the wavelength of maximum spectral irradiance.
 
-```{r}
+```{r, eval = eval_chunks}
 ggplot(sun.spct) + 
   geom_line() + 
   stat_peaks(size = 3, span = NULL) +
@@ -144,7 +156,7 @@ ggplot(sun.spct) +
 
 We can easily highlight a wavelength range by overplotting the line in a different color.
 
-```{r}
+```{r, eval = eval_chunks}
 ggplot(sun.spct) + 
   geom_line() + 
   geom_line(data = . %>% trim_wl(range = PAR()), colour = "red")
@@ -152,7 +164,7 @@ ggplot(sun.spct) +
 
 We can highlight a range of wavelengths by plotting the points using colors matching human color vision.
 
-```{r}
+```{r, eval = eval_chunks}
 ggplot(sun.spct) + 
   geom_line() + 
   geom_point(data = . %>% trim_wl(range = VIS()) %>% tag(),
@@ -162,7 +174,7 @@ ggplot(sun.spct) +
 ```
 In the plot above, spectral irradiance is taken into account when computing the colors, while below, only the wavelength at the centre of each waveband is used.
 
-```{r}
+```{r, eval = eval_chunks}
 ggplot(sun.spct) + 
   geom_area(data = . %>% trim_wl(range = VIS()) %>% tag(w.band = VIS_bands()),
             mapping = aes(fill = wb.color)) +

@@ -23,7 +23,7 @@ package 'ggspectra' is loaded. This is the behaviour from version 0.9.26
 onwards, when using earlier versions these packages needed to be loaded explicitly.
 
 ```{r}
-library(dplyr)
+library(ggplot2)
 library(photobiologyWavebands)
 library(ggspectra)
 library(ggrepel)
