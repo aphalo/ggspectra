@@ -281,14 +281,14 @@ stat_find_qtys <- function(mapping = NULL,
 #'
 StatFindQty <-
   ggplot2::ggproto("StatFindQty", ggplot2::Stat,
-                   compute_group = function(data,
-                                            scales,
-                                            target,
-                                            interpolate,
-                                            chroma.type,
-                                            label.fmt,
-                                            x.label.fmt,
-                                            y.label.fmt) {
+                   compute_group =   function(data,
+                                              scales,
+                                              target,
+                                              interpolate,
+                                              chroma.type,
+                                              label.fmt,
+                                              x.label.fmt,
+                                              y.label.fmt) {
                      # By swapping the column names, we obtain qty values instead of wls
                      if (is.numeric(target)) {
                        target <- target[target >= min(data[["x"]], na.rm = TRUE) &
