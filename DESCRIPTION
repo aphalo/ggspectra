@@ -20,19 +20,20 @@ ByteCompile: TRUE
 Depends:
     R (>= 3.6.0),
     photobiology (>= 0.10.10),
-    ggplot2 (>= 3.3.2)
+    ggplot2 (>= 3.3.4)
 Imports:
     photobiologyWavebands (>= 0.4.3),
-    scales (>= 1.1.1),
+    scales (>= 1.2.0),
     ggrepel (>= 0.9.1),
-    lubridate (>= 1.7.9),
-    tidyr (>= 1.0.2),
-    tidyselect(>= 1.1.2)
+    lubridate (>= 1.8.0),
+    tidyr (>= 1.2.0),
+    tidyselect(>= 1.1.2),
+    tibble (>= 3.1.5)
 Suggests:
-    rlang (>= 0.4.7),
-    knitr (>= 1.29),
-    rmarkdown (>= 2.3),
-    dplyr (>= 1.0.2)
+    rlang (>= 1.0.2),
+    knitr (>= 1.38),
+    rmarkdown (>= 2.13),
+    dplyr (>= 1.0.6)
 URL: https://docs.r4photobiology.info/ggspectra/,
     https://github.com/aphalo/ggspectra/
 BugReports: https://github.com/aphalo/ggspectra/issues/

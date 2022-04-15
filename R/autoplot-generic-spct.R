@@ -61,15 +61,15 @@ generic_plot <- function(spct,
                          ylim,
                          na.rm,
                          ...) {
-  if (!is.generic_spct(spct)) {
+  if (!photobiology::is.generic_spct(spct)) {
     stop("generic_plot() can only plot generic_spct objects.")
   }
 
   if (!is.null(range)) {
-    spct <- trim_wl(spct, range = range)
+    spct <- photobiology::trim_wl(spct, range = range)
   }
   if (!is.null(w.band)) {
-    w.band <- trim_wl(w.band, range = range(spct))
+    w.band <- photobiology::trim_wl(w.band, range = range(spct))
   }
 
   y.name <- intersect(names(spct), y.name)
@@ -86,12 +86,20 @@ generic_plot <- function(spct,
 
   # ggplot construction
   if (length(ymin.name) && length(ymax.name)) {
-    plot <- ggplot(spct,
-                   aes_(x = ~w.length, y = as.name(y.name),
-                        ymax = as.name(ymax.name), ymin = as.name(ymin.name)))
+    plot <-
+      ggplot2::ggplot(spct,
+                      spct_class = "generic_spct",
+                      ggplot2::aes_(x = ~w.length,
+                                    y = as.name(y.name),
+                                    ymax = as.name(ymax.name),
+                                    ymin = as.name(ymin.name)))
     with.band <- TRUE
   } else {
-    plot <- ggplot(spct, aes_(x = ~w.length,y = as.name(y.name)))
+    plot <-
+      ggplot2::ggplot(spct,
+                      spct_class = "generic_spct",
+                      ggplot2::aes_(x = ~w.length,
+                                    y = as.name(y.name)))
     with.band <- FALSE
   }
 
@@ -111,37 +119,44 @@ generic_plot <- function(spct,
   plot <- plot + temp$ggplot_comp
   annotations <- temp$annotations
 
-  plot <- plot + geom_line(na.rm = na.rm)
+  plot <- plot + ggplot2::geom_line(na.rm = na.rm)
 
   if (length(annotations) != 1 || annotations != "") {
 
-    plot <- plot + scale_fill_identity() + scale_color_identity()
+    plot <-
+      plot +
+      ggplot2::scale_fill_identity() +
+      ggplot2::scale_color_identity()
 
-    plot <- plot + decoration(w.band = w.band,
-                              y.max = y.max,
-                              y.min = y.min,
-                              x.max = max(spct),
-                              x.min = min(spct),
-                              annotations = annotations,
-                              label.qty = label.qty,
-                              span = span,
-                              wls.target = wls.target,
-                              text.size = text.size,
-                              na.rm = TRUE)
+    plot <-
+      plot + decoration(w.band = w.band,
+                        y.max = y.max,
+                        y.min = y.min,
+                        x.max = max(spct),
+                        x.min = min(spct),
+                        annotations = annotations,
+                        label.qty = label.qty,
+                        span = span,
+                        wls.target = wls.target,
+                        text.size = text.size,
+                        na.rm = TRUE)
   }
 
   if (!is.null(annotations) &&
-      length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide", "reserve.space"), annotations)) > 0L) {
-    y.limits <- c(y.min, y.max * 1.25)
-    x.limits <- c(wl_min(spct) - wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
+      length(intersect(c("boxes", "segments", "labels", "summaries",
+                         "colour.guide", "reserve.space"), annotations)) > 0L) {
+    y.limits <- c(y.min, y.max + (y.max - y.min) * 0.25)
+    x.limits <-
+      c(photobiology::wl_min(spct) - photobiology::wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
     y.limits <- c(y.min, y.max)
-    x.limits <- wl_range(spct)
+    x.limits <- photobiology::wl_range(spct)
   }
 
-  plot <- plot + scale_y_continuous(name = ylab,
-                                    limits = y.limits,
-                                    breaks = scales::pretty_breaks(n = 5))
+  plot <- plot +
+    ggplot2::scale_y_continuous(name = ylab,
+                                limits = y.limits,
+                                breaks = scales::pretty_breaks(n = 5))
 
   plot + scale_x_wl_continuous(limits = x.limits)
 
@@ -269,11 +284,11 @@ autoplot.generic_spct <-
                                         annotations.default)
       if (length(w.band) == 0) {
         if (is.null(range)) {
-          w.band <- waveband(object)
-        } else if (is.waveband(range)) {
+          w.band <- photobiology::waveband(object)
+        } else if (photobiology::is.waveband(range)) {
           w.band <- range
         } else {
-          w.band <- waveband(range, wb.name = "Total")
+          w.band <- photobiology::waveband(range, wb.name = "Total")
         }
       }
 

@@ -12,7 +12,7 @@ spectral data, as well as cosmetic tweaks to labels. It also tracks
 changes in packages 'ggrepel' (\>= 0.9.1), 'photobiology' (\>= 0.10.10)
 and 'ggplot2' (\>= 3.3.3) and deprecation of functions in 'tidyr' (\>=
 1.0.0). The updated code depends on the revised `normalize()` function
-in 'photobiology' (\>= 0.10.10).
+in 'photobiology' (\>= 0.10.10) and on 'ggrepel' (\>= 0.9.1).
 
 -   Revise all `autoplot()` methods to support on-the-fly normalization
     internally using `photobiology::normalize()`.
@@ -48,6 +48,7 @@ in 'photobiology' (\>= 0.10.10).
     justification.
 -   Improve handling of multiple spectra in long form by `ggplot()`
     methods and by `autotitle()`.
+-   Remove direct dependency on 'dplyr'.
 -   Add to the documentation of all `autoplot()` methods an explanation
     of how to modify the default plot annotations and tittles using
     arguments passed to parameter `annotations`. Also add *see also*
