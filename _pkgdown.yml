@@ -87,6 +87,7 @@ reference:
     - s.e.response_label
     - multipliers_label
     - multiplot
+    - plot.generic_spct
 
 navbar:
   structure:
