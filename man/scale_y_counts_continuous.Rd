@@ -19,8 +19,8 @@ scale_y_counts_continuous(
 
 scale_y_counts_tg_continuous(
   unit.exponent = ifelse(normalized, 0, 3),
-  name = counts_label(unit.exponent = 0, format = format, label.text = label.text,
-    scaled = scaled, normalized = round(normalized, 1)),
+  name = counts_label(unit.exponent = 0, format = format, label.text = label.text, scaled
+    = scaled, normalized = round(normalized, 1)),
   labels = SI_tg_format(exponent = unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["counts"]],

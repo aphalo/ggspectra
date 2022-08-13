@@ -8,8 +8,8 @@
 \usage{
 scale_y_A_continuous(
   unit.exponent = 0,
-  name = A_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), Tfr.type = Tfr.type),
+  name = A_label(unit.exponent = unit.exponent, format = format, label.text = label.text,
+    scaled = scaled, normalized = round(normalized, 1), Tfr.type = Tfr.type),
   labels = SI_pl_format(exponent = unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = NULL,
@@ -21,9 +21,8 @@ scale_y_A_continuous(
 
 scale_y_A_internal_continuous(
   unit.exponent = 0,
-  name = A_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), Tfr.type =
-    "internal"),
+  name = A_label(unit.exponent = unit.exponent, format = format, label.text = label.text,
+    scaled = scaled, normalized = round(normalized, 1), Tfr.type = "internal"),
   labels = SI_pl_format(exponent = unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = NULL,
@@ -34,8 +33,8 @@ scale_y_A_internal_continuous(
 
 scale_y_A_total_continuous(
   unit.exponent = 0,
-  name = A_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), Tfr.type = "total"),
+  name = A_label(unit.exponent = unit.exponent, format = format, label.text = label.text,
+    scaled = scaled, normalized = round(normalized, 1), Tfr.type = "total"),
   labels = SI_pl_format(exponent = unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = NULL,

@@ -9,8 +9,8 @@
 \usage{
 scale_y_s.e.response_continuous(
   unit.exponent = 0,
-  name = s.e.response_label(unit.exponent = unit.exponent, format = format, label.text
-    = label.text, scaled = scaled, normalized = round(normalized, 1)),
+  name = s.e.response_label(unit.exponent = unit.exponent, format = format, label.text =
+    label.text, scaled = scaled, normalized = round(normalized, 1)),
   labels = SI_pl_format(exponent = -unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.e.response"]],
@@ -21,8 +21,8 @@ scale_y_s.e.response_continuous(
 
 scale_y_s.q.response_continuous(
   unit.exponent = 0,
-  name = s.q.response_label(unit.exponent = unit.exponent, format = format, label.text
-    = label.text, scaled = scaled, normalized = round(normalized, 1)),
+  name = s.q.response_label(unit.exponent = unit.exponent, format = format, label.text =
+    label.text, scaled = scaled, normalized = round(normalized, 1)),
   labels = SI_pl_format(exponent = -unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.q.response"]],
