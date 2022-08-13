@@ -8,7 +8,7 @@ message: 'To cite package "ggspectra" in publications use:'
 type: software
 license: GPL-2.0-or-later
 title: 'ggspectra: Extensions to ''ggplot2'' for Radiation Spectra'
-version: 0.3.8
+version: 0.3.8-1
 doi: 10.19232/uv4pb.2015.1.14
 abstract: Additional annotations, stats, geoms and scales for plotting "light" spectra
   with 'ggplot2', together with specializations of ggplot() and autoplot() methods
@@ -37,7 +37,7 @@ preferred-citation:
 repository: https://CRAN.R-project.org/package=ggspectra
 repository-code: https://github.com/aphalo/ggspectra/issues/
 url: https://docs.r4photobiology.info/ggspectra/
-date-released: '2022-04-15'
+date-released: '2022-08-13'
 contact:
 - family-names: Aphalo
   given-names: Pedro J.
