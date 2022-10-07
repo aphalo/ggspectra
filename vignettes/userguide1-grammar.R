@@ -303,7 +303,7 @@ ggplot(sun.spct) + geom_line() +
 ## -----------------------------------------------------------------------------
 ggplot(sun.spct) + geom_line() + 
   stat_peaks(shape = 21, span = 35, size = 2) + 
-  stat_label_peaks(aes(label = stat(y.label)),
+  stat_label_peaks(aes(label = after_stat(y.label)),
                    span = 35, geom = "label", size = 3,
                    position = position_nudge(y = 0.04),
                    label.fmt = "%1.2f") +
@@ -356,7 +356,7 @@ ggplot(sun.spct) + geom_line() +
 ggplot(sun.spct) + geom_line() + 
   stat_peaks(span = NULL, color = "red") +
   stat_peaks(span = NULL, geom = "text", vjust = -0.5, color = "red", 
-             aes(label = paste(stat(y.label), "at", stat(x.label), "nm"))) +
+             aes(label = paste(stat(y.label), "at", after_stat(x.label), "nm"))) +
   expand_limits(y = c(NA, 0.9))
 
 ## -----------------------------------------------------------------------------
@@ -374,7 +374,7 @@ ggplot(two_suns.spct) + aes(color = spct.idx) +
   stat_peaks(span = NULL, color = "black") +
   stat_peaks(span = NULL, geom = "text", vjust = -0.5, size = 3, 
              color = "black", 
-             aes(label = paste(stat(y.label), "at", stat(x.label), "nm"))) +
+             aes(label = paste(stat(y.label), "at", after_stat(x.label), "nm"))) +
   facet_grid(spct.idx~.)
 
 ## -----------------------------------------------------------------------------

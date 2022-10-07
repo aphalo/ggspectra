@@ -222,8 +222,8 @@ StatLabelPeaks <-
                                               segment.color = "black",
                                               xintercept = after_stat(x),
                                               yintercept = after_stat(y)#,
-                                              # hjust = stat(lab.hjust),
-                                              # vjust = stat(lab.vjust)
+                                              # hjust = after_stat(lab.hjust),
+                                              # vjust = after_stat(lab.vjust)
                    ),
                    required_aes = c("x", "y")
   )
@@ -317,8 +317,8 @@ StatLabelValleys <-
                                               segment.color = "black",
                                               xintercept = after_stat(x),
                                               yintercept = after_stat(y)#,
- #                                             hjust = stat(lab.hjust),
- #                                             vjust = stat(lab.vjust)
+ #                                             hjust = after_stat(lab.hjust),
+ #                                             vjust = after_stat(lab.vjust)
                                               ),
                    required_aes = c("x", "y")
 )
