@@ -128,12 +128,12 @@
 #' ggplot(sun.spct) +
 #'   geom_line() +
 #'   stat_peaks(span = 51, geom = "point", colour = "red", refine.wl = TRUE) +
-#'   stat_peaks(mapping = aes(fill = stat(wl.colour), color = stat(BW.colour)),
+#'   stat_peaks(mapping = aes(fill = after_stat(wl.colour), color = after_stat(BW.colour)),
 #'              span = 51, geom = "label",
 #'              size = 3, vjust = -0.2, label.fmt = "%.3g nm",
 #'              refine.wl = TRUE) +
 #'   stat_valleys(span = 71, geom = "point", colour = "blue", refine.wl = TRUE) +
-#'   stat_valleys(mapping = aes(fill = stat(wl.colour), color = stat(BW.colour)),
+#'   stat_valleys(mapping = aes(fill = after_stat(wl.colour), color = after_stat(BW.colour)),
 #'                span = 71, geom = "label",
 #'                size = 3, vjust = 1.2, label.fmt = "%.3g nm",
 #'                refine.wl = TRUE) +

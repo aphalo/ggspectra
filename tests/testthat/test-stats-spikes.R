@@ -46,7 +46,7 @@ test_that("stat_spikes", {
   vdiffr::expect_doppelganger("stat-spikes-width-colour",
                               ggplot(my_test.spct) +
                                 geom_line() +
-                                stat_spikes(mapping = aes(color = stat(wl.color)),
+                                stat_spikes(mapping = aes(color = after_stat(wl.color)),
                                             z.threshold = 4,
                                             max.spike.width = 2) +
                                 scale_color_identity())
@@ -68,8 +68,8 @@ test_that("stat_spikes", {
   vdiffr::expect_doppelganger("stat-spikes-label",
                               ggplot(my_test.spct) +
                                 geom_line() +
-                                stat_spikes(mapping = aes(color = stat(wl.color),
-                                                          fill = stat(BW.color)),
+                                stat_spikes(mapping = aes(color = after_stat(wl.color),
+                                                          fill = after_stat(BW.color)),
                                             z.threshold = 4,
                                             max.spike.width = 2,
                                             geom = "label") +
