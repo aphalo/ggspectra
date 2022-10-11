@@ -89,17 +89,17 @@ generic_plot <- function(spct,
     plot <-
       ggplot2::ggplot(spct,
                       spct_class = "generic_spct",
-                      ggplot2::aes_(x = ~w.length,
-                                    y = as.name(y.name),
-                                    ymax = as.name(ymax.name),
-                                    ymin = as.name(ymin.name)))
+                      ggplot2::aes(x = .data[["w.length"]],
+                                   y = .data[[y.name]],
+                                   ymax = .data[[ymax.name]],
+                                   ymin = .data[[ymin.name]]))
     with.band <- TRUE
   } else {
     plot <-
       ggplot2::ggplot(spct,
                       spct_class = "generic_spct",
-                      ggplot2::aes_(x = ~w.length,
-                                    y = as.name(y.name)))
+                      ggplot2::aes(x = .data[["w.length"]],
+                                   y = .data[[y.name]]))
     with.band <- FALSE
   }
 

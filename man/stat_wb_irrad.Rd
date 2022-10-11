@@ -210,7 +210,7 @@ ggplot(sun.spct) +
                label.fmt = "\%.2f",
                angle = 90, color = "black", ypos.fixed = 0.1,
                hjust = "left", size = 3,
-               mapping = aes(label = stat(paste(wb.name, ": ",
+               mapping = aes(label = after_stat(paste(wb.name, ": ",
                                                 signif(wb.yint, 3),
                                                 sep = "")))) +
   geom_line() +

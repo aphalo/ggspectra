@@ -122,7 +122,7 @@ Afr_plot <- function(spct,
     y.breaks <- c(0, 0.25, 0.5, 0.75, 1)
   }
 
-  plot <- ggplot(spct, aes_(x = ~w.length, y = ~Afr))
+  plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["Afr"]]))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
                         facets = facets,
@@ -343,7 +343,7 @@ T_plot <- function(spct,
     y.breaks <- c(0, 0.25, 0.5, 0.75, 1)
   }
 
-  plot <- ggplot(spct, aes_(x = ~w.length, y = ~Tfr))
+  plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["Tfr"]]))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
                         facets = facets,
@@ -546,7 +546,7 @@ A_plot <- function(spct,
     y.breaks <- c(0, 0.25, 0.5, 0.75, 1)
   }
 
-  plot <- ggplot(spct, aes_(x = ~w.length, y = ~A))
+  plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["A"]]))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
                         facets = facets,
@@ -749,7 +749,7 @@ R_plot <- function(spct,
     y.breaks <- c(0, 0.25, 0.5, 0.75, 1)
   }
 
-  plot <- ggplot(spct, aes_(x = ~w.length, y = ~Rfr))
+  plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["Rfr"]]))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
                         facets = facets,
@@ -948,10 +948,10 @@ O_plot <- function(spct,
     factor(molten.spct[["variable"]], levels = stack.levels)
 #  setGenericSpct(molten.spct, multiple.wl = 3L * getMultipleWl(spct))
 
-  plot <- ggplot(molten.spct, aes_(~w.length, ~value), na.rm = na.rm)
+  plot <- ggplot(molten.spct, aes(x = .data[["w.length"]], y = .data[["value"]]), na.rm = na.rm)
   attributes(plot[["data"]]) <- c(attributes(plot[["data"]]), get_attributes(spct))
   if (stacked) {
-    plot <- plot + geom_area(aes_(alpha = ~variable), fill = "black", colour = NA)
+    plot <- plot + geom_area(aes(alpha = .data[["variable"]]), fill = "black", colour = NA)
     plot <- plot + scale_alpha_manual(values = c(Tfr = 0.4,
                                                  Rfr = 0.25,
                                                  Afr = 0.55),
@@ -961,7 +961,7 @@ O_plot <- function(spct,
                                                  Rfr = expression(R[lambda])),
                                       guide = guide_legend(title = NULL))
   } else {
-    plot <- plot + geom_line(aes_(linetype = ~variable))
+    plot <- plot + geom_line(aes(linetype = .data[["variable"]]))
     plot <- plot + scale_linetype(labels = c(Tfr = expression(T[lambda]),
                                              Afr = expression(A[lambda]),
                                              Rfr = expression(R[lambda])),

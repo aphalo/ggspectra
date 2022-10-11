@@ -140,7 +140,7 @@ cal_plot <- function(spct,
                                 names_to = "scan",
                                 values_to = "irrad.mult")
     setCalibrationSpct(spct, multiple.wl = NULL) # guessed from data
-    plot <- ggplot(spct) + aes_(x = ~w.length, y = ~irrad.mult, linetype = ~scan)
+    plot <- ggplot(spct) + aes(x = .data[["w.length"]], y = .data[["irrad.mult"]], linetype = .data[["scan"]])
     temp <- find_idfactor(spct = spct,
                           idfactor = idfactor,
                           facets = facets,
@@ -149,7 +149,7 @@ cal_plot <- function(spct,
     plot <- plot + temp$ggplot_comp
     annotations <- temp$annotations
   } else {
-    plot <- ggplot(spct) + aes_(x = ~w.length, y = ~irrad.mult)
+    plot <- ggplot(spct) + aes(x = .data[["w.length"]], y = .data[["irrad.mult"]])
     temp <- find_idfactor(spct = spct,
                           idfactor = idfactor,
                           facets = facets,

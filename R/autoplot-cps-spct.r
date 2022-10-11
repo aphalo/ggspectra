@@ -113,7 +113,7 @@ cps_plot <- function(spct,
                                 names_to = "scan",
                                 values_to = "cps")
     setCpsSpct(spct, multiple.wl = NULL) # guessed from data
-    plot <- ggplot(spct, aes_(x = ~w.length, y = ~cps, linetype = ~scan))
+    plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["cps"]], linetype = .data[["scan"]]))
     temp <- find_idfactor(spct = spct,
                           idfactor = idfactor,
                           facets = facets,
@@ -122,7 +122,7 @@ cps_plot <- function(spct,
     plot <- plot + temp$ggplot_comp
     annotations <- temp$annotations
   } else {
-    plot <- ggplot(spct, aes_(x = ~w.length, y = ~cps))
+    plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["cps"]]))
     temp <- find_idfactor(spct = spct,
                           idfactor = idfactor,
                           facets = facets,

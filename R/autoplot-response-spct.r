@@ -153,7 +153,7 @@ e_rsp_plot <- function(spct,
     rsp.label <- ""
   }
 
-  plot <- ggplot(spct, aes_(~w.length, ~s.e.response))
+  plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["s.e.response"]]))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
                         facets = facets,
@@ -374,7 +374,7 @@ q_rsp_plot <- function(spct,
     rsp.label <- ""
   }
 
-  plot <- ggplot(spct, aes_(x = ~w.length, y = ~s.q.response))
+  plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["s.q.response"]]))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
                         facets = facets,

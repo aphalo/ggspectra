@@ -127,7 +127,7 @@ raw_plot <- function(spct,
                                 names_to = "scan",
                                 values_to = "counts")
     setRawSpct(spct, multiple.wl = NULL) # guessed from data
-    plot <- ggplot(spct) + aes_(x = ~w.length, y = ~counts, linetype = ~scan)
+    plot <- ggplot(spct) + aes(x = .data[["w.length"]], y = .data[["counts"]], linetype = .data[["scan"]])
     temp <- find_idfactor(spct = spct,
                           idfactor = idfactor,
                           facets = facets,
@@ -136,7 +136,7 @@ raw_plot <- function(spct,
     plot <- plot + temp$ggplot_comp
     annotations <- temp$annotations
   } else {
-    plot <- ggplot(spct) + aes_(x = ~w.length, y = ~counts)
+    plot <- ggplot(spct) + aes(x = .data[["w.length"]], y = .data[["counts"]])
     temp <- find_idfactor(spct = spct,
                           idfactor = idfactor,
                           facets = facets,

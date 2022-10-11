@@ -162,7 +162,7 @@ ggplot(sun.spct, range = c(NA, 410)) +
   stat_wb_box(w.band = UV_bands(), color = "white") +
   stat_wb_contribution(w.band = UV_bands(), size = 2.5,
                        label.mult = 100, label.fmt = "\%3.0f\%\%",
-                       mapping = aes(label = stat(paste(wb.name, y.label)))) +
+                       mapping = aes(label = after_stat(paste(wb.name, y.label)))) +
   scale_fill_identity() + scale_color_identity()
 
 }
