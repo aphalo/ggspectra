@@ -106,10 +106,10 @@ ggplot.source_spct <-
     if (default.mapping) {
       if (unit.out == "energy") {
         data <- photobiology::q2e(data, action = "replace")
-        mapping <- ggplot2::aes(w.length, s.e.irrad)
+        mapping <- ggplot2::aes(.data[["w.length"]], .data[["s.e.irrad"]])
       } else if (unit.out %in% c("photon", "quantum")) {
         data <- photobiology::e2q(data, action = "replace")
-        mapping <- ggplot2::aes(w.length, s.q.irrad)
+        mapping <- ggplot2::aes(.data[["w.length"]], .data[["s.q.irrad"]])
       } else {
         stop("Invalid 'unit.out' argument value: '", unit.out, "'")
       }
@@ -150,10 +150,10 @@ ggplot.response_spct <-
     if (default.mapping) {
       if (unit.out == "energy") {
         data <- photobiology::q2e(data)
-        mapping <- ggplot2::aes(w.length, s.e.response)
+        mapping <- ggplot2::aes(.data[["w.length"]], .data[["s.e.response"]])
       } else if (unit.out %in% c("photon", "quantum")) {
         data <- photobiology::e2q(data)
-        mapping <- ggplot2::aes(w.length, s.q.response)
+        mapping <- ggplot2::aes(.data[["w.length"]], .data[["s.q.response"]])
       } else {
         stop("Invalid 'unit.out' argument value: '", unit.out, "'")
       }
@@ -194,13 +194,13 @@ ggplot.filter_spct <-
     if (default.mapping) {
       if (plot.qty == "transmittance") {
         data <- photobiology::any2T(data, action = "replace")
-        mapping <- ggplot2::aes(w.length, Tfr)
+        mapping <- ggplot2::aes(.data[["w.length"]], .data[["Tfr"]])
       } else if (plot.qty == "absorptance") {
         data <- photobiology::any2Afr(data, action = "replace")
-        mapping <- ggplot2::aes(w.length, Afr)
+        mapping <- ggplot2::aes(.data[["w.length"]], .data[["Afr"]])
       } else if (plot.qty == "absorbance") {
         data <- photobiology::any2A(data, action = "replace")
-        mapping <- ggplot2::aes(w.length, A)
+        mapping <- ggplot2::aes(.data[["w.length"]], .data[["A"]])
       } else {
         stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
       }
@@ -241,7 +241,7 @@ ggplot.reflector_spct <-
     }
     default.mapping <- is.null(mapping)
     if (default.mapping) {
-      mapping <- ggplot2::aes(w.length, Rfr)
+      mapping <- ggplot2::aes(.data[["w.length"]], .data[["Rfr"]])
     }
     # roundabout way of retaining the derived classes without calling any
     # private (not exported) method or function from 'ggplot2'
@@ -277,9 +277,9 @@ ggplot.cps_spct <-
     default.mapping <- is.null(mapping)
     if (default.mapping) {
       if ("cps" %in% names(data)) {
-        mapping <- ggplot2::aes(w.length, cps)
+        mapping <- ggplot2::aes(.data[["w.length"]], .data[["cps"]])
       } else {
-        mapping <- ggplot2::aes(w.length, cps_1)
+        mapping <- ggplot2::aes(.data[["w.length"]], .data[["cps_1"]])
       }
     }
     # roundabout way of retaining the derived classes without calling any
@@ -316,9 +316,9 @@ ggplot.calibration_spct <-
     default.mapping <- is.null(mapping)
     if (default.mapping) {
       if ("irrad.mult" %in% names(data)) {
-        mapping <- ggplot2::aes(w.length, irrad.mult)
+        mapping <- ggplot2::aes(.data[["w.length"]], .data[["irrad.mult"]])
       } else {
-        mapping <- ggplot2::aes(w.length, irrad.mult_1)
+        mapping <- ggplot2::aes(.data[["w.length"]], .data[["irrad.mult_1"]])
       }
     }
     # roundabout way of retaining the derived classes without calling any
@@ -355,9 +355,9 @@ ggplot.raw_spct <-
     default.mapping <- is.null(mapping)
     if (default.mapping) {
       if ("counts" %in% names(data)) {
-        mapping <- ggplot2::aes(w.length, counts)
+        mapping <- ggplot2::aes(.data[["w.length"]], .data[["counts"]])
       } else {
-        mapping <- ggplot2::aes(w.length, counts_1)
+        mapping <- ggplot2::aes(.data[["w.length"]], .data[["counts_1"]])
       }
     }
     # roundabout way of retaining the derived classes without calling any
@@ -436,7 +436,7 @@ ggplot.object_spct <-
                             values_to = "value")
       # if not supplied create a mapping
       if (is.null(mapping)) {
-        mapping <- ggplot2::aes(w.length, value)
+        mapping <- ggplot2::aes(.data[["w.length"]], .data[["value"]])
       }
       # roundabout way of retaining the attributes without calling any
       # private (not exported) method or function from 'ggplot2'
@@ -525,13 +525,13 @@ ggplot.filter_mspct <-
     if (is.null(mapping)) {
       if (plot.qty == "transmittance") {
         data <- photobiology::any2T(data, action = "replace")
-        mapping <- ggplot2::aes(w.length, Tfr)
+        mapping <- ggplot2::aes(.data[["w.length"]], .data[["Tfr"]])
       } else if (plot.qty == "absorptance") {
         data <- photobiology::any2Afr(data, action = "replace")
-        mapping <- ggplot2::aes(w.length, Afr)
+        mapping <- ggplot2::aes(.data[["w.length"]], .data[["Afr"]])
       } else if (plot.qty == "absorbance") {
         data <- photobiology::any2A(data, action = "replace")
-        mapping <- ggplot2::aes(w.length, A)
+        mapping <- ggplot2::aes(.data[["w.length"]], .data[["A"]])
       } else {
         stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
       }
@@ -559,10 +559,10 @@ ggplot.source_mspct <-
     if (is.null(mapping)) {
       if (unit.out == "energy") {
         data <- photobiology::q2e(data, action = "replace")
-        mapping <- ggplot2::aes(w.length, s.e.irrad)
+        mapping <- ggplot2::aes(.data[["w.length"]], .data[["s.e.irrad"]])
       } else if (unit.out %in% c("photon", "quantum")) {
         data <- photobiology::e2q(data, action = "replace")
-        mapping <- ggplot2::aes(w.length, s.q.irrad)
+        mapping <- ggplot2::aes(.data[["w.length"]], .data[["s.q.irrad"]])
       } else {
         stop("Invalid 'unit.out' argument value: '", unit.out, "'")
       }

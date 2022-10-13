@@ -75,18 +75,18 @@ color_chart <- function(colors = grDevices::colors(),
                )
   # we build the plot
   p <- ggplot(colors.df,
-              ggplot2::aes(x = x,
-                           y = y,
-                           fill = color))
+              ggplot2::aes(x = .data[["x"]],
+                           y = .data[["y"]],
+                           fill = .data[["color"]]))
   if (use.names) {
-    p <- p + ggplot2::aes(label = color.names)
+    p <- p + ggplot2::aes(label = .data[["color.names"]])
   } else {
-    p <- p + ggplot2::aes(label = idx)
+    p <- p + ggplot2::aes(label = .data[["idx"]])
   }
   p <- p +
     geom_tile(color = grid.color) +
     scale_fill_identity() +
-    geom_text(size = text.size, ggplot2::aes(color = text.color)) +
+    geom_text(size = text.size, ggplot2::aes(color = .data[["text.color"]])) +
     scale_color_identity()
   p + theme_void()
 }
