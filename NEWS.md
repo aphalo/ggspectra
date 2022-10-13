@@ -4,6 +4,11 @@ editor_options:
     wrap: 72
 ---
 
+# ggspectra 0.3.9
+
+-   Maintenace release for compatibility with 'ggplot2' >= 3.4.0.
+-   Bug fixes.
+
 # ggspectra 0.3.8
 
 This update brings many improvements to `autoplot()` methods. These
