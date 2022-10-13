@@ -27,7 +27,6 @@ Imports:
     ggrepel (>= 0.9.1),
     lubridate (>= 1.8.0),
     rlang (>= 1.0.2),
-    poorman (>= 0.2.6),
     tidyr (>= 1.2.0),
     tidyselect(>= 1.1.2),
     tibble (>= 3.1.5)

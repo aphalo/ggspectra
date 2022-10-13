@@ -41,14 +41,14 @@ find_idfactor <- function(spct,
       message("'multiple.wl > 1' but no idexing factor found.")
       ggplot_comp <- list()
     } else if(!facets) {
-      ggplot_comp <- list(aes_string(linetype = idfactor))
+      ggplot_comp <- list(ggplot2::aes(linetype = .data[[{{idfactor}}]]))
       annotations <- setdiff(annotations, "summaries")
     } else {
       if (is.numeric(facets)) {
-        ggplot_comp <- list(facet_wrap(facets = idfactor,
-                                       ncol = as.integer(facets)))
+        ggplot_comp <- list(ggplot2::facet_wrap(facets = ggplot2::vars(.data[[{{idfactor}}]]),
+                                                ncol = as.integer(facets)))
       } else {
-        ggplot_comp <- list(facet_wrap(facets = idfactor))
+        ggplot_comp <- list(ggplot2::facet_wrap(facets = ggplot2::vars(.data[[{{idfactor}}]])))
       }
     }
   } else { # only one spectrum or idfactor is NA

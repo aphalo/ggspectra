@@ -128,7 +128,7 @@ decoration <- function(w.band,
     nudge.y <- 0.06 * y.expanse
     z <- c(z,
            stat_label_peaks(geom = "label_repel",
-                            mapping = aes_(color = ~..BW.color..),
+                            mapping = ggplot2::aes(color = after_stat(BW.color)),
                             span = span,
                             ignore_threshold = 0.02,
                             strict = strict,
@@ -181,7 +181,7 @@ decoration <- function(w.band,
     nudge.y <- -0.06 * y.expanse
     z <- c(z,
            stat_label_valleys(geom = "label_repel",
-                              mapping = aes_(color = ~..BW.color..),
+                              mapping = ggplot2::aes(color = after_stat(BW.color)),
                               span = span,
                               ignore_threshold = -0.02,
                               strict = strict,
@@ -230,7 +230,7 @@ decoration <- function(w.band,
     nudge.x <- 0.1 * x.expanse
     z <- c(z,
            stat_find_wls(geom = "label_repel",
-                         mapping = aes_(color = ~..BW.color..),
+                         mapping = ggplot2::aes(color = after_stat(BW.color)),
                          target = wls.target,
                          interpolate = TRUE,
                          chroma.type = chroma.type,
@@ -293,12 +293,12 @@ decoration <- function(w.band,
   if ("labels" %in% annotations || "summaries" %in% annotations) {
 
     if ("labels" %in% annotations && "summaries" %in% annotations) {
-      mapping <- aes_(label = quote(paste(..wb.name.., ..y.label.., sep = "\n")),
-                      color = ~..BW.color..)
+      mapping <- ggplot2::aes(label = paste(after_stat(wb.name), after_stat(y.label), sep = "\n"),
+                      color = after_stat(BW.color))
     } else if ("labels" %in% annotations) {
-      mapping <- aes_(label = ~..wb.name.., color = ~..BW.color..)
+      mapping <- ggplot2::aes(label = after_stat(wb.name), color = after_stat(BW.color))
     } else if ("summaries" %in% annotations) {
-      mapping <- aes_(label = ~..y.label.., color = ~..BW.color..)
+      mapping <- ggplot2::aes(label = after_stat(y.label), color = after_stat(BW.color))
     }
 
     if ("summaries" %in% annotations) {
@@ -360,7 +360,7 @@ decoration <- function(w.band,
     } else {
       if (is.null(label.color)) {
         z <- c(z,
-               stat_wb_label(mapping = aes_(color = ~..BW.color..),
+               stat_wb_label(mapping = ggplot2::aes(color = after_stat(BW.color)),
                              w.band = w.band,
                              chroma.type = chroma.type,
                              ypos.fixed = y.max * (1.143 + pos.shift),
