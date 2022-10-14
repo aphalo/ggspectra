@@ -1171,18 +1171,14 @@ O_plot <- function(spct,
 #' autoplot(yellow_gel.spct, plot.qty = "absorptance")
 #' autoplot(yellow_gel.spct, plot.qty = "absorbance")
 #' autoplot(yellow_gel.spct, pc.out = TRUE)
-#' autoplot(yellow_gel.spct, annotations = "")
 #' autoplot(yellow_gel.spct, annotations = c("+", "wls"))
 #'
 #' two_filters.mspct <-
 #'  filter_mspct(list("Yellow gel" = yellow_gel.spct,
 #'                    "Polyester film" = polyester.spct))
 #' autoplot(two_filters.mspct)
-#' autoplot(two_filters.mspct, geom = "spct")
 #' autoplot(two_filters.mspct, idfactor = "Spectra")
 #' autoplot(two_filters.mspct, facets = TRUE)
-#' autoplot(two_filters.mspct, facets = 1)
-#' autoplot(two_filters.mspct, facets = 2)
 #'
 #' @family autoplot methods
 #'
@@ -1471,17 +1467,13 @@ autoplot.filter_mspct <-
 #'
 #' autoplot(Ler_leaf_rflt.spct)
 #' autoplot(Ler_leaf_rflt.spct, geom = "spct")
-#' autoplot(Ler_leaf_rflt.spct, annotations = "")
 #' autoplot(Ler_leaf_rflt.spct, annotations = c("+", "valleys"))
 #'
 #' two_leaves.mspct <-
 #'  reflector_mspct(list("Arabidopsis leaf 1" = Ler_leaf_rflt.spct,
 #'                       "Arabidopsis leaf 2" = Ler_leaf_rflt.spct / 2))
 #' autoplot(two_leaves.mspct)
-#' autoplot(two_leaves.mspct, geom = "spct")
 #' autoplot(two_leaves.mspct, idfactor = "Spectra")
-#' autoplot(two_leaves.mspct, facets = TRUE)
-#' autoplot(two_leaves.mspct, facets = 1)
 #' autoplot(two_leaves.mspct, facets = 2)
 #'
 #' @family autoplot methods
@@ -1741,17 +1733,15 @@ autoplot.reflector_mspct <-
 #' autoplot(Ler_leaf.spct, geom = "line")
 #' autoplot(Ler_leaf.spct, annotations = "")
 #'
-#' \dontrun{
 #' # too time consuming at the moment
-#' autoplot(Ler_leaf.spct, plot.qty = "transmittance")
-#' autoplot(Ler_leaf.spct, plot.qty = "transmittance", norm = "max")
+#' # autoplot(Ler_leaf.spct, plot.qty = "transmittance")
+#' # autoplot(Ler_leaf.spct, plot.qty = "transmittance", norm = "max")
 #'
 #' two_leaves.mspct <-
 #'   object_mspct(list("Arabidopsis leaf 1" = Ler_leaf.spct,
 #'                     "Arabidopsis leaf 2" = Ler_leaf.spct))
 #' autoplot(two_leaves.mspct, idfactor = "Spectra")
-#' autoplot(two_leaves.mspct, facets = 1)
-#' }
+#' # autoplot(two_leaves.mspct, facets = 1)
 #'
 #' @family autoplot methods
 #'

@@ -68,8 +68,8 @@ quantities and units are well defined.
 Here we use the same example `source_spct` object from package 'photobiology'
 used in _User Guide 1_ to demonstrate parameters common to all `autoplot()`
 methods for spectra. Methods for plotting of objects of all the classes defined
-in package 'photobiology' are available. Function `spct_classes()` lists these
-classes.
+in package 'photobiology', except `solute_spct` are available. Function
+`spct_classes()` lists these classes.
 
 ```{r}
 spct_classes()
@@ -117,7 +117,9 @@ We use in the examples a simple collection of two spectra. The output and
 accepted arguments are the same as those in the `autoplot()` methods for
 multiple spectra in long form described above. The plotting of objects of all
 the classes for collections of spectra defined in package 'photobiology' is
-similar. Function `mspct_classes()` lists them.
+similar. However, classes `solute_mspct` and `generic_mspct` are currently
+not supported. Function `mspct_classes()` lists all the classes for collections
+of spectra defined in package 'photobiology'.
 
 ```{r}
 mspct_classes()

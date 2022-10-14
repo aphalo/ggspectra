@@ -171,17 +171,13 @@ for the annotations.
 
 autoplot(Ler_leaf_rflt.spct)
 autoplot(Ler_leaf_rflt.spct, geom = "spct")
-autoplot(Ler_leaf_rflt.spct, annotations = "")
 autoplot(Ler_leaf_rflt.spct, annotations = c("+", "valleys"))
 
 two_leaves.mspct <-
  reflector_mspct(list("Arabidopsis leaf 1" = Ler_leaf_rflt.spct,
                       "Arabidopsis leaf 2" = Ler_leaf_rflt.spct / 2))
 autoplot(two_leaves.mspct)
-autoplot(two_leaves.mspct, geom = "spct")
 autoplot(two_leaves.mspct, idfactor = "Spectra")
-autoplot(two_leaves.mspct, facets = TRUE)
-autoplot(two_leaves.mspct, facets = 1)
 autoplot(two_leaves.mspct, facets = 2)
 
 }

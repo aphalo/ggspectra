@@ -182,7 +182,7 @@ ggplot(sun.spct) +
   scale_y_s.e.irrad_continuous()
 
 ## -----------------------------------------------------------------------------
-ggplot(sun.spct, unit.out = "photon") + 
+ggplot(sun.spct, unit.out = "photon", range = c(293, NA)) + 
   geom_line() +
   scale_x_wl_continuous() +
   scale_y_s.e.irrad_log10(unit.exponent = -6)
@@ -356,7 +356,7 @@ ggplot(sun.spct) + geom_line() +
 ggplot(sun.spct) + geom_line() + 
   stat_peaks(span = NULL, color = "red") +
   stat_peaks(span = NULL, geom = "text", vjust = -0.5, color = "red", 
-             aes(label = paste(stat(y.label), "at", after_stat(x.label), "nm"))) +
+             aes(label = paste(after_stat(y.label), "at", after_stat(x.label), "nm"))) +
   expand_limits(y = c(NA, 0.9))
 
 ## -----------------------------------------------------------------------------

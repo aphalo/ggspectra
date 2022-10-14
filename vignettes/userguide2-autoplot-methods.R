@@ -30,6 +30,9 @@ autoplot(sun.spct)
 autoplot(sun.spct, unit.out = "photon")
 
 ## -----------------------------------------------------------------------------
+autoplot(sun.spct, geom = "spct")
+
+## -----------------------------------------------------------------------------
 autoplot(two_suns.spct)
 
 ## -----------------------------------------------------------------------------
@@ -37,7 +40,6 @@ mspct_classes()
 
 ## -----------------------------------------------------------------------------
 two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct / 2))
-mixed.mspct <- generic_mspct(list(sun = sun.spct, filter = polyester.spct))
 
 ## -----------------------------------------------------------------------------
 autoplot(two_suns.mspct)
@@ -46,31 +48,40 @@ autoplot(two_suns.mspct)
 autoplot(two_suns.mspct, idfactor = "Spectra")
 
 ## -----------------------------------------------------------------------------
+autoplot(two_suns.spct, facets = TRUE)
+
+## -----------------------------------------------------------------------------
 autoplot(two_suns.mspct, facets = 1)
 
 ## -----------------------------------------------------------------------------
 autoplot(two_suns.mspct, facets = 2)
 
-## ---- fig.width = 7, fig.height = 8-------------------------------------------
-multiplot(plotlist = mslply(mixed.mspct, autoplot))
+## -----------------------------------------------------------------------------
+autoplot(sun.spct, range = c(400, 700))
+
+## -----------------------------------------------------------------------------
+autoplot(sun.spct, w.band = photobiologyWavebands::VIS_bands("ISO"))
+
+## -----------------------------------------------------------------------------
+autoplot(sun.spct, w.band = waveband(c(380, 760)))
+
+## -----------------------------------------------------------------------------
+autoplot(sun.spct, w.band = NULL)
+
+## ---- eval=FALSE--------------------------------------------------------------
+#  set_w.band_default(w.band = Plant_bands())
 
 ## -----------------------------------------------------------------------------
 autoplot(two_suns.mspct, plot.data = "mean")
 
 ## -----------------------------------------------------------------------------
-autoplot(sun.spct, norm = "max")
-
-## -----------------------------------------------------------------------------
-autoplot(sun.spct, norm = 400, pc.out = TRUE)
-
-## -----------------------------------------------------------------------------
 autoplot(sun.spct, label.qty = "mean")
 
 ## -----------------------------------------------------------------------------
-autoplot(sun.spct, label.qty = "contribution")
+autoplot(sun.spct, label.qty = "contribution.pc")
 
 ## -----------------------------------------------------------------------------
-autoplot(sun.spct, label.qty = "relative")
+autoplot(sun.spct, label.qty = "relative.pc")
 
 ## -----------------------------------------------------------------------------
 autoplot(sun.spct, 
@@ -102,16 +113,16 @@ autoplot(sun.spct, annotations = c("+", "valleys"), span = 41)
 autoplot(sun.spct, 
          annotations = list(c("+", "peak.labels"), 
                             c("-", "boxes", "summaries", "labels")), 
-         span = 51)
+         span = 21)
 
 ## ---- eval=good_label_repel---------------------------------------------------
 autoplot(sun.spct, 
          annotations = list(c("+", "valley.labels"), 
                             c("-", "peaks")), 
-         span = 51)
+         span = 31)
 
 ## ---- eval=good_label_repel---------------------------------------------------
-autoplot(sun.spct, annotations = c("+", "peak.labels", "valley.labels"), span = 51)
+autoplot(sun.spct, annotations = c("+", "peak.labels", "valley.labels"), span = 31)
 
 ## -----------------------------------------------------------------------------
 autoplot(sun.spct, annotations = "")
@@ -125,30 +136,6 @@ autoplot(sun.spct, annotations = c("=", "segments", "labels", "color.guide"),
 
 ## -----------------------------------------------------------------------------
 autoplot(sun.spct, ylim = c(NA, 1))
-
-## -----------------------------------------------------------------------------
-autoplot(sun.spct, range = VIS())
-
-## -----------------------------------------------------------------------------
-autoplot(sun.spct, w.band = PAR())
-
-## -----------------------------------------------------------------------------
-autoplot(sun.spct, w.band = CIE())
-
-## -----------------------------------------------------------------------------
-autoplot(sun.spct, w.band = NULL)
-
-## -----------------------------------------------------------------------------
-autoplot(sun.spct, w.band = NULL, range = c(400,700))
-
-## -----------------------------------------------------------------------------
-autoplot(sun.spct, w.band = NULL, range = PAR())
-
-## -----------------------------------------------------------------------------
-autoplot(sun.spct, w.band = PAR(), range = PAR())
-
-## -----------------------------------------------------------------------------
-autoplot(sun.spct, w.band = VIS_bands(), range = VIS())
 
 ## -----------------------------------------------------------------------------
 getTimeUnit(sun.daily.spct)
@@ -165,10 +152,6 @@ autoplot(filter_no_yes.spct)
 
 ## -----------------------------------------------------------------------------
 autoplot(yellow_gel.spct, 
-         annotations = list(c("-", "peaks"), c("+", "wls")))
-
-## -----------------------------------------------------------------------------
-autoplot(yellow_gel.spct, pc.out = TRUE, 
          annotations = list(c("-", "peaks"), c("+", "wls")))
 
 ## -----------------------------------------------------------------------------
@@ -191,11 +174,11 @@ autoplot(yellow_gel.spct, annotations = c("+", "boundaries"))
 autoplot(white_led.raw_spct, annotations = c("+", "boundaries"))
 
 ## ---- eval=FALSE--------------------------------------------------------------
-#  autoplot(dplyr::select(white_led.raw_spct, w.length, counts = counts_1),
-#       annotations = c("+", "boundaries"))
+#  autoplot(white_led.raw_spct[ , c("w.length", "counts_1")],
+#           annotations = c("+", "boundaries"))
 
 ## ---- eval=FALSE--------------------------------------------------------------
-#  autoplot(dplyr::select(white_led.raw_spct, w.length, counts_1, counts_3),
+#  autoplot(white_led.raw_spct[ , c("w.length", "counts_1", "counts_3")],
 #       annotations = c("+", "boundaries"))
 
 ## ---- eval=FALSE--------------------------------------------------------------
@@ -203,8 +186,9 @@ autoplot(white_led.raw_spct, annotations = c("+", "boundaries"))
 #  autoplot(yellow_gel.spct - 0.01, annotations = c("+", "boundaries"))
 
 ## -----------------------------------------------------------------------------
-autoplot(two_suns.mspct) + 
-  aes(color = ifelse(spct.idx == "sun1", "darkgreen", "darkred"))
+autoplot(two_suns.mspct, annotations = c("-", "peaks")) +
+  aes(color = ifelse(spct.idx == "sun1", "darkgreen", "darkred"), linetype = "solid") +
+  theme(legend.position = "none")
 
 ## -----------------------------------------------------------------------------
 autoplot(two_suns.mspct, annotations = c("-", "peaks")) +
@@ -216,6 +200,10 @@ autoplot(two_suns.mspct, annotations = c("-", "peaks")) +
 
 ## -----------------------------------------------------------------------------
 autoplot(VIS())
+
+## -----------------------------------------------------------------------------
+autoplot(PAR(), range = c(200, 1000), geom = "spct", 
+         unit.in = "photon", unit.out = "energy")
 
 ## -----------------------------------------------------------------------------
 autoplot(CIE(), range = CIE(), annotations = c("-", "color.guide"))
