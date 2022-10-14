@@ -23,6 +23,9 @@
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
 #' @param annotations a character vector.
+#' @param geom character The name of a ggplot geometry, currently only
+#'   \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
+#'   selects between them based on \code{stacked}.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
@@ -48,6 +51,7 @@ e_rsp_plot <- function(spct,
                        span,
                        wls.target,
                        annotations,
+                       geom,
                        text.size,
                        idfactor,
                        facets,
@@ -56,6 +60,10 @@ e_rsp_plot <- function(spct,
                        ...) {
   if (!is.response_spct(spct)) {
     stop("e_Rsp_plot() can only plot response_spct objects.")
+  }
+  if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
+    warning("'geom = ", geom, "' not supported, using default instead.")
+    geom <- NULL
   }
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
@@ -167,6 +175,9 @@ e_rsp_plot <- function(spct,
     plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
   }
 
+  if (!is.null(geom) && geom %in% c("area", "spct")) {
+    plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
+  }
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.rsp.label)
 
@@ -244,6 +255,9 @@ e_rsp_plot <- function(spct,
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
 #' @param annotations a character vector.
+#' @param geom character The name of a ggplot geometry, currently only
+#'   \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
+#'   selects between them based on \code{stacked}.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
@@ -269,6 +283,7 @@ q_rsp_plot <- function(spct,
                        span,
                        wls.target,
                        annotations,
+                       geom,
                        text.size,
                        idfactor,
                        facets,
@@ -277,6 +292,10 @@ q_rsp_plot <- function(spct,
                        ...) {
   if (!is.response_spct(spct)) {
     stop("q_Rsp_plot() can only plot response_spct objects.")
+  }
+  if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
+    warning("'geom = ", geom, "' not supported, using default instead.")
+    geom <- NULL
   }
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
@@ -388,6 +407,9 @@ q_rsp_plot <- function(spct,
     plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
   }
 
+  if (!is.null(geom) && geom %in% c("area", "spct")) {
+    plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
+  }
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.rsp.label)
 
@@ -489,6 +511,9 @@ q_rsp_plot <- function(spct,
 #'   also accepted.
 #' @param annotations a character vector. For details please see sections Plot
 #'   Annotations and Title Annotations.
+#' @param geom character The name of a ggplot geometry, currently only
+#'   \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
+#'   selects between them based on \code{stacked}.
 #' @param time.format character Format as accepted by
 #'   \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
@@ -521,6 +546,7 @@ q_rsp_plot <- function(spct,
 #' @examples
 #'
 #' autoplot(photodiode.spct)
+#' autoplot(photodiode.spct, geom = "spct")
 #' autoplot(photodiode.spct, unit.out = "photon")
 #' autoplot(photodiode.spct, annotations = "")
 #' autoplot(photodiode.spct, norm = "skip")
@@ -532,6 +558,7 @@ q_rsp_plot <- function(spct,
 #' autoplot(two_sensors.mspct, normalize = TRUE, unit.out = "photon")
 #' autoplot(two_sensors.mspct, normalize = TRUE, idfactor = "Spectra")
 #' autoplot(two_sensors.mspct, normalize = TRUE, facets = 2)
+#' autoplot(two_sensors.mspct, normalize = TRUE, geom = "spct")
 #'
 #' @family autoplot methods
 #'
@@ -549,6 +576,7 @@ autoplot.response_spct <-
            span = NULL,
            wls.target = "HM",
            annotations = NULL,
+           geom = "line",
            time.format = "",
            tz = "UTC",
            text.size = 2.5,
@@ -602,6 +630,7 @@ autoplot.response_spct <-
                                span = span,
                                wls.target = wls.target,
                                annotations = annotations,
+                               geom = geom,
                                norm = norm,              # read from object
                                text.size = text.size,
                                idfactor = idfactor,
@@ -617,7 +646,9 @@ autoplot.response_spct <-
                                label.qty = label.qty,
                                span = span,
                                wls.target = wls.target,
-                               annotations = annotations, norm = norm,
+                               annotations = annotations,
+                               geom = geom,
+                               norm = norm,
                                text.size = text.size,
                                idfactor = idfactor,
                                facets = facets,

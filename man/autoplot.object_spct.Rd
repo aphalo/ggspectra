@@ -18,13 +18,14 @@
   span = NULL,
   wls.target = "HM",
   annotations = NULL,
+  geom = NULL,
   time.format = "",
   tz = "UTC",
-  stacked = TRUE,
+  stacked = plot.qty == "all",
   text.size = 2.5,
   chroma.type = "CMF",
   idfactor = NULL,
-  facets = FALSE,
+  facets = NULL,
   ylim = c(NA, NA),
   object.label = deparse(substitute(object)),
   na.rm = TRUE
@@ -83,11 +84,17 @@ also accepted.}
 \item{annotations}{a character vector. For details please see sections Plot
 Annotations and Title Annotations.}
 
-\item{time.format}{character Format as accepted by \code{\link[base]{strptime}}.}
+\item{geom}{character The name of a ggplot geometry, currently only
+\code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
+selects between them based on \code{stacked}.}
+
+\item{time.format}{character Format as accepted by
+\code{\link[base]{strptime}}.}
 
 \item{tz}{character Time zone to use for title and/or subtitle.}
 
-\item{stacked}{logical}
+\item{stacked}{logical Whether to use \code{position_stack()} or
+\code{position_identity()}.}
 
 \item{text.size}{numeric size of text in the plot decorations.}
 
@@ -175,15 +182,20 @@ The method for collections of object spectra of length > 1 is
 \examples{
 
 autoplot(Ler_leaf.spct)
-autoplot(Ler_leaf.spct, plot.qty = "transmittance")
+autoplot(Ler_leaf.spct, geom = "line")
 autoplot(Ler_leaf.spct, annotations = "")
+
+\dontrun{
+# too time consuming at the moment
+autoplot(Ler_leaf.spct, plot.qty = "transmittance")
 autoplot(Ler_leaf.spct, plot.qty = "transmittance", norm = "max")
 
 two_leaves.mspct <-
- object_mspct(list("Arabidopsis leaf 1" = Ler_leaf.spct,
-                   "Arabidopsis leaf 2" = Ler_leaf.spct))
+  object_mspct(list("Arabidopsis leaf 1" = Ler_leaf.spct,
+                    "Arabidopsis leaf 2" = Ler_leaf.spct))
 autoplot(two_leaves.mspct, idfactor = "Spectra")
-autoplot(two_leaves.mspct, facets = TRUE)
+autoplot(two_leaves.mspct, facets = 1)
+}
 
 }
 \seealso{

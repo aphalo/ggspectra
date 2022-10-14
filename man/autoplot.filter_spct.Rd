@@ -18,6 +18,7 @@
   span = NULL,
   wls.target = "HM",
   annotations = NULL,
+  geom = "line",
   time.format = "",
   tz = "UTC",
   text.size = 2.5,
@@ -79,6 +80,10 @@ also accepted.}
 
 \item{annotations}{a character vector. For details please see sections Plot
 Annotations and Title Annotations.}
+
+\item{geom}{character The name of a ggplot geometry, currently only
+\code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
+selects between them based on \code{stacked}.}
 
 \item{time.format}{character Format as accepted by \code{\link[base]{strptime}}.}
 
@@ -168,6 +173,7 @@ annotations.
 \examples{
 
 autoplot(yellow_gel.spct)
+autoplot(yellow_gel.spct, geom = "spct")
 autoplot(yellow_gel.spct, plot.qty = "transmittance")
 autoplot(yellow_gel.spct, plot.qty = "absorptance")
 autoplot(yellow_gel.spct, plot.qty = "absorbance")
@@ -179,6 +185,7 @@ two_filters.mspct <-
  filter_mspct(list("Yellow gel" = yellow_gel.spct,
                    "Polyester film" = polyester.spct))
 autoplot(two_filters.mspct)
+autoplot(two_filters.mspct, geom = "spct")
 autoplot(two_filters.mspct, idfactor = "Spectra")
 autoplot(two_filters.mspct, facets = TRUE)
 autoplot(two_filters.mspct, facets = 1)

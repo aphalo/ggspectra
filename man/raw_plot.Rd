@@ -13,6 +13,7 @@ raw_plot(
   span,
   wls.target,
   annotations,
+  geom,
   relative,
   text.size,
   idfactor,
@@ -46,6 +47,10 @@ as arguments. A list with \code{numeric} and/or \code{character} values is
 also accepted.}
 
 \item{annotations}{a character vector.}
+
+\item{geom}{character The name of a ggplot geometry, currently only
+\code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
+selects between them based on \code{stacked}.}
 
 \item{text.size}{numeric size of text in the plot decorations.}
 

@@ -19,6 +19,7 @@
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
 #' @param annotations a character vector.
+#' @param geom character.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
 #'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
@@ -48,6 +49,7 @@ Afr_plot <- function(spct,
                      span,
                      wls.target,
                      annotations,
+                     geom,
                      text.size,
                      chroma.type,
                      idfactor,
@@ -146,6 +148,9 @@ Afr_plot <- function(spct,
     }
   }
 
+  if (!is.null(geom) && geom %in% c("area", "spct")) {
+    plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
+  }
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.Afr.label)
 
@@ -215,6 +220,7 @@ Afr_plot <- function(spct,
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
 #' @param annotations a character vector.
+#' @param geom character.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
 #'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
@@ -244,6 +250,7 @@ T_plot <- function(spct,
                    span,
                    wls.target,
                    annotations,
+                   geom,
                    text.size,
                    chroma.type,
                    idfactor,
@@ -253,6 +260,10 @@ T_plot <- function(spct,
                    ...) {
   if (!is.filter_spct(spct)) {
     stop("T_plot() can only plot filter_spct objects.")
+  }
+  if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
+    warning("'geom = ", geom, "' not supported, using default instead.")
+    geom <- NULL
   }
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
@@ -369,6 +380,9 @@ T_plot <- function(spct,
     }
   }
 
+  if (!is.null(geom) && geom %in% c("area", "spct")) {
+    plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
+  }
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.Tfr.label)
 
@@ -436,6 +450,7 @@ T_plot <- function(spct,
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
 #' @param annotations a character vector.
+#' @param geom character.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
 #'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
@@ -464,6 +479,7 @@ A_plot <- function(spct,
                    span,
                    wls.target,
                    annotations,
+                   geom,
                    text.size,
                    chroma.type,
                    idfactor,
@@ -473,6 +489,10 @@ A_plot <- function(spct,
                    ...) {
   if (!is.filter_spct(spct)) {
     stop("A_plot() can only plot filter_spct objects.")
+  }
+  if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
+    warning("'geom = ", geom, "' not supported, using default instead.")
+    geom <- NULL
   }
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
@@ -566,6 +586,9 @@ A_plot <- function(spct,
     }
   }
 
+  if (!is.null(geom) && geom %in% c("area", "spct")) {
+    plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
+  }
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.A.label)
 
@@ -626,6 +649,7 @@ A_plot <- function(spct,
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
 #' @param annotations a character vector.
+#' @param geom character.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
 #'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
@@ -655,6 +679,7 @@ R_plot <- function(spct,
                    span,
                    wls.target,
                    annotations,
+                   geom,
                    text.size,
                    chroma.type,
                    idfactor,
@@ -664,6 +689,10 @@ R_plot <- function(spct,
                    ...) {
   if (!photobiology::is.reflector_spct(spct)) {
     stop("R_plot() can only plot reflector_spct objects.")
+  }
+  if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
+    warning("'geom = ", geom, "' not supported, using default instead.")
+    geom <- NULL
   }
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
@@ -771,6 +800,9 @@ R_plot <- function(spct,
     }
   }
 
+  if (!is.null(geom) && geom %in% c("area", "spct")) {
+    plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
+  }
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.Rfr.label)
 
@@ -837,6 +869,7 @@ R_plot <- function(spct,
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
 #' @param annotations a character vector.
+#' @param geom character.
 #' @param stacked logical.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
@@ -857,6 +890,7 @@ O_plot <- function(spct,
                    span,
                    wls.target,
                    annotations,
+                   geom,
                    stacked,
                    text.size,
                    chroma.type,
@@ -864,16 +898,22 @@ O_plot <- function(spct,
                    na.rm,
                    ylim,
                    ...) {
-  if (getMultipleWl(spct) > 1L & !facets) {
-    warning("Only one object spectrum per panel supported")
-    facets <- TRUE
-  }
   if (!is.object_spct(spct)) {
     stop("O_plot() can only plot object_spct objects.")
+  }
+  if (getMultipleWl(spct) > 1L && (is.null(facets) || !facets)) {
+    warning("Only one object spectrum per panel supported")
+    facets <- TRUE
+  } else if (is.null(facets)) {
+    facets <- FALSE
   }
   if (stacked) {
     # we need to ensure that none of Tfr, Rfr and Afr are negative
     spct <- photobiology::clean(spct)
+  }
+  if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
+    warning("'geom = ", geom, "' not supported, using default instead.")
+    geom <- NULL
   }
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
@@ -932,17 +972,22 @@ O_plot <- function(spct,
 
   }
 
+  columns.selector <- c("w.length", "Tfr", "Afr", "Rfr")
+  if (getMultipleWl(spct) > 1L) {
+    idfactor <- getIdFactor(spct)
+    if (is.na(idfactor)) {
+      stop("'idfactor' not found")
+    }
+    columns.selector <- c(columns.selector, idfactor)
+  }
   # Once molten it will not pass checks as object_spct
   spct.tb <- spct
   photobiology::rmDerivedSpct(spct.tb)
   molten.spct <-
-    tidyr::pivot_longer(data = spct.tb[ , c("w.length", "Tfr", "Afr", "Rfr")],
+    tidyr::pivot_longer(data = spct.tb[ , columns.selector],
                         cols = c("Tfr", "Afr", "Rfr"),
                         names_to = "variable",
                         values_to = "value")
-  # molten.spct <-
-  #   tidyr::gather(data = spct.tb[ , c("w.length", "Tfr", "Afr", "Rfr")],
-  #                  key_col = "variable", value_col = "value", gathercols = c("Tfr", "Afr", "Rfr"))
   stack.levels <- c("Rfr", "Afr", "Tfr")
   molten.spct[["variable"]] <-
     factor(molten.spct[["variable"]], levels = stack.levels)
@@ -951,21 +996,41 @@ O_plot <- function(spct,
   plot <- ggplot(molten.spct, aes(x = .data[["w.length"]], y = .data[["value"]]), na.rm = na.rm)
   attributes(plot[["data"]]) <- c(attributes(plot[["data"]]), get_attributes(spct))
   if (stacked) {
-    plot <- plot + geom_area(aes(alpha = .data[["variable"]]), fill = "black", colour = NA)
-    plot <- plot + scale_alpha_manual(values = c(Tfr = 0.4,
-                                                 Rfr = 0.25,
-                                                 Afr = 0.55),
-                                      breaks = c("Rfr", "Afr", "Tfr"),
-                                      labels = c(Tfr = expression(T[lambda]),
-                                                 Afr = expression(A[lambda]),
-                                                 Rfr = expression(R[lambda])),
-                                      guide = guide_legend(title = NULL))
+    if (is.null(geom) || geom %in% c("spct", "area")) {
+      plot <- plot + geom_area(aes(alpha = .data[["variable"]]), fill = "black", colour = NA)
+      plot <- plot + scale_alpha_manual(values = c(Tfr = 0.4,
+                                                   Rfr = 0.25,
+                                                   Afr = 0.55),
+                                        breaks = c("Rfr", "Afr", "Tfr"),
+                                        labels = c(Tfr = expression(T[lambda]),
+                                                   Afr = expression(A[lambda]),
+                                                   Rfr = expression(R[lambda])),
+                                        guide = guide_legend(title = NULL))
+    } else {
+      plot <- plot + geom_line(aes(linetype = .data[["variable"]]),
+                               position = position_stack())
+      plot <- plot + scale_linetype(labels = c(Tfr = expression(T[lambda]),
+                                               Afr = expression(A[lambda]),
+                                               Rfr = expression(R[lambda])),
+                                    guide = guide_legend(title = NULL))
+    }
   } else {
+    if (!is.null(geom) && geom %in% c("spct", "area")) {
+      plot <- plot + geom_spct(aes(group = .data[["variable"]]),
+                               fill = "black", colour = NA, alpha = 0.2)
+    }
     plot <- plot + geom_line(aes(linetype = .data[["variable"]]))
     plot <- plot + scale_linetype(labels = c(Tfr = expression(T[lambda]),
                                              Afr = expression(A[lambda]),
                                              Rfr = expression(R[lambda])),
                                   guide = guide_legend(title = NULL))
+  }
+  if (is.numeric(facets)) {
+    plot <- plot +
+      facet_wrap(facets = vars(.data[[idfactor]]), ncol = as.integer(facets))
+  } else if (facets) {
+    plot <- plot +
+      facet_wrap(facets = vars(.data[[idfactor]]))
   }
   plot <- plot + labs(x = "Wavelength (nm)", y = s.Rfr.label)
 
@@ -1018,6 +1083,8 @@ O_plot <- function(spct,
 
 }
 
+# autoplot methods -------------------------------------------------------------
+
 #' Create a complete ggplot for a filter spectrum.
 #'
 #' These methods return a ggplot object with an annotated plot of a filter_spct
@@ -1062,6 +1129,9 @@ O_plot <- function(spct,
 #'   also accepted.
 #' @param annotations a character vector. For details please see sections Plot
 #'   Annotations and Title Annotations.
+#' @param geom character The name of a ggplot geometry, currently only
+#'   \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
+#'   selects between them based on \code{stacked}.
 #' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
 #' @param text.size numeric size of text in the plot decorations.
@@ -1096,6 +1166,7 @@ O_plot <- function(spct,
 #' @examples
 #'
 #' autoplot(yellow_gel.spct)
+#' autoplot(yellow_gel.spct, geom = "spct")
 #' autoplot(yellow_gel.spct, plot.qty = "transmittance")
 #' autoplot(yellow_gel.spct, plot.qty = "absorptance")
 #' autoplot(yellow_gel.spct, plot.qty = "absorbance")
@@ -1107,6 +1178,7 @@ O_plot <- function(spct,
 #'  filter_mspct(list("Yellow gel" = yellow_gel.spct,
 #'                    "Polyester film" = polyester.spct))
 #' autoplot(two_filters.mspct)
+#' autoplot(two_filters.mspct, geom = "spct")
 #' autoplot(two_filters.mspct, idfactor = "Spectra")
 #' autoplot(two_filters.mspct, facets = TRUE)
 #' autoplot(two_filters.mspct, facets = 1)
@@ -1128,6 +1200,7 @@ autoplot.filter_spct <-
            span = NULL,
            wls.target = "HM",
            annotations = NULL,
+           geom = "line",
            time.format = "",
            tz = "UTC",
            text.size = 2.5,
@@ -1182,6 +1255,7 @@ autoplot.filter_spct <-
                            span = span,
                            wls.target = wls.target,
                            annotations = annotations,
+                           geom = geom,
                            text.size = text.size,
                            chroma.type = chroma.type,
                            idfactor = idfactor,
@@ -1197,6 +1271,7 @@ autoplot.filter_spct <-
                            span = span,
                            wls.target = wls.target,
                            annotations = annotations,
+                           geom = geom,
                            text.size = text.size,
                            chroma.type = chroma.type,
                            idfactor = idfactor,
@@ -1213,6 +1288,7 @@ autoplot.filter_spct <-
                              span = span,
                              wls.target = wls.target,
                              annotations = annotations,
+                             geom = geom,
                              text.size = text.size,
                              chroma.type = chroma.type,
                              idfactor = idfactor,
@@ -1358,6 +1434,9 @@ autoplot.filter_mspct <-
 #'   also accepted.
 #' @param annotations a character vector. For details please see sections Plot
 #'   Annotations and Title Annotations.
+#' @param geom character The name of a ggplot geometry, currently only
+#'   \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
+#'   selects between them based on \code{stacked}.
 #' @param time.format character Format as accepted by
 #'   \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
@@ -1391,6 +1470,7 @@ autoplot.filter_mspct <-
 #' @examples
 #'
 #' autoplot(Ler_leaf_rflt.spct)
+#' autoplot(Ler_leaf_rflt.spct, geom = "spct")
 #' autoplot(Ler_leaf_rflt.spct, annotations = "")
 #' autoplot(Ler_leaf_rflt.spct, annotations = c("+", "valleys"))
 #'
@@ -1398,6 +1478,7 @@ autoplot.filter_mspct <-
 #'  reflector_mspct(list("Arabidopsis leaf 1" = Ler_leaf_rflt.spct,
 #'                       "Arabidopsis leaf 2" = Ler_leaf_rflt.spct / 2))
 #' autoplot(two_leaves.mspct)
+#' autoplot(two_leaves.mspct, geom = "spct")
 #' autoplot(two_leaves.mspct, idfactor = "Spectra")
 #' autoplot(two_leaves.mspct, facets = TRUE)
 #' autoplot(two_leaves.mspct, facets = 1)
@@ -1419,6 +1500,7 @@ autoplot.reflector_spct <-
            span = NULL,
            wls.target = "HM",
            annotations = NULL,
+           geom = "line",
            time.format = "",
            tz = "UTC",
            text.size = 2.5,
@@ -1473,6 +1555,7 @@ autoplot.reflector_spct <-
                            wls.target = wls.target,
                            annotations = annotations,
                            text.size = text.size,
+                           geom = geom,
                            chroma.type = chroma.type,
                            idfactor = idfactor,
                            facets = facets,
@@ -1503,8 +1586,7 @@ autoplot.reflector_mspct <-
   function(object,
            ...,
            range = NULL,
-           norm = getOption("ggspectra.normalize",
-                            default = "update"),
+           norm = getOption("ggspectra.normalize", default = "update"),
            plot.qty = getOption("photobiology.reflector.qty",
                                 default = "reflectance"),
            pc.out = FALSE,
@@ -1613,9 +1695,14 @@ autoplot.reflector_mspct <-
 #'   also accepted.
 #' @param annotations a character vector. For details please see sections Plot
 #'   Annotations and Title Annotations.
-#' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
+#' @param geom character The name of a ggplot geometry, currently only
+#'   \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
+#'   selects between them based on \code{stacked}.
+#' @param time.format character Format as accepted by
+#'   \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
-#' @param stacked logical
+#' @param stacked logical Whether to use \code{position_stack()} or
+#'   \code{position_identity()}.
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
 #'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param text.size numeric size of text in the plot decorations.
@@ -1651,15 +1738,20 @@ autoplot.reflector_mspct <-
 #' @examples
 #'
 #' autoplot(Ler_leaf.spct)
-#' autoplot(Ler_leaf.spct, plot.qty = "transmittance")
+#' autoplot(Ler_leaf.spct, geom = "line")
 #' autoplot(Ler_leaf.spct, annotations = "")
+#'
+#' \dontrun{
+#' # too time consuming at the moment
+#' autoplot(Ler_leaf.spct, plot.qty = "transmittance")
 #' autoplot(Ler_leaf.spct, plot.qty = "transmittance", norm = "max")
 #'
 #' two_leaves.mspct <-
-#'  object_mspct(list("Arabidopsis leaf 1" = Ler_leaf.spct,
-#'                    "Arabidopsis leaf 2" = Ler_leaf.spct))
+#'   object_mspct(list("Arabidopsis leaf 1" = Ler_leaf.spct,
+#'                     "Arabidopsis leaf 2" = Ler_leaf.spct))
 #' autoplot(two_leaves.mspct, idfactor = "Spectra")
-#' autoplot(two_leaves.mspct, facets = TRUE)
+#' autoplot(two_leaves.mspct, facets = 1)
+#' }
 #'
 #' @family autoplot methods
 #'
@@ -1676,20 +1768,27 @@ autoplot.object_spct <-
            span = NULL,
            wls.target = "HM",
            annotations = NULL,
+           geom = NULL,
            time.format = "",
            tz = "UTC",
-           stacked = TRUE,
+           stacked = plot.qty == "all",
            text.size = 2.5,
            chroma.type = "CMF",
            idfactor = NULL,
-           facets = FALSE,
+           facets = NULL,
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
     force(object.label)
+    if (is.null(plot.qty)) {
+      plot.qty <- "all"
+    }
+    if (is.null(facets)) {
+      facets <- plot.qty == "all" && getMultipleWl(object) > 1L
+    }
 
-    if (is.null(plot.qty) || plot.qty == "all") {
+    if (plot.qty == "all") {
       # stacked area plot
       annotations.default <-
         getOption("photobiology.plot.annotations",
@@ -1714,26 +1813,27 @@ autoplot.object_spct <-
         }
       }
       out.ggplot <- O_plot(spct = object,
-                         w.band = w.band,
-                         range = range,
-                         pc.out = pc.out,
-                         label.qty = label.qty,
-                         span = span,
-                         wls.target = wls.target,
-                         annotations = annotations,
-                         stacked = stacked,
-                         text.size = text.size,
-                         chroma.type = chroma.type,
-                         facets = facets,
-                         ylim = ylim,
-                         na.rm = na.rm,
-                         ...)
-    out.ggplot +
-      autotitle(object = object,
-                time.format = time.format,
-                tz = tz,
-                object.label = object.label,
-                annotations = annotations)
+                           w.band = w.band,
+                           range = range,
+                           pc.out = pc.out,
+                           label.qty = label.qty,
+                           span = span,
+                           wls.target = wls.target,
+                           annotations = annotations,
+                           geom = geom,
+                           stacked = stacked,
+                           text.size = text.size,
+                           chroma.type = chroma.type,
+                           facets = facets,
+                           ylim = ylim,
+                           na.rm = na.rm,
+                           ...)
+      out.ggplot +
+        autotitle(object = object,
+                  time.format = time.format,
+                  tz = tz,
+                  object.label = object.label,
+                  annotations = annotations)
     } else {
       # Line plots for components: we convert object and call respective method
       if (plot.qty == "reflectance") {
@@ -1755,6 +1855,7 @@ autoplot.object_spct <-
                span = span,
                wls.target = wls.target,
                annotations = annotations,
+               geom = geom,
                time.format = time.format,
                tz = tz,
                text.size = text.size,
@@ -1827,7 +1928,7 @@ autoplot.object_mspct <-
                 se = photobiology::s_se(object)
     )
     col.name <- c(transmittance = "Tfr", absorptance = "Afr", reflectance = "Rfr")
-    if ((is.object_spct(z) && all(col.name %in% names(z))) ||
+    if ((is.object_spct(z) && sum(col.name %in% names(z)) >= 2) ||
         (is.filter_spct(z) && any(c("Tfr", "Afr", "A")) %in% names(z)) ||
         (is.reflector_spct(z) && "Rfr" %in% names(z)))  {
       autoplot(object = z,

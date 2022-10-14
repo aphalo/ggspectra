@@ -24,6 +24,9 @@
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
 #' @param annotations a character vector
+#' @param geom character The name of a ggplot geometry, currently only
+#'   \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
+#'   selects between them based on \code{stacked}.
 #' @param norm numeric Normalization wavelength (nm) or character string "max",
 #'   or "min" for normalization at the corresponding wavelength, "update" to
 #'   update the normalization after modifying units of expression, quantity
@@ -57,6 +60,7 @@ cal_plot <- function(spct,
                      span,
                      wls.target,
                      annotations,
+                     geom,
                      norm,
                      text.size,
                      idfactor,
@@ -66,6 +70,10 @@ cal_plot <- function(spct,
                      ...) {
   if (!is.calibration_spct(spct)) {
     stop("cal_plot() can only plot calibration_spct objects.")
+  }
+  if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
+    warning("'geom = ", geom, "' not supported, using default instead.")
+    geom <- NULL
   }
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
@@ -176,6 +184,9 @@ cal_plot <- function(spct,
     }
   }
 
+  if (!is.null(geom) && geom %in% c("area", "spct")) {
+    plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
+  }
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.counts.label)
 
@@ -252,6 +263,9 @@ cal_plot <- function(spct,
 #'   also accepted.
 #' @param annotations a character vector ("summaries" is ignored). For details
 #'   please see sections Plot Annotations and Title Annotations.
+#' @param geom character The name of a ggplot geometry, currently only
+#'   \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
+#'   selects between them based on \code{stacked}.
 #' @param time.format character Format as accepted by
 #'   \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
@@ -295,6 +309,7 @@ autoplot.calibration_spct <-
            span = NULL,
            wls.target = "HM",
            annotations = NULL,
+           geom = "line",
            time.format = "",
            tz = "UTC",
            norm = NULL,
@@ -330,6 +345,7 @@ autoplot.calibration_spct <-
              wls.target = wls.target,
              pc.out = pc.out,
              annotations = annotations,
+             geom = geom,
              norm = norm,
              text.size = text.size,
              idfactor = idfactor,

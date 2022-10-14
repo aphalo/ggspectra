@@ -18,6 +18,7 @@
   span = NULL,
   wls.target = "HM",
   annotations = NULL,
+  geom = "line",
   time.format = "",
   tz = "UTC",
   text.size = 2.5,
@@ -78,6 +79,10 @@ also accepted.}
 
 \item{annotations}{a character vector. For details please see sections Plot
 Annotations and Title Annotations.}
+
+\item{geom}{character The name of a ggplot geometry, currently only
+\code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
+selects between them based on \code{stacked}.}
 
 \item{time.format}{character Format as accepted by
 \code{\link[base]{strptime}}.}
@@ -156,6 +161,7 @@ to.
 \examples{
 
 autoplot(photodiode.spct)
+autoplot(photodiode.spct, geom = "spct")
 autoplot(photodiode.spct, unit.out = "photon")
 autoplot(photodiode.spct, annotations = "")
 autoplot(photodiode.spct, norm = "skip")
@@ -167,6 +173,7 @@ two_sensors.mspct <-
 autoplot(two_sensors.mspct, normalize = TRUE, unit.out = "photon")
 autoplot(two_sensors.mspct, normalize = TRUE, idfactor = "Spectra")
 autoplot(two_sensors.mspct, normalize = TRUE, facets = 2)
+autoplot(two_sensors.mspct, normalize = TRUE, geom = "spct")
 
 }
 \seealso{

@@ -27,6 +27,9 @@
 #'   based.
 #' @param annotations a character vector. For details please see section Plot
 #'   Annotations.
+#' @param geom character The name of a ggplot geometry, currently only
+#'   \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
+#'   selects between them based on \code{stacked}.
 #' @param wb.trim logical.
 #' @param norm numeric normalization wavelength (nm) or character string "max"
 #'   for normalization at the wavelength of highest peak.
@@ -62,6 +65,7 @@
 #' @examples
 #'
 #' autoplot(waveband(c(400, 500)))
+#' autoplot(waveband(c(400, 500)), geom = "spct")
 #'
 autoplot.waveband <-
   function(object,
@@ -73,6 +77,7 @@ autoplot.waveband <-
            wls.target = "HM",
            unit.in = getOption("photobiology.radiation.unit", default = "energy"),
            annotations = NULL,
+           geom = "line",
            wb.trim = TRUE,
            norm = NULL,
            text.size = 2.5,
@@ -108,7 +113,7 @@ autoplot.waveband <-
       range <- range(w.length)
       w.length <- seq(range[1], range[2], length.out = 200)
     }
-    if (!is.null(w.band$hinges) & length(w.band$hinges)>0) {
+    if (!is.null(w.band$hinges) & length(w.band$hinges) > 0) {
       hinges <- with(w.band, hinges[hinges > range[1] & hinges < range[2]])
       w.length <- c(w.length, hinges)
     }
@@ -140,6 +145,7 @@ autoplot.waveband <-
     autoplot(spct,
              w.band = w.band.range,
              annotations = annotations,
+             geom = geom,
              wb.trim = wb.trim,
              span = span,
              wls.target = wls.target,

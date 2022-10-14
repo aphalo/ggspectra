@@ -23,6 +23,9 @@
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
 #' @param annotations a character vector.
+#' @param geom character The name of a ggplot geometry, currently only
+#'   \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
+#'   selects between them based on \code{stacked}.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
 #'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
@@ -52,6 +55,7 @@ e_plot <- function(spct,
                    span,
                    wls.target,
                    annotations,
+                   geom,
                    text.size,
                    chroma.type,
                    idfactor,
@@ -61,6 +65,10 @@ e_plot <- function(spct,
                    ...) {
   if (!is.source_spct(spct)) {
     stop("e_plot() can only plot source_spct objects.")
+  }
+  if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
+    warning("'geom = ", geom, "' not supported, using default instead.")
+    geom <- NULL
   }
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
@@ -186,6 +194,9 @@ e_plot <- function(spct,
     }
   }
 
+  if (!is.null(geom) && geom %in% c("area", "spct")) {
+    plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
+  }
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.irrad.label)
 
@@ -291,6 +302,9 @@ e_plot <- function(spct,
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
 #' @param annotations a character vector
+#' @param geom character The name of a ggplot geometry, currently only
+#'   \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
+#'   selects between them based on \code{stacked}.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
 #'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
@@ -320,6 +334,7 @@ q_plot <- function(spct,
                    span,
                    wls.target,
                    annotations,
+                   geom,
                    text.size,
                    chroma.type,
                    idfactor,
@@ -329,6 +344,10 @@ q_plot <- function(spct,
                    ...) {
   if (!is.source_spct(spct)) {
     stop("q_plot() can only plot source_spct objects.")
+  }
+  if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
+    warning("'geom = ", geom, "' not supported, using default instead.")
+    geom <- NULL
   }
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
@@ -455,6 +474,9 @@ q_plot <- function(spct,
     }
   }
 
+  if (!is.null(geom) && geom %in% c("area", "spct")) {
+    plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
+  }
   plot <- plot + geom_line(na.rm = na.rm)
   plot <- plot + labs(x = "Wavelength (nm)", y = s.irrad.label)
 
@@ -574,6 +596,9 @@ q_plot <- function(spct,
 #'   also accepted.
 #' @param annotations a character vector. For details please see sections Plot
 #'   Annotations and Title Annotations.
+#' @param geom character The name of a ggplot geometry, currently only
+#'   \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
+#'   selects between them based on \code{stacked}.
 #' @param time.format character Format as accepted by
 #'   \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
@@ -609,12 +634,14 @@ q_plot <- function(spct,
 #' @examples
 #'
 #' autoplot(sun.spct)
+#' autoplot(sun.spct, geom = "spct")
 #' autoplot(sun.spct, unit.out = "photon")
 #' autoplot(sun.spct, norm = "max")
 #' autoplot(sun.spct, norm = "max", unit.out = "photon")
 #'
 #' two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct / 2))
 #' autoplot(two_suns.mspct)
+#' autoplot(two_suns.mspct, geom = "spct")
 #' autoplot(two_suns.mspct, plot.data = "mean")
 #' autoplot(two_suns.mspct, idfactor = "Spectra")
 #' autoplot(two_suns.mspct, facets = TRUE) # uses ggplot2's default
@@ -638,6 +665,7 @@ autoplot.source_spct <-
            span = NULL,
            wls.target = "HM",
            annotations = NULL,
+           geom = "line",
            time.format = "",
            tz = "UTC",
            text.size = 2.5,
@@ -691,6 +719,7 @@ autoplot.source_spct <-
                            span = span,
                            wls.target = wls.target,
                            annotations = annotations,
+                           geom = geom,
                            text.size = text.size,
                            chroma.type = chroma.type,
                            idfactor = idfactor,
@@ -707,6 +736,7 @@ autoplot.source_spct <-
                            span = span,
                            wls.target = wls.target,
                            annotations = annotations,
+                           geom = geom,
                            text.size = text.size,
                            chroma.type = chroma.type,
                            idfactor = idfactor,
@@ -752,7 +782,7 @@ autoplot.source_mspct <-
     force(object.label)
 
     idfactor <- validate_idfactor(idfactor = idfactor)
-    # We trim the spectra to avoid unnecesary computaions later
+    # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
       object <- photobiology::trim_wl(object,
                                       range = range,

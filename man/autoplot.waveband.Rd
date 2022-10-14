@@ -14,6 +14,7 @@
   wls.target = "HM",
   unit.in = getOption("photobiology.radiation.unit", default = "energy"),
   annotations = NULL,
+  geom = "line",
   wb.trim = TRUE,
   norm = NULL,
   text.size = 2.5,
@@ -50,6 +51,10 @@ based.}
 
 \item{annotations}{a character vector. For details please see section Plot
 Annotations.}
+
+\item{geom}{character The name of a ggplot geometry, currently only
+\code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
+selects between them based on \code{stacked}.}
 
 \item{wb.trim}{logical.}
 
@@ -111,6 +116,7 @@ method of the \code{response_spct} class.
 \examples{
 
 autoplot(waveband(c(400, 500)))
+autoplot(waveband(c(400, 500)), geom = "spct")
 
 }
 \seealso{

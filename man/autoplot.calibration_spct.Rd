@@ -17,6 +17,7 @@
   span = NULL,
   wls.target = "HM",
   annotations = NULL,
+  geom = "line",
   time.format = "",
   tz = "UTC",
   norm = NULL,
@@ -72,6 +73,10 @@ also accepted.}
 
 \item{annotations}{a character vector ("summaries" is ignored). For details
 please see sections Plot Annotations and Title Annotations.}
+
+\item{geom}{character The name of a ggplot geometry, currently only
+\code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
+selects between them based on \code{stacked}.}
 
 \item{time.format}{character Format as accepted by
 \code{\link[base]{strptime}}.}

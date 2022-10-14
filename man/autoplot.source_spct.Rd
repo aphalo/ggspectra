@@ -18,6 +18,7 @@
   span = NULL,
   wls.target = "HM",
   annotations = NULL,
+  geom = "line",
   time.format = "",
   tz = "UTC",
   text.size = 2.5,
@@ -81,6 +82,10 @@ also accepted.}
 
 \item{annotations}{a character vector. For details please see sections Plot
 Annotations and Title Annotations.}
+
+\item{geom}{character The name of a ggplot geometry, currently only
+\code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
+selects between them based on \code{stacked}.}
 
 \item{time.format}{character Format as accepted by
 \code{\link[base]{strptime}}.}
@@ -167,12 +172,14 @@ If \code{idfactor = NULL}, the default for single spectra, the name of
 \examples{
 
 autoplot(sun.spct)
+autoplot(sun.spct, geom = "spct")
 autoplot(sun.spct, unit.out = "photon")
 autoplot(sun.spct, norm = "max")
 autoplot(sun.spct, norm = "max", unit.out = "photon")
 
 two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct / 2))
 autoplot(two_suns.mspct)
+autoplot(two_suns.mspct, geom = "spct")
 autoplot(two_suns.mspct, plot.data = "mean")
 autoplot(two_suns.mspct, idfactor = "Spectra")
 autoplot(two_suns.mspct, facets = TRUE) # uses ggplot2's default

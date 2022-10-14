@@ -18,6 +18,7 @@
   span = NULL,
   wls.target = "HM",
   annotations = NULL,
+  geom = "line",
   time.format = "",
   tz = "UTC",
   text.size = 2.5,
@@ -77,6 +78,10 @@ also accepted.}
 
 \item{annotations}{a character vector ("summaries" is ignored). For details
 please see sections Plot Annotations and Title Annotations.}
+
+\item{geom}{character The name of a ggplot geometry, currently only
+\code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
+selects between them based on \code{stacked}.}
 
 \item{time.format}{character Format as accepted by \code{\link[base]{strptime}}.}
 
@@ -153,6 +158,7 @@ object returned is a ggplot objects, and can be further manipulated.
 \examples{
 
 autoplot(white_led.cps_spct)
+autoplot(white_led.cps_spct, geom = "spct")
 autoplot(white_led.cps_spct, norm = "max")
 autoplot(white_led.cps_spct, annotations = "")
 
@@ -160,6 +166,7 @@ two_leds.mspct <-
   cps_mspct(list("LED 1" = white_led.cps_spct,
                  "LED 2" = white_led.cps_spct / 2))
 autoplot(two_leds.mspct)
+autoplot(two_leds.mspct, geom = "spct")
 autoplot(two_leds.mspct, idfactor = "Spectra")
 autoplot(two_leds.mspct, facets = 1) # one column
 autoplot(two_leds.mspct, facets = 2) # two columns

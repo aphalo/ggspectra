@@ -12,6 +12,7 @@ A_plot(
   span,
   wls.target,
   annotations,
+  geom,
   text.size,
   chroma.type,
   idfactor,
@@ -43,6 +44,8 @@ as arguments. A list with \code{numeric} and/or \code{character} values is
 also accepted.}
 
 \item{annotations}{a character vector.}
+
+\item{geom}{character.}
 
 \item{text.size}{numeric size of text in the plot decorations.}
 

@@ -380,6 +380,8 @@ decoration <- function(w.band,
   }
   z
 }
+# Silence NOTE in CRAN checks
+utils::globalVariables(c("BW.color", "wb.name", "y.label"))
 
 #' Merge user supplied annotations with default ones
 #'
