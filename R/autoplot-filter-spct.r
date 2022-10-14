@@ -1731,17 +1731,11 @@ autoplot.reflector_mspct <-
 #'
 #' autoplot(Ler_leaf.spct)
 #' autoplot(Ler_leaf.spct, geom = "line")
-#' autoplot(Ler_leaf.spct, annotations = "")
-#'
-#' # too time consuming at the moment
-#' # autoplot(Ler_leaf.spct, plot.qty = "transmittance")
-#' # autoplot(Ler_leaf.spct, plot.qty = "transmittance", norm = "max")
 #'
 #' two_leaves.mspct <-
 #'   object_mspct(list("Arabidopsis leaf 1" = Ler_leaf.spct,
 #'                     "Arabidopsis leaf 2" = Ler_leaf.spct))
 #' autoplot(two_leaves.mspct, idfactor = "Spectra")
-#' # autoplot(two_leaves.mspct, facets = 1)
 #'
 #' @family autoplot methods
 #'

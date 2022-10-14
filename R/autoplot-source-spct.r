@@ -637,17 +637,12 @@ q_plot <- function(spct,
 #' autoplot(sun.spct, geom = "spct")
 #' autoplot(sun.spct, unit.out = "photon")
 #' autoplot(sun.spct, norm = "max")
-#' autoplot(sun.spct, norm = "max", unit.out = "photon")
 #'
 #' two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct / 2))
 #' autoplot(two_suns.mspct)
-#' autoplot(two_suns.mspct, geom = "spct")
-#' autoplot(two_suns.mspct, plot.data = "mean")
-#' autoplot(two_suns.mspct, idfactor = "Spectra")
-#' autoplot(two_suns.mspct, facets = TRUE) # uses ggplot2's default
 #' autoplot(two_suns.mspct, facets = 1) # one column
 #' autoplot(two_suns.mspct, facets = 2) # two columns
-#' autoplot(two_suns.mspct, norm = "max", facets = 2)
+#' autoplot(two_suns.mspct, plot.data = "mean")
 #'
 #' @family autoplot methods
 #'
