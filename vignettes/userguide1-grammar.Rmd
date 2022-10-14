@@ -363,14 +363,14 @@ ggplot(sun.spct) +
   scale_y_s.e.irrad_continuous()
 ```
 
-In addition to formatters defined in package 'scales', additional
-formatters are defined this package, `SI_pl_format()` and
-`SI_tg_format()`. Most of the scales in this package use the first of
-them, while the second one can be passed as an argument. *When it is
-used as shoen here, it is important to remember that as the axis label
-should not show scaled units, `unit.exponent` must be always passed zero
-as argument.* I have seen this approach used in engineering related
-publications.
+In addition to formatters defined in package 'scales', two additional formatters
+are defined in package 'ggspectra', `SI_pl_format()` and `SI_tg_format()`. Most
+of the new scales defined use `SI_pl_format()`, but `SI_tg_format()` can be
+passed as an argument. *When it is used as shown here, it is important to
+remember that the axis label should not show scaled units, i.e., when using
+`SI_tg_format()`, `unit.exponent` must be passed zero as argument.* I have seen
+this approach used in engineering related publications. (Recent updates to
+packages 'ggplot2' and 'scales' have added similar functionality.)
 
 ```{r}
 ggplot(sun.spct) + 
@@ -381,7 +381,7 @@ ggplot(sun.spct) +
 ```
 
 Transformation objects from package 'scales', or user defined, can be
-passed as additional arguments. We replace zeros to avoid a warnings
+passed as additional arguments. We replace zeros to avoid a warning
 from the `log10()` call, and as the scale `limits` discards some
 observations, we use `na.rm = TRUE` to silence this additional warning.
 
@@ -407,7 +407,7 @@ ggplot(sun.spct) +
 ```
 
 If the data are normalized, we can pass the normalization wavelength as
-an argument.
+an argument. In this example, we retrieve this wavelength from the metadata.
 
 ```{r}
 norm_sun.spct <- normalize(sun.spct)
@@ -434,7 +434,7 @@ the purpose of these wrappers.
 
 Currently only one x-scale function suitable for wavelengths in
 nanometres is exported by package 'ggspectra', as well as two secondary
-axis definitions for wavenumber and frequency.
+axis definitions for wave number and frequency.
 
 ```{r}
 ggplot(sun.spct) + 
@@ -514,7 +514,7 @@ ggplot(sun.spct) +
 ```
 
 ```{r}
-ggplot(sun.spct, unit.out = "photon") + 
+ggplot(sun.spct, unit.out = "photon", range = c(293, NA)) + 
   geom_line() +
   scale_x_wl_continuous() +
   scale_y_s.e.irrad_log10(unit.exponent = -6)
@@ -846,7 +846,7 @@ text.
 ggplot(sun.spct) + geom_line() + 
   stat_peaks(span = NULL, color = "red") +
   stat_peaks(span = NULL, geom = "text", vjust = -0.5, color = "red", 
-             aes(label = paste(stat(y.label), "at", after_stat(x.label), "nm"))) +
+             aes(label = paste(after_stat(y.label), "at", after_stat(x.label), "nm"))) +
   expand_limits(y = c(NA, 0.9))
 ```
 
@@ -887,8 +887,9 @@ Raman spectra but can also appear occasionally in any measurement with
 array spectrometers when integration times are long or if some pixels in
 an array detector are defective (e.g., hot pixels and dead pixels).
 Usually spikes are considered "noise" to be removed, but occasionally we
-may want to highlight in a plot the spikes, and do this consistently
-with function `despike()` from package 'photobiology'.
+may want to highlight in a plot the spikes. (Spikes can be replaced by values
+interpolated from neighbours with function `despike()` from package 
+'photobiology'.)
 
 ```{r}
 ggplot(white_led.raw_spct, aes(w.length, counts_3)) + 
