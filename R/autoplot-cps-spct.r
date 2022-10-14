@@ -277,16 +277,12 @@ cps_plot <- function(spct,
 #' autoplot(white_led.cps_spct)
 #' autoplot(white_led.cps_spct, geom = "spct")
 #' autoplot(white_led.cps_spct, norm = "max")
-#' autoplot(white_led.cps_spct, annotations = "")
 #'
 #' two_leds.mspct <-
 #'   cps_mspct(list("LED 1" = white_led.cps_spct,
 #'                  "LED 2" = white_led.cps_spct / 2))
 #' autoplot(two_leds.mspct)
-#' autoplot(two_leds.mspct, geom = "spct")
 #' autoplot(two_leds.mspct, idfactor = "Spectra")
-#' autoplot(two_leds.mspct, facets = 1) # one column
-#' autoplot(two_leds.mspct, facets = 2) # two columns
 #' autoplot(two_leds.mspct, plot.data = "mean")
 #'
 #' @family autoplot methods
