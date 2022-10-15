@@ -19,7 +19,7 @@ LazyLoad: TRUE
 ByteCompile: TRUE
 Depends:
     R (>= 4.1.0),
-    photobiology (>= 0.10.13),
+    photobiology (>= 0.10.14),
     ggplot2 (>= 3.3.4)
 Imports:
     photobiologyWavebands (>= 0.4.3),
