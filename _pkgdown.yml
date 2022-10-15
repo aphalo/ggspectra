@@ -106,8 +106,8 @@ navbar:
     articles:
       text: User Guide
       menu:
-      - text: 'The R for Photobiology Suite'
-        href: articles/r4p-introduction.html
+      - text: '0 The R for Photobiology Suite'
+        href: articles/userguide0-r4p-introduction.html
       - text: '1 Grammar of Graphics'
         href: articles/userguide1-grammar.html
       - text: '2 Autoplot Methods'
