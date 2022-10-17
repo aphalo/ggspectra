@@ -427,21 +427,14 @@ ggplot.object_spct <-
       # Attributes will be lost when melting the tibble or data frame
       data.attributes <- photobiology::get_attributes(data)
       # Once molten it will not pass checks as object_spct
-      photobiology::rmDerivedSpct(data)
-      # melt data into long form
-      molten.data <-
-        tidyr::pivot_longer(data = data[ , c("w.length", "Tfr", "Afr", "Rfr")],
-                            cols = tidyr::all_of(c("Tfr", "Afr", "Rfr")),
-                            names_to = "variable",
-                            values_to = "value")
+      molten.tb <- photobiology::spct_wide2long(data, idfactor = "variable", rm.spct.class = TRUE)
       # if not supplied create a mapping
       if (is.null(mapping)) {
         mapping <- ggplot2::aes(.data[["w.length"]], .data[["value"]])
       }
       # roundabout way of retaining the attributes without calling any
       # private (not exported) method or function from 'ggplot2'
-      photobiology::rmDerivedSpct(molten.data)
-      p <- ggplot2::ggplot(data = molten.data, mapping = mapping, ...,
+      p <- ggplot2::ggplot(data = molten.tb, mapping = mapping, ...,
                            environment = environment)
       attributes(p$data) <- c(attributes(p$data), data.attributes)
     }

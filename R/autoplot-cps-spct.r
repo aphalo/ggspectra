@@ -114,13 +114,7 @@ cps_plot <- function(spct,
   }
 
   if (num.cps.cols > 1L) {
-    # remove cps_spct class before melting as it invalidates expectations
-    rmDerivedSpct(spct)
-    spct <- tidyr::pivot_longer(data = spct,
-                                cols = tidyr::all_of(cps.cols),
-                                names_to = "scan",
-                                values_to = "cps")
-    setCpsSpct(spct, multiple.wl = NULL) # guessed from data
+    spct <- photobiology::spct_wide2long(spct = spct, idfactor = "scan")
     plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["cps"]], linetype = .data[["scan"]]))
     temp <- find_idfactor(spct = spct,
                           idfactor = idfactor,
