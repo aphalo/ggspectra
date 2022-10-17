@@ -117,7 +117,7 @@ cps_plot <- function(spct,
     # remove cps_spct class before melting as it invalidates expectations
     rmDerivedSpct(spct)
     spct <- tidyr::pivot_longer(data = spct,
-                                cols = tidyselect::all_of(cps.cols),
+                                cols = tidyr::all_of(cps.cols),
                                 names_to = "scan",
                                 values_to = "cps")
     setCpsSpct(spct, multiple.wl = NULL) # guessed from data

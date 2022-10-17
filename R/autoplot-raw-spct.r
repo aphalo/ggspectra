@@ -131,7 +131,7 @@ raw_plot <- function(spct,
     # remove raw_spct class before melting as it invalidates expectations
     rmDerivedSpct(spct)
     spct <- tidyr::pivot_longer(data = spct,
-                                cols = tidyselect::all_of(counts.cols),
+                                cols = tidyr::all_of(counts.cols),
                                 names_to = "scan",
                                 values_to = "counts")
     setRawSpct(spct, multiple.wl = NULL) # guessed from data
@@ -303,16 +303,18 @@ raw_plot <- function(spct,
 #'
 #' @examples
 #'
-#' autoplot(white_led.raw_spct)
-#' autoplot(white_led.raw_spct, annotations = "")
+#' low_res.raw_spct <- thin_wl(white_led.raw_spct,
+#'                             max.wl.step = 20,
+#'                             max.slope.delta = 0.05,
+#'                             col.names = "counts_3")
+#' autoplot(low_res.raw_spct)
+#' autoplot(low_res.raw_spct, annotations = "")
 #'
 #' two_leds.mspct <-
-#'   raw_mspct(list("LED 1" = white_led.raw_spct,
-#'                  "LED 2" = white_led.raw_spct))
+#'   raw_mspct(list("LED 1" = low_res.raw_spct,
+#'                  "LED 2" = low_res.raw_spct))
 #' autoplot(two_leds.mspct)
-#' autoplot(two_leds.mspct, idfactor = "Spectra")
 #' autoplot(two_leds.mspct, facets = 1) # one column
-#' autoplot(two_leds.mspct, facets = 2) # two columns
 #'
 #' @family autoplot methods
 #'

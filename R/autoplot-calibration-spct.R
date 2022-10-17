@@ -144,7 +144,7 @@ cal_plot <- function(spct,
     # remove calibration_spct class before melting as it invalidates expectations
     rmDerivedSpct(spct)
     spct <- tidyr::pivot_longer(data = spct,
-                                cols = tidyselect::all_of(mult.cols),
+                                cols = tidyr::all_of(mult.cols),
                                 names_to = "scan",
                                 values_to = "irrad.mult")
     setCalibrationSpct(spct, multiple.wl = NULL) # guessed from data

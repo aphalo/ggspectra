@@ -181,12 +181,16 @@ The method for collections of object spectra of length > 1 is
 
 \examples{
 
-autoplot(Ler_leaf.spct)
-autoplot(Ler_leaf.spct, geom = "line")
+low_res.spct <- thin_wl(Ler_leaf.spct,
+                        max.wl.step = 20,
+                        max.slope.delta = 0.01,
+                        col.names = "Tfr")
+autoplot(low_res.spct)
+autoplot(low_res.spct, geom = "line")
 
 two_leaves.mspct <-
-  object_mspct(list("Arabidopsis leaf 1" = Ler_leaf.spct,
-                    "Arabidopsis leaf 2" = Ler_leaf.spct))
+  object_mspct(list("Arabidopsis leaf 1" = low_res.spct,
+                    "Arabidopsis leaf 2" = low_res.spct))
 autoplot(two_leaves.mspct, idfactor = "Spectra")
 
 }

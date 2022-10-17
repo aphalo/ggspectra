@@ -431,7 +431,7 @@ ggplot.object_spct <-
       # melt data into long form
       molten.data <-
         tidyr::pivot_longer(data = data[ , c("w.length", "Tfr", "Afr", "Rfr")],
-                            cols = c("Tfr", "Afr", "Rfr"),
+                            cols = tidyr::all_of(c("Tfr", "Afr", "Rfr")),
                             names_to = "variable",
                             values_to = "value")
       # if not supplied create a mapping
