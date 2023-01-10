@@ -270,3 +270,22 @@ scale_x_wl_continuous <-
                        labels = labels,
                        ...)
   }
+
+#' @rdname scale_x_wl_continuous
+#'
+#' @export
+#'
+scale_x_w_number_continuous <-
+  function(unit.exponent = -9,
+           name = w_length_label(unit.exponent = unit.exponent,
+                                 label.text = label.text),
+           breaks = scales::pretty_breaks(n = 7),
+           labels = SI_pl_format(exponent = unit.exponent + 9),
+           label.text = axis_labels()[["w.length"]],
+           ...) {
+    scale_x_continuous(name = name,
+                       breaks = breaks,
+                       labels = labels,
+                       ...)
+  }
+
