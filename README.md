@@ -6,7 +6,9 @@
 [![cran
 version](https://www.r-pkg.org/badges/version/ggspectra)](https://cran.r-project.org/package=ggspectra)
 [![cran
-checks](https://cranchecks.info/badges/worst/ggspectra)](https://cran.r-project.org/web/checks/check_results_ggspectra.html)
+checks](https://badges.cranchecks.info/worst/ggspectra.svg)](https://cran.r-project.org/web/checks/check_results_ggspectra.html)
+[![R build
+status](https://github.com/aphalo/ggspectra/workflows/R-CMD-check/badge.svg)](https://github.com/aphalo/ggspectra/actions)
 
 The goal of ‘ggspectra’ is to make it easy to plot radiation spectra and
 similar data, such and transmittance, absorbance and reflectance
@@ -56,6 +58,8 @@ ggplot(sun.spct, unit.out = "photon") +
   scale_y_s.q.irrad_continuous() +
   scale_x_wl_continuous(sec.axis = sec_axis_w_number()) +
   theme_bw()
+#> Warning: Using the `size` aesthetic in this geom was deprecated in ggplot2 3.4.0.
+#> ℹ Please use `linewidth` in the `default_aes` field and elsewhere instead.
 ```
 
 ![](man/figures/README-example2-1.png)<!-- -->
