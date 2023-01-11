@@ -64,7 +64,7 @@ geom_spct <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @usage NULL
 #' @export
 GeomSpct <- ggproto("GeomSpct", GeomRibbon,
-  default_aes = aes(color = NA, fill = "grey60", size = 0.5, linetype = 1,
+  default_aes = aes(color = NA, fill = "grey60", linewidth = 0.5, linetype = 1,
     alpha = NA),
 
   required_aes = c("x", "y"),

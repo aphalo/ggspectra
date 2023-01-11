@@ -1,30 +1,29 @@
-#' Wavelength conversions
+#' Deprecated functions
 #'
-#' Convert wavelength into wavenumber or into frequency.
+#' To convert wavelength into wavenumber or into frequency, please, use the
+#' conversion functions from package 'photobiology' in place of the deprecated
+#' functions \code{w_number()} and \code{w_frequency()} from this package.
 #'
-#' @param w.length numeric wavelength (nm)
-#' @param unit.exponent integer
+#' @section Deprecated: These functions will be removed from package 'ggpmisc'
+#'   in the near future.
+#'
+#' @seealso \code{\link[photobiology]{}}
 #'
 #' @export
 #'
 #' @examples
+#' library(photobiology)
 #'
-#' w_number(600)
-#' w_frequency(600)
+#' wl2wavenumber(600)
+#' wl2frequency(600)
 #'
-w_number <- function(w.length,
-                     unit.exponent = 0) {
-  1e9 / w.length * 10^unit.exponent # 1/m
-}
+w_number <- photobiology::wl2wavenumber
 
 #' @rdname w_number
 #'
 #' @export
 #'
-w_frequency <- function(w.length,
-                        unit.exponent = 0) {
-  299792458 / (w.length * 1e-9) / 10^unit.exponent # speed of light [m/s] / w.length [m]
-}
+w_frequency <- photobiology::wl2frequency
 
 #' Wave- axis labels
 #'
@@ -197,7 +196,7 @@ w_frequency_label <- function(unit.exponent = 9,
 sec_axis_w_number <-
   function(unit.exponent = -6,
            label.text = axis_labels()[["w.number"]]) {
-    ggplot2::sec_axis(trans = ~w_number(., unit.exponent),
+    ggplot2::sec_axis(trans = ~photobiology::wl2wavenumber(., unit.exponent),
                       name = w_number_label(unit.exponent = unit.exponent,
                                             label.text = label.text),
                       breaks = scales::pretty_breaks(n = 7))
@@ -210,7 +209,7 @@ sec_axis_w_number <-
 sec_axis_w_frequency <-
   function(unit.exponent = 12,
            label.text = axis_labels()[["freq"]]) {
-    ggplot2::sec_axis(trans = ~w_frequency(., unit.exponent),
+    ggplot2::sec_axis(trans = ~photobiology::wl2frequency(., unit.exponent),
                       name = w_frequency_label(unit.exponent = unit.exponent,
                                                label.text = label.text),
                       breaks = scales::pretty_breaks(n = 7)

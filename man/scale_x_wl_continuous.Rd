@@ -2,9 +2,19 @@
 % Please edit documentation in R/axis-utils-wlength.R
 \name{scale_x_wl_continuous}
 \alias{scale_x_wl_continuous}
+\alias{scale_x_w_number_continuous}
 \title{Wavelength x-scale}
 \usage{
 scale_x_wl_continuous(
+  unit.exponent = -9,
+  name = w_length_label(unit.exponent = unit.exponent, label.text = label.text),
+  breaks = scales::pretty_breaks(n = 7),
+  labels = SI_pl_format(exponent = unit.exponent + 9),
+  label.text = axis_labels()[["w.length"]],
+  ...
+)
+
+scale_x_w_number_continuous(
   unit.exponent = -9,
   name = w_length_label(unit.exponent = unit.exponent, label.text = label.text),
   breaks = scales::pretty_breaks(n = 7),

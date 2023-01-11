@@ -3,23 +3,29 @@
 \name{w_number}
 \alias{w_number}
 \alias{w_frequency}
-\title{Wavelength conversions}
+\title{Deprecated functions}
 \usage{
 w_number(w.length, unit.exponent = 0)
 
 w_frequency(w.length, unit.exponent = 0)
 }
-\arguments{
-\item{w.length}{numeric wavelength (nm)}
-
-\item{unit.exponent}{integer}
-}
 \description{
-Convert wavelength into wavenumber or into frequency.
+To convert wavelength into wavenumber or into frequency, please, use the
+conversion functions from package 'photobiology' in place of the deprecated
+functions \code{w_number()} and \code{w_frequency()} from this package.
 }
+\section{Deprecated}{
+ These functions will be removed from package 'ggpmisc'
+  in the near future.
+}
+
 \examples{
+library(photobiology)
 
-w_number(600)
-w_frequency(600)
+wl2wavenumber(600)
+wl2frequency(600)
 
+}
+\seealso{
+\code{\link[photobiology]{}}
 }
