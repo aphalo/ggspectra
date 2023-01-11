@@ -4,6 +4,8 @@
 \alias{w_length_label}
 \alias{w_number_label}
 \alias{w_frequency_label}
+\alias{w_energy_eV_label}
+\alias{w_energy_J_label}
 \title{Wave- axis labels}
 \usage{
 w_length_label(
@@ -22,6 +24,18 @@ w_frequency_label(
   unit.exponent = 9,
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["freq"]]
+)
+
+w_energy_eV_label(
+  unit.exponent = 0,
+  format = getOption("photobiology.math", default = "R.expression"),
+  label.text = axis_labels()[["energy"]]
+)
+
+w_energy_J_label(
+  unit.exponent = -18,
+  format = getOption("photobiology.math", default = "R.expression"),
+  label.text = axis_labels()[["energy"]]
 )
 }
 \arguments{
@@ -49,5 +63,7 @@ w_number_label()
 w_number_label("R.expression")
 w_frequency_label()
 w_frequency_label("R.expression")
+w_energy_J_label()
+w_energy_eV_label()
 
 }

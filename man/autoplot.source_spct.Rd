@@ -8,8 +8,9 @@
 \method{autoplot}{source_spct}(
   object,
   ...,
-  w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
-    PAR())),
+  w.band = getOption("photobiology.plot.bands", default =
+    list(photobiologyWavebands::UVC(), photobiologyWavebands::UVB(),
+    photobiologyWavebands::UVA(), photobiologyWavebands::PhR())),
   range = NULL,
   norm = getOption("ggspectra.norm", default = "update"),
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),

@@ -295,7 +295,7 @@ cal_plot <- function(spct,
 autoplot.calibration_spct <-
   function(object, ...,
            w.band = getOption("photobiology.plot.bands",
-                              default = list(UVC(), UVB(), UVA(), PAR())),
+                              default = list(UVC(), UVB(), UVA(), PhR())),
            range = NULL,
            unit.out = "ignored",
            pc.out = FALSE,

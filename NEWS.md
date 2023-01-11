@@ -4,6 +4,17 @@ editor_options:
     wrap: 72
 ---
 
+# ggspectra 0.3.10
+
+-   Track bug fix in 'photobiologyWavebands', that updated the definition of
+    `PAR()`. The previous defintion of `PAR()` as a wavelength range returned
+    a value that should not be called PAR when used to compute energy 
+    irradiance. This change does not affect the numerical value of irradiances,
+    but now the waveband is labelled _PhR_ instead of _PAR_.
+-   Track changes in 'photobiology' 0.10.15.
+-   Add `sec_axis_energy_eV()` and `sec_axis_energy_()` to express wavelength
+    as energy per photon.
+    
 # ggspectra 0.3.9
 
 -   Maintenance release for compatibility with 'ggplot2' >= 3.4.0.

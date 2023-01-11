@@ -9,7 +9,7 @@
   object,
   ...,
   w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
-    PAR())),
+    PhR())),
   range = NULL,
   norm = getOption("ggspectra.norm", default = "update"),
   plot.qty = getOption("photobiology.reflector.qty", default = "reflectance"),

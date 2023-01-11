@@ -7,7 +7,12 @@
 #' @section Deprecated: These functions will be removed from package 'ggpmisc'
 #'   in the near future.
 #'
-#' @seealso \code{\link[photobiology]{}}
+#' @param w.length numeric wavelength (nm)
+#' @param unit.exponent integer Exponent of the scale multiplier implicit in
+#'   result, e.g., use 3 for kJ.
+#'
+#' @seealso See \code{\link[photobiology]{wl2wavenumber}} for the functions to
+#'   be used in all new code.
 #'
 #' @export
 #'
@@ -49,6 +54,8 @@ w_frequency <- photobiology::wl2frequency
 #' w_number_label("R.expression")
 #' w_frequency_label()
 #' w_frequency_label("R.expression")
+#' w_energy_J_label()
+#' w_energy_eV_label()
 #'
 w_length_label <- function(unit.exponent = -9,
                            format = getOption("photobiology.math",
@@ -156,6 +163,80 @@ w_frequency_label <- function(unit.exponent = 9,
   }
 }
 
+#' @rdname w_length_label
+#'
+#' @export
+#'
+w_energy_eV_label <- function(unit.exponent = 0,
+                           format = getOption("photobiology.math",
+                                              default = "R.expression"),
+                           label.text = axis_labels()[["energy"]]) {
+  if (tolower(format) == "latex") {
+    if (has_SI_prefix(unit.exponent)) {
+      paste(label.text, " $E$ (",
+            exponent2prefix(unit.exponent, char.set = "LaTeX"),
+            "eV)", sep = "")
+    } else {
+      paste(label.text, " $E$ ($\\times 10^{",
+            unit.exponent,
+            "}$~eV)", sep = "")
+    }
+  } else if (format %in% c("R.expression")) {
+    if (has_SI_prefix(unit.exponent)) {
+      prefix <- exponent2prefix(unit.exponent)
+      bquote(.(label.text)~italic(E)~(plain(.(prefix))*plain(eV)))
+    } else {
+      bquote(.(label.text)~italic(E)~(10^{.(unit.exponent)}~plain(eV)))
+    }
+  } else if (format == "R.character" &&
+             has_SI_prefix(unit.exponent)) {
+    paste(label.text, " E (",
+          exponent2prefix(unit.exponent, char.set = "ascii"),
+          "eV)", sep = "")
+  } else {
+    warning("'format = ", format,
+            "' not implemented for unit.exponent = ", unit.exponent)
+    NA_character_
+  }
+}
+
+#' @rdname w_length_label
+#'
+#' @export
+#'
+w_energy_J_label <- function(unit.exponent = -18,
+                              format = getOption("photobiology.math",
+                                                 default = "R.expression"),
+                              label.text = axis_labels()[["energy"]]) {
+  if (tolower(format) == "latex") {
+    if (has_SI_prefix(unit.exponent)) {
+      paste(label.text, " $E$ (",
+            exponent2prefix(unit.exponent, char.set = "LaTeX"),
+            "J)", sep = "")
+    } else {
+      paste(label.text, " $E$ ($\\times 10^{",
+            unit.exponent,
+            "}$~J)", sep = "")
+    }
+  } else if (format %in% c("R.expression")) {
+    if (has_SI_prefix(unit.exponent)) {
+      prefix <- exponent2prefix(unit.exponent)
+      bquote(.(label.text)~italic(E)~(plain(.(prefix))*plain(J)))
+    } else {
+      bquote(.(label.text)~italic(E)~(10^{.(unit.exponent)}~plain(J)))
+    }
+  } else if (format == "R.character" &&
+             has_SI_prefix(unit.exponent)) {
+    paste(label.text, " E (",
+          exponent2prefix(unit.exponent, char.set = "ascii"),
+          "J)", sep = "")
+  } else {
+    warning("'format = ", format,
+            "' not implemented for unit.exponent = ", unit.exponent)
+    NA_character_
+  }
+}
+
 #' Secondary axes for wavelengths
 #'
 #' Secondary axes for wavelength data in nanometres. With suitable scaling and
@@ -193,6 +274,16 @@ w_frequency_label <- function(unit.exponent = 9,
 #'   scale_x_continuous(name = w_length_label(),
 #'                      sec.axis = sec_axis_w_frequency())
 #'
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   scale_x_continuous(name = w_length_label(),
+#'                      sec.axis = sec_axis_energy_J())
+#'
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   scale_x_continuous(name = w_length_label(),
+#'                      sec.axis = sec_axis_energy_eV())
+#'
 sec_axis_w_number <-
   function(unit.exponent = -6,
            label.text = axis_labels()[["w.number"]]) {
@@ -213,6 +304,34 @@ sec_axis_w_frequency <-
                       name = w_frequency_label(unit.exponent = unit.exponent,
                                                label.text = label.text),
                       breaks = scales::pretty_breaks(n = 7)
+    )
+  }
+
+#' @rdname sec_axis_w_number
+#'
+#' @export
+#'
+sec_axis_energy_eV <-
+  function(unit.exponent = 0,
+           label.text = axis_labels()[["energy"]]) {
+    ggplot2::sec_axis(trans = ~photobiology::wl2energy(., unit.exponent, unit = "eV"),
+                      name = w_energy_eV_label(unit.exponent = unit.exponent,
+                                               label.text = label.text),
+                      breaks = scales::pretty_breaks(n = 8)
+    )
+  }
+
+#' @rdname sec_axis_w_number
+#'
+#' @export
+#'
+sec_axis_energy_J <-
+  function(unit.exponent = -18,
+           label.text = axis_labels()[["energy"]]) {
+    ggplot2::sec_axis(trans = ~photobiology::wl2energy(., unit.exponent, unit = "joule"),
+                      name = w_energy_J_label(unit.exponent = unit.exponent,
+                                               label.text = label.text),
+                      breaks = scales::pretty_breaks(n = 8)
     )
   }
 
@@ -257,24 +376,6 @@ sec_axis_w_frequency <-
 #'                         sec.axis = sec_axis_w_number())
 #'
 scale_x_wl_continuous <-
-  function(unit.exponent = -9,
-           name = w_length_label(unit.exponent = unit.exponent,
-                                 label.text = label.text),
-           breaks = scales::pretty_breaks(n = 7),
-           labels = SI_pl_format(exponent = unit.exponent + 9),
-           label.text = axis_labels()[["w.length"]],
-           ...) {
-    scale_x_continuous(name = name,
-                       breaks = breaks,
-                       labels = labels,
-                       ...)
-  }
-
-#' @rdname scale_x_wl_continuous
-#'
-#' @export
-#'
-scale_x_w_number_continuous <-
   function(unit.exponent = -9,
            name = w_length_label(unit.exponent = unit.exponent,
                                  label.text = label.text),

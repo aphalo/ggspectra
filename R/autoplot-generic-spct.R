@@ -260,7 +260,7 @@ autoplot.generic_spct <-
              ymax.name = NULL,
              ylab = ggplot2::waiver(),
              w.band = getOption("photobiology.plot.bands",
-                                default = list(UVC(), UVB(), UVA(), PAR())),
+                                default = list(UVC(), UVB(), UVA(), PhR())),
              range = NULL,
              label.qty = "none",
              span = NULL,

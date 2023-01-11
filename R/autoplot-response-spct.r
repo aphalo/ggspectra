@@ -565,7 +565,7 @@ q_rsp_plot <- function(spct,
 autoplot.response_spct <-
   function(object, ...,
            w.band = getOption("photobiology.plot.bands",
-                              default = list(UVC(), UVB(), UVA(), PAR())),
+                              default = list(UVC(), UVB(), UVA(), PhR())),
            range = NULL,
            norm = getOption("ggspectra.norm",
                             default = "max"),

@@ -3,11 +3,17 @@
 \name{sec_axis_w_number}
 \alias{sec_axis_w_number}
 \alias{sec_axis_w_frequency}
+\alias{sec_axis_energy_eV}
+\alias{sec_axis_energy_J}
 \title{Secondary axes for wavelengths}
 \usage{
 sec_axis_w_number(unit.exponent = -6, label.text = axis_labels()[["w.number"]])
 
 sec_axis_w_frequency(unit.exponent = 12, label.text = axis_labels()[["freq"]])
+
+sec_axis_energy_eV(unit.exponent = 0, label.text = axis_labels()[["energy"]])
+
+sec_axis_energy_J(unit.exponent = -18, label.text = axis_labels()[["energy"]])
 }
 \arguments{
 \item{unit.exponent}{integer}
@@ -44,5 +50,15 @@ ggplot(sun.spct) +
   geom_line() +
   scale_x_continuous(name = w_length_label(),
                      sec.axis = sec_axis_w_frequency())
+
+ggplot(sun.spct) +
+  geom_line() +
+  scale_x_continuous(name = w_length_label(),
+                     sec.axis = sec_axis_energy_J())
+
+ggplot(sun.spct) +
+  geom_line() +
+  scale_x_continuous(name = w_length_label(),
+                     sec.axis = sec_axis_energy_eV())
 
 }

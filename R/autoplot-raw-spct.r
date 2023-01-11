@@ -315,7 +315,7 @@ raw_plot <- function(spct,
 autoplot.raw_spct <-
   function(object, ...,
            w.band = getOption("photobiology.plot.bands",
-                              default = list(UVC(), UVB(), UVA(), PAR())),
+                              default = list(UVC(), UVB(), UVA(), PhR())),
            range = NULL,
            unit.out = "counts",
            pc.out = FALSE,

@@ -9,6 +9,12 @@ w_number(w.length, unit.exponent = 0)
 
 w_frequency(w.length, unit.exponent = 0)
 }
+\arguments{
+\item{w.length}{numeric wavelength (nm)}
+
+\item{unit.exponent}{integer Exponent of the scale multiplier implicit in
+result, e.g., use 3 for kJ.}
+}
 \description{
 To convert wavelength into wavenumber or into frequency, please, use the
 conversion functions from package 'photobiology' in place of the deprecated
@@ -27,5 +33,6 @@ wl2frequency(600)
 
 }
 \seealso{
-\code{\link[photobiology]{}}
+See \code{\link[photobiology]{wl2wavenumber}} for the functions to
+  be used in all new code.
 }

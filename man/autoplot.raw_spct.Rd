@@ -9,7 +9,7 @@
   object,
   ...,
   w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
-    PAR())),
+    PhR())),
   range = NULL,
   unit.out = "counts",
   pc.out = FALSE,
