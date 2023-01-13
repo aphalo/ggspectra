@@ -19,11 +19,21 @@ axis_labels_none()
 A character vector
 }
 \description{
-Obtain texts used by default for axis labels in
-  plots. They contain only the text part, but not symbols or units of
-  expression. Can be used to change the language or to suppress the text.
+Texts used by default for axis labels in plots are recalled from character
+vectors returned by these functions. The aim is that their default values can
+be easily changed or translated to other languages. They contain only the
+text part, but not symbols or units of expression.
+}
+\details{
+By default \code{axis_labes()} contains a copy of
+  \code{axis_labels_uk_comma()}. By assigning to this name a user function
+  that returns a named character vector using the same names as those
+  returned by these funtcions, it is possible to temporarily change
+  the default texts.
 }
 \examples{
-axis_labels()[["w.length"]]
+axis_labels()[["w.length"]] # ending in a comma
+axis_labels <- axis_labels_uk
+axis_labels()[["w.length"]] # no comma
 
 }

@@ -66,6 +66,7 @@ e_plot <- function(spct,
   if (!is.source_spct(spct)) {
     stop("e_plot() can only plot source_spct objects.")
   }
+  spct[["s.q.irrad"]] <- NULL
   if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
     warning("'geom = ", geom, "' not supported, using default instead.")
     geom <- NULL
@@ -73,7 +74,6 @@ e_plot <- function(spct,
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
   }
-  q2e(spct, byref=TRUE)
   if (!is.null(range)) {
     spct <- trim_wl(spct, range = range)
   }
@@ -345,6 +345,7 @@ q_plot <- function(spct,
   if (!is.source_spct(spct)) {
     stop("q_plot() can only plot source_spct objects.")
   }
+  spct[["s.e.irrad"]] <- NULL
   if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
     warning("'geom = ", geom, "' not supported, using default instead.")
     geom <- NULL
@@ -352,7 +353,6 @@ q_plot <- function(spct,
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
   }
-  e2q(spct, byref = TRUE)
   if (!is.null(range)) {
     spct <- trim_wl(spct, range = range)
   }
@@ -704,7 +704,16 @@ autoplot.source_spct <-
       } else if (is.waveband(range)) {
         w.band <- range
       } else {
-        w.band <-  waveband(range, wb.name = "Total")
+        w.band <- waveband(range, wb.name = "Total")
+      }
+    } else if (unit.out %in% c("photon", "quantum") &&
+               !is_normalised(object) &&
+               !is_scaled(object)) {
+      # change "PhR" into "PAR" because we compute photon irradiance
+      labels <- sapply(w.band, labels)[1, ]
+      wb.PAR <- grep("^PhR$", labels)
+      if (length(wb.PAR)) {
+        w.band[[wb.PAR]] <- photobiologyWavebands::PAR()
       }
     }
 

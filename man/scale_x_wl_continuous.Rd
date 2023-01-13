@@ -30,6 +30,13 @@ positions.}
 \description{
 Scale x continuous with defaults suitable for wavelengths in nanometres.
 }
+\details{
+This scale automates the generation of axis labels when the variable
+  mapped to the \emph{x} aesthetic contains numeric values for wavelengths
+  expressed in nanometres. This is how spectral data are stored in all the
+  packages of the R for Photobiology suite, inlcuding the the expected data
+  by the \code{autoplot()} methods defined in 'ggspectra'.
+}
 \note{
 This function only alters two default arguments, please, see
 documentation for \code{\link[ggplot2]{scale_continuous}}
@@ -42,19 +49,14 @@ ggplot(sun.spct) +
 
 ggplot(sun.spct) +
   geom_line() +
-  scale_x_wl_continuous(-6)
+  scale_x_wl_continuous(unit.exponent = -6)
 
 ggplot(sun.spct) +
   geom_line() +
-  scale_x_wl_continuous(sec.axis = sec_axis_w_frequency())
+  scale_x_wl_continuous(label.text = "Longitud de onda,")
 
-ggplot(sun.spct) +
-  geom_line() +
-  scale_x_wl_continuous(sec.axis = sec_axis_w_number())
-
-ggplot(sun.spct) +
-  geom_line() +
-  scale_x_wl_continuous(unit.exponent = -6,
-                        sec.axis = sec_axis_w_number())
+autoplot(sun.spct) +
+  scale_x_wl_continuous(label.text = "Longitud de onda,",
+                        unit.exponent = -6)
 
 }

@@ -5,6 +5,7 @@
 \alias{sec_axis_w_frequency}
 \alias{sec_axis_energy_eV}
 \alias{sec_axis_energy_J}
+\alias{sec_axis_wl}
 \title{Secondary axes for wavelengths}
 \usage{
 sec_axis_w_number(unit.exponent = -6, label.text = axis_labels()[["w.number"]])
@@ -14,51 +15,85 @@ sec_axis_w_frequency(unit.exponent = 12, label.text = axis_labels()[["freq"]])
 sec_axis_energy_eV(unit.exponent = 0, label.text = axis_labels()[["energy"]])
 
 sec_axis_energy_J(unit.exponent = -18, label.text = axis_labels()[["energy"]])
+
+sec_axis_wl(unit.exponent = -9, label.text = axis_labels()[["w.length"]])
 }
 \arguments{
-\item{unit.exponent}{integer}
+\item{unit.exponent}{integer The exponent on base 10 of the scale multiplier
+used for the axis labels, e.g., 3 for \eqn{10^3} or {k}.}
 
 \item{label.text}{character Textual portion of the labels.}
 }
 \description{
 Secondary axes for wavelength data in nanometres. With suitable scaling and
-name (axis label) for frequency and wavenumber.
+name (axis label) for frequency, wave number, photon energy and wavelength.
+}
+\details{
+These secondary axis functions can be used only when the \emph{x}
+  aesthetic is mapped to a numerical variable containing wavelength values
+  expressed in nanometres. They can be used to add a secondary x axis to
+  plots created using \code{ggplot()} or \code{autoplot()}.
 }
 \examples{
 
 ggplot(sun.spct) +
   geom_line() +
+  scale_x_wl_continuous(sec.axis = sec_axis_w_number())
+
+# Secondary axes can be added to plots built with autoplot() methods
+autoplot(sun.spct) +
+  scale_x_wl_continuous(sec.axis = sec_axis_w_number())
+
+# Using 'ggplot2' scale
+ggplot(sun.spct) +
+  geom_line() +
   scale_x_continuous(name = w_length_label(),
                      sec.axis = sec_axis_w_number())
 
+# change scale multipliers, SI defined
 ggplot(sun.spct) +
   geom_line() +
-  scale_x_continuous(name = w_length_label(),
-                     sec.axis = sec_axis_w_number(-4))
+  scale_x_wl_continuous(-6, sec.axis = sec_axis_w_number(-3))
 
+# change scale multipliers, not SI defined (best avoided)
 ggplot(sun.spct) +
   geom_line() +
-  scale_x_continuous(name = w_length_label(),
-                     sec.axis = sec_axis_w_number(nearest_SI_exponent(-4)))
+  scale_x_wl_continuous(-8, sec.axis = sec_axis_w_number(-4))
 
+# Change quantity name to Spanish
 ggplot(sun.spct) +
   geom_line() +
-  scale_x_continuous(name = w_length_label(),
-                     sec.axis = sec_axis_w_number(-3))
+  scale_x_wl_continuous(label.text = "Longitud de onda,",
+                        sec.axis = sec_axis_w_frequency(label.text = "Frecuencia,"))
 
+# Frequency in secondary axis
 ggplot(sun.spct) +
   geom_line() +
-  scale_x_continuous(name = w_length_label(),
-                     sec.axis = sec_axis_w_frequency())
+  scale_x_wl_continuous(sec.axis = sec_axis_w_frequency())
 
+# Energy (per photon) in atto joules
 ggplot(sun.spct) +
   geom_line() +
-  scale_x_continuous(name = w_length_label(),
-                     sec.axis = sec_axis_energy_J())
+  scale_x_wl_continuous(sec.axis = sec_axis_energy_J())
 
+# Energy (per photon) in electron volts
 ggplot(sun.spct) +
   geom_line() +
-  scale_x_continuous(name = w_length_label(),
-                     sec.axis = sec_axis_energy_eV())
+  scale_x_wl_continuous(sec.axis = sec_axis_energy_eV())
 
+# Secondary axis with wavelength using a different scale factor
+ggplot(sun.spct) +
+  geom_line() +
+  scale_x_wl_continuous(sec.axis = sec_axis_wl(-6))
+
+# Secondary axes can be added to plots built with autoplot() methods
+autoplot(sun.spct) +
+  scale_x_wl_continuous(sec.axis = sec_axis_wl(-6))
+
+}
+\seealso{
+the default text used for quantity names are most easily changed
+  by resetting all the defaults once as explained in
+  \code{\link{axis_labels_uk}}, even if it is possible to override them
+  also in each call.
 }

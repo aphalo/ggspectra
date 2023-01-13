@@ -39,7 +39,8 @@ w_energy_J_label(
 )
 }
 \arguments{
-\item{unit.exponent}{integer}
+\item{unit.exponent}{integer The exponent in base 10 of the scale multiplier
+to use.}
 
 \item{format}{character string, "R", "R.expresion", "R.character", or
 "LaTeX".}
@@ -50,9 +51,29 @@ w_energy_J_label(
 a character string or an R expression.
 }
 \description{
-Generate wavelength, wavenumber and wave frequency axis labels in SI units,
-using SI scale factors. Output can be selected as character, expression (R
-default devices) or LaTeX (for tikz device).
+Generate wavelength, wavenumber, wave frequency, and energy per photon axis
+labels in SI units, using SI scale factors. Output can be selected as
+character, expression (R default devices) or LaTeX (for tikz device).
+}
+\details{
+By default labels consist in a textual name for the quantity, a
+  symbol separated by a comma and units with scale factor in parenthesis. The
+  textual names are by default in English but this default can be overridden
+  for example with translations to a different language. To change or
+  translate the default texts please see \code{\link{axis_labels_uk}}. The
+  markup language used for the labels can be selected through a parameter
+  argument, with character strings ready to be parsed into R expressions
+  as default.
+
+  Wavelengths are assumed to be expressed in nanometres in the data. The
+  \code{unit.exponent} corresponds to that desired for the tick labels
+  with the corresponding axis label automatically set to an SI scale
+  factor if possible, and otherwise shown as a power of 10.
+
+  These functions are used internally by \emph{x} scales; see
+  \code{\link{sec_axis_w_number}} and \code{\link{scale_x_wl_continuous}}.
+  The scales and secondary axis functions should be used except when
+  defining new scale functions.
 }
 \examples{
 

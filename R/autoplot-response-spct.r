@@ -61,6 +61,7 @@ e_rsp_plot <- function(spct,
   if (!is.response_spct(spct)) {
     stop("e_Rsp_plot() can only plot response_spct objects.")
   }
+  spct[["s.q.response"]] <- NULL
   if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
     warning("'geom = ", geom, "' not supported, using default instead.")
     geom <- NULL
@@ -68,7 +69,6 @@ e_rsp_plot <- function(spct,
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
   }
-  q2e(spct, action="replace", byref=TRUE)
   if (!is.null(range)) {
     spct <- trim_wl(spct, range = range)
   }
@@ -293,6 +293,7 @@ q_rsp_plot <- function(spct,
   if (!is.response_spct(spct)) {
     stop("q_Rsp_plot() can only plot response_spct objects.")
   }
+  spct[["s.e.response"]] <- NULL
   if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
     warning("'geom = ", geom, "' not supported, using default instead.")
     geom <- NULL
@@ -300,7 +301,6 @@ q_rsp_plot <- function(spct,
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
   }
-  e2q(spct, action="replace", byref=TRUE)
   if (!is.null(range)) {
     spct <- trim_wl(spct, range = range)
   }
@@ -312,7 +312,7 @@ q_rsp_plot <- function(spct,
 
   if (is_scaled(spct)) {
     if (pc.out) {
-      warning("Percent scale supported only for normalized cps_spct objects.")
+      warning("Percent scale supported only for normalized response_spct objects.")
       pc.out <- FALSE
     }
     s.rsp.label <- expression(Spectral~~photon~~response~~k %*% R[Q~lambda]~~("rel."))
@@ -567,8 +567,7 @@ autoplot.response_spct <-
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PhR())),
            range = NULL,
-           norm = getOption("ggspectra.norm",
-                            default = "max"),
+           norm = getOption("ggspectra.norm", default = "max"),
            unit.out = getOption("photobiology.radiation.unit",
                                 default = "energy"),
            pc.out = FALSE,
@@ -587,6 +586,7 @@ autoplot.response_spct <-
            na.rm = TRUE) {
 
     force(object.label)
+    force(norm)
 
     annotations.default <-
       getOption("photobiology.plot.annotations",

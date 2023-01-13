@@ -7,13 +7,19 @@ editor_options:
 # ggspectra 0.3.10
 
 -   Track bug fix in 'photobiologyWavebands', that updated the definition of
-    `PAR()`. The previous defintion of `PAR()` as a wavelength range returned
-    a value that should not be called PAR when used to compute energy 
-    irradiance. This change does not affect the numerical value of irradiances,
-    but now the waveband is labelled _PhR_ instead of _PAR_.
+`PAR()` (photosynthetically active radiation) as a BSWF (biological spectral
+weighting function). The previous defintion of `PAR()` as a wavelength range
+returned a value that should be called "PAR"" only when used to compute photon
+irradiance. This change does not affect the numerical values of energy
+irradiances or other spectral quantities, but now the waveband is labelled _PhR_
+instead of _PAR_ in such cases.
 -   Track changes in 'photobiology' 0.10.15.
--   Add `sec_axis_energy_eV()` and `sec_axis_energy_()` to express wavelength
-    as energy per photon.
+-   Add `sec_axis_energy_eV()` and `sec_axis_energy_J()` to express wavelength
+    as energy per photon, and `sec_axis_wl()` to allow a secondary wavelength
+    axis with wavelengths expressed using a different scale factor than in the
+    main axis.
+-   Add scales `scale_x_wavenumber_continuous()`, `scale_x_frequency_continuous()`.
+    `scale_x_energy_eV_continuous()` and `scale_x_energy_J_continuous()`.
     
 # ggspectra 0.3.9
 
