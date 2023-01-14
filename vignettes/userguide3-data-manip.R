@@ -30,47 +30,58 @@ two_suns.spct <- rbindspct(two_suns.mspct)
 ## -----------------------------------------------------------------------------
 theme_set(theme_bw())
 
-## ---- eval=FALSE--------------------------------------------------------------
-#  ggplot() +
-#    geom_line(data = sun.spct, mapping = aes(w.length, s.e.irrad)) +
-#    geom_line(data = sun.spct %>% smooth_spct(method = "supsmu"),
-#              mapping = aes(w.length, s.e.irrad),
-#              colour = "red", size = 1.2)
+## ---- eval=eval_chunks--------------------------------------------------------
+ggplot() + 
+  geom_line(data = sun.spct, mapping = aes(w.length, s.e.irrad)) + 
+  geom_line(data = smooth_spct(sun.spct, method = "supsmu"), 
+            mapping = aes(w.length, s.e.irrad), 
+            colour = "red", linewidth = 1.2)
+
+## ---- eval=eval_chunks--------------------------------------------------------
+ggplot() + 
+  geom_line(data = sun.spct, mapping = aes(w.length, s.e.irrad)) + 
+  geom_line(data = sun.spct |> smooth_spct(method = "supsmu"), 
+            mapping = aes(w.length, s.e.irrad), 
+            colour = "red", linewidth = 1.2)
+
+## ---- eval = eval_chunks------------------------------------------------------
+p <- ggplot(sun.spct) + geom_line()
+class(p$data)
 
 ## ---- eval = eval_chunks------------------------------------------------------
 ggplot(sun.spct) + 
   geom_line() + 
   geom_line(data = . %>% smooth_spct(method = "supsmu"), 
-            colour = "red", size = 1.2)
+            colour = "red", linewidth = 1.2)
 
 ## ---- eval = eval_chunks------------------------------------------------------
 photon_as_default()
 ggplot(sun.spct) + 
   geom_line() + 
   geom_line(data = . %>% smooth_spct(method = "supsmu"), 
-            colour = "red", size = 1.2)
+            colour = "red", linewidth = 1.2)
 unset_radiation_unit_default()
 
 ## ---- eval=FALSE--------------------------------------------------------------
 #  ggplot(sun.spct) +
 #    geom_line(data = . %>% smooth_spct(method = "supsmu"),
-#              colour = "red", size = 1.2)
+#              colour = "red", linewidth = 1.2)
 
-## ---- eval=FALSE--------------------------------------------------------------
-#  sun.spct %>%
-#    smooth_spct(method = "supsmu") %>%
-#    ggplot() +
-#    geom_line(colour = "red", size = 1.2)
+## ---- eval=eval_chunks--------------------------------------------------------
+sun.spct |> 
+  smooth_spct(method = "supsmu") |>
+  ggplot() + 
+  geom_line(colour = "red", linewidth = 1.2)
 
 ## ---- eval = eval_chunks------------------------------------------------------
 ggplot(sun.spct) + 
   geom_line() + 
   geom_line(data = . %>% smooth_spct(method = "custom"), 
-            colour = "blue", size = 1) +
+            colour = "blue", linewidth = 1) +
   geom_line(data = . %>% smooth_spct(method = "lowess"), 
-            colour = "green", size = 1) +
+            colour = "green", linewidth = 1) +
   geom_line(data = . %>% smooth_spct(method = "supsmu"), 
-            colour = "red", size = 1)
+            colour = "red", linewidth = 1)
 
 ## ---- eval = eval_chunks------------------------------------------------------
 ggplot(sun.spct) + 
@@ -78,7 +89,7 @@ ggplot(sun.spct) +
   stat_peaks(size = 3, span = NULL) +
   stat_peaks(geom = "vline", linetype = "dotted", span = NULL) +
   geom_line(data = . %>% smooth_spct(method = "supsmu"), 
-            colour = "red", size = 1.2) +
+            colour = "red", linewidth = 1.2) +
   stat_peaks(data = . %>% smooth_spct(method = "supsmu"),
              colour = "red", size = 3, span = NULL) +
   stat_peaks(data = . %>% smooth_spct(method = "supsmu"),

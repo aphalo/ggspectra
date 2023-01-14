@@ -75,27 +75,42 @@ theme_set(theme_bw())
 
 ## Visualizing the effect of methods
 
-The class of the spectral objects stored by calls to `ggplot()` methods specific to them is
-no longer stripped, neither are other attributes used by package 'photobiology'. Consequently, transformations in layers using default `data` can use methods from package
-'photobiology'. 
+In the past we needed to pass to the `data` parameter of layer functions always a data frame. A simple example passing spectral data to each layer function follows.
 
-A simple example passing spectral data to each layer function follows. This approach was previously the only available.
-
-```{r, eval=FALSE}
+```{r, eval=eval_chunks}
 ggplot() + 
   geom_line(data = sun.spct, mapping = aes(w.length, s.e.irrad)) + 
-  geom_line(data = sun.spct %>% smooth_spct(method = "supsmu"), 
+  geom_line(data = smooth_spct(sun.spct, method = "supsmu"), 
             mapping = aes(w.length, s.e.irrad), 
-            colour = "red", size = 1.2)
+            colour = "red", linewidth = 1.2)
 ```
 
-The code can be simplified usinf `.` to refer to the default data in the ggplot object. This is possible because the argument passed to `data` in the call to `ggplot2()` is not converted into a "plain" data frame. In this case, it remains as an object of class `source_spct`. The mapping to aesthetics remains valid because `smooth_spct()` returns a new `source_spct` object with the same column names as `sun.spct`, which was passed as argument to `data`. 
+With this approach we can use R's own pipe operator to make it easier to see the intention of the code.
+
+```{r, eval=eval_chunks}
+ggplot() + 
+  geom_line(data = sun.spct, mapping = aes(w.length, s.e.irrad)) + 
+  geom_line(data = sun.spct |> smooth_spct(method = "supsmu"), 
+            mapping = aes(w.length, s.e.irrad), 
+            colour = "red", linewidth = 1.2)
+```
+
+The class of the spectral objects stored by calls to `ggplot()` methods specific
+to them is not stripped, neither are other attributes used by package
+'photobiology'. Consequently, transformations in layers using default `data` can
+use methods from package 'photobiology'.
+
+```{r, eval = eval_chunks}
+p <- ggplot(sun.spct) + geom_line()
+class(p$data)
+```
+To ensure that the same data are used in both plot layers the code can be simplified using `.` to refer to the default data in the ggplot object (`p$data` in the example above). The mapping to aesthetics remains valid because `smooth_spct()` returns a new `source_spct` object with the same column names as `sun.spct`, which was passed as argument to `data`. 
 
 ```{r, eval = eval_chunks}
 ggplot(sun.spct) + 
   geom_line() + 
   geom_line(data = . %>% smooth_spct(method = "supsmu"), 
-            colour = "red", size = 1.2)
+            colour = "red", linewidth = 1.2)
 ```
 
 The easiest approach to plotting photon spectral irradiance instead of spectral energy irradiance is to temporarily change the default radiation unit. An alternative approach is to replace the first two lines in the code chunk below by: `ggplot(sun.spct, unit.out = "photon")`.)
@@ -105,7 +120,7 @@ photon_as_default()
 ggplot(sun.spct) + 
   geom_line() + 
   geom_line(data = . %>% smooth_spct(method = "supsmu"), 
-            colour = "red", size = 1.2)
+            colour = "red", linewidth = 1.2)
 unset_radiation_unit_default()
 ```
 
@@ -114,28 +129,29 @@ Obviously, the default data does not need to be plotted, so this provides a roun
 ```{r, eval=FALSE}
 ggplot(sun.spct) + 
   geom_line(data = . %>% smooth_spct(method = "supsmu"), 
-            colour = "red", size = 1.2)
+            colour = "red", linewidth = 1.2)
 ```
  
 which is equivalent to doing the transformation ahead of plotting, which might be preferable.
  
-```{r, eval=FALSE}
-sun.spct %>% 
-  smooth_spct(method = "supsmu") %>%
+```{r, eval=eval_chunks}
+sun.spct |> 
+  smooth_spct(method = "supsmu") |>
   ggplot() + 
-  geom_line(colour = "red", size = 1.2)
+  geom_line(colour = "red", linewidth = 1.2)
 ```
 
 However, when using different transformations in different layers we need to apply them at each layer. 
+
 ```{r, eval = eval_chunks}
 ggplot(sun.spct) + 
   geom_line() + 
   geom_line(data = . %>% smooth_spct(method = "custom"), 
-            colour = "blue", size = 1) +
+            colour = "blue", linewidth = 1) +
   geom_line(data = . %>% smooth_spct(method = "lowess"), 
-            colour = "green", size = 1) +
+            colour = "green", linewidth = 1) +
   geom_line(data = . %>% smooth_spct(method = "supsmu"), 
-            colour = "red", size = 1)
+            colour = "red", linewidth = 1)
 ```
 
 Of course, this approach works both with _geoms_ and _stats_, but one should remember that these layer functions do not "see" the original data object, but instead a new data frame containing the mapped variables in columns named according to _aesthetics_. The next example demostrates this and illustrates that smoothing displaces the wavelength of maximum spectral irradiance.
@@ -146,7 +162,7 @@ ggplot(sun.spct) +
   stat_peaks(size = 3, span = NULL) +
   stat_peaks(geom = "vline", linetype = "dotted", span = NULL) +
   geom_line(data = . %>% smooth_spct(method = "supsmu"), 
-            colour = "red", size = 1.2) +
+            colour = "red", linewidth = 1.2) +
   stat_peaks(data = . %>% smooth_spct(method = "supsmu"),
              colour = "red", size = 3, span = NULL) +
   stat_peaks(data = . %>% smooth_spct(method = "supsmu"),
@@ -172,6 +188,7 @@ ggplot(sun.spct) +
             shape = "circle", size = 1.3) +
   scale_color_identity()
 ```
+
 In the plot above, spectral irradiance is taken into account when computing the colors, while below, only the wavelength at the centre of each waveband is used.
 
 ```{r, eval = eval_chunks}

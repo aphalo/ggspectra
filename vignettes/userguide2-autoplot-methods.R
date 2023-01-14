@@ -142,7 +142,7 @@ getTimeUnit(sun.daily.spct)
 autoplot(sun.daily.spct)
 
 ## -----------------------------------------------------------------------------
-autoplot(two_suns.spct, idfactor = NA) + facet_wrap(~spct.idx)
+autoplot(two_suns.spct, idfactor = NA) + facet_wrap(facets = vars(spct.idx))
 
 ## -----------------------------------------------------------------------------
 filter_no_yes.spct <- 
@@ -173,7 +173,7 @@ autoplot(yellow_gel.spct, annotations = c("+", "boundaries"))
 ## -----------------------------------------------------------------------------
 autoplot(white_led.raw_spct, annotations = c("+", "boundaries"))
 
-## ---- eval=FALSE--------------------------------------------------------------
+## ---- eval=FALSE, message = FALSE---------------------------------------------
 #  autoplot(white_led.raw_spct[ , c("w.length", "counts_1")],
 #           annotations = c("+", "boundaries"))
 

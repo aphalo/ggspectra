@@ -706,14 +706,13 @@ autoplot.source_spct <-
       } else {
         w.band <- waveband(range, wb.name = "Total")
       }
-    } else if (unit.out %in% c("photon", "quantum") &&
-               !is_normalised(object) &&
-               !is_scaled(object)) {
-      # change "PhR" into "PAR" because we compute photon irradiance
+    } else if (unit.out %in% c("photon", "quantum")) {
+      # change "PhR" label into "PAR" because we compute photon irradiance
       labels <- sapply(w.band, labels)[1, ]
       wb.PAR <- grep("^PhR$", labels)
       if (length(wb.PAR)) {
-        w.band[[wb.PAR]] <- photobiologyWavebands::PAR()
+        w.band[[wb.PAR]] <-
+          photobiology::waveband(x = c(400, 700), wb.name = "PAR")
       }
     }
 

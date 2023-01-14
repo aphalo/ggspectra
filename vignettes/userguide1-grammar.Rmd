@@ -100,25 +100,30 @@ numbers to the plot of a spectrum.
 
 | *scale*                          | unit.exponent | name                 | labels         | breaks             |
 |:-----------------|:-------------|:-------------|:-------------|:-------------|
-| scale_y\_cps_continuous          | 0             | cps_label()          | SI_pl_format() |                    |
-| scale_y\_counts_continuous       | 3             | counts_label()       | SI_pl_format() |                    |
-| scale_y\_counts_tg_continuous    | 3             | counts_label()       | SI_tg_format() |                    |
-| scale_y\_A_internal_continuous   | 0             | A_internal_label()   | SI_pl_format() |                    |
-| scale_y\_A_total_continuous      | 0             | A_total_label()      | SI_pl_format() |                    |
-| scale_y\_Tfr_internal_continuous | 0             | Tfr_internal_label() | SI_pl_format() |                    |
-| scale_y\_Tfr_total_continuous    | 0             | Tfr_total_label()    | SI_pl_format() |                    |
-| scale_y\_Rfr_internal_continuous | 0             | Rfr_internal_label() | SI_pl_format() |                    |
-| scale_y\_Rfr_total_continuous    | 0             | Rfr_total_label()    | SI_pl_format() |                    |
-| scale_y\_s.e.irrad_continuous    | 0             | s.e.irrad_label()    | SI_pl_format() |                    |
-| scale_y\_s.q.irrad_continuous    | -6            | s.q.irrad_label()    | SI_pl_format() |                    |
-| scale_y\_s.e.response_continuous | 0             | s.e.response_label() | SI_pl_format() |                    |
-| scale_y\_s.q.response_continuous | 0             | s.q.response_label() | SI_pl_format() |                    |
-| scale_x\_wl_continuous           | -9            | w_length_label()     | SI_pl_format() | pretty_breaks(n=7) |
+| scale_y_cps_continuous          | 0             | cps_label()          | SI_pl_format() |                    |
+| scale_y_counts_continuous       | 3             | counts_label()       | SI_pl_format() |                    |
+| scale_y_counts_tg_continuous    | 3             | counts_label()       | SI_tg_format() |                    |
+| scale_y_A_internal_continuous   | 0             | A_internal_label()   | SI_pl_format() |                    |
+| scale_y_A_total_continuous      | 0             | A_total_label()      | SI_pl_format() |                    |
+| scale_y_Tfr_internal_continuous | 0             | Tfr_internal_label() | SI_pl_format() |                    |
+| scale_y_Tfr_total_continuous    | 0             | Tfr_total_label()    | SI_pl_format() |                    |
+| scale_y_Rfr_internal_continuous | 0             | Rfr_internal_label() | SI_pl_format() |                    |
+| scale_y_Rfr_total_continuous    | 0             | Rfr_total_label()    | SI_pl_format() |                    |
+| scale_y_s.e.irrad_continuous    | 0             | s.e.irrad_label()    | SI_pl_format() |                    |
+| scale_y_s.q.irrad_continuous    | -6            | s.q.irrad_label()    | SI_pl_format() |                    |
+| scale_y_s.e.response_continuous | 0             | s.e.response_label() | SI_pl_format() |                    |
+| scale_y_s.q.response_continuous | 0             | s.q.response_label() | SI_pl_format() |                    |
+| scale_x_wl_continuous           | -9            | w_length_label()     | SI_pl_format() | pretty_breaks(n=7) |
+| scale_x_wavenumber_continuous   | -6            | w_number_label()     | SI_pl_format() | pretty_breaks(n=7) |
+| scale_x_energy_eV_continuous    | 0             | w_energy_eV_label()  | SI_pl_format() | pretty_breaks(n=7) |
+| scale_x_energy_J_continuous     | -18           | w_energy_J_label()   | SI_pl_format() | pretty_breaks(n=7) |
+| scale_x_frequency_continuous    | 12            | w_frequency_label()  | SI_pl_format() | pretty_breaks(n=7) |
 
-In addition secondary axis definitions, `sec_axis_w_number()` and
-`sec_axis_w_frequency()`, and SI system formatters `SI_pl_format`, and
-`SI_tg_format` are exported, together with auxiliary functions for
-finding the nearest SI multiplier based on an arbitrary exponent.
+In addition secondary axis definitions, `sec_axis_w_number()`,
+`sec_axis_w_frequency()`, `sec_axis_w_energy_eV()`, `sec_axis_w_energy_J()` and
+sec_axis_wl(), and SI system formatters `SI_pl_format`, and `SI_tg_format` are
+exported, together with auxiliary functions for finding the nearest SI
+multiplier based on an arbitrary exponent.
 
 ### What are functions `color_chart()` and `black_or_white()` for?
 
@@ -291,7 +296,7 @@ ggplot(two_suns.mspct) +
   wl_guide(ymax = -0.05) +
   geom_spct() +
   geom_line() +
-  facet_wrap(~spct.idx, ncol = 1L)
+  facet_wrap(facets = vars(spct.idx), ncol = 1L)
 ```
 
 ```{r}
@@ -299,7 +304,7 @@ ggplot(two_suns.mspct) +
   wl_guide(ymax = -0.05) +
   geom_spct() +
   geom_line() +
-  facet_wrap(~spct.idx, ncol = 1L, scales = "free_y")
+  facet_wrap(vars(spct.idx), ncol = 1L, scales = "free_y")
 ```
 
 ## Scales
@@ -432,9 +437,15 @@ the purpose of these wrappers.
 
 ### Wavelength
 
-Currently only one x-scale function suitable for wavelengths in
-nanometres is exported by package 'ggspectra', as well as two secondary
-axis definitions for wave number and frequency.
+Currently one x-scale function suitable for wavelengths in nanometres is
+exported by package 'ggspectra', as well as scales for wavenumber, frequency and
+energy, expecting the respective data quantities expressed in SI units with no
+scale factor. 
+
+_These scale functions can be also used when plots are based on ordinary data
+frames or tibbles. However, in this case users must ensure that the data are
+expressed as expected as otherwise the axis labels and the power of ten
+multipliers plotted are wrong._
 
 ```{r}
 ggplot(sun.spct) + 
@@ -442,18 +453,28 @@ ggplot(sun.spct) +
   scale_x_wl_continuous()
 ```
 
-Functions for automating the addition of secondary axes are available.
+Except `scale_x_wl_continuous()` the _x_ scales if used with `source_spct()` objects as `data` require the wavelength values to be converted to the expected quantity using `aes()` to map variables to both _x_ and _y_ aesthetics.
 
 ```{r}
-ggplot(sun.spct) + 
+ggplot(sun.spct, aes(x = wl2frequency(w.length), y = s.e.irrad)) + 
   geom_line() +
-  scale_x_wl_continuous(sec.axis = sec_axis_w_number())
+  scale_x_frequency_continuous()
 ```
+
+Functions automating the addition of secondary axes are available. They expect
+wavelength in nanometres in data and convert it into other equivalent physical
+quantities: wave number, frequency and energy per photon.
 
 ```{r}
 ggplot(sun.spct) + 
   geom_line() +
   scale_x_wl_continuous(sec.axis = sec_axis_w_frequency())
+```
+
+```{r}
+ggplot(sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous(sec.axis = sec_axis_energy_eV())
 ```
 
 As shown above for the main axis, it is possible to set a different SI
@@ -877,7 +898,7 @@ ggplot(two_suns.spct) + aes(color = spct.idx) +
   stat_peaks(span = NULL, geom = "text", vjust = -0.5, size = 3, 
              color = "black", 
              aes(label = paste(stat(y.label), "at", after_stat(x.label), "nm"))) +
-  facet_grid(spct.idx~.)
+  facet_grid(rows = vars(spct.idx))
 ```
 
 An additional statistics, `stat_spikes()`, returns the same computed
@@ -984,7 +1005,7 @@ groups.
 ggplot(two_suns.spct) + aes(shape = spct.idx) +
   stat_color() + scale_color_identity() +
   geom_line() + 
-  facet_grid(spct.idx~., scales = "free_y")
+  facet_grid(cols = vars(spct.idx), scales = "free_y")
 ```
 
 ## Averages and similar summaries
@@ -1089,7 +1110,7 @@ ggplot(two_suns.spct) + aes(color = spct.idx) +
   geom_line() + 
   stat_wl_summary(geom = "hline") +
   stat_wl_summary(label.fmt = "Mean = %.3g", vjust = 1.2, show.legend = FALSE) +
-  facet_grid(spct.idx~.)
+  facet_grid(cols = vars(spct.idx))
 ```
 
 Same example as above but using a free scale for $y$, still working as
@@ -1100,7 +1121,7 @@ ggplot(two_suns.spct) + aes(color = spct.idx) +
   geom_line() + 
   stat_wl_summary(geom = "hline") +
   stat_wl_summary(label.fmt = "Mean = %.3g", vjust = 1.2, show.legend = FALSE) +
-  facet_grid(spct.idx~., scales = "free_y")
+  facet_grid(cols = vars(spct.idx), scales = "free_y")
 ```
 
 ### Means by waveband

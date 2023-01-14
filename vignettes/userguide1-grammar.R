@@ -64,14 +64,14 @@ ggplot(two_suns.mspct) +
   wl_guide(ymax = -0.05) +
   geom_spct() +
   geom_line() +
-  facet_wrap(~spct.idx, ncol = 1L)
+  facet_wrap(facets = vars(spct.idx), ncol = 1L)
 
 ## -----------------------------------------------------------------------------
 ggplot(two_suns.mspct) + 
   wl_guide(ymax = -0.05) +
   geom_spct() +
   geom_line() +
-  facet_wrap(~spct.idx, ncol = 1L, scales = "free_y")
+  facet_wrap(vars(spct.idx), ncol = 1L, scales = "free_y")
 
 ## -----------------------------------------------------------------------------
 ggplot(sun.spct) + 
@@ -143,14 +143,19 @@ ggplot(sun.spct) +
   scale_x_wl_continuous()
 
 ## -----------------------------------------------------------------------------
-ggplot(sun.spct) + 
+ggplot(sun.spct, aes(x = wl2frequency(w.length), y = s.e.irrad)) + 
   geom_line() +
-  scale_x_wl_continuous(sec.axis = sec_axis_w_number())
+  scale_x_frequency_continuous()
 
 ## -----------------------------------------------------------------------------
 ggplot(sun.spct) + 
   geom_line() +
   scale_x_wl_continuous(sec.axis = sec_axis_w_frequency())
+
+## -----------------------------------------------------------------------------
+ggplot(sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous(sec.axis = sec_axis_energy_eV())
 
 ## -----------------------------------------------------------------------------
 ggplot(sun.spct) + 
@@ -375,7 +380,7 @@ ggplot(two_suns.spct) + aes(color = spct.idx) +
   stat_peaks(span = NULL, geom = "text", vjust = -0.5, size = 3, 
              color = "black", 
              aes(label = paste(stat(y.label), "at", after_stat(x.label), "nm"))) +
-  facet_grid(spct.idx~.)
+  facet_grid(rows = vars(spct.idx))
 
 ## -----------------------------------------------------------------------------
 ggplot(white_led.raw_spct, aes(w.length, counts_3)) + 
@@ -428,7 +433,7 @@ ggplot(sun.spct) +
 ggplot(two_suns.spct) + aes(shape = spct.idx) +
   stat_color() + scale_color_identity() +
   geom_line() + 
-  facet_grid(spct.idx~., scales = "free_y")
+  facet_grid(cols = vars(spct.idx), scales = "free_y")
 
 ## -----------------------------------------------------------------------------
 ggplot(sun.spct) + geom_line() + 
@@ -475,14 +480,14 @@ ggplot(two_suns.spct) + aes(color = spct.idx) +
   geom_line() + 
   stat_wl_summary(geom = "hline") +
   stat_wl_summary(label.fmt = "Mean = %.3g", vjust = 1.2, show.legend = FALSE) +
-  facet_grid(spct.idx~.)
+  facet_grid(cols = vars(spct.idx))
 
 ## -----------------------------------------------------------------------------
 ggplot(two_suns.spct) + aes(color = spct.idx) +
   geom_line() + 
   stat_wl_summary(geom = "hline") +
   stat_wl_summary(label.fmt = "Mean = %.3g", vjust = 1.2, show.legend = FALSE) +
-  facet_grid(spct.idx~., scales = "free_y")
+  facet_grid(cols = vars(spct.idx), scales = "free_y")
 
 ## -----------------------------------------------------------------------------
 ggplot(sun.spct) +

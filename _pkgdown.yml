@@ -41,6 +41,10 @@ reference:
     desc: Scales control the mapping between data and aesthetics. The scales defined in package 'ggspectra' are continuous scales with defaults suitable for spectral data.
     contents:
     - scale_x_wl_continuous
+    - scale_x_wavenumber_continuous
+    - scale_x_frequency_continuous
+    - scale_x_energy_eV_continuous
+    - scale_x_energy_J_continuous
     - scale_y_s.e.response_continuous
     - scale_y_s.e.irrad_continuous
     - scale_y_A_internal_continuous

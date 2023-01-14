@@ -358,13 +358,13 @@ autoplot(sun.spct,
 autoplot(sun.spct, annotations = c("+", "peak.labels", "valley.labels"), span = 31)
 ```
 
-Passing `""` as argument to `annotations` results in a plot with no annotations, and no _scales_ set. 
+Passing `""` as argument to `annotations` results in a plot with no annotations, and no extra expansion of scale limits. 
 
 ```{r}
 autoplot(sun.spct, annotations = "")
 ```
 
-Passing `"reserve.space"` as argument to `annotations` results in a plot with no annotations, but _scales_ set and expanded so as to receive annotations.
+Passing `"reserve.space"` as argument to `annotations` results in a plot with no annotations, but with scale limits expanded so as to receive annotations.
 
 ```{r}
 autoplot(sun.spct, annotations = "reserve.space")
@@ -392,7 +392,7 @@ autoplot(sun.daily.spct)
 Even though the `autoplot()` methods can return a finished plot, the returned object is a `ggplot` object and can be built upon by adding additional elements like _facets_, _aesthetics_ and even additional _layers_. We pass `idfactor = NA` to suppress the mapping of the spectra to `linetype`.
 
 ```{r}
-autoplot(two_suns.spct, idfactor = NA) + facet_wrap(~spct.idx)
+autoplot(two_suns.spct, idfactor = NA) + facet_wrap(facets = vars(spct.idx))
 ```
 
 It is possible to construct and bind the spectra on-the-fly, and to use arbitrary variable names for the index factor. This works automatically as long as row binding is done with function `rbindspct()` which saves the name of the factor.
@@ -448,7 +448,7 @@ autoplot(white_led.raw_spct, annotations = c("+", "boundaries"))
 
 Both `raw_spct` and `cps_spct` objects contain multiple data columns when integration time bracketing has been used during data acquisition. In such cases, if one wants to plot only one of the raw spectra, one can extract the columns as usual in R using the extraction operator (`[ ]`). The single remaining column of spectral data is automatically renamed.
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, message = FALSE}
 autoplot(white_led.raw_spct[ , c("w.length", "counts_1")],
          annotations = c("+", "boundaries"))
 ```
