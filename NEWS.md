@@ -9,7 +9,7 @@ editor_options:
 -   Track bug fix in 'photobiologyWavebands', that updated the definition of
 `PAR()` (photosynthetically active radiation) as a BSWF (biological spectral
 weighting function). The previous definition of `PAR()` as a wavelength range
-returned a value that should be called "PAR"" only when used to compute photon
+returned a value that should be called "PAR" only when used to compute photon
 irradiance. This change does not affect the numerical values of energy
 irradiances or other spectral quantities, but now the waveband is labelled _PhR_
 instead of _PAR_ in such cases.
