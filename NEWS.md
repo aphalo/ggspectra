@@ -4,6 +4,15 @@ editor_options:
     wrap: 72
 ---
 
+# ggspectra 0.3.11
+
+-   'photobiology' (>= 0.10.16) is needed as a bug in 'photobiology' 
+(>= 0.10.15) can trigger an occasional error in `autoplot()`.
+-   Bug fix, attempt in `autoplot()` to use `linetype` aesthetic with more than
+the 13 supported levels. This changes plots with more than 13 spectra
+compared to earlier versions, but in these plots some spectra were missing. New
+behaviour is to use semi-transparent solid lines for more than 13 spectra.
+
 # ggspectra 0.3.10
 
 -   Track bug fix in 'photobiologyWavebands', that updated the definition of

@@ -40,8 +40,17 @@ find_idfactor <- function(spct,
     if (!exists(idfactor, spct, inherits = FALSE)) {
       message("'multiple.wl > 1' but no idexing factor found.")
       ggplot_comp <- list()
-    } else if(!facets) {
-      ggplot_comp <- list(ggplot2::aes(linetype = .data[[{{idfactor}}]]))
+    } else if (!facets) {
+      if (getMultipleWl(spct) <= 13L) {
+        # ggplot2 linetype supports at most 13L levels
+        ggplot_comp <- list(ggplot2::aes(linetype = .data[[{{idfactor}}]]),
+                            scale_linetype_discrete(name = "Spectrum"),
+                            theme(legend.key.width = grid::unit(2.5, "lines")))
+      } else {
+        ggplot_comp <- list(ggplot2::aes(group = .data[[{{idfactor}}]],
+                                         alpha = 0.3 / log10(getMultipleWl(spct))),
+                            scale_alpha_continuous(guide = "none"))
+      }
       annotations <- setdiff(annotations, "summaries")
     } else {
       if (is.numeric(facets)) {
