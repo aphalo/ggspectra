@@ -125,7 +125,7 @@ decoration <- function(w.band,
                       na.rm = na.rm))
   }
   if ("peak.labels" %in% annotations) {
-    nudge.y <- 0.06 * y.expanse
+    nudge.y <- 0.04 * y.expanse
     z <- c(z,
            stat_label_peaks(geom = "label_repel",
                             mapping = ggplot2::aes(color = after_stat(BW.color)),
@@ -146,11 +146,11 @@ decoration <- function(w.band,
                             na.rm = na.rm),
            stat_peaks(geom = "point",
                       chroma.type = chroma.type,
-                      color = "red",
+                      color = "black",
                       span = span,
                       ignore_threshold = 0.02,
                       strict = strict,
-                      shape = 16,
+                      shape = "circle filled",
                       na.rm = na.rm))
   }
   if ("valleys" %in% annotations) {
@@ -178,7 +178,7 @@ decoration <- function(w.band,
                         na.rm = na.rm))
   }
   if ("valley.labels" %in% annotations) {
-    nudge.y <- -0.06 * y.expanse
+    nudge.y <- -0.04 * y.expanse
     z <- c(z,
            stat_label_valleys(geom = "label_repel",
                               mapping = ggplot2::aes(color = after_stat(BW.color)),
@@ -202,8 +202,8 @@ decoration <- function(w.band,
                         ignore_threshold = -0.02,
                         strict = strict,
                         chroma.type = chroma.type,
-                        color = "blue",
-                        shape = 16,
+                        color = "black",
+                        shape = "circle filled",
                         na.rm = na.rm))
   }
   if ("wls" %in% annotations) {
@@ -213,6 +213,7 @@ decoration <- function(w.band,
                          target = wls.target,
                          interpolate = TRUE,
                          chroma.type = chroma.type,
+                         label.fmt = "%.4g",
                          color = "black",
                          hjust = 0,
                          position = ggplot2::position_nudge(x = nudge.x),
@@ -227,7 +228,7 @@ decoration <- function(w.band,
                          na.rm = na.rm))
   }
   if ("wls.labels" %in% annotations) {
-    nudge.x <- 0.1 * x.expanse
+    nudge.x <- 0.03 * x.expanse
     z <- c(z,
            stat_find_wls(geom = "label_repel",
                          mapping = ggplot2::aes(color = after_stat(BW.color)),
@@ -251,7 +252,7 @@ decoration <- function(w.band,
                          interpolate = TRUE,
                          chroma.type = chroma.type,
                          color = "black",
-                         shape = 16,
+                         shape = "circle filled",
                          na.rm = na.rm))
   }
   if ("colour.guide" %in% annotations) {

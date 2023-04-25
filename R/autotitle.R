@@ -55,10 +55,18 @@ autotitle <- function(object,
     }
   }
 
+  class.object <- class(object)[1]
+
+  # this makes it possible to support collections without additional code
+  # but it is a kludge, tolerable as it is rarely used
+  if (is.generic_mspct(object)) {
+    object <- rbindspct(object)
+  }
+
   get_title_text <- function(key) {
     switch(key,
            objt = object.label,
-           class = class(object)[1],
+           class = class.object,
            what = getWhatMeasured(object)[[1]],
            how = getHowMeasured(object)[[1]],
            when = strftime(x = getWhenMeasured(object),
@@ -87,6 +95,7 @@ autotitle <- function(object,
              inst.name = getInstrDesc(object)[["spectrometer.name"]],
              inst.sn = getInstrDesc(object)[["spectrometer.sn"]],
              comment = comment(object),
+             num.spct = paste("n=", getMultipleWl(object)),
              none = NULL,
              {warning("Title key '", key, "' not recognized"); NULL}
     )
@@ -95,20 +104,19 @@ autotitle <- function(object,
   title.ann <- grep("^title", annotations, value = TRUE)
   if (length(title.ann) == 0) {
     return(NULL)
-  } else if (getMultipleWl(object) > 1) {
-    warning("Multiple spectra in long form: title annotation not supported.")
-    # This could be improved!
-    return(NULL)
   } else if (title.ann[1] == "title") {
     # default title
     title.ann <- default.title
   }
 
   # we avoid calling tz() on lists as returned for multiple spectra
+  when.measured <- getWhenMeasured(object)
+  if (is.data.frame(when.measured)) {
+    when.measured <- unique(range(when.measured[["when.measured"]]))
+  }
   if (is.null(tz)) {
-    when.measured <- getWhenMeasured(object)
-    if (lubridate::is.instant(when.measured)) {
-      tz <- lubridate::tz(when.measured)
+    if (lubridate::is.instant(when.measured[1])) {
+      tz <- lubridate::tz(when.measured[1])
       if (tz == "") {
         # [2021-09-30] this may happen if the user uses lubridate::now()
         tz <- Sys.timezone()
@@ -119,9 +127,10 @@ autotitle <- function(object,
   }
 
   # length(title.ann) > 0 is guaranteed
-  if (getMultipleWl(object) > 1 && title.ann !=  "title:objt") {
-    title.ann <- "title:objt"
-    warning("Multiple spectra in long form: overriding requested title.")
+  if (getMultipleWl(object) > 1 &&
+      grepl(":where|:what|:when|:how|:inst.name|:inst.sn", title.ann)) {
+    warning("Multiple spectra: ignoring requested attr(s) in title.")
+    title.ann <- gsub(":where|:what|:when|:how|:inst.name|:inst.sn", ":none", title.ann)
   }
 
   title.ann <- c(strsplit(title.ann[1], ":")[[1]][-1], "none", "none", "none")

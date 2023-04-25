@@ -4,6 +4,10 @@ editor_options:
     wrap: 72
 ---
 
+# ggspectra 0.3.12
+
+- Fix some rough edges of how plots created with autoplot() look.
+
 # ggspectra 0.3.11
 
 -   'photobiology' (>= 0.10.16) is needed as a bug in 'photobiology' 

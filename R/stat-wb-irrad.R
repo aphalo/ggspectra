@@ -306,7 +306,11 @@ StatWbIrrad <-
                      } else {
                        integ.df[["y"]] <- ypos.fixed
                      }
-                     integ.df[["y.label"]] <- sprintf(label.fmt, integ.df[["wb.yeff"]] * label.mult)
+                     # we need to avoid too many digits after decimal point
+                     # we apply the format after rounding
+                     digits <- 5 - floor(log10(max(integ.df[["wb.yeff"]])))
+                     integ.df[["y.label"]] <-
+                       sprintf(label.fmt, round(integ.df[["wb.yeff"]], digits) * label.mult)
                      integ.df
                    },
                    default_aes = ggplot2::aes(label = after_stat(y.label),

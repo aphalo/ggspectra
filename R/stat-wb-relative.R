@@ -185,23 +185,27 @@ StatWbRelative <-
                                          data.frame(x = midpoint(mydata$x),
                                                     xmin = min(wb),
                                                     xmax = max(wb),
-                                                    ymin = min(data$y),
-                                                    ymax = max(data$y),
+                                                    ymin = min(data[["y"]]),
+                                                    ymax = max(data[["y"]]),
                                                     yint = yint.tmp,
                                                     ymean = ymean.tmp,
                                                     wb.color = fast_color_of_wb(wb, chroma.type = chroma.type),
-                                                    wb.name = labels(wb)$label,
+                                                    wb.name = labels(wb)[["label"]],
                                                     BW.color = black_or_white(fast_color_of_wb(wb, chroma.type = chroma.type)))
                                          )
                      }
                      if (is.null(ypos.fixed)) {
-                       integ.df$y <- with(integ.df, ymin + (ymax - ymin) * ypos.mult)
+                       integ.df[["y"]] <- with(integ.df, ymin + (ymax - ymin) * ypos.mult)
                      } else {
-                       integ.df$y <- ypos.fixed
+                       integ.df[["y"]] <- ypos.fixed
                      }
-                     integ.df$yint <- integ.df$yint / sum(integ.df$yint, na.rm = TRUE)
-                     integ.df$y.label <- sprintf(label.fmt, integ.df$yint * label.mult)
-#                     print(integ.df)
+                     integ.df[["yint"]] <- integ.df[["yint"]] / sum(integ.df[["yint"]], na.rm = TRUE)
+
+                     # we need to avoid too many digits after decimal point
+                     # we apply the format after rounding
+                     digits <- 5 - floor(log10(max(integ.df[["yint"]])))
+                     integ.df[["y.label"]] <-
+                       sprintf(label.fmt, round(integ.df[["yint"]], digits) * label.mult)
                      integ.df
                    },
                    default_aes =

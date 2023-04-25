@@ -191,8 +191,11 @@ StatWbTotal <-
                      } else {
                        integ.df[["y"]] <- ypos.fixed
                      }
-                     integ.df[["y.label"]] <- sprintf(label.fmt, integ.df[["wb.yint"]] * label.mult)
-#                     print(integ.df)
+                     # we need to avoid too many digits after decimal point
+                     # we apply the format after rounding
+                     digits <- 5 - floor(log10(max(integ.df[["wb.yint"]])))
+                     integ.df[["y.label"]] <-
+                       sprintf(label.fmt, round(integ.df[["wb.yint"]], digits) * label.mult)
                      integ.df
                    },
                    default_aes =
