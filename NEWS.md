@@ -6,7 +6,8 @@ editor_options:
 
 # ggspectra 0.3.12
 
-- Fix some rough edges of how plots created with autoplot() look.
+- Imrove how plots created with autoplot() look, e.g., limit number of digits
+in labels and improve some annotations in the case of multiple spectra.
 
 # ggspectra 0.3.11
 
