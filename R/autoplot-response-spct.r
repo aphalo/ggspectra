@@ -611,6 +611,7 @@ autoplot.response_spct <-
         label.qty = "total"
       }
     }
+
     if (length(w.band) == 0) {
       if (is.null(range)) {
         w.band <- photobiology::waveband(object)
@@ -618,6 +619,18 @@ autoplot.response_spct <-
         w.band <- range
       } else {
         w.band <- photobiology::waveband(range, wb.name = "Total")
+      }
+    }
+    if (is.waveband(w.band)) {
+      w.band <- list(w.band)
+    }
+    labels <- sapply(w.band, labels)[1, ]
+    if (unit.out %in% c("photon", "quantum")) {
+      # change "PhR" label into "PAR" because we compute photon irradiance
+      wb.PAR <- grep("^PhR$", labels)
+      if (length(wb.PAR)) {
+        w.band[[wb.PAR]] <-
+          photobiology::waveband(x = c(400, 700), wb.name = "PAR")
       }
     }
 

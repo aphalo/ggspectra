@@ -6,8 +6,14 @@ editor_options:
 
 # ggspectra 0.3.12
 
-- Imrove how plots created with autoplot() look, e.g., limit number of digits
+- Improve how plots created with autoplot() look, e.g., limit number of digits
 in labels and improve some annotations in the case of multiple spectra.
+- Fix bug in `autoplot.source_spct()` introduced in version 0.3.10: bad handling
+of single waveband objects as argument to `w.band`.
+- Track bug fix in 'photobiologyWavebands', that updated the definition of
+`PAR()` (photosynthetically active radiation) as a BSWF (biological spectral
+weighting function). The labelling as PAR is now restored when plotting
+spectral photon response using the `autoplot()` method. 
 
 # ggspectra 0.3.11
 

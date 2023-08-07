@@ -698,6 +698,7 @@ autoplot.source_spct <-
         label.qty = "total"
       }
     }
+
     if (length(w.band) == 0) {
       if (is.null(range)) {
         w.band <- waveband(object)
@@ -706,9 +707,13 @@ autoplot.source_spct <-
       } else {
         w.band <- waveband(range, wb.name = "Total")
       }
-    } else if (unit.out %in% c("photon", "quantum")) {
+    }
+    if (is.waveband(w.band)) {
+      w.band <- list(w.band)
+    }
+    labels <- sapply(w.band, labels)[1, ]
+    if (unit.out %in% c("photon", "quantum")) {
       # change "PhR" label into "PAR" because we compute photon irradiance
-      labels <- sapply(w.band, labels)[1, ]
       wb.PAR <- grep("^PhR$", labels)
       if (length(wb.PAR)) {
         w.band[[wb.PAR]] <-
