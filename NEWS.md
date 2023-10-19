@@ -13,7 +13,8 @@ of single waveband objects as argument to `w.band`.
 - Track bug fix in 'photobiologyWavebands', that updated the definition of
 `PAR()` (photosynthetically active radiation) as a BSWF (biological spectral
 weighting function). The labelling as PAR is now restored when plotting
-spectral photon response using the `autoplot()` method. 
+spectral photon response using the `autoplot()` method.
+- Replace use of "mu" (\u03bc) character by "micro" (\u00b5) in UTF-8.
 
 # ggspectra 0.3.11
 
