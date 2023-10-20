@@ -147,14 +147,26 @@ raw_plot <- function(spct,
     annotations <- temp$annotations
   }
 
-  y.min <- ifelse(!is.na(ylim[1]),
-                  ylim[1],
-                  min(spct[["counts"]], 0, na.rm = TRUE))
-  y.max <- ifelse(!is.na(ylim[2]),
-                  ylim[2],
-                  max(spct[["counts"]],
-                      ifelse(is.na(upper.boundary), 0, upper.boundary - 1),
-                      na.rm = TRUE))
+  if (!is.na(ylim[1])) {
+    y.min <- ylim[1]
+    spct[["counts"]] <- ifelse(spct[["counts"]] < y.min,
+                               NA_real_,
+                               spct[["counts"]])
+  } else {
+    y.min <- min(spct[["counts"]], 0, na.rm = TRUE)
+  }
+
+  if (!is.na(ylim[2])) {
+    y.max <- ylim[2]
+    spct[["counts"]] <- ifelse(spct[["counts"]] > y.max,
+                               NA_real_,
+                               spct[["counts"]])
+  } else {
+    y.max <- max(spct[["counts"]],
+                 ifelse(is.na(upper.boundary), 0, upper.boundary - 1),
+                 y.min,
+                 na.rm = TRUE)
+  }
 
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
@@ -211,7 +223,7 @@ raw_plot <- function(spct,
       length(intersect(c("boxes", "segments", "labels",
                          "summaries", "colour.guide", "reserve.space"),
                        annotations)) > 0L) {
-    y.limits <- c(y.min, y.max * 1.25)
+    y.limits <- c(y.min, y.min + (y.max - y.min) * 1.25)
     x.limits <- c(min(spct) - wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
     y.limits <- c(y.min, y.max)

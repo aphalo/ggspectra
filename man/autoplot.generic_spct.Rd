@@ -79,7 +79,7 @@ default "spct.idx" is tried.}
 the levels of \code{idfactor} when \code{spct} contain multiple spectra in
 long form.}
 
-\item{ylim}{numeric y axis limits,}
+\item{ylim}{numeric y axis limits (expansion only!).}
 
 \item{object.label}{character The name of the object being plotted.}
 

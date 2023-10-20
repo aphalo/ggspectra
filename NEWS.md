@@ -6,13 +6,17 @@ editor_options:
 
 # ggspectra 0.3.12
 
-- Improve how plots created with autoplot() look, e.g., limit number of digits
+- Improve how plots created with `autoplot()` look, e.g., limit number of digits
 in labels and improve some annotations in the case of multiple spectra.
+- Ensure that parameter `ylim` in `autoplot()` methods works correctly with any 
+values passed as argument. Plots with non-default `ylim` values may change (for
+the better) and occasionally a plot made with defaults may look the same but
+not be identical.
 - Fix bug in `autoplot.source_spct()` introduced in version 0.3.10: bad handling
 of single waveband objects as argument to `w.band`.
 - Track bug fix in 'photobiologyWavebands', that updated the definition of
 `PAR()` (photosynthetically active radiation) as a BSWF (biological spectral
-weighting function). The labelling as PAR is now restored when plotting
+weighting function). The labeling as PAR is now restored when plotting
 spectral photon response using the `autoplot()` method.
 - Replace use of "mu" (\u03bc) character by "micro" (\u00b5) in UTF-8, as Greek
 UTF-8 characters are not supported in all Linux versions (at CRAN's request).

@@ -34,7 +34,9 @@ nearest_SI_exponent(exponent)
 \item{exponent}{numeric The power of 10 of the unit multiplier.}
 
 \item{char.set}{character How to encode Greek letters and other fancy
-characters in prefixes: \code{"utf8"}, \code{"ascii"}, \code{"LaTeX"}.}
+characters in prefixes: \code{"utf8"}, \code{"ascii"}, \code{"LaTeX"}.
+The difference between \code{"utf8"} and \code{"ascii"} is that the first
+uses UTF8 character "micro" (similar to Greek mu) and the second uses "u".}
 
 \item{if.zero.exponent}{character string to return when exponent is equal to zero.}
 

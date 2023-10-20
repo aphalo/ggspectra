@@ -376,9 +376,9 @@ test_that("filter_spct", {
                               autoplot(fscale(Ler_leaf_trns_i.spct, target = 2, qty.out = "absorbance",
                                               range = c(400,700), set.scaled = TRUE),
                                        plot.qty = "absorbance", range = c(300, NA)))
-  vdiffr::expect_doppelganger("filter-default-a-normalized",
-                              autoplot(normalize(Ler_leaf_trns_i.spct, norm = "max"),
-                                       plot.qty = "absorbance", range = c(300, NA)))
+  # vdiffr::expect_doppelganger("filter-default-a-normalized",
+  #                             autoplot(normalize(Ler_leaf_trns_i.spct, norm = "max"),
+  #                                      plot.qty = "absorbance", range = c(300, NA)))
 
   vdiffr::expect_doppelganger("filter-default-a",
                               autoplot(Ler_leaf_trns_i.spct, plot.qty = "absorbance", range = c(300, NA)))

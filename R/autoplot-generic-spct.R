@@ -104,11 +104,11 @@ generic_plot <- function(spct,
 
   if (with.band) {
     plot <- plot + ggplot2::geom_ribbon(fill = "grey50", alpha = 0.5)
-    y.min <- min(c(spct[[ymin.name]], ylim), na.rm = TRUE)
-    y.max <- max(c(spct[[ymax.name]], ylim), na.rm = TRUE)
+    y.min <- min(spct[[ymin.name]], ylim, na.rm = TRUE)
+    y.max <- max(spct[[ymax.name]], ylim, na.rm = TRUE)
   } else {
-    y.min <- min(c(spct[[y.name]], ylim), na.rm = TRUE)
-    y.max <- max(c(spct[[y.name]], ylim), na.rm = TRUE)
+    y.min <- min(spct[[y.name]], ylim, na.rm = TRUE)
+    y.max <- max(spct[[y.name]], ylim, na.rm = TRUE)
   }
 
   temp <- find_idfactor(spct = spct,
@@ -218,7 +218,7 @@ generic_plot <- function(spct,
 #' @param facets logical or integer Indicating if facets are to be created for
 #'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
 #'   long form.
-#' @param ylim numeric y axis limits,
+#' @param ylim numeric y axis limits (expansion only!).
 #' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.
 #'

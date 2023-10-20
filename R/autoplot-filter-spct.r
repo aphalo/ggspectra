@@ -60,6 +60,7 @@ Afr_plot <- function(spct,
   if (!is.filter_spct(spct)) {
     stop("Afr_plot() can only plot filter_spct objects.")
   }
+
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
   }
@@ -111,17 +112,28 @@ Afr_plot <- function(spct,
     Afr.label <- ""
   }
 
-  y.min <- ifelse(!is.na(ylim[1]),
-                  ylim[1],
-                  min(0, spct[["Afr"]], na.rm = TRUE))
-  y.max <- ifelse(!is.na(ylim[2]),
-                  ylim[2],
-                  max(1, spct[["Afr"]], na.rm = TRUE))
-
   if (any(!is.na(ylim))) {
     y.breaks <- scales::pretty_breaks(n = 6)
   } else {
     y.breaks <- c(0, 0.25, 0.5, 0.75, 1)
+  }
+
+  if (!is.na(ylim[1])) {
+    y.min <- ylim[1]
+    spct[["Afr"]] <- ifelse(spct[["Afr"]] < y.min,
+                            NA_real_,
+                            spct[["Afr"]])
+  } else {
+    y.min <- min(spct[["Afr"]], 0, na.rm = TRUE)
+  }
+
+  if (!is.na(ylim[2])) {
+    y.max <- ylim[2]
+    spct[["Afr"]] <- ifelse(spct[["Afr"]] > y.max,
+                            NA_real_,
+                            spct[["Afr"]])
+  } else {
+    y.max <- max(spct[["Afr"]], 1, y.min, na.rm = TRUE)
   }
 
   plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["Afr"]]))
@@ -177,7 +189,7 @@ Afr_plot <- function(spct,
 
   if (!is.null(annotations) &&
       length(intersect(c("labels", "summaries", "colour.guide", "reserve.space"), annotations)) > 0L) {
-    y.limits <- c(y.min, y.max * 1.25)
+    y.limits <- c(y.min, y.min + (y.max - y.min) * 1.25)
     x.limits <- c(min(spct) - wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
     y.limits <- c(y.min, y.max)
@@ -341,17 +353,28 @@ T_plot <- function(spct,
     Tfr.label <- ""
   }
 
-  y.min <- ifelse(!is.na(ylim[1]),
-                  ylim[1],
-                  min(0, spct[["Tfr"]], na.rm = TRUE))
-  y.max <- ifelse(!is.na(ylim[2]),
-                  ylim[2],
-                  max(1, spct[["Tfr"]], na.rm = TRUE))
-
   if (any(!is.na(ylim))) {
     y.breaks <- scales::pretty_breaks(n = 6)
   } else {
     y.breaks <- c(0, 0.25, 0.5, 0.75, 1)
+  }
+
+  if (!is.na(ylim[1])) {
+    y.min <- ylim[1]
+    spct[["Tfr"]] <- ifelse(spct[["Tfr"]] < y.min,
+                            NA_real_,
+                            spct[["Tfr"]])
+  } else {
+    y.min <- min(c(spct[["Tfr"]], 0), na.rm = TRUE)
+  }
+
+  if (!is.na(ylim[2])) {
+    y.max <- ylim[2]
+    spct[["Tfr"]] <- ifelse(spct[["Tfr"]] > y.max,
+                            NA_real_,
+                            spct[["Tfr"]])
+  } else {
+    y.max <- max(c(spct[["Tfr"]], 1), na.rm = TRUE)
   }
 
   plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["Tfr"]]))
@@ -409,7 +432,7 @@ T_plot <- function(spct,
 
   if (!is.null(annotations) &&
       length(intersect(c("labels", "summaries", "colour.guide", "reserve.space"), annotations)) > 0L) {
-    y.limits <- c(y.min, y.max * 1.25)
+    y.limits <- c(y.min, y.min + (y.max - y.min) * 1.25)
     x.limits <- c(min(spct) - wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
     y.limits <- c(y.min, y.max)
@@ -553,17 +576,24 @@ A_plot <- function(spct,
     A.label <- ""
   }
 
-  y.min <- ifelse(!is.na(ylim[1]),
-                  ylim[1],
-                  min(0, spct[["A"]], na.rm = TRUE))
-  y.max <- ifelse(!is.na(ylim[2]),
-                  ylim[2],
-                  max(spct[["A"]], na.rm = TRUE))
+  y.breaks <- scales::pretty_breaks(n = 6)
 
-  if (any(!is.na(ylim))) {
-    y.breaks <- scales::pretty_breaks(n = 6)
+  if (!is.na(ylim[1])) {
+    y.min <- ylim[1]
+    spct[["A"]] <- ifelse(spct[["A"]] < y.min,
+                            NA_real_,
+                            spct[["A"]])
   } else {
-    y.breaks <- c(0, 0.25, 0.5, 0.75, 1)
+    y.min <- min(c(spct[["A"]], 0), na.rm = TRUE)
+  }
+
+  if (!is.na(ylim[2])) {
+    y.max <- ylim[2]
+    spct[["A"]] <- ifelse(spct[["A"]] > y.max,
+                            NA_real_,
+                            spct[["A"]])
+  } else {
+    y.max <- max(spct[["A"]], na.rm = TRUE)
   }
 
   plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["A"]]))
@@ -765,17 +795,28 @@ R_plot <- function(spct,
     Rfr.label <- ""
   }
 
-  y.min <- ifelse(!is.na(ylim[1]),
-                  ylim[1],
-                  min(0, spct[["Rfr"]], na.rm = TRUE))
-  y.max <- ifelse(!is.na(ylim[2]),
-                  ylim[2],
-                  max(1, spct[["Rfr"]], na.rm = TRUE))
-
   if (any(!is.na(ylim))) {
     y.breaks <- scales::pretty_breaks(n = 6)
   } else {
     y.breaks <- c(0, 0.25, 0.5, 0.75, 1)
+  }
+
+  if (!is.na(ylim[1])) {
+    y.min <- ylim[1]
+    spct[["Rfr"]] <- ifelse(spct[["Rfr"]] < y.min,
+                            NA_real_,
+                            spct[["Rfr"]])
+  } else {
+    y.min <- min(c(spct[["Rfr"]], 0), na.rm = TRUE)
+  }
+
+  if (!is.na(ylim[2])) {
+    y.max <- ylim[2]
+    spct[["Rfr"]] <- ifelse(spct[["Rfr"]] > y.max,
+                            NA_real_,
+                            spct[["Rfr"]])
+  } else {
+    y.max <- max(c(spct[["Rfr"]], 1), na.rm = TRUE)
   }
 
   plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["Rfr"]]))
@@ -828,7 +869,7 @@ R_plot <- function(spct,
 
   if (!is.null(annotations) &&
       length(intersect(c("labels", "summaries", "colour.guide", "reserve.space"), annotations)) > 0L) {
-    y.limits <- c(y.min, y.max * 1.25)
+    y.limits <- c(y.min, y.min + (y.max - y.min) * 1.25)
     x.limits <- c(min(spct) - wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
     y.limits <- c(y.min, y.max)
@@ -957,12 +998,20 @@ O_plot <- function(spct,
     y.min <- -0.01 # take care of rounding off
     y.breaks <- c(0, 0.25, 0.5, 0.75, 1)
   } else {
-    y.min <- ifelse(!is.na(ylim[1]),
-                    ylim[1],
-                    min(0, spct[["Rfr"]], spct[["Tfr"]], spct[["Afr"]], na.rm = TRUE))
-    y.max <- ifelse(!is.na(ylim[2]),
-                    ylim[2],
-                    max(1, spct[["Rfr"]], spct[["Tfr"]], spct[["Afr"]], na.rm = TRUE))
+    if (!is.na(ylim[1])) {
+      y.min <- ylim[1]
+      spct[["Rfr"]] <- ifelse(spct[["Rfr"]] < y.min,
+                              NA_real_,
+                              spct[["Rfr"]])
+      spct[["Tfr"]] <- ifelse(spct[["Tfr"]] < y.min,
+                              NA_real_,
+                              spct[["Tfr"]])
+      spct[["Afr"]] <- ifelse(spct[["Afr"]] < y.min,
+                              NA_real_,
+                              spct[["Afr"]])
+    } else {
+      y.min <- min(0, spct[["Rfr"]], spct[["Tfr"]], spct[["Afr"]], na.rm = TRUE)
+    }
 
     if (any(!is.na(ylim))) {
       y.breaks <- scales::pretty_breaks(n = 6)
@@ -970,6 +1019,20 @@ O_plot <- function(spct,
       y.breaks <- c(0, 0.25, 0.5, 0.75, 1)
     }
 
+    if (!is.na(ylim[2])) {
+      y.max <- ylim[2]
+      spct[["Rfr"]] <- ifelse(spct[["Rfr"]] > y.max,
+                              NA_real_,
+                              spct[["Rfr"]])
+      spct[["Tfr"]] <- ifelse(spct[["Tfr"]] > y.max,
+                              NA_real_,
+                              spct[["Tfr"]])
+      spct[["Afr"]] <- ifelse(spct[["Afr"]] > y.max,
+                              NA_real_,
+                              spct[["Afr"]])
+    } else {
+      y.max <- max(1, y.min, spct[["Rfr"]], spct[["Tfr"]], spct[["Afr"]], na.rm = TRUE)
+    }
   }
 
   idfactor <- getIdFactor(spct) # needed as we will get a tibble back
@@ -1043,7 +1106,7 @@ O_plot <- function(spct,
                             na.rm = TRUE)
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "colour.guide", "reserve.space"), annotations)) > 0L) {
-    y.limits <- c(y.min, y.max * 1.25)
+    y.limits <- c(y.min, y.min + (y.max - y.min) * 1.25)
     x.limits <- c(min(spct) - wl_expanse(spct) * 0.025, NA)
   } else {
     y.limits <- c(y.min, y.max)
