@@ -7,7 +7,6 @@
 #'
 #' @param w.band waveband object or list of waveband objects
 #' @param y.max,y.min,x.max,x.min,x.expanse,y.expanse numeric
-#' @param nudge_npcx,nudge_npcy numeric
 #' @param annotations character vector
 #' @param span numeric
 #' @param strict logical

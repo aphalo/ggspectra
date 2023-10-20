@@ -20,7 +20,7 @@ sec_axis_wl(unit.exponent = -9, label.text = axis_labels()[["w.length"]])
 }
 \arguments{
 \item{unit.exponent}{integer The exponent on base 10 of the scale multiplier
-used for the axis labels, e.g., 3 for \eqn{10^3} or {k}.}
+used for the axis labels, e.g., 3 for \eqn{10^3} or \eqn{k}.}
 
 \item{label.text}{character Textual portion of the labels.}
 }

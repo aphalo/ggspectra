@@ -55,8 +55,6 @@ decoration(
 \item{pos.shift}{numeric}
 
 \item{na.rm}{logical}
-
-\item{nudge_npcx, nudge_npcy}{numeric}
 }
 \value{
 A list of ggplot "components" that can be added to a ggplot object

@@ -82,7 +82,7 @@ object returned is a ggplot object, and can be further manipulated.
 }
 \note{
 Effectiveness spectra are plotted expressing the spectral effectiveness
-either as $1 mol^{-1} nm$ photons of $1 J^{-1} nm$ which can selected through
+either as \eqn{1 mol^{-1} nm} photons of \eqn{1 J^{-1} nm} which can selected through
 formal argument \code{unit.out}. The value of \code{unit.in} has no effect on
 the result when uisng BSWFs, as BSWFs are defined based on a certain base of
 expression, which is enforced. In contrast, for wavebands which only define a

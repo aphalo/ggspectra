@@ -273,7 +273,7 @@ w_energy_J_label <- function(unit.exponent = -18,
 #'   also in each call.
 #'
 #' @param unit.exponent integer The exponent on base 10 of the scale multiplier
-#'   used for the axis labels, e.g., 3 for \eqn{10^3} or {k}.
+#'   used for the axis labels, e.g., 3 for \eqn{10^3} or \eqn{k}.
 #' @param label.text character Textual portion of the labels.
 #'
 #' @export

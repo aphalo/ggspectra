@@ -69,8 +69,6 @@ long form.}
 \item{na.rm}{logical.}
 
 \item{...}{currently ignored.}
-
-\item{pc.out}{logical, if TRUE use percents instead of fraction of one}
 }
 \value{
 a \code{ggplot} object.

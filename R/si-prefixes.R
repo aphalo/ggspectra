@@ -26,6 +26,8 @@ exp_pfix.df <-
 #' @param exponent numeric The power of 10 of the unit multiplier.
 #' @param char.set character How to encode Greek letters and other fancy
 #'    characters in prefixes: \code{"utf8"}, \code{"ascii"}, \code{"LaTeX"}.
+#'    The difference between \code{"utf8"} and \code{"ascii"} is that the first
+#'    uses UTF8 character "micro" (similar to Greek mu) and the second uses "u".
 #'
 #' @export
 #'
