@@ -1,4 +1,4 @@
-destination: ../ggspectra-docs
+destination: ../docs/ggspectra
 url: https://docs.r4photobiology.info/ggspectra/
 
 template:
