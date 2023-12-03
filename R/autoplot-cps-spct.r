@@ -390,7 +390,7 @@ autoplot.cps_mspct <-
     force(object.label)
 
     idfactor <- validate_idfactor(idfactor = idfactor)
-    # We trim the spectra to avoid unnecesary computaions later
+    # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
       object <- photobiology::trim_wl(object,
                                       range = range,
