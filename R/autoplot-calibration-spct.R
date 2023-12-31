@@ -155,7 +155,7 @@ cal_plot <- function(spct,
                                    NA_real_,
                                    spct[["irrad.mult"]])
   } else {
-    y.max <- max(spct[["s.e.irrad"]], 0, y.min, na.rm = TRUE)
+    y.max <- max(spct[["irrad.mult"]], 0, y.min, na.rm = TRUE)
   }
 
   if (num.mult.cols > 1L) {
