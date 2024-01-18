@@ -113,24 +113,6 @@ cps_plot <- function(spct,
     cps.label <- ""
   }
 
-  if (!is.na(ylim[1])) {
-    y.min <- ylim[1]
-    spct[["cps"]] <- ifelse(spct[["cps"]] < y.min,
-                            NA_real_,
-                            spct[["cps"]])
-  } else {
-    y.min <- min(spct[["cps"]], 0, na.rm = TRUE)
-  }
-
-  if (!is.na(ylim[2])) {
-    y.max <- ylim[2]
-    spct[["cps"]] <- ifelse(spct[["cps"]] > y.max,
-                            NA_real_,
-                            spct[["cps"]])
-  } else {
-    y.max <- max(spct[["cps"]], y.min, 0, na.rm = TRUE)
-  }
-
   if (num.cps.cols > 1L) {
     spct <- photobiology::spct_wide2long(spct = spct, idfactor = "scan")
     plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["cps"]], linetype = .data[["scan"]]))
@@ -149,6 +131,24 @@ cps_plot <- function(spct,
                           annotations = annotations)
     plot <- plot + temp$ggplot_comp
     annotations <- temp$annotations
+  }
+
+  if (!is.na(ylim[1])) {
+    y.min <- ylim[1]
+    spct[["cps"]] <- ifelse(spct[["cps"]] < y.min,
+                            NA_real_,
+                            spct[["cps"]])
+  } else {
+    y.min <- min(spct[["cps"]], 0, na.rm = TRUE)
+  }
+
+  if (!is.na(ylim[2])) {
+    y.max <- ylim[2]
+    spct[["cps"]] <- ifelse(spct[["cps"]] > y.max,
+                            NA_real_,
+                            spct[["cps"]])
+  } else {
+    y.max <- max(spct[["cps"]], y.min, 0, na.rm = TRUE)
   }
 
   # We want data plotted on top of the boundary lines
