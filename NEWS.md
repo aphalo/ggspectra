@@ -6,8 +6,15 @@ editor_options:
 
 # ggspectra 0.3.13
 
-- Fix bug: Bad default y-limits in `autoplot.calibration_spct()` (bug introduced in version 0.3.12).
-- Fix bug: Error when attempting to plot `cps_spct` objects with multiple columns of `cps` data (bug introduced in version 0.3.12).
+- Revise function `autotitle()` to better support collections of spectra and 
+multiple spectra in long form.
+- Fix bug: Bad default y-limits in `autoplot.calibration_spct()` (bug 
+introduced in version 0.3.12).
+- Fix bug: Error when attempting to plot `cps_spct` objects with multiple 
+columns of `cps` data (bug introduced in version 0.3.12).
+- In `autoplot.response_spct()` change default argument `norm = "max"` to 
+`norm = "update"` for consistency with the other `autoplot()` methods and 
+to avoide "surprising" users.
 
 # ggspectra 0.3.12
 

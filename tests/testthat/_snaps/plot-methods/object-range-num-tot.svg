@@ -18,7 +18,7 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
-<rect x='0.00' y='0.00' width='720.00' height='576.00' style='stroke-width: 1.07; stroke: #FFFFFF; fill: #FFFFFF;' />
+<rect x='0.000000000000064' y='0.00' width='720.00' height='576.00' style='stroke-width: 1.07; stroke: #FFFFFF; fill: #FFFFFF;' />
 </g>
 <defs>
   <clipPath id='cpNjAuOTZ8NjcxLjMxfDIyLjc4fDU0NS4xMQ=='>
@@ -212,19 +212,19 @@
 <text transform='translate(31.75,245.70) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='2.75px' lengthAdjust='spacingAndGlyphs'> </text>
 <text transform='translate(31.75,242.94) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='6.72px' lengthAdjust='spacingAndGlyphs'>T</text>
 <text transform='translate(33.79,236.22) rotate(-90)' style='font-size: 7.70px; font-family: sans;' textLength='3.92px' lengthAdjust='spacingAndGlyphs'>λ</text>
-<rect x='682.27' y='255.29' width='32.25' height='57.32' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<rect x='682.27' y='260.77' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<rect x='682.97' y='261.48' width='15.86' height='15.86' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #000000; fill-opacity: 0.25;' />
-<rect x='682.27' y='278.05' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<rect x='682.97' y='278.76' width='15.86' height='15.86' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #000000; fill-opacity: 0.55;' />
-<rect x='682.27' y='295.33' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<rect x='682.97' y='296.04' width='15.86' height='15.86' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #000000; fill-opacity: 0.40;' />
-<text x='705.03' y='271.58' style='font-size: 8.80px; font-family: sans;' textLength='6.36px' lengthAdjust='spacingAndGlyphs'>R</text>
-<text x='711.38' y='273.21' style='font-size: 6.16px; font-family: sans;' textLength='3.14px' lengthAdjust='spacingAndGlyphs'>λ</text>
-<text x='705.51' y='288.86' style='font-size: 8.80px; font-family: sans;' textLength='5.87px' lengthAdjust='spacingAndGlyphs'>A</text>
-<text x='711.38' y='290.49' style='font-size: 6.16px; font-family: sans;' textLength='3.14px' lengthAdjust='spacingAndGlyphs'>λ</text>
-<text x='706.01' y='306.14' style='font-size: 8.80px; font-family: sans;' textLength='5.38px' lengthAdjust='spacingAndGlyphs'>T</text>
-<text x='711.38' y='307.77' style='font-size: 6.16px; font-family: sans;' textLength='3.14px' lengthAdjust='spacingAndGlyphs'>λ</text>
+<rect x='682.27' y='258.03' width='32.25' height='51.84' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
+<rect x='682.27' y='258.03' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
+<rect x='682.97' y='258.74' width='15.86' height='15.86' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #000000; fill-opacity: 0.25;' />
+<rect x='682.27' y='275.31' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
+<rect x='682.97' y='276.02' width='15.86' height='15.86' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #000000; fill-opacity: 0.55;' />
+<rect x='682.27' y='292.59' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
+<rect x='682.97' y='293.30' width='15.86' height='15.86' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #000000; fill-opacity: 0.40;' />
+<text x='705.03' y='268.85' style='font-size: 8.80px; font-family: sans;' textLength='6.36px' lengthAdjust='spacingAndGlyphs'>R</text>
+<text x='711.38' y='270.47' style='font-size: 6.16px; font-family: sans;' textLength='3.14px' lengthAdjust='spacingAndGlyphs'>λ</text>
+<text x='705.03' y='286.13' style='font-size: 8.80px; font-family: sans;' textLength='5.87px' lengthAdjust='spacingAndGlyphs'>A</text>
+<text x='710.90' y='287.75' style='font-size: 6.16px; font-family: sans;' textLength='3.14px' lengthAdjust='spacingAndGlyphs'>λ</text>
+<text x='705.03' y='303.41' style='font-size: 8.80px; font-family: sans;' textLength='5.38px' lengthAdjust='spacingAndGlyphs'>T</text>
+<text x='710.40' y='305.03' style='font-size: 6.16px; font-family: sans;' textLength='3.14px' lengthAdjust='spacingAndGlyphs'>λ</text>
 <text x='60.96' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='122.54px' lengthAdjust='spacingAndGlyphs'>object-range-num-tot</text>
 </g>
 </svg>

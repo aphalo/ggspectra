@@ -35,7 +35,7 @@
   object,
   ...,
   range = NULL,
-  norm = "update",
+  norm = "skip",
   plot.qty = getOption("photobiology.filter.qty", default = "all"),
   pc.out = FALSE,
   plot.data = "as.is",

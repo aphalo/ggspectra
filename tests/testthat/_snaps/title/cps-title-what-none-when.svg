@@ -88,8 +88,8 @@
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
 <text x='48.40' y='511.63' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='24.72px' lengthAdjust='spacingAndGlyphs'>0e+00</text>
 <text x='48.40' y='370.69' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='24.72px' lengthAdjust='spacingAndGlyphs'>1e+05</text>
-<text x='48.40' y='229.74' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='24.72px' lengthAdjust='spacingAndGlyphs'>2e+05</text>
-<text x='48.40' y='88.80' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='24.72px' lengthAdjust='spacingAndGlyphs'>3e+05</text>
+<text x='48.40' y='229.75' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='24.72px' lengthAdjust='spacingAndGlyphs'>2e+05</text>
+<text x='48.40' y='88.81' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='24.72px' lengthAdjust='spacingAndGlyphs'>3e+05</text>
 <polyline points='50.59,508.60 53.33,508.60 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
 <polyline points='50.59,367.66 53.33,367.66 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
 <polyline points='50.59,226.72 53.33,226.72 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
@@ -146,6 +146,6 @@
 <text transform='translate(10.78,193.72) rotate(-90)' style='font-size: 7.70px; font-family: sans;' textLength='4.28px' lengthAdjust='spacingAndGlyphs'>1</text>
 <text transform='translate(16.30,189.44) rotate(-90)' style='font-size: 13.75px; font-family: sans;' textLength='4.57px' lengthAdjust='spacingAndGlyphs'>)</text>
 <text x='53.33' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='74.88px' lengthAdjust='spacingAndGlyphs'>led_desk201</text>
-<text x='714.52' y='568.69' text-anchor='end' style='font-size: 8.80px; font-family: sans;' textLength='102.25px' lengthAdjust='spacingAndGlyphs'>2016-12-19 16:19:57 UTC</text>
+<text x='714.52' y='568.69' text-anchor='end' style='font-size: 8.80px; font-family: sans;' textLength='90.02px' lengthAdjust='spacingAndGlyphs'>2016-12-19 16:19 UTC</text>
 </g>
 </svg>

@@ -3,7 +3,7 @@
 #' Add a title, subtitle and caption to a spectral plot based on automatically
 #' extracted metadata from an spectral object.
 #'
-#' @param object generic_spct The spectral object plotted.
+#' @param object generic_spct or generic_mspct The spectral object plotted.
 #' @param object.label character The name of the object being plotted.
 #' @param annotations character vector Annotations as described for
 #'   \code{plot()} methods, values unrelated to title are ignored.
@@ -34,17 +34,31 @@
 #'   geom_line()
 #'
 #' p + autotitle(sun.spct)
-#' p + autotitle(sun.spct, annotations = "title:what")
-#' p + autotitle(sun.spct, annotations = "title:where:when")
-#' p + autotitle(sun.spct, annotations = "title:none:none:comment")
+#' p + autotitle(sun.spct, object.label = "The terrestrial solar spectrum")
+#' p + autotitle(sun.spct, annotations = "title:objt:class")
+#' p + autotitle(sun.spct, annotations = "title:where:when:how")
+#'
+#' p <- ggplot(sun_evening.spct) +
+#'   aes(linetype = spct.idx) +
+#'   geom_line()
+#'
+#' p + autotitle(sun_evening.spct, annotations = "title:objt:class")
+#' p + autotitle(sun_evening.spct, annotations = "title:where:when:how")
+#' p + autotitle(sun_evening.spct, annotations = "title:none:none:how")
+#'
+#' p <- ggplot(sun_evening.mspct) +
+#'   aes(linetype = spct.idx) +
+#'   geom_line()
+#'
+#' p + autotitle(sun_evening.mspct, annotations = "title:objt:class")
 #'
 #' @export
 #'
 autotitle <- function(object,
                       object.label = deparse(substitute(object)),
                       annotations = "title",
-                      time.format = "",
-                      tz = NULL,
+                      time.format = NULL,
+                      tz = "",
                       default.title  = "title:objt") {
 
   if (!is.character(object.label)) {
@@ -55,10 +69,16 @@ autotitle <- function(object,
     }
   }
 
+  if (is.null(time.format) || all(time.format == "")) {
+    time.format <- c("%Y-%m-%d %H:%M", "%H:%M")
+  } else if (length(time.format) == 1) {
+    time.format <- rep(time.format, 2)
+  }
+
   class.object <- class(object)[1]
 
-  # this makes it possible to support collections without additional code
-  # but it is a kludge, tolerable as it is rarely used
+  # this makes it possible to support collections
+  # maybe not needed with current versions 'photobiology' >= 0.11.1
   if (is.generic_mspct(object)) {
     object <- rbindspct(object)
   }
@@ -67,37 +87,149 @@ autotitle <- function(object,
     switch(key,
            objt = object.label,
            class = class.object,
-           what = getWhatMeasured(object)[[1]],
-           how = getHowMeasured(object)[[1]],
-           when = strftime(x = getWhenMeasured(object),
-                           format = time.format,
-                           tz = tz,
-                           usetz = TRUE),
+           what =
+             {
+               what <- getWhatMeasured(object)
+               if (all(is.na(what))) {
+                 what <- "what measured not known"
+               }
+               if (is.list(what)) {
+                 what <- unique(what)
+                 if (length(what) == 1) {
+                   what
+                 } else {
+                   ""
+                 }
+               } else {
+                 what
+               }
+             },
+           how =
+             {
+               how <- getHowMeasured(object)
+               if (all(is.na(how))) {
+                 how <- "how measured not known"
+               } else {
+                 if (is.list(how)) {
+                   how <- unique(how)
+                   if (length(how) == 1) {
+                     how
+                   } else {
+                     "how measured varies"
+                   }
+                 } else {
+                   how
+                 }
+               }
+             },
+           when =
+             {
+               when <- getWhenMeasured(object)
+               if (all(is.na(when))) {
+                 when <- "when measured not known"
+               } else {
+                 if (is.list(when)) {
+                   when <- cbind(unname(when))
+                   when <- as.POSIXct(unique(range(when)))
+                   if ((when[2] - when[1]) >= lubridate::ddays(1)) {
+                     time.format[2] <- time.format[1]
+                   }
+                 }
+                 if(length(when) == 1) {
+                   strftime(x = when[1],
+                            format = time.format[1],
+                            tz = tz,
+                            usetz = TRUE)
+                 } else if(length(when) == 2) {
+                   paste(
+                     strftime(x = when[1],
+                              format = time.format[1],
+                              tz = tz,
+                              usetz = FALSE),
+                     strftime(x = when[2],
+                              format = time.format[2],
+                              tz = tz,
+                              usetz = TRUE),
+                     sep = " to ")
+                 }
+               }
+             },
            where =
              {
                where <- getWhereMeasured(object)
-               if (!(anyNA(where[["lon"]]) | anyNA(where[["lat"]]))) {
-                 where[["lon"]] <- ifelse(where[["lon"]] < 0,
-                                          paste(abs(where[["lon"]]), " W"),
-                                          paste(where[["lon"]], " E"))
-                 where[["lat"]] <- ifelse(where[["lat"]] < 0,
-                                          paste(abs(where[["lat"]]), " S"),
-                                          paste(where[["lat"]], " N"))
-                 where[["address"]] <- ifelse(is.na(where[["address"]]),
-                                              character(),
-                                              as.character(where[["address"]]))
-                 # the order of columns in the data frame can vary
-                 paste(where[["lat"]], where[["lon"]], where[["address"]], sep = ", ")
+               if (all(is.na(where))) {
+                 "where measured not know"
                } else {
-                 character()
+                 if (!is.data.frame(where) && is.list(where)) {
+                   where <- unique(where)
+                   if (length(where) == 1) {
+                     where <- where[[1]] # extract list member
+                   } else {
+                     where <- "where measured varies"
+                   }
+                 }
+                 if (is.data.frame(where) &&
+                     (!(anyNA(where[["lon"]]) | anyNA(where[["lat"]])))) {
+                   where[["lon"]] <- ifelse(where[["lon"]] < 0,
+                                            paste(abs(where[["lon"]]), " W"),
+                                            paste(where[["lon"]], " E"))
+                   where[["lat"]] <- ifelse(where[["lat"]] < 0,
+                                            paste(abs(where[["lat"]]), " S"),
+                                            paste(where[["lat"]], " N"))
+                   where[["address"]] <- ifelse(is.na(where[["address"]]),
+                                                character(),
+                                                as.character(where[["address"]]))
+                   # the order of columns in the data frame can vary
+                   paste(where[["lat"]], where[["lon"]], where[["address"]], sep = ", ")
+                 } else {
+                   where
+                 }
                }
              },
-             inst.name = getInstrDesc(object)[["spectrometer.name"]],
-             inst.sn = getInstrDesc(object)[["spectrometer.sn"]],
-             comment = comment(object),
-             num.spct = paste("n=", getMultipleWl(object)),
-             none = NULL,
-             {warning("Title key '", key, "' not recognized"); NULL}
+           inst.name =
+             {
+               descriptor <- getInstrDesc(object)
+               if (all(is.na(descriptor))) {
+                 descriptor <- "instrument name not known"
+               } else {
+                 if (inherits(descriptor, "instr_desc")) {
+                   inst.names <- descriptor[["spectrometer.name"]]
+                 } else {
+                   inst.names <- sapply(descriptor, `[[`, i = "spectrometer.name")
+                   inst.names <- unique(inst.names)
+                 }
+                 if (length(inst.names) == 1) {
+                   inst.names
+                 } else {
+                   "multiple instrument names"
+                 }
+               }
+             },
+           inst.sn =
+             {
+               descriptor <- getInstrDesc(object)
+               if (all(is.na(descriptor))) {
+                 descriptor <- "instrument serial number not known"
+               } else {
+                 if (inherits(descriptor, "instr_desc")) {
+                   inst.sns <- descriptor[["spectrometer.sn"]]
+                 } else {
+                   inst.sns <- sapply(descriptor, `[[`, i = "spectrometer.sn")
+                   inst.sns <- unique(inst.sns)
+                 }
+                 if (length(inst.sns) == 1) {
+                   inst.sns
+                 } else {
+                   "multiple instrument units"
+                 }
+               }
+             },
+           comment = comment(object),
+           num.spct = paste("n =", getMultipleWl(object)),
+           none = NULL,
+           {
+             warning("Title key '", key, "' not recognized"); NULL
+           }
     )
   }
 
@@ -124,13 +256,6 @@ autotitle <- function(object,
     } else {
       tz <- NA_character_
     }
-  }
-
-  # length(title.ann) > 0 is guaranteed
-  if (getMultipleWl(object) > 1 &&
-      grepl(":where|:what|:when|:how|:inst.name|:inst.sn", title.ann)) {
-    warning("Multiple spectra: ignoring requested attr(s) in title.")
-    title.ann <- gsub(":where|:what|:when|:how|:inst.name|:inst.sn", ":none", title.ann)
   }
 
   title.ann <- c(strsplit(title.ann[1], ":")[[1]][-1], "none", "none", "none")

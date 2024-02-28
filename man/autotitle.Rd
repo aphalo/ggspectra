@@ -9,8 +9,8 @@ autotitle(
   object,
   object.label = deparse(substitute(object)),
   annotations = "title",
-  time.format = "",
-  tz = NULL,
+  time.format = NULL,
+  tz = "",
   default.title = "title:objt"
 )
 
@@ -18,13 +18,13 @@ ggtitle_spct(
   object,
   object.label = deparse(substitute(object)),
   annotations = "title",
-  time.format = "",
-  tz = NULL,
+  time.format = NULL,
+  tz = "",
   default.title = "title:objt"
 )
 }
 \arguments{
-\item{object}{generic_spct The spectral object plotted.}
+\item{object}{generic_spct or generic_mspct The spectral object plotted.}
 
 \item{object.label}{character The name of the object being plotted.}
 
@@ -72,8 +72,22 @@ p <- ggplot(sun.spct) +
   geom_line()
 
 p + autotitle(sun.spct)
-p + autotitle(sun.spct, annotations = "title:what")
-p + autotitle(sun.spct, annotations = "title:where:when")
-p + autotitle(sun.spct, annotations = "title:none:none:comment")
+p + autotitle(sun.spct, object.label = "The terrestrial solar spectrum")
+p + autotitle(sun.spct, annotations = "title:objt:class")
+p + autotitle(sun.spct, annotations = "title:where:when:how")
+
+p <- ggplot(sun_evening.spct) +
+  aes(linetype = spct.idx) +
+  geom_line()
+
+p + autotitle(sun_evening.spct, annotations = "title:objt:class")
+p + autotitle(sun_evening.spct, annotations = "title:where:when:how")
+p + autotitle(sun_evening.spct, annotations = "title:none:none:how")
+
+p <- ggplot(sun_evening.mspct) +
+  aes(linetype = spct.idx) +
+  geom_line()
+
+p + autotitle(sun_evening.mspct, annotations = "title:objt:class")
 
 }
