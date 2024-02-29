@@ -34,6 +34,7 @@ provides the most automatic approach.
 ``` r
 library(ggspectra)
 autoplot(sun.spct)
+#> [1] NA
 ```
 
 ![](man/figures/README-example0-1.png)<!-- -->
@@ -42,6 +43,7 @@ Some degree of flexibility can be obtained by passing arguments.
 
 ``` r
 autoplot(sun.spct, annotations = c("+", "title:where:when"), unit.out = "photon")
+#> [1] NA
 ```
 
 ![](man/figures/README-example1-1.png)<!-- -->
@@ -117,8 +119,7 @@ publications, please cite according to:
 
 ``` r
 citation("ggspectra")
-#> 
-#> To cite package 'ggspectra' in publications, please use:
+#> To cite package ‘photobiology’ in publications use:
 #> 
 #>   Aphalo, Pedro J. (2015) The r4photobiology suite. UV4Plants Bulletin,
 #>   2015:1, 21-29. DOI:10.19232/uv4pb.2015.1.14
