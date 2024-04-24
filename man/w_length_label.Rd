@@ -11,31 +11,36 @@
 w_length_label(
   unit.exponent = -9,
   format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["w.length"]]
+  label.text = axis_labels()[["w.length"]],
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
 )
 
 w_number_label(
   unit.exponent = 0,
   format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["w.number"]]
+  label.text = axis_labels()[["w.number"]],
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
 )
 
 w_frequency_label(
   unit.exponent = 9,
   format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["freq"]]
+  label.text = axis_labels()[["freq"]],
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
 )
 
 w_energy_eV_label(
   unit.exponent = 0,
   format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["energy"]]
+  label.text = axis_labels()[["energy"]],
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
 )
 
 w_energy_J_label(
   unit.exponent = -18,
   format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["energy"]]
+  label.text = axis_labels()[["energy"]],
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
 )
 }
 \arguments{
@@ -46,6 +51,9 @@ to use.}
 "LaTeX".}
 
 \item{label.text}{character Textual portion of the labels.}
+
+\item{add.symbols}{logical If \code{TRUE} symbols of the quantities are
+added to the \code{name}. Supported only by \code{format = "R.expression"}.}
 }
 \value{
 a character string or an R expression.
@@ -78,12 +86,13 @@ By default labels consist in a textual name for the quantity, a
 \examples{
 
 w_length_label()
-w_length_label("R.expression")
-w_length_label("LaTeX")
+w_length_label(add.symbols = FALSE)
+w_length_label(format = "R.expression")
+w_length_label(format = "LaTeX")
 w_number_label()
-w_number_label("R.expression")
+w_number_label(format = "R.expression")
 w_frequency_label()
-w_frequency_label("R.expression")
+w_frequency_label(format = "R.expression")
 w_energy_J_label()
 w_energy_eV_label()
 

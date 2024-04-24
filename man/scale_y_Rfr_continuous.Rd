@@ -9,13 +9,15 @@
 scale_y_Rfr_continuous(
   unit.exponent = 0,
   name = Rfr_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), Rfr.type = Rfr.type),
+    label.text, scaled = scaled, normalized = round(normalized, 1), add.symbols =
+    add.symbols, Rfr.type = Rfr.type),
   labels = SI_pl_format(exponent = unit.exponent),
   limits = c(0, 1),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = NULL,
   scaled = FALSE,
   normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
   Rfr.type,
   ...
 )
@@ -23,27 +25,30 @@ scale_y_Rfr_continuous(
 scale_y_Rfr_specular_continuous(
   unit.exponent = 0,
   name = Rfr_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), Rfr.type =
-    "specular"),
+    label.text, scaled = scaled, normalized = round(normalized, 1), add.symbols =
+    add.symbols, Rfr.type = "specular"),
   labels = SI_pl_format(exponent = unit.exponent),
   limits = c(0, 1),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = NULL,
   scaled = FALSE,
   normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
   ...
 )
 
 scale_y_Rfr_total_continuous(
   unit.exponent = 0,
   name = Rfr_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), Rfr.type = "total"),
+    label.text, scaled = scaled, normalized = round(normalized, 1), add.symbols =
+    add.symbols, Rfr.type = "total"),
   labels = SI_pl_format(exponent = unit.exponent),
   limits = c(0, 1),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = NULL,
   scaled = FALSE,
   normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
   ...
 )
 }
@@ -67,6 +72,9 @@ data-based limits as argument and returns new limits.}
 
 \item{normalized}{logical (\code{FALSE}) or numeric Normalization wavelength
 in manometers (nm).}
+
+\item{add.symbols}{logical If \code{TRUE} symbols of the quantities are
+added to the \code{name}. Supported only by \code{format = "R.expression"}.}
 
 \item{Rfr.type}{character, either "total" or "spcular".}
 
@@ -102,5 +110,10 @@ ggplot(Ler_leaf_rflt.spct) +
   geom_line() +
   scale_y_Rfr_specular_continuous() +
   scale_x_wl_continuous()
+
+ggplot(Ler_leaf_rflt.spct) +
+  geom_line() +
+  scale_y_Rfr_specular_continuous(add.symbols = FALSE) +
+  scale_x_wl_continuous(add.symbols = FALSE)
 
 }

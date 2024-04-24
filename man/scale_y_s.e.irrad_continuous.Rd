@@ -10,48 +10,56 @@
 scale_y_s.e.irrad_continuous(
   unit.exponent = 0,
   name = s.e.irrad_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1)),
+    label.text, scaled = scaled, normalized = round(normalized, 1), add.symbols =
+    add.symbols),
   labels = SI_pl_format(exponent = unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.e.irrad"]],
   scaled = FALSE,
   normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
   ...
 )
 
 scale_y_s.q.irrad_continuous(
   unit.exponent = ifelse(normalized, 0, -6),
   name = s.q.irrad_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1)),
+    label.text, scaled = scaled, normalized = round(normalized, 1), add.symbols =
+    add.symbols),
   labels = SI_pl_format(exponent = unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.q.irrad"]],
   scaled = FALSE,
   normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
   ...
 )
 
 scale_y_s.e.irrad_log10(
   unit.exponent = 0,
   name = s.e.irrad_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1)),
+    label.text, scaled = scaled, normalized = round(normalized, 1), add.symbols =
+    add.symbols),
   labels = SI_pl_format(exponent = unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.e.irrad"]],
   scaled = FALSE,
   normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
   ...
 )
 
 scale_y_s.q.irrad_log10(
   unit.exponent = ifelse(normalized, 0, -6),
   name = s.q.irrad_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1)),
+    label.text, scaled = scaled, normalized = round(normalized, 1), add.symbols =
+    add.symbols),
   labels = SI_pl_format(exponent = unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.q.irrad"]],
   scaled = FALSE,
   normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
   ...
 )
 }
@@ -71,6 +79,9 @@ scale_y_s.q.irrad_log10(
 
 \item{normalized}{logical (\code{FALSE}) or numeric Normalization wavelength
 in manometers (nm).}
+
+\item{add.symbols}{logical If \code{TRUE} symbols of the quantities are
+added to the default \code{name}.}
 
 \item{...}{other named arguments passed to \code{scale_y_continuous}}
 }

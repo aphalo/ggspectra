@@ -11,6 +11,7 @@ Rfr_label(
   label.text = NULL,
   scaled = FALSE,
   normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
   Rfr.type
 )
 
@@ -19,7 +20,8 @@ Rfr_specular_label(
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = NULL,
   scaled = FALSE,
-  normalized = FALSE
+  normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
 )
 }
 \arguments{
@@ -34,6 +36,9 @@ Rfr_specular_label(
 
 \item{normalized}{logical (\code{FALSE}) or numeric Normalization wavelength
 in manometers (nm).}
+
+\item{add.symbols}{logical If \code{TRUE} symbols of the quantities are
+added to the \code{name}. Supported only by \code{format = "R.expression"}.}
 
 \item{Rfr.type}{character, either "total" or "specular".}
 }
@@ -56,6 +61,7 @@ Rfr_label(Rfr.type = "total")
 
 
 Rfr_specular_label()
+Rfr_specular_label(add.symbols = FALSE)
 Rfr_specular_label(-2)
 Rfr_specular_label(-3)
 Rfr_specular_label(format = "R.expression")

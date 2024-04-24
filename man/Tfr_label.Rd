@@ -12,6 +12,7 @@ Tfr_label(
   label.text = NULL,
   scaled = FALSE,
   normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
   Tfr.type
 )
 
@@ -20,7 +21,8 @@ Tfr_internal_label(
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = NULL,
   scaled = FALSE,
-  normalized = FALSE
+  normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
 )
 
 Tfr_total_label(
@@ -28,7 +30,8 @@ Tfr_total_label(
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = NULL,
   scaled = FALSE,
-  normalized = FALSE
+  normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
 )
 }
 \arguments{
@@ -43,6 +46,9 @@ Tfr_total_label(
 
 \item{normalized}{logical (\code{FALSE}) or numeric Normalization wavelength
 in manometers (nm).}
+
+\item{add.symbols}{logical If \code{TRUE} symbols of the quantities are
+added to the \code{name}. Supported only by \code{format = "R.expression"}.}
 
 \item{Tfr.type}{character, either "total" or "internal".}
 }
@@ -62,9 +68,11 @@ Default for \code{label.text} depends on the value passed as argument
 
 Tfr_label(Tfr.type = "internal")
 Tfr_label(Tfr.type = "total")
+Tfr_label(Tfr.type = "internal", add.symbols = FALSE)
 
 
 Tfr_internal_label()
+Tfr_internal_label(format = "R.expression", add.symbols = FALSE)
 Tfr_internal_label(-2)
 Tfr_internal_label(-3)
 Tfr_internal_label(format = "R.expression")
@@ -73,6 +81,7 @@ Tfr_internal_label(-3, format = "LaTeX")
 
 
 Tfr_total_label()
+Tfr_total_label(format = "R.expression", add.symbols = FALSE)
 Tfr_total_label(-2)
 Tfr_total_label(-3)
 Tfr_total_label(format = "R.expression")

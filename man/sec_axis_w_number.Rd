@@ -8,21 +8,44 @@
 \alias{sec_axis_wl}
 \title{Secondary axes for wavelengths}
 \usage{
-sec_axis_w_number(unit.exponent = -6, label.text = axis_labels()[["w.number"]])
+sec_axis_w_number(
+  unit.exponent = -6,
+  label.text = axis_labels()[["w.number"]],
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
+)
 
-sec_axis_w_frequency(unit.exponent = 12, label.text = axis_labels()[["freq"]])
+sec_axis_w_frequency(
+  unit.exponent = 12,
+  label.text = axis_labels()[["freq"]],
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
+)
 
-sec_axis_energy_eV(unit.exponent = 0, label.text = axis_labels()[["energy"]])
+sec_axis_energy_eV(
+  unit.exponent = 0,
+  label.text = axis_labels()[["energy"]],
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
+)
 
-sec_axis_energy_J(unit.exponent = -18, label.text = axis_labels()[["energy"]])
+sec_axis_energy_J(
+  unit.exponent = -18,
+  label.text = axis_labels()[["energy"]],
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
+)
 
-sec_axis_wl(unit.exponent = -9, label.text = axis_labels()[["w.length"]])
+sec_axis_wl(
+  unit.exponent = -9,
+  label.text = axis_labels()[["w.length"]],
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
+)
 }
 \arguments{
 \item{unit.exponent}{integer The exponent on base 10 of the scale multiplier
 used for the axis labels, e.g., 3 for \eqn{10^3} or \eqn{k}.}
 
 \item{label.text}{character Textual portion of the labels.}
+
+\item{add.symbols}{logical If \code{TRUE} symbols of the quantities are
+added to the \code{name}. Supported only by \code{format = "R.expression"}.}
 }
 \description{
 Secondary axes for wavelength data in nanometres. With suitable scaling and

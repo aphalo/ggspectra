@@ -15,6 +15,7 @@ columns of `cps` data (bug introduced in version 0.3.12).
 - In `autoplot.response_spct()` change default argument `norm = "max"` to 
 `norm = "update"` for consistency with the other `autoplot()` methods and 
 to avoide "surprising" users.
+- Revise _scales_ .... adding parameter `add.symbols`.
 
 # ggspectra 0.3.12
 

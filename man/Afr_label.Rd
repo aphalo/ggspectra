@@ -10,7 +10,8 @@ Afr_label(
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["Afr"]],
   scaled = FALSE,
-  normalized = FALSE
+  normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
 )
 
 Rfr_total_label(
@@ -18,7 +19,8 @@ Rfr_total_label(
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = NULL,
   scaled = FALSE,
-  normalized = FALSE
+  normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
 )
 }
 \arguments{
@@ -33,6 +35,9 @@ Rfr_total_label(
 
 \item{normalized}{logical (\code{FALSE}) or numeric Normalization wavelength
 in manometers (nm).}
+
+\item{add.symbols}{logical If \code{TRUE} symbols of the quantities are
+added to the \code{name}. Supported only by \code{format = "R.expression"}.}
 }
 \value{
 a character string or an R expression.
@@ -45,6 +50,7 @@ default devices) or LaTeX (for tikz device).
 \examples{
 
 Afr_label()
+Afr_label(format = "R.expression", add.symbols = FALSE)
 Afr_label(-2)
 Afr_label(-3)
 Afr_label(format = "R.expression")
@@ -53,6 +59,7 @@ Afr_label(-2, format = "LaTeX")
 
 
 Rfr_total_label()
+Rfr_total_label(add.symbols = FALSE)
 Rfr_total_label(-2)
 Rfr_total_label(-3)
 Rfr_total_label(format = "R.expression")

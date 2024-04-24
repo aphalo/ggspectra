@@ -7,13 +7,15 @@
 scale_y_Afr_continuous(
   unit.exponent = 0,
   name = Afr_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1)),
+    label.text, scaled = scaled, normalized = round(normalized, 1), add.symbols =
+    add.symbols),
   labels = SI_pl_format(exponent = unit.exponent),
   limits = c(0, 1),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["Afr"]],
   scaled = FALSE,
   normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
   ...
 )
 }
@@ -37,6 +39,9 @@ data-based limits as argument and returns new limits.}
 
 \item{normalized}{logical (\code{FALSE}) or numeric Normalization wavelength
 in manometers (nm).}
+
+\item{add.symbols}{logical If \code{TRUE} symbols of the quantities are
+added to the \code{name}. Supported only by \code{format = "R.expression"}.}
 
 \item{...}{other named arguments passed to \code{scale_y_continuous}}
 }
@@ -65,6 +70,11 @@ ggplot(yellow_gel.spct) +
   geom_line() +
   scale_y_Afr_continuous(unit.exponent = -3) +
   scale_x_wl_continuous()
+
+ggplot(yellow_gel.spct) +
+  geom_line() +
+  scale_y_Afr_continuous(add.symbols = FALSE) +
+  scale_x_wl_continuous(add.symbols = FALSE)
 
 unset_filter_qty_default()
 
