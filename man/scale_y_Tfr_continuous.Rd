@@ -7,7 +7,7 @@
 \title{Transmittance y-scale}
 \usage{
 scale_y_Tfr_continuous(
-  unit.exponent = 0,
+  unit.exponent = ifelse(pc.out, -2, 0),
   name = Tfr_label(unit.exponent = unit.exponent, format = format, label.text =
     label.text, scaled = scaled, normalized = round(normalized, 1), add.symbols =
     add.symbols, Tfr.type = Tfr.type),
@@ -18,12 +18,13 @@ scale_y_Tfr_continuous(
   scaled = FALSE,
   normalized = FALSE,
   add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
+  pc.out = getOption("ggspectra.pc.out", default = FALSE),
   Tfr.type,
   ...
 )
 
 scale_y_Tfr_internal_continuous(
-  unit.exponent = 0,
+  unit.exponent = ifelse(pc.out, -2, 0),
   name = Tfr_label(unit.exponent = unit.exponent, format = format, label.text =
     label.text, scaled = scaled, normalized = round(normalized, 1), add.symbols =
     add.symbols, Tfr.type = "internal"),
@@ -34,11 +35,12 @@ scale_y_Tfr_internal_continuous(
   scaled = FALSE,
   normalized = FALSE,
   add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
+  pc.out = getOption("ggspectra.pc.out", default = FALSE),
   ...
 )
 
 scale_y_Tfr_total_continuous(
-  unit.exponent = 0,
+  unit.exponent = ifelse(pc.out, -2, 0),
   name = Tfr_label(unit.exponent = unit.exponent, format = format, label.text =
     label.text, scaled = scaled, normalized = round(normalized, 1), add.symbols =
     add.symbols, Tfr.type = "total"),
@@ -49,6 +51,7 @@ scale_y_Tfr_total_continuous(
   scaled = FALSE,
   normalized = FALSE,
   add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
+  pc.out = getOption("ggspectra.pc.out", default = FALSE),
   ...
 )
 }
@@ -75,6 +78,9 @@ in manometers (nm).}
 
 \item{add.symbols}{logical If \code{TRUE} symbols of the quantities are
 added to the \code{name}. Supported only by \code{format = "R.expression"}.}
+
+\item{pc.out}{logical, if TRUE use percent as default instead of fraction
+of one.}
 
 \item{Tfr.type}{character, either "total" or "internal".}
 

@@ -5,7 +5,7 @@
 \title{Absorptance y-scale}
 \usage{
 scale_y_Afr_continuous(
-  unit.exponent = 0,
+  unit.exponent = ifelse(pc.out, -2, 0),
   name = Afr_label(unit.exponent = unit.exponent, format = format, label.text =
     label.text, scaled = scaled, normalized = round(normalized, 1), add.symbols =
     add.symbols),
@@ -16,6 +16,7 @@ scale_y_Afr_continuous(
   scaled = FALSE,
   normalized = FALSE,
   add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
+  pc.out = getOption("ggspectra.pc.out", default = FALSE),
   ...
 )
 }
@@ -42,6 +43,9 @@ in manometers (nm).}
 
 \item{add.symbols}{logical If \code{TRUE} symbols of the quantities are
 added to the \code{name}. Supported only by \code{format = "R.expression"}.}
+
+\item{pc.out}{logical, if TRUE use percent as default instead of fraction
+of one.}
 
 \item{...}{other named arguments passed to \code{scale_y_continuous}}
 }

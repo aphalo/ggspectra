@@ -6,21 +6,23 @@
 \title{Absorptance axis labels}
 \usage{
 Afr_label(
-  unit.exponent = 0,
+  unit.exponent = ifelse(pc.out, -2, 0),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["Afr"]],
   scaled = FALSE,
   normalized = FALSE,
-  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
+  pc.out = getOption("ggspectra.pc.out", default = FALSE)
 )
 
 Rfr_total_label(
-  unit.exponent = 0,
+  unit.exponent = ifelse(pc.out, -2, 0),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = NULL,
   scaled = FALSE,
   normalized = FALSE,
-  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
+  pc.out = getOption("ggspectra.pc.out", default = FALSE)
 )
 }
 \arguments{
@@ -38,6 +40,9 @@ in manometers (nm).}
 
 \item{add.symbols}{logical If \code{TRUE} symbols of the quantities are
 added to the \code{name}. Supported only by \code{format = "R.expression"}.}
+
+\item{pc.out}{logical, if TRUE use percent as default instead of fraction
+of one.}
 }
 \value{
 a character string or an R expression.

@@ -330,9 +330,19 @@ ggplot(sun.spct) +
   scale_x_wl_continuous() +
   scale_y_s.e.irrad_continuous()
 ```
+We can have also axis labels without symbols, either by passing an argument to
+parameter `add.symbols` or by seeting R option `ggspectra.add.symbols`, which
+sets the default.
+
+```{r}
+ggplot(sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous(add.symbols = FALSE) +
+  scale_y_s.e.irrad_continuous(add.symbols = FALSE)
+```
 
 Here we change the `unit.exponent` from its default value of `-9`
-(nanometres) to `-6` (micrometers) for wavelengts, change `0` to `-3`
+(nanometres) to `-6` (micrometers) for wavelengths, and change `0` to `-3`
 for irradiance. When they exist SI multipliers are used, and powers of
 10 otherwise. This is not a transformation of the data, it only affects
 the tick labels and the axis labels in coordination. **Consequently
@@ -408,7 +418,7 @@ units pass `""` as argument (not shown).
 ggplot(sun.spct) + 
   geom_line() +
   scale_x_wl_continuous(label.text = "Longitud de onda,") +
-  scale_y_s.e.irrad_continuous(label.text = "Irradiancia,")
+  scale_y_s.e.irrad_continuous(label.text = "Irradiancia espectral,")
 ```
 
 If the data are normalized, we can pass the normalization wavelength as
@@ -438,7 +448,7 @@ the purpose of these wrappers.
 ### Wavelength
 
 Currently one x-scale function suitable for wavelengths in nanometres is
-exported by package 'ggspectra', as well as scales for wavenumber, frequency and
+exported by package 'ggspectra', as well as scales for wave number, frequency and
 energy, expecting the respective data quantities expressed in SI units with no
 scale factor. 
 

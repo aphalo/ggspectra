@@ -7,12 +7,13 @@
 \title{Transmittance axis labels}
 \usage{
 Tfr_label(
-  unit.exponent = 0,
+  unit.exponent = ifelse(pc.out, -2, 0),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = NULL,
   scaled = FALSE,
   normalized = FALSE,
   add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
+  pc.out = getOption("ggspectra.pc.out", default = FALSE),
   Tfr.type
 )
 
@@ -49,6 +50,9 @@ in manometers (nm).}
 
 \item{add.symbols}{logical If \code{TRUE} symbols of the quantities are
 added to the \code{name}. Supported only by \code{format = "R.expression"}.}
+
+\item{pc.out}{logical, if TRUE use percent as default instead of fraction
+of one.}
 
 \item{Tfr.type}{character, either "total" or "internal".}
 }
