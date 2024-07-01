@@ -11,6 +11,8 @@
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
+#' @param add.symbols logical If \code{TRUE} symbols of the quantities are
+#'   added to the \code{name}. Supported only by \code{format = "R.expression"}.
 #'
 #' @return a character string or an R expression.
 #'
@@ -44,12 +46,21 @@ s.e.response_label <- function(unit.exponent = 0,
                                                   default = "R.expression"),
                                label.text = axis_labels()[["s.e.response"]],
                                scaled = FALSE,
-                               normalized = FALSE) {
+                               normalized = FALSE,
+                               add.symbols = getOption("ggspectra.add.symbols",
+                                                       default = TRUE)) {
+  if (!add.symbols) {
+    label.text <- gsub(",$", "", label.text)
+  }
   if (scaled) {
     if (tolower(format) == "latex") {
       paste(label.text, "$R(E)_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~italic(R(E))[lambda]~plain((rel.~units)))
+      if (add.symbols) {
+        bquote(.(label.text)~italic(R(E))[lambda]~plain((rel.~units)))
+      } else {
+        bquote(.(label.text)~plain((rel.~units)))
+      }
     } else if (format == "R.character") {
       paste(label.text, "R(lambda) (rel. units)")
     }
@@ -57,7 +68,11 @@ s.e.response_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $R(E)_{\\lambda} / R(E)_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~italic(R(E))[lambda]/italic(R(E))[.(normalized)]~plain("(/1)"))
+      if (add.symbols) {
+        bquote(.(label.text)~italic(R(E))[lambda]/italic(R(E))[.(normalized)]~plain("(/1)"))
+      } else {
+        bquote(.(label.text)*", normalised"~plain("(/1)"))
+      }
     } else if (format == "R.character") {
       paste(label.text, "R(E)(lambda) (norm. at", normalized, "nm)")
     }
@@ -75,9 +90,17 @@ s.e.response_label <- function(unit.exponent = 0,
     } else if (format %in% c("R.expression")) {
       if (has_SI_prefix(unit.exponent)) {
         prefix <- exponent2prefix(unit.exponent)
-        bquote(.(label.text)~italic(R(E))[lambda]~(plain(.(prefix))*plain(J^{-1}~m^{-2}~nm^{-1})))
+        if (add.symbols) {
+          bquote(.(label.text)~italic(R(E))[lambda]~(plain(.(prefix))*plain(J^{-1}~m^{-2}~nm^{-1})))
+        } else {
+          bquote(.(label.text)~(plain(.(prefix))*plain(J^{-1}~m^{-2}~nm^{-1})))
+        }
       } else {
-        bquote(.(label.text)~italic(R(E))[lambda]~(10^{.(unit.exponent)}~plain(J^{-1}~m^{-2}~nm^{-1})))
+        if (add.symbols) {
+          bquote(.(label.text)~italic(R(E))[lambda]~(10^{.(unit.exponent)}~plain(J^{-1}~m^{-2}~nm^{-1})))
+        } else {
+          bquote(.(label.text)~(10^{.(unit.exponent)}~plain(J^{-1}~m^{-2}~nm^{-1})))
+        }
       }
     } else if (format == "R.character" &&
                has_SI_prefix(unit.exponent)) {
@@ -100,12 +123,21 @@ s.q.response_label <- function(unit.exponent = 0,
                                                   default = "R.expression"),
                                label.text = axis_labels()[["s.q.response"]],
                                scaled = FALSE,
-                               normalized = FALSE) {
+                               normalized = FALSE,
+                               add.symbols = getOption("ggspectra.add.symbols",
+                                                       default = TRUE)) {
+  if (!add.symbols) {
+    label.text <- gsub(",$", "", label.text)
+  }
   if (scaled) {
     if (tolower(format) == "latex") {
       paste(label.text, " $R(Q)_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      expression(.(label.text)~italic(R(Q))[lambda]~plain((rel.~units)))
+      if (add.symbols) {
+        expression(.(label.text)~italic(R(Q))[lambda]~plain((rel.~units)))
+      } else {
+        expression(.(label.text)~plain((rel.~units)))
+      }
     } else if (format == "R.character") {
       paste(label.text, " (rel. units)")
     }
@@ -113,7 +145,11 @@ s.q.response_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $R(Q)_{\\lambda} / R(Q)_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~italic(R(Q))[lambda]/italic(R(Q))[.(normalized)]~plain("(/1)"))
+      if (add.symbols) {
+        bquote(.(label.text)~italic(R(Q))[lambda]/italic(R(Q))[.(normalized)]~plain("(/1)"))
+      } else {
+        bquote(.(label.text)*", normalised"~plain("(/1)"))
+      }
     } else if (format == "R.character") {
       paste(label.text, "R(Q)(lambda) (norm.", normalized, "nm)")
     }
@@ -131,9 +167,17 @@ s.q.response_label <- function(unit.exponent = 0,
     } else if (format %in% c("R.expression")) {
       if (has_SI_prefix(unit.exponent)) {
         prefix <- exponent2prefix(unit.exponent)
-        bquote(.(label.text)~italic(R(Q))[lambda]~(plain(.(prefix))*plain(mol^{-1}~m^{-2}~nm^{-1})))
+        if (add.symbols) {
+          bquote(.(label.text)~italic(R(Q))[lambda]~(plain(.(prefix))*plain(mol^{-1}~m^{-2}~nm^{-1})))
+        } else {
+          bquote(.(label.text)~(plain(.(prefix))*plain(mol^{-1}~m^{-2}~nm^{-1})))
+        }
       } else {
-        bquote(.(label.text)~italic(R(Q))[lambda]~(10^{.(unit.exponent)}*plain(mol^{-1}~m^{-2}~nm^{-1})))
+        if (add.symbols) {
+          bquote(.(label.text)~italic(R(Q))[lambda]~(10^{.(unit.exponent)}*plain(mol^{-1}~m^{-2}~nm^{-1})))
+        } else {
+          bquote(.(label.text)~(10^{.(unit.exponent)}*plain(mol^{-1}~m^{-2}~nm^{-1})))
+        }
       }
     } else if (format == "R.character" &&
                has_SI_prefix(unit.exponent)) {
@@ -156,12 +200,21 @@ s.e.action_label <- function(unit.exponent = 0,
                                                 default = "R.expression"),
                              label.text = axis_labels()[["s.e.action"]],
                              scaled = FALSE,
-                             normalized = FALSE) {
+                             normalized = FALSE,
+                             add.symbols = getOption("ggspectra.add.symbols",
+                                                     default = TRUE)) {
+  if (!add.symbols) {
+    label.text <- gsub(",$", "", label.text)
+  }
   if (scaled) {
     if (tolower(format) == "latex") {
       paste(label.text, "$A(E)_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~italic(A(E))[lambda]~plain((rel.~units)))
+      if (add.symbols) {
+        bquote(.(label.text)~italic(A(E))[lambda]~plain((rel.~units)))
+      } else {
+        bquote(.(label.text)~plain((rel.~units)))
+      }
     } else if (format == "R.character") {
       paste(label.text, "A(E)(lambda) (rel. units)")
     }
@@ -169,7 +222,11 @@ s.e.action_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $A(E)_{\\lambda} / A(E)_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~italic(A(E))[lambda]/italic(A(E))[.(normalized)]~plain("(/1)"))
+      if (add.symbols) {
+        bquote(.(label.text)~italic(A(E))[lambda]/italic(A(E))[.(normalized)]~plain("(/1)"))
+      } else {
+        bquote(.(label.text)*", normalised"~plain("(/1)"))
+      }
     } else if (format == "R.character") {
       paste(label.text, "A(E)(lambda) (norm. at", normalized, "nm)")
     }
@@ -187,9 +244,17 @@ s.e.action_label <- function(unit.exponent = 0,
     } else if (format %in% c("R.expression")) {
       if (has_SI_prefix(unit.exponent)) {
         prefix <- exponent2prefix(unit.exponent)
-        bquote(.(label.text)~italic(A(E))[lambda]~(plain(.(prefix))*plain(J^{-1}~m^{-2}~nm^{-1})))
+        if (add.symbols) {
+          bquote(.(label.text)~italic(A(E))[lambda]~(plain(.(prefix))*plain(J^{-1}~m^{-2}~nm^{-1})))
+        } else {
+          bquote(.(label.text)~(plain(.(prefix))*plain(J^{-1}~m^{-2}~nm^{-1})))
+        }
       } else {
-        bquote(.(label.text)~italic(A(E))[lambda]~(10^{.(unit.exponent)}~plain(J^{-1}~m^{-2}~nm^{-1})))
+        if (add.symbols) {
+          bquote(.(label.text)~italic(A(E))[lambda]~(10^{.(unit.exponent)}~plain(J^{-1}~m^{-2}~nm^{-1})))
+        } else {
+          bquote(.(label.text)~(10^{.(unit.exponent)}~plain(J^{-1}~m^{-2}~nm^{-1})))
+        }
       }
     } else if (format == "R.character" &&
                has_SI_prefix(unit.exponent)) {
@@ -212,12 +277,21 @@ s.q.action_label <- function(unit.exponent = 0,
                                                 default = "R.expression"),
                              label.text = axis_labels()[["s.q.action"]],
                              scaled = FALSE,
-                             normalized = FALSE) {
+                             normalized = FALSE,
+                             add.symbols = getOption("ggspectra.add.symbols",
+                                                     default = TRUE)) {
+  if (!add.symbols) {
+    label.text <- gsub(",$", "", label.text)
+  }
   if (scaled) {
     if (tolower(format) == "latex") {
       paste(label.text, "$A(Q)_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      expression(.(label.text)~talic(A(Q))[lambda]~plain((rel.~units)))
+      if (add.symbols) {
+        expression(.(label.text)~talic(A(Q))[lambda]~plain((rel.~units)))
+      } else {
+        expression(.(label.text)~plain((rel.~units)))
+      }
     } else if (format == "R.character") {
       paste(label.text, "A(Q)(lambda) (rel. units)")
     }
@@ -225,7 +299,11 @@ s.q.action_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $A(Q)_{\\lambda} / A(Q)_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~italic(A(Q))[lambda]/talic(A(Q))[.(normalized)]~plain("(/1)"))
+      if (add.symbols) {
+        bquote(.(label.text)~italic(A(Q))[lambda]/talic(A(Q))[.(normalized)]~plain("(/1)"))
+      } else {
+        bquote(.(label.text)*", normalised"~plain("(/1)"))
+      }
     } else if (format == "R.character") {
       paste(label.text, "A(Q)(lambda) (norm. at", normalized, "nm)")
     }
@@ -243,9 +321,17 @@ s.q.action_label <- function(unit.exponent = 0,
     } else if (format %in% c("R.expression")) {
       if (has_SI_prefix(unit.exponent)) {
         prefix <- exponent2prefix(unit.exponent)
-        bquote(.(label.text)~talic(A(Q))[lambda]~(plain(.(prefix))*plain(mol^{-1}~m^{-2}~nm^{-1})))
+        if (add.symbols) {
+          bquote(.(label.text)~italic(A(Q))[lambda]~(plain(.(prefix))*plain(mol^{-1}~m^{-2}~nm^{-1})))
+        } else {
+          bquote(.(label.text)~(plain(.(prefix))*plain(mol^{-1}~m^{-2}~nm^{-1})))
+        }
       } else {
-        bquote(.(label.text)~talic(A(Q))[lambda]~(10^{.(unit.exponent)}*plain(mol^{-1}~m^{-2}~nm^{-1})))
+        if (add.symbols) {
+          bquote(.(label.text)~italic(A(Q))[lambda]~(10^{.(unit.exponent)}*plain(mol^{-1}~m^{-2}~nm^{-1})))
+        } else {
+          bquote(.(label.text)~(10^{.(unit.exponent)}*plain(mol^{-1}~m^{-2}~nm^{-1})))
+        }
       }
     } else if (format == "R.character" &&
                has_SI_prefix(unit.exponent)) {
@@ -272,6 +358,8 @@ s.q.action_label <- function(unit.exponent = 0,
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
+#' @param add.symbols logical If \code{TRUE} symbols of the quantities are
+#'   added to the \code{name}. Supported only by \code{format = "R.expression"}.
 #' @param ... other named arguments passed to \code{scale_y_continuous}
 #'
 #' @note This function only alters two default arguments, please, see
@@ -334,13 +422,16 @@ scale_y_s.e.response_continuous <-
                                      format = format,
                                      label.text = label.text,
                                      scaled = scaled,
-                                     normalized = round(normalized, 1)),
+                                     normalized = round(normalized, 1),
+                                     add.symbols = add.symbols),
            labels = SI_pl_format(exponent = -unit.exponent), # per unit
            format = getOption("photobiology.math",
                               default = "R.expression"),
            label.text = axis_labels()[["s.e.response"]],
            scaled = FALSE,
            normalized = FALSE,
+           add.symbols = getOption("ggspectra.add.symbols",
+                                   default = TRUE),
            ...) {
     scale_y_continuous(name = name,
                        labels = labels,
@@ -357,13 +448,16 @@ scale_y_s.q.response_continuous <-
                                      format = format,
                                      label.text = label.text,
                                      scaled = scaled,
-                                     normalized = round(normalized, 1)),
+                                     normalized = round(normalized, 1),
+                                     add.symbols = add.symbols),
            labels = SI_pl_format(exponent = -unit.exponent),  # per unit
            format = getOption("photobiology.math",
                               default = "R.expression"),
            label.text = axis_labels()[["s.q.response"]],
            scaled = FALSE,
            normalized = FALSE,
+           add.symbols = getOption("ggspectra.add.symbols",
+                                   default = TRUE),
            ...) {
     scale_y_continuous(name = name,
                        labels = labels,
@@ -380,13 +474,16 @@ scale_y_s.e.action_continuous <-
                                    format = format,
                                    label.text = label.text,
                                    scaled = scaled,
-                                   normalized = round(normalized, 1)),
+                                   normalized = round(normalized, 1),
+                                   add.symbols = add.symbols),
            labels = SI_pl_format(exponent = -unit.exponent), # per unit
            format = getOption("photobiology.math",
                               default = "R.expression"),
            label.text = axis_labels()[["s.e.action"]],
            scaled = FALSE,
            normalized = FALSE,
+           add.symbols = getOption("ggspectra.add.symbols",
+                                   default = TRUE),
            ...) {
     scale_y_continuous(name = name,
                        labels = labels,
@@ -403,13 +500,16 @@ scale_y_s.q.action_continuous <-
                                    format = format,
                                    label.text = label.text,
                                    scaled = scaled,
-                                   normalized = round(normalized, 1)),
+                                   normalized = round(normalized, 1),
+                                   add.symbols = add.symbols),
            labels = SI_pl_format(exponent = -unit.exponent),  # per unit
            format = getOption("photobiology.math",
                               default = "R.expression"),
            label.text = axis_labels()[["s.q.action"]],
            scaled = FALSE,
            normalized = FALSE,
+           add.symbols = getOption("ggspectra.add.symbols",
+                                   default = TRUE),
            ...) {
     scale_y_continuous(name = name,
                        labels = labels,

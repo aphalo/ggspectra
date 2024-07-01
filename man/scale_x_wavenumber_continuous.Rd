@@ -6,10 +6,12 @@
 \usage{
 scale_x_wavenumber_continuous(
   unit.exponent = -6,
-  name = w_number_label(unit.exponent = unit.exponent, label.text = label.text),
+  name = w_number_label(unit.exponent = unit.exponent, label.text = label.text,
+    add.symbols = add.symbols),
   breaks = scales::pretty_breaks(n = 7),
   labels = SI_pl_format(exponent = -unit.exponent),
   label.text = axis_labels()[["w.number"]],
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
   ...
 )
 }
@@ -24,6 +26,9 @@ scale_x_wavenumber_continuous(
 positions.}
 
 \item{label.text}{character Textual portion of the labels.}
+
+\item{add.symbols}{logical If \code{TRUE} symbols of the quantities are
+added to the \code{name}. Supported only by \code{format = "R.expression"}.}
 
 \item{...}{other named arguments passed to \code{scale_y_continuous}}
 }

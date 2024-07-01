@@ -10,48 +10,56 @@
 scale_y_s.e.response_continuous(
   unit.exponent = 0,
   name = s.e.response_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1)),
+    label.text, scaled = scaled, normalized = round(normalized, 1), add.symbols =
+    add.symbols),
   labels = SI_pl_format(exponent = -unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.e.response"]],
   scaled = FALSE,
   normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
   ...
 )
 
 scale_y_s.q.response_continuous(
   unit.exponent = 0,
   name = s.q.response_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1)),
+    label.text, scaled = scaled, normalized = round(normalized, 1), add.symbols =
+    add.symbols),
   labels = SI_pl_format(exponent = -unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.q.response"]],
   scaled = FALSE,
   normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
   ...
 )
 
 scale_y_s.e.action_continuous(
   unit.exponent = 0,
   name = s.e.action_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1)),
+    label.text, scaled = scaled, normalized = round(normalized, 1), add.symbols =
+    add.symbols),
   labels = SI_pl_format(exponent = -unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.e.action"]],
   scaled = FALSE,
   normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
   ...
 )
 
 scale_y_s.q.action_continuous(
   unit.exponent = 0,
   name = s.q.action_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1)),
+    label.text, scaled = scaled, normalized = round(normalized, 1), add.symbols =
+    add.symbols),
   labels = SI_pl_format(exponent = -unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.q.action"]],
   scaled = FALSE,
   normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
   ...
 )
 }
@@ -71,6 +79,9 @@ scale_y_s.q.action_continuous(
 
 \item{normalized}{logical (\code{FALSE}) or numeric Normalization wavelength
 in manometers (nm).}
+
+\item{add.symbols}{logical If \code{TRUE} symbols of the quantities are
+added to the \code{name}. Supported only by \code{format = "R.expression"}.}
 
 \item{...}{other named arguments passed to \code{scale_y_continuous}}
 }

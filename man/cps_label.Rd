@@ -9,7 +9,8 @@ cps_label(
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["cps"]],
   scaled = FALSE,
-  normalized = FALSE
+  normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
 )
 }
 \arguments{
@@ -24,6 +25,9 @@ cps_label(
 
 \item{normalized}{logical (\code{FALSE}) or numeric Normalization wavelength
 in manometers (nm).}
+
+\item{add.symbols}{logical If \code{TRUE} symbols of the quantities are
+added to the \code{name}. Supported only by \code{format = "R.expression"}.}
 }
 \value{
 a character string or an R expression.

@@ -13,6 +13,8 @@
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
+#' @param add.symbols logical If \code{TRUE} symbols of the quantities are
+#'   added to the \code{name}. Supported only by \code{format = "R.expression"}.
 #' @param Tfr.type character, either "total" or "internal".
 #'
 #' @note Default for \code{label.text} depends on the value passed as argument
@@ -26,6 +28,7 @@
 #'
 #' A_label(Tfr.type = "internal")
 #' A_label(Tfr.type = "total")
+#' A_label(Tfr.type = "total", add.symbols = FALSE)
 #'
 A_label <- function(unit.exponent = 0,
                     format = getOption("photobiology.math",
@@ -33,6 +36,8 @@ A_label <- function(unit.exponent = 0,
                     label.text = NULL,
                     scaled = FALSE,
                     normalized = FALSE,
+                    add.symbols = getOption("ggspectra.add.symbols",
+                                            default = TRUE),
                     Tfr.type) {
   if (is.null(label.text)) {
     label.text <- switch(tolower(Tfr.type),
@@ -42,11 +47,18 @@ A_label <- function(unit.exponent = 0,
     )
   }
 
+  if (!add.symbols) {
+    label.text <- gsub(",$", "", label.text)
+  }
   if (scaled) {
     if (tolower(format) == "latex") {
       paste(label.text, " $A_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~italic(A)[lambda]~plain((rel.~units)))
+      if (add.symbols) {
+        bquote(.(label.text)~italic(A)[lambda]~~plain((rel.~units)))
+      } else {
+        bquote(.(label.text)~~plain((rel.~units)))
+      }
     } else if (format == "R.character") {
       paste(label.text, " A(lambda) (rel. units)")
     }
@@ -54,7 +66,11 @@ A_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $A_{\\lambda}/A_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~italic(A)[lambda]/italic(A)[.(normalized)]~~plain("(/1)"))
+      if (add.symbols) {
+        bquote(.(label.text)~italic(A)[lambda]/italic(A)[.(normalized)]~~plain("(/1)"))
+      } else {
+        bquote(.(label.text)*", normalised"~~plain("(/1)"))
+      }
     } else if (format == "R.character") {
       paste(label.text, " A(lambda) (norm. at", normalized, "nm)")
     }
@@ -72,9 +88,17 @@ A_label <- function(unit.exponent = 0,
     } else if (format %in% c("R.expression")) {
       if (has_SI_prefix(unit.exponent)) {
         prefix <- exponent2prefix(unit.exponent)
-        bquote(.(label.text)~italic(A)[lambda]~~(plain(.(prefix)*AU)))
+        if (add.symbols) {
+          bquote(.(label.text)~italic(A)[lambda]~~(plain(.(prefix)*AU)))
+        } else {
+          bquote(.(label.text)~~(plain(.(prefix)*AU)))
+        }
       } else {
-        bquote(.(label.text)~italic(A)[lambda]~(10^{.(unit.exponent)}*plain(AU)))
+        if (add.symbols) {
+          bquote(.(label.text)~italic(A)[lambda]~(10^{.(unit.exponent)}*plain(AU)))
+        } else {
+          bquote(.(label.text)~(10^{.(unit.exponent)}*plain(AU)))
+        }
       }
     } else if (format == "R.character" && has_SI_prefix(unit.exponent)) {
       paste(label.text, " A(lambda) (",
@@ -95,6 +119,7 @@ A_label <- function(unit.exponent = 0,
 #' @examples
 #'
 #' A_internal_label()
+#' A_internal_label(format = "R.expression", add.symbols = FALSE)
 #' A_internal_label(-3)
 #' A_internal_label(format = "R.expression")
 #' A_internal_label(format = "LaTeX")
@@ -105,12 +130,15 @@ A_internal_label <- function(unit.exponent = 0,
                                                 default = "R.expression"),
                              label.text = NULL,
                              scaled = FALSE,
-                             normalized = FALSE) {
+                             normalized = FALSE,
+                             add.symbols = getOption("ggspectra.add.symbols",
+                                                     default = TRUE)) {
   A_label(unit.exponent = unit.exponent,
           format = format,
           label.text = label.text,
           scaled = scaled,
           normalized = normalized,
+          add.symbols = add.symbols,
           Tfr.type = "internal")
 }
 
@@ -121,6 +149,7 @@ A_internal_label <- function(unit.exponent = 0,
 #' @examples
 #'
 #' A_total_label()
+#' A_total_label(format = "R.expression", add.symbols = FALSE)
 #' A_total_label(-3)
 #' A_total_label(format = "R.expression")
 #' A_total_label(format = "LaTeX")
@@ -131,12 +160,15 @@ A_total_label <- function(unit.exponent = 0,
                                              default = "R.expression"),
                           label.text = NULL,
                           scaled = FALSE,
-                          normalized = FALSE) {
+                          normalized = FALSE,
+                          add.symbols = getOption("ggspectra.add.symbols",
+                                                  default = TRUE)) {
   A_label(unit.exponent = unit.exponent,
           format = format,
           label.text = label.text,
           scaled = scaled,
           normalized = normalized,
+          add.symbols = add.symbols,
           Tfr.type = "total")
 }
 
@@ -153,6 +185,8 @@ A_total_label <- function(unit.exponent = 0,
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
+#' @param add.symbols logical If \code{TRUE} symbols of the quantities are
+#'   added to the \code{name}. Supported only by \code{format = "R.expression"}.
 #' @param Tfr.type character, either "total" or "internal".
 #' @param ... other named arguments passed to \code{scale_y_continuous}
 #'
@@ -178,6 +212,11 @@ A_total_label <- function(unit.exponent = 0,
 #'   scale_y_A_total_continuous() +
 #'   scale_x_wl_continuous()
 #'
+#' ggplot(yellow_gel.spct, plot.qty = "absorbance") +
+#'   geom_line() +
+#'   scale_y_A_total_continuous(add.symbols = FALSE) +
+#'   scale_x_wl_continuous(add.symbols = FALSE)
+#'
 scale_y_A_continuous <-
   function(unit.exponent = 0,
            name = A_label(unit.exponent = unit.exponent,
@@ -185,6 +224,7 @@ scale_y_A_continuous <-
                           label.text = label.text,
                           scaled = scaled,
                           normalized = round(normalized, 1),
+                          add.symbols = add.symbols,
                           Tfr.type = Tfr.type),
            labels = SI_pl_format(exponent = unit.exponent),
            format = getOption("photobiology.math",
@@ -192,6 +232,8 @@ scale_y_A_continuous <-
            label.text = NULL,
            scaled = FALSE,
            normalized = FALSE,
+           add.symbols = getOption("ggspectra.add.symbols",
+                                   default = TRUE),
            Tfr.type,
            ...) {
     scale_y_continuous(name = name,
@@ -210,6 +252,7 @@ scale_y_A_internal_continuous <-
                           label.text = label.text,
                           scaled = scaled,
                           normalized = round(normalized, 1),
+                          add.symbols = add.symbols,
                           Tfr.type = "internal"),
            labels = SI_pl_format(exponent = unit.exponent),
            format = getOption("photobiology.math",
@@ -217,6 +260,8 @@ scale_y_A_internal_continuous <-
            label.text = NULL,
            scaled = FALSE,
            normalized = FALSE,
+           add.symbols = getOption("ggspectra.add.symbols",
+                                   default = TRUE),
            ...) {
     scale_y_continuous(name = name,
                        labels = labels,
@@ -234,6 +279,7 @@ scale_y_A_total_continuous <-
                           label.text = label.text,
                           scaled = scaled,
                           normalized = round(normalized, 1),
+                          add.symbols = add.symbols,
                           Tfr.type = "total"),
            labels = SI_pl_format(exponent = unit.exponent),
            format = getOption("photobiology.math",
@@ -241,6 +287,8 @@ scale_y_A_total_continuous <-
            label.text = NULL,
            scaled = FALSE,
            normalized = FALSE,
+           add.symbols = getOption("ggspectra.add.symbols",
+                                   default = TRUE),
            ...) {
     scale_y_continuous(name = name,
                        labels = labels,
@@ -262,6 +310,10 @@ scale_y_A_total_continuous <-
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
+#' @param add.symbols logical If \code{TRUE} symbols of the quantities are
+#'   added to the \code{name}. Supported only by \code{format = "R.expression"}.
+#' @param pc.out logical, if TRUE use percent as default instead of fraction
+#'   of one.
 #' @param Tfr.type character, either "total" or "internal".
 #'
 #' @note Default for \code{label.text} depends on the value passed as argument
@@ -275,13 +327,18 @@ scale_y_A_total_continuous <-
 #'
 #' Tfr_label(Tfr.type = "internal")
 #' Tfr_label(Tfr.type = "total")
+#' Tfr_label(Tfr.type = "internal", add.symbols = FALSE)
 #'
-Tfr_label <- function(unit.exponent = 0,
+Tfr_label <- function(unit.exponent = ifelse(pc.out, -2, 0),
                       format = getOption("photobiology.math",
                                          default = "R.expression"),
                       label.text = NULL,
                       scaled = FALSE,
                       normalized = FALSE,
+                      add.symbols = getOption("ggspectra.add.symbols",
+                                              default = TRUE),
+                      pc.out = getOption("ggspectra.pc.out",
+                                         default = FALSE),
                       Tfr.type) {
   if (is.null(label.text)) {
     label.text <- switch(tolower(Tfr.type),
@@ -290,6 +347,10 @@ Tfr_label <- function(unit.exponent = 0,
                          stop("Bad Tfr.type: ", Tfr.type)
     )
   }
+  if (!add.symbols) {
+    label.text <- gsub(",$", "", label.text)
+  }
+
   if (unit.exponent == 0) {
     unit.text = "(/1)"
     unit.tex = "(/1)"
@@ -309,7 +370,11 @@ Tfr_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $\\tau_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~tau[lambda]~plain((rel.~units)))
+      if (add.symbols) {
+        bquote(.(label.text)~tau[lambda]~plain((rel.~units)))
+      } else {
+        bquote(.(label.text)~plain((rel.~units)))
+      }
     } else if (format == "R.character") {
       paste(label.text, " t(lambda) (rel. units)")
     }
@@ -317,7 +382,11 @@ Tfr_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $\\tau_{\\lambda}/\\tau_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~tau[lambda]/tau[.(normalized)]~plain("(/1)"))
+      if (add.symbols) {
+        bquote(.(label.text)~tau[lambda]/tau[.(normalized)]~plain("(/1)"))
+      } else {
+        bquote(.(label.text)*", normalised"~plain("(/1)"))
+      }
     } else if (format == "R.character") {
       paste(label.text, " t(lambda) (norm. at", normalized, "nm)")
     }
@@ -325,7 +394,11 @@ Tfr_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $\\tau_{\\lambda}$ ", unit.tex, sep = "")
     } else if (format %in% c("R.expression")) {
+      if (add.symbols) {
         bquote(.(label.text)~tau[lambda]~plain(.(unit.text)))
+      } else {
+        bquote(.(label.text)~plain(.(unit.text)))
+      }
     } else if (format == "R.character") {
       paste(label.text, " t(lambda) ", unit.text, sep = "")
     } else {
@@ -343,6 +416,7 @@ Tfr_label <- function(unit.exponent = 0,
 #' @examples
 #'
 #' Tfr_internal_label()
+#' Tfr_internal_label(format = "R.expression", add.symbols = FALSE)
 #' Tfr_internal_label(-2)
 #' Tfr_internal_label(-3)
 #' Tfr_internal_label(format = "R.expression")
@@ -354,12 +428,15 @@ Tfr_internal_label <- function(unit.exponent = 0,
                                                   default = "R.expression"),
                                label.text = NULL,
                                scaled = FALSE,
-                               normalized = FALSE) {
+                               normalized = FALSE,
+                               add.symbols = getOption("ggspectra.add.symbols",
+                                                       default = TRUE)) {
   Tfr_label(unit.exponent = unit.exponent,
             format = format,
             label.text = label.text,
             scaled = scaled,
             normalized = normalized,
+            add.symbols = add.symbols,
             Tfr.type = "internal")
 }
 
@@ -370,6 +447,7 @@ Tfr_internal_label <- function(unit.exponent = 0,
 #' @examples
 #'
 #' Tfr_total_label()
+#' Tfr_total_label(format = "R.expression", add.symbols = FALSE)
 #' Tfr_total_label(-2)
 #' Tfr_total_label(-3)
 #' Tfr_total_label(format = "R.expression")
@@ -381,12 +459,15 @@ Tfr_total_label <- function(unit.exponent = 0,
                                                default = "R.expression"),
                             label.text = NULL,
                             scaled = FALSE,
-                            normalized = FALSE) {
+                            normalized = FALSE,
+                            add.symbols = getOption("ggspectra.add.symbols",
+                                                    default = TRUE)) {
   Tfr_label(unit.exponent = unit.exponent,
             format = format,
             label.text = label.text,
             scaled = scaled,
             normalized = normalized,
+            add.symbols = add.symbols,
             Tfr.type = "total")
 }
 
@@ -406,6 +487,10 @@ Tfr_total_label <- function(unit.exponent = 0,
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
+#' @param add.symbols logical If \code{TRUE} symbols of the quantities are
+#'   added to the \code{name}. Supported only by \code{format = "R.expression"}.
+#' @param pc.out logical, if TRUE use percent as default instead of fraction
+#'   of one.
 #' @param Tfr.type character, either "total" or "internal".
 #' @param ... other named arguments passed to \code{scale_y_continuous}
 #'
@@ -440,14 +525,20 @@ Tfr_total_label <- function(unit.exponent = 0,
 #'   scale_y_Tfr_total_continuous() +
 #'   scale_x_wl_continuous()
 #'
+#' ggplot(yellow_gel.spct) +
+#'   geom_line() +
+#'   scale_y_Tfr_total_continuous(add.symbols = FALSE) +
+#'   scale_x_wl_continuous(add.symbols = FALSE)
+#'
 #' unset_filter_qty_default()
 #'
-scale_y_Tfr_continuous <- function(unit.exponent = 0,
+scale_y_Tfr_continuous <- function(unit.exponent = ifelse(pc.out, -2, 0),
                                    name = Tfr_label(unit.exponent = unit.exponent,
                                                     format = format,
                                                     label.text = label.text,
                                                     scaled = scaled,
                                                     normalized = round(normalized, 1),
+                                                    add.symbols = add.symbols,
                                                     Tfr.type = Tfr.type),
                                    labels = SI_pl_format(exponent = unit.exponent),
                                    limits = c(0, 1),
@@ -456,6 +547,10 @@ scale_y_Tfr_continuous <- function(unit.exponent = 0,
                                    label.text = NULL,
                                    scaled = FALSE,
                                    normalized = FALSE,
+                                   add.symbols = getOption("ggspectra.add.symbols",
+                                                           default = TRUE),
+                                   pc.out = getOption("ggspectra.pc.out",
+                                                      default = FALSE),
                                    Tfr.type,
                                    ...) {
   scale_y_continuous(name = name,
@@ -469,12 +564,13 @@ scale_y_Tfr_continuous <- function(unit.exponent = 0,
 #' @export
 #'
 scale_y_Tfr_internal_continuous <-
-  function(unit.exponent = 0,
+  function(unit.exponent = ifelse(pc.out, -2, 0),
            name = Tfr_label(unit.exponent = unit.exponent,
                             format = format,
                             label.text = label.text,
                             scaled = scaled,
                             normalized = round(normalized, 1),
+                            add.symbols = add.symbols,
                             Tfr.type = "internal"),
            labels = SI_pl_format(exponent = unit.exponent),
            limits = c(0, 1),
@@ -483,6 +579,10 @@ scale_y_Tfr_internal_continuous <-
            label.text = NULL,
            scaled = FALSE,
            normalized = FALSE,
+           add.symbols = getOption("ggspectra.add.symbols",
+                                   default = TRUE),
+           pc.out = getOption("ggspectra.pc.out",
+                              default = FALSE),
            ...) {
     scale_y_continuous(name = name,
                        labels = labels,
@@ -495,12 +595,13 @@ scale_y_Tfr_internal_continuous <-
 #' @export
 #'
 scale_y_Tfr_total_continuous <-
-  function(unit.exponent = 0,
+  function(unit.exponent = ifelse(pc.out, -2, 0),
            name = Tfr_label(unit.exponent = unit.exponent,
                             format = format,
                             label.text = label.text,
                             scaled = scaled,
                             normalized = round(normalized, 1),
+                            add.symbols = add.symbols,
                             Tfr.type = "total"),
            labels = SI_pl_format(exponent = unit.exponent),
            limits = c(0, 1),
@@ -509,6 +610,10 @@ scale_y_Tfr_total_continuous <-
            label.text = NULL,
            scaled = FALSE,
            normalized = FALSE,
+           add.symbols = getOption("ggspectra.add.symbols",
+                                   default = TRUE),
+           pc.out = getOption("ggspectra.pc.out",
+                              default = FALSE),
            ...) {
     scale_y_continuous(name = name,
                        labels = labels,
@@ -531,6 +636,10 @@ scale_y_Tfr_total_continuous <-
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
+#' @param add.symbols logical If \code{TRUE} symbols of the quantities are
+#'   added to the \code{name}. Supported only by \code{format = "R.expression"}.
+#' @param pc.out logical, if TRUE use percent as default instead of fraction
+#'   of one.
 #'
 #' @return a character string or an R expression.
 #'
@@ -539,18 +648,27 @@ scale_y_Tfr_total_continuous <-
 #' @examples
 #'
 #' Afr_label()
+#' Afr_label(format = "R.expression", add.symbols = FALSE)
 #' Afr_label(-2)
 #' Afr_label(-3)
 #' Afr_label(format = "R.expression")
 #' Afr_label(format = "LaTeX")
 #' Afr_label(-2, format = "LaTeX")
 #'
-Afr_label <- function(unit.exponent = 0,
+Afr_label <- function(unit.exponent = ifelse(pc.out, -2, 0),
                       format = getOption("photobiology.math",
                                          default = "R.expression"),
                       label.text = axis_labels()[["Afr"]],
                       scaled = FALSE,
-                      normalized = FALSE) {
+                      normalized = FALSE,
+                      add.symbols = getOption("ggspectra.add.symbols",
+                                              default = TRUE),
+                      pc.out = getOption("ggspectra.pc.out",
+                                         default = FALSE)) {
+  if (!add.symbols) {
+    label.text <- gsub(",$", "", label.text)
+  }
+
   if (unit.exponent == 0) {
     unit.text = "(/1)"
     unit.tex = "(/1)"
@@ -570,7 +688,11 @@ Afr_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $\\alpha_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~alpha[lambda]~plain((rel.~units)))
+      if (add.symbols) {
+        bquote(.(label.text)~alpha[lambda]~plain((rel.~units)))
+      } else {
+        bquote(.(label.text)~plain((rel.~units)))
+      }
     } else if (format == "R.character") {
       paste(label.text, " a(lambda) (rel. units)")
     }
@@ -578,7 +700,11 @@ Afr_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $\\alpha_{\\lambda}/\\alpha_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~alpha[lambda]/alpha[.(normalized)]~plain("(/1)"))
+      if (add.symbols) {
+        bquote(.(label.text)~alpha[lambda]/alpha[.(normalized)]~plain("(/1)"))
+      } else {
+        bquote(.(label.text)*", normalised"~plain("(/1)"))
+      }
     } else if (format == "R.character") {
       paste(label.text, " a(lambda) (norm. at", normalized, "nm)")
     }
@@ -586,7 +712,11 @@ Afr_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $\\alpha_{\\lambda}$ ", unit.tex, sep = "")
     } else if (format %in% c("R.expression")) {
-      bquote(.(label.text)~alpha[lambda]~~plain(.(unit.text)))
+      if (add.symbols) {
+        bquote(.(label.text)~alpha[lambda]~~plain(.(unit.text)))
+      } else {
+        bquote(.(label.text)~~plain(.(unit.text)))
+      }
     } else if (format == "R.character") {
       paste(label.text, " a(lambda) ", unit.text, sep = "")
     } else {
@@ -613,6 +743,10 @@ Afr_label <- function(unit.exponent = 0,
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
+#' @param add.symbols logical If \code{TRUE} symbols of the quantities are
+#'   added to the \code{name}. Supported only by \code{format = "R.expression"}.
+#' @param pc.out logical, if TRUE use percent as default instead of fraction
+#'   of one.
 #' @param ... other named arguments passed to \code{scale_y_continuous}
 #'
 #' @note This function only alters two default arguments, please, see
@@ -639,15 +773,21 @@ Afr_label <- function(unit.exponent = 0,
 #'   scale_y_Afr_continuous(unit.exponent = -3) +
 #'   scale_x_wl_continuous()
 #'
+#' ggplot(yellow_gel.spct) +
+#'   geom_line() +
+#'   scale_y_Afr_continuous(add.symbols = FALSE) +
+#'   scale_x_wl_continuous(add.symbols = FALSE)
+#'
 #' unset_filter_qty_default()
 #'
 scale_y_Afr_continuous <-
-  function(unit.exponent = 0,
+  function(unit.exponent = ifelse(pc.out, -2, 0),
            name = Afr_label(unit.exponent = unit.exponent,
                             format = format,
                             label.text = label.text,
                             scaled = scaled,
-                            normalized = round(normalized, 1)),
+                            normalized = round(normalized, 1),
+                            add.symbols = add.symbols),
            labels = SI_pl_format(exponent = unit.exponent),
            limits = c(0, 1),
            format = getOption("photobiology.math",
@@ -655,6 +795,10 @@ scale_y_Afr_continuous <-
            label.text = axis_labels()[["Afr"]],
            scaled = FALSE,
            normalized = FALSE,
+           add.symbols = getOption("ggspectra.add.symbols",
+                                   default = TRUE),
+           pc.out = getOption("ggspectra.pc.out",
+                              default = FALSE),
            ...) {
     scale_y_continuous(name = name,
                        labels = labels,
@@ -677,6 +821,10 @@ scale_y_Afr_continuous <-
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
+#' @param add.symbols logical If \code{TRUE} symbols of the quantities are
+#'   added to the \code{name}. Supported only by \code{format = "R.expression"}.
+#' @param pc.out logical, if TRUE use percent as default instead of fraction
+#'   of one.
 #' @param Rfr.type character, either "total" or "specular".
 #'
 #' @note Default for \code{label.text} depends on the value passed as argument
@@ -691,12 +839,16 @@ scale_y_Afr_continuous <-
 #' Rfr_label(Rfr.type = "specular")
 #' Rfr_label(Rfr.type = "total")
 #'
-Rfr_label <- function(unit.exponent = 0,
+Rfr_label <- function(unit.exponent = ifelse(pc.out, -2, 0),
                       format = getOption("photobiology.math",
                                          default = "R.expression"),
                       label.text = NULL,
                       scaled = FALSE,
                       normalized = FALSE,
+                      add.symbols = getOption("ggspectra.add.symbols",
+                                              default = TRUE),
+                      pc.out = getOption("ggspectra.pc.out",
+                                         default = FALSE),
                       Rfr.type) {
   if (is.null(label.text)) {
     label.text <- switch(tolower(Rfr.type),
@@ -706,6 +858,9 @@ Rfr_label <- function(unit.exponent = 0,
     )
   }
 
+  if (!add.symbols) {
+    label.text <- gsub(",$", "", label.text)
+  }
   if (unit.exponent == 0) {
     unit.text = "(/1)"
     unit.tex = "(/1)"
@@ -725,7 +880,11 @@ Rfr_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $\\rho_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~rho[lambda]~plain((rel.~units)))
+      if (add.symbols) {
+        bquote(.(label.text)~rho[lambda]~plain((rel.~units)))
+      } else {
+        bquote(.(label.text)~plain((rel.~units)))
+      }
     } else if (format == "R.character") {
       paste(label.text, " r (lambda) (rel. units)")
     }
@@ -733,7 +892,11 @@ Rfr_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $\\rho_{\\lambda}/\\rho_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      bquote(.(label.text)~rho[lambda]/rho[.(normalized)]~plain("(/1)"))
+      if (add.symbols) {
+        bquote(.(label.text)~rho[lambda]/rho[.(normalized)]~plain("(/1)"))
+      } else {
+        bquote(.(label.text)*", normalised"~plain("(/1)"))
+      }
     } else if (format == "R.character") {
       paste(label.text, " r(lambda) (norm. at", normalized, "nm)")
     }
@@ -741,7 +904,11 @@ Rfr_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $\\rho_{\\lambda}$ ", unit.tex, sep = "")
     } else if (format %in% c("R.expression")) {
-      bquote(.(label.text)~rho[lambda]~plain(.(unit.text)))
+      if (add.symbols) {
+        bquote(.(label.text)~rho[lambda]~plain(.(unit.text)))
+      } else {
+        bquote(.(label.text)~plain(.(unit.text)))
+      }
     } else if (format == "R.character") {
       paste(label.text, " r(lambda) ", unit.text, sep = "")
     } else {
@@ -759,23 +926,29 @@ Rfr_label <- function(unit.exponent = 0,
 #' @examples
 #'
 #' Rfr_specular_label()
+#' Rfr_specular_label(add.symbols = FALSE)
 #' Rfr_specular_label(-2)
 #' Rfr_specular_label(-3)
 #' Rfr_specular_label(format = "R.expression")
 #' Rfr_specular_label(format = "LaTeX")
 #' Rfr_specular_label(-3, format = "LaTeX")
 #'
-Rfr_specular_label <- function(unit.exponent = 0,
+Rfr_specular_label <- function(unit.exponent = ifelse(pc.out, -2, 0),
                                format = getOption("photobiology.math",
                                                   default = "R.expression"),
                                label.text = NULL,
                                scaled = FALSE,
-                               normalized = FALSE) {
+                               normalized = FALSE,
+                               add.symbols = getOption("ggspectra.add.symbols",
+                                                       default = TRUE),
+                               pc.out = getOption("ggspectra.pc.out",
+                                                  default = FALSE)) {
   Rfr_label(unit.exponent = unit.exponent,
             format = format,
             label.text = label.text,
             scaled = scaled,
             normalized = normalized,
+            add.symbols = add.symbols,
             Rfr.type = "specular")
 }
 
@@ -786,23 +959,29 @@ Rfr_specular_label <- function(unit.exponent = 0,
 #' @examples
 #'
 #' Rfr_total_label()
+#' Rfr_total_label(add.symbols = FALSE)
 #' Rfr_total_label(-2)
 #' Rfr_total_label(-3)
 #' Rfr_total_label(format = "R.expression")
 #' Rfr_total_label(format = "LaTeX")
 #' Rfr_total_label(-3, format = "LaTeX")
 #'
-Rfr_total_label <- function(unit.exponent = 0,
+Rfr_total_label <- function(unit.exponent = ifelse(pc.out, -2, 0),
                             format = getOption("photobiology.math",
                                                default = "R.expression"),
                             label.text = NULL,
                             scaled = FALSE,
-                            normalized = FALSE) {
+                            normalized = FALSE,
+                            add.symbols = getOption("ggspectra.add.symbols",
+                                                    default = TRUE),
+                            pc.out = getOption("ggspectra.pc.out",
+                                               default = FALSE)) {
   Rfr_label(unit.exponent = unit.exponent,
             format = format,
             label.text = label.text,
             scaled = scaled,
             normalized = normalized,
+            add.symbols = add.symbols,
             Rfr.type = "total")
 }
 
@@ -822,6 +1001,10 @@ Rfr_total_label <- function(unit.exponent = 0,
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
+#' @param add.symbols logical If \code{TRUE} symbols of the quantities are
+#'   added to the \code{name}. Supported only by \code{format = "R.expression"}.
+#' @param pc.out logical, if TRUE use percent as default instead of fraction
+#'   of one.
 #' @param Rfr.type character, either "total" or "spcular".
 #' @param ... other named arguments passed to \code{scale_y_continuous}
 #'
@@ -854,13 +1037,19 @@ Rfr_total_label <- function(unit.exponent = 0,
 #'   scale_y_Rfr_specular_continuous() +
 #'   scale_x_wl_continuous()
 #'
+#' ggplot(Ler_leaf_rflt.spct) +
+#'   geom_line() +
+#'   scale_y_Rfr_specular_continuous(add.symbols = FALSE) +
+#'   scale_x_wl_continuous(add.symbols = FALSE)
+#'
 scale_y_Rfr_continuous <-
-  function(unit.exponent = 0,
+  function(unit.exponent = ifelse(pc.out, -2, 0),
            name = Rfr_label(unit.exponent = unit.exponent,
                             format = format,
                             label.text = label.text,
                             scaled = scaled,
                             normalized = round(normalized, 1),
+                            add.symbols = add.symbols,
                             Rfr.type = Rfr.type),
            labels = SI_pl_format(exponent = unit.exponent),
            limits = c(0, 1),
@@ -869,6 +1058,10 @@ scale_y_Rfr_continuous <-
            label.text = NULL,
            scaled = FALSE,
            normalized = FALSE,
+           add.symbols = getOption("ggspectra.add.symbols",
+                                   default = TRUE),
+           pc.out = getOption("ggspectra.pc.out",
+                              default = FALSE),
            Rfr.type,
            ...) {
   scale_y_continuous(name = name,
@@ -882,12 +1075,13 @@ scale_y_Rfr_continuous <-
 #' @export
 #'
 scale_y_Rfr_specular_continuous <-
-  function(unit.exponent = 0,
+  function(unit.exponent = ifelse(pc.out, -2, 0),
            name = Rfr_label(unit.exponent = unit.exponent,
                             format = format,
                             label.text = label.text,
                             scaled = scaled,
                             normalized = round(normalized, 1),
+                            add.symbols = add.symbols,
                             Rfr.type = "specular"),
            labels = SI_pl_format(exponent = unit.exponent),
            limits = c(0, 1),
@@ -896,6 +1090,10 @@ scale_y_Rfr_specular_continuous <-
            label.text = NULL,
            scaled = FALSE,
            normalized = FALSE,
+           add.symbols = getOption("ggspectra.add.symbols",
+                                   default = TRUE),
+           pc.out = getOption("ggspectra.pc.out",
+                              default = FALSE),
            ...) {
     scale_y_continuous(name = name,
                        labels = labels,
@@ -908,12 +1106,13 @@ scale_y_Rfr_specular_continuous <-
 #' @export
 #'
 scale_y_Rfr_total_continuous <-
-  function(unit.exponent = 0,
+  function(unit.exponent = ifelse(pc.out, -2, 0),
            name = Rfr_label(unit.exponent = unit.exponent,
                             format = format,
                             label.text = label.text,
                             scaled = scaled,
                             normalized = round(normalized, 1),
+                            add.symbols = add.symbols,
                             Rfr.type = "total"),
            labels = SI_pl_format(exponent = unit.exponent),
            limits = c(0, 1),
@@ -922,6 +1121,10 @@ scale_y_Rfr_total_continuous <-
            label.text = NULL,
            scaled = FALSE,
            normalized = FALSE,
+           add.symbols = getOption("ggspectra.add.symbols",
+                                   default = TRUE),
+           pc.out = getOption("ggspectra.pc.out",
+                              default = FALSE),
            ...) {
     scale_y_continuous(name = name,
                        labels = labels,

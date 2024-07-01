@@ -6,20 +6,24 @@
 \title{Reflectance axis labels}
 \usage{
 Rfr_label(
-  unit.exponent = 0,
+  unit.exponent = ifelse(pc.out, -2, 0),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = NULL,
   scaled = FALSE,
   normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
+  pc.out = getOption("ggspectra.pc.out", default = FALSE),
   Rfr.type
 )
 
 Rfr_specular_label(
-  unit.exponent = 0,
+  unit.exponent = ifelse(pc.out, -2, 0),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = NULL,
   scaled = FALSE,
-  normalized = FALSE
+  normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
+  pc.out = getOption("ggspectra.pc.out", default = FALSE)
 )
 }
 \arguments{
@@ -34,6 +38,12 @@ Rfr_specular_label(
 
 \item{normalized}{logical (\code{FALSE}) or numeric Normalization wavelength
 in manometers (nm).}
+
+\item{add.symbols}{logical If \code{TRUE} symbols of the quantities are
+added to the \code{name}. Supported only by \code{format = "R.expression"}.}
+
+\item{pc.out}{logical, if TRUE use percent as default instead of fraction
+of one.}
 
 \item{Rfr.type}{character, either "total" or "specular".}
 }
@@ -56,6 +66,7 @@ Rfr_label(Rfr.type = "total")
 
 
 Rfr_specular_label()
+Rfr_specular_label(add.symbols = FALSE)
 Rfr_specular_label(-2)
 Rfr_specular_label(-3)
 Rfr_specular_label(format = "R.expression")

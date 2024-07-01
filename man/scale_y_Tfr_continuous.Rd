@@ -7,43 +7,51 @@
 \title{Transmittance y-scale}
 \usage{
 scale_y_Tfr_continuous(
-  unit.exponent = 0,
+  unit.exponent = ifelse(pc.out, -2, 0),
   name = Tfr_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), Tfr.type = Tfr.type),
+    label.text, scaled = scaled, normalized = round(normalized, 1), add.symbols =
+    add.symbols, Tfr.type = Tfr.type),
   labels = SI_pl_format(exponent = unit.exponent),
   limits = c(0, 1),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = NULL,
   scaled = FALSE,
   normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
+  pc.out = getOption("ggspectra.pc.out", default = FALSE),
   Tfr.type,
   ...
 )
 
 scale_y_Tfr_internal_continuous(
-  unit.exponent = 0,
+  unit.exponent = ifelse(pc.out, -2, 0),
   name = Tfr_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), Tfr.type =
-    "internal"),
+    label.text, scaled = scaled, normalized = round(normalized, 1), add.symbols =
+    add.symbols, Tfr.type = "internal"),
   labels = SI_pl_format(exponent = unit.exponent),
   limits = c(0, 1),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = NULL,
   scaled = FALSE,
   normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
+  pc.out = getOption("ggspectra.pc.out", default = FALSE),
   ...
 )
 
 scale_y_Tfr_total_continuous(
-  unit.exponent = 0,
+  unit.exponent = ifelse(pc.out, -2, 0),
   name = Tfr_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), Tfr.type = "total"),
+    label.text, scaled = scaled, normalized = round(normalized, 1), add.symbols =
+    add.symbols, Tfr.type = "total"),
   labels = SI_pl_format(exponent = unit.exponent),
   limits = c(0, 1),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = NULL,
   scaled = FALSE,
   normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
+  pc.out = getOption("ggspectra.pc.out", default = FALSE),
   ...
 )
 }
@@ -67,6 +75,12 @@ data-based limits as argument and returns new limits.}
 
 \item{normalized}{logical (\code{FALSE}) or numeric Normalization wavelength
 in manometers (nm).}
+
+\item{add.symbols}{logical If \code{TRUE} symbols of the quantities are
+added to the \code{name}. Supported only by \code{format = "R.expression"}.}
+
+\item{pc.out}{logical, if TRUE use percent as default instead of fraction
+of one.}
 
 \item{Tfr.type}{character, either "total" or "internal".}
 
@@ -104,6 +118,11 @@ ggplot(yellow_gel.spct) +
   geom_line() +
   scale_y_Tfr_total_continuous() +
   scale_x_wl_continuous()
+
+ggplot(yellow_gel.spct) +
+  geom_line() +
+  scale_y_Tfr_total_continuous(add.symbols = FALSE) +
+  scale_x_wl_continuous(add.symbols = FALSE)
 
 unset_filter_qty_default()
 

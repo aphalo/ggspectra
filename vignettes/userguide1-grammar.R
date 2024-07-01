@@ -1,4 +1,4 @@
-## ---- message=FALSE-----------------------------------------------------------
+## ----message=FALSE------------------------------------------------------------
 library(ggplot2)
 library(scales)
 library(photobiology)
@@ -6,7 +6,7 @@ library(photobiologyWavebands)
 library(ggspectra)
 library(ggrepel)
 
-## ---- include=FALSE, echo=FALSE-----------------------------------------------
+## ----include=FALSE, echo=FALSE------------------------------------------------
 library(knitr)
 opts_chunk$set(fig.align = 'center', 
                fig.show = 'hold', fig.width = 7, fig.height = 4,
@@ -82,6 +82,12 @@ ggplot(sun.spct) +
 ## -----------------------------------------------------------------------------
 ggplot(sun.spct) + 
   geom_line() +
+  scale_x_wl_continuous(add.symbols = FALSE) +
+  scale_y_s.e.irrad_continuous(add.symbols = FALSE)
+
+## -----------------------------------------------------------------------------
+ggplot(sun.spct) + 
+  geom_line() +
   scale_x_wl_continuous(unit.exponent = -6) +
   scale_y_s.e.irrad_continuous(unit.exponent = -3)
 
@@ -121,7 +127,7 @@ ggplot(temp.spct) +
 ggplot(sun.spct) + 
   geom_line() +
   scale_x_wl_continuous(label.text = "Longitud de onda,") +
-  scale_y_s.e.irrad_continuous(label.text = "Irradiancia,")
+  scale_y_s.e.irrad_continuous(label.text = "Irradiancia espectral,")
 
 ## -----------------------------------------------------------------------------
 norm_sun.spct <- normalize(sun.spct)

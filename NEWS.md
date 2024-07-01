@@ -14,7 +14,16 @@ introduced in version 0.3.12).
 columns of `cps` data (bug introduced in version 0.3.12).
 - In `autoplot.response_spct()` change default argument `norm = "max"` to 
 `norm = "update"` for consistency with the other `autoplot()` methods and 
-to avoide "surprising" users.
+to avoid "surprising" users.
+- Revise all _scales_ and the matching _axis-label building functions_ by adding
+formal parameter `add.symbols` with default given by R option 
+`ggspectra.add.symbols`.
+- Revise _scales_ for transmittance, absorptance and reflectance and the 
+matching _axis-label building functions_ by adding
+formal parameter `pc.out` with default given by R option 
+`ggspectra.pc.out`.
+- Revise all autoplot methods so that the default for their `pc.out` defaults
+to the value of R option `ggspectra.pc.out`.
 
 # ggspectra 0.3.12
 

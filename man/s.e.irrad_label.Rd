@@ -3,14 +3,15 @@
 \name{s.e.irrad_label}
 \alias{s.e.irrad_label}
 \alias{s.q.irrad_label}
-\title{spectral irradiance axis labels}
+\title{Spectral irradiance axis labels}
 \usage{
 s.e.irrad_label(
   unit.exponent = 0,
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.e.irrad"]],
   scaled = FALSE,
-  normalized = FALSE
+  normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
 )
 
 s.q.irrad_label(
@@ -18,11 +19,12 @@ s.q.irrad_label(
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.q.irrad"]],
   scaled = FALSE,
-  normalized = FALSE
+  normalized = FALSE,
+  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
 )
 }
 \arguments{
-\item{unit.exponent}{integer}
+\item{unit.exponent}{integer.}
 
 \item{format}{character string, "R", "R.expresion", "R.character", or
 "LaTeX".}
@@ -33,19 +35,29 @@ s.q.irrad_label(
 
 \item{normalized}{logical (\code{FALSE}) or numeric Normalization wavelength
 in manometers (nm).}
+
+\item{add.symbols}{logical If \code{TRUE} symbols of the quantities are
+added to the \code{name}. Supported only by \code{format = "R.expression"}.}
 }
 \value{
 a character string or an R expression.
 }
 \description{
-Generate axis labels in SI units,
+Generate axis labels for spectral irradiance in SI units,
 using SI scale factors. Output can be selected as character, expression (R
 default devices) or LaTeX (for tikz device).
 }
 \examples{
 
-counts_label()
-counts_label("R.expression")
-counts_label("LaTeX")
+str(s.e.irrad_label())
+str(s.e.irrad_label(add.symbols = FALSE))
+str(s.e.irrad_label(format = "R.expression"))
+str(s.e.irrad_label(format = "LaTeX"))
+
+
+str(s.q.irrad_label())
+str(s.q.irrad_label(add.symbols = FALSE))
+str(s.q.irrad_label(format = "R.expression"))
+str(s.q.irrad_label(format = "LaTeX"))
 
 }
