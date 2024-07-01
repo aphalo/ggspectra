@@ -9,6 +9,8 @@ version](https://www.r-pkg.org/badges/version/ggspectra)](https://cran.r-project
 checks](https://badges.cranchecks.info/worst/ggspectra.svg)](https://cran.r-project.org/web/checks/check_results_ggspectra.html)
 [![R build
 status](https://github.com/aphalo/ggspectra/workflows/R-CMD-check/badge.svg)](https://github.com/aphalo/ggspectra/actions)
+[![Documentation](https://img.shields.io/badge/documentation-ggspectra-informational.svg)](https://docs.r4photobiology.info/ggspectra/)
+[![doi](https://img.shields.io/badge/doi-10.32614/CRAN.package.ggspectra-blue.svg)](https://doi.org/10.32614/CRAN.package.ggspectra)
 
 The goal of ‘ggspectra’ is to make it easy to plot radiation spectra and
 similar data, such and transmittance, absorbance and reflectance
@@ -34,7 +36,6 @@ provides the most automatic approach.
 ``` r
 library(ggspectra)
 autoplot(sun.spct)
-#> [1] NA
 ```
 
 ![](man/figures/README-example0-1.png)<!-- -->
@@ -43,7 +44,6 @@ Some degree of flexibility can be obtained by passing arguments.
 
 ``` r
 autoplot(sun.spct, annotations = c("+", "title:where:when"), unit.out = "photon")
-#> [1] NA
 ```
 
 ![](man/figures/README-example1-1.png)<!-- -->

@@ -41,8 +41,8 @@ A_label <- function(unit.exponent = 0,
                     Tfr.type) {
   if (is.null(label.text)) {
     label.text <- switch(tolower(Tfr.type),
-                         internal = axis_labels()[["A.int"]],
-                         total = axis_labels()[["A.tot"]],
+                         internal = axis_labels()[["s.A.int"]],
+                         total = axis_labels()[["s.A.tot"]],
                          stop("Bad Tfr.type: ", Tfr.type)
     )
   }
@@ -342,8 +342,8 @@ Tfr_label <- function(unit.exponent = ifelse(pc.out, -2, 0),
                       Tfr.type) {
   if (is.null(label.text)) {
     label.text <- switch(tolower(Tfr.type),
-                         internal = axis_labels()[["Tfr.int"]],
-                         total = axis_labels()[["Tfr.tot"]],
+                         internal = axis_labels()[["s.Tfr.int"]],
+                         total = axis_labels()[["s.Tfr.tot"]],
                          stop("Bad Tfr.type: ", Tfr.type)
     )
   }
@@ -658,7 +658,7 @@ scale_y_Tfr_total_continuous <-
 Afr_label <- function(unit.exponent = ifelse(pc.out, -2, 0),
                       format = getOption("photobiology.math",
                                          default = "R.expression"),
-                      label.text = axis_labels()[["Afr"]],
+                      label.text = axis_labels()[["s.Afr"]],
                       scaled = FALSE,
                       normalized = FALSE,
                       add.symbols = getOption("ggspectra.add.symbols",
@@ -792,7 +792,7 @@ scale_y_Afr_continuous <-
            limits = c(0, 1),
            format = getOption("photobiology.math",
                               default = "R.expression"),
-           label.text = axis_labels()[["Afr"]],
+           label.text = axis_labels()[["s.Afr"]],
            scaled = FALSE,
            normalized = FALSE,
            add.symbols = getOption("ggspectra.add.symbols",
@@ -852,8 +852,8 @@ Rfr_label <- function(unit.exponent = ifelse(pc.out, -2, 0),
                       Rfr.type) {
   if (is.null(label.text)) {
     label.text <- switch(tolower(Rfr.type),
-                         specular = axis_labels()[["Rfr.spec"]],
-                         total = axis_labels()[["Rfr.tot"]],
+                         specular = axis_labels()[["s.Rfr.spec"]],
+                         total = axis_labels()[["s.Rfr.tot"]],
                          stop("Bad Rfr.type: ", Rfr.type)
     )
   }

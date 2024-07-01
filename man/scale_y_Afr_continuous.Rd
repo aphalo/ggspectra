@@ -12,7 +12,7 @@ scale_y_Afr_continuous(
   labels = SI_pl_format(exponent = unit.exponent),
   limits = c(0, 1),
   format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["Afr"]],
+  label.text = axis_labels()[["s.Afr"]],
   scaled = FALSE,
   normalized = FALSE,
   add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
