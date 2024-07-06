@@ -64,7 +64,8 @@ return of \code{object} unchanged.}
 
 \item{plot.qty}{character string (currently ignored).}
 
-\item{pc.out}{logical, if TRUE use percents instead of fraction of one.}
+\item{pc.out}{logical, if TRUE use percent instead of fraction of one for
+normalized spectral data.}
 
 \item{label.qty}{character string giving the type of summary quantity to use
 for labels, one of "mean", "total", "contribution", and "relative".}
@@ -98,18 +99,14 @@ selects between them based on \code{stacked}.}
 
 \item{idfactor}{character Name of an index column in data holding a
 \code{factor} with each spectrum in a long-form multispectrum object
-corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
-the factor is retrieved from metadata or if no metadata found, the
-default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
-to the spectra and the user needs to use 'ggplot2' functions to manually
-map an aesthetic or use facets for the spectra.}
+corresponding to a distinct level of the factor.}
 
 \item{facets}{logical or integer Indicating if facets are to be created for
 the levels of \code{idfactor} when \code{spct} contain multiple spectra in
 long form.}
 
 \item{plot.data}{character Data to plot. Default is "as.is" plotting one line
-per spectrum. When passing "mean", "median", "sum", "prod", "var", "sd",
+per spectrum. When passing "mean", "median", "sum", "prod", var", "sd",
 "se" as argument all the spectra must contain data at the same wavelength
 values.}
 
@@ -120,7 +117,8 @@ values.}
 \item{na.rm}{logical.}
 }
 \value{
-a \code{ggplot} object.
+A \code{ggplot} object with a number of layers that depends on the
+  data and annotations.
 }
 \description{
 These methods return a ggplot object with an annotated plot of a
@@ -133,6 +131,13 @@ when no annotations are added, limits are set for the x-axis and y-axis
 scales. The y scale limits are expanded to include all data, or at least to
 the range of expected values. Scales are further expanded so as to make space
 for the annotations.
+}
+\note{
+If \code{idfactor = NULL}, the default for single spectra, the name of
+  the factor is retrieved from metadata or if no metadata found, the default
+  "spct.idx" is tried. The default for multiple spectra is to create
+  a factor named "spct.idx", but if a different name is passed, it will be
+  used instead, possibly renaminig a pre-existing one.
 }
 \section{Plot Annotations}{
  The recognized annotation names are: \code{"summaries"}, \code{"peaks"},

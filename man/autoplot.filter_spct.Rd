@@ -49,12 +49,12 @@
 \item{object}{a filter_spct object or a filter_mspct object.}
 
 \item{...}{in the case of collections of spectra, additional arguments passed
-to the autoplot methods for individual spectra, otherwise currently ignored.}
+to the plot methods for individual spectra, otherwise currently ignored.}
 
 \item{w.band}{a single waveband object or a list of waveband objects.}
 
 \item{range}{an R object on which range() returns a vector of length 2, with
-min and max wavelengths (nm).}
+min annd max wavelengths (nm).}
 
 \item{norm}{numeric Normalization wavelength (nm) or character string "max",
 or "min" for normalization at the corresponding wavelength, "update" to
@@ -64,13 +64,14 @@ return of \code{object} unchanged.}
 
 \item{plot.qty}{character string one of "transmittance" or "absorbance".}
 
-\item{pc.out}{logical, if TRUE use percents instead of fraction of one.}
+\item{pc.out}{logical, if TRUE use percent instead of fraction of one for
+normalized spectral data.}
 
 \item{label.qty}{character string giving the type of summary quantity to use
 for labels, one of "mean", "total", "contribution", and "relative".}
 
 \item{span}{a peak is defined as an element in a sequence which is greater
-than all other elements within a window of width span centred at that
+than all other elements within a window of width span centered at that
 element.}
 
 \item{wls.target}{numeric vector indicating the spectral quantity values for
@@ -86,7 +87,8 @@ Annotations and Title Annotations.}
 \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
 selects between them based on \code{stacked}.}
 
-\item{time.format}{character Format as accepted by \code{\link[base]{strptime}}.}
+\item{time.format}{character Format as accepted by
+\code{\link[base]{strptime}}.}
 
 \item{tz}{character Time zone to use for title and/or subtitle.}
 
@@ -97,11 +99,7 @@ selects between them based on \code{stacked}.}
 
 \item{idfactor}{character Name of an index column in data holding a
 \code{factor} with each spectrum in a long-form multispectrum object
-corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
-the factor is retrieved from metadata or if no metadata found, the
-default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
-to the spectra and the user needs to use 'ggplot2' functions to manually
-map an aesthetic or use facets for the spectra.}
+corresponding to a distinct level of the factor.}
 
 \item{facets}{logical or integer Indicating if facets are to be created for
 the levels of \code{idfactor} when \code{spct} contain multiple spectra in
@@ -119,17 +117,31 @@ values.}
 \item{na.rm}{logical.}
 }
 \value{
-a \code{ggplot} object.
+A \code{ggplot} object with a number of layers that depends on the
+  data and annotations.
 }
 \description{
 These methods return a ggplot object with an annotated plot of a filter_spct
 object or of the spectra contained in a filter_mspct object.
 }
 \details{
-The ggplot object returned can be further manipulated and added to. Except
-when no annotations are added, limits are set for the x-axis and y-axis
-scales. The y scale limits are expanded to include all data, or at least to
-the range of expected values. The plotting of absorbance is an exception as
+The plot object returned is a ggplot (an object of class "gg") and
+  it can be added to or modified as any other ggplot. The axis labels are
+  encoded as \emph{plotmath} expressions as they contain superscripts and
+  special characters. In 'ggplot2', plotmath expressions do not obey theme
+  settings related to text fonts, except for \code{size}.
+
+  Scale limits are expanded so as to make space for the annotations. If
+  annotaions are disabled, limits are not expanded unless
+  \code{reserve.space} is passed to parameter \code{annotations}.
+
+  The generic of the \code{\link[ggplot2]{autoplot}} method is defined in
+  package 'ggplot2'. Package 'ggspectra' defines specializations for the
+  different classes for storage of spectral data defined in package
+  \code{\link[photobiology]{photobiology}}.
+}
+\note{
+The plotting of absorbance is an exception to scale limits as
 the y-axis is not extended past 6 a.u. In the case of absorbance, values
 larger than 6 a.u. are rarely meaningful due to stray light during
 measurement. However, when transmittance values below the detection limit are
@@ -211,4 +223,3 @@ Other autoplot methods:
 \code{\link{set_annotations_default}()}
 }
 \concept{autoplot methods}
-\keyword{hplot}

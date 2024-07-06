@@ -53,11 +53,12 @@ to the plot methods for individual spectra, otherwise currently ignored.}
 \item{w.band}{a single waveband object or a list of waveband objects.}
 
 \item{range}{an R object on which range() returns a vector of length 2, with
-min and max wavelengths (nm).}
+min annd max wavelengths (nm).}
 
 \item{unit.out}{character IGNORED.}
 
-\item{pc.out}{logical, if TRUE use percent instead of fraction of one.}
+\item{pc.out}{logical, if TRUE use percent instead of fraction of one for
+normalized spectral data.}
 
 \item{label.qty}{character string giving the type of summary quantity to use
 for labels, one of "mean", "total", "contribution", and "relative".}
@@ -72,8 +73,8 @@ which wavelengths are to be searched and interpolated if need. The
 as arguments. A list with \code{numeric} and/or \code{character} values is
 also accepted.}
 
-\item{annotations}{a character vector ("summaries" is ignored). For details
-please see sections Plot Annotations and Title Annotations.}
+\item{annotations}{a character vector. For details please see sections Plot
+Annotations and Title Annotations.}
 
 \item{geom}{character The name of a ggplot geometry, currently only
 \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
@@ -84,18 +85,17 @@ selects between them based on \code{stacked}.}
 
 \item{tz}{character Time zone to use for title and/or subtitle.}
 
-\item{norm}{numeric normalization wavelength (nm) or character string "max"
-for normalization at the wavelength of highest peak.}
+\item{norm}{numeric Normalization wavelength (nm) or character string "max",
+or "min" for normalization at the corresponding wavelength, "update" to
+update the normalization after modifying units of expression, quantity
+or range but respecting the previously used criterion, or "skip" to force
+return of \code{object} unchanged.}
 
 \item{text.size}{numeric size of text in the plot decorations.}
 
 \item{idfactor}{character Name of an index column in data holding a
 \code{factor} with each spectrum in a long-form multispectrum object
-corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
-the factor is retrieved from metadata or if no metadata found, the default
-"spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped to the
-spectra and the user needs to use 'ggplot2' functions to manually map an
-aesthetic or use facets for the spectra.}
+corresponding to a distinct level of the factor.}
 
 \item{facets}{logical or integer Indicating if facets are to be created for
 the levels of \code{idfactor} when \code{spct} contain multiple spectra in
@@ -113,12 +113,29 @@ values.}
 \item{na.rm}{logical.}
 }
 \value{
-a \code{ggplot} object.
+A \code{ggplot} object with a number of layers that depends on the
+  data and annotations.
 }
 \description{
 These methods return a ggplot object with an annotated plot of a
 calibration_spct object or of the spectra contained in a calibration_mspct
 object.
+}
+\details{
+The plot object returned is a ggplot (an object of class "gg") and
+  it can be added to or modified as any other ggplot. The axis labels are
+  encoded as \emph{plotmath} expressions as they contain superscripts and
+  special characters. In 'ggplot2', plotmath expressions do not obey theme
+  settings related to text fonts, except for \code{size}.
+
+  Scale limits are expanded so as to make space for the annotations. If
+  annotaions are disabled, limits are not expanded unless
+  \code{reserve.space} is passed to parameter \code{annotations}.
+
+  The generic of the \code{\link[ggplot2]{autoplot}} method is defined in
+  package 'ggplot2'. Package 'ggspectra' defines specializations for the
+  different classes for storage of spectral data defined in package
+  \code{\link[photobiology]{photobiology}}.
 }
 \note{
 Note that scales are expanded so as to make space for the annotations.
@@ -158,6 +175,29 @@ The object returned is a ggplot object, and can be further manipulated.
   \code{"title:objt"} or no title depending on the context.
 }
 
+\examples{
+
+autoplot(sun.spct)
+autoplot(sun.spct, geom = "spct")
+autoplot(sun.spct, unit.out = "photon")
+autoplot(sun.spct, norm = "max")
+autoplot(sun.spct, norm = "max", pc.out = TRUE)
+
+# multiple spectra in long form
+autoplot(sun_evening.spct)
+autoplot(sun_evening.spct, facets = 1) # one column
+autoplot(sun_evening.spct, facets = 2) # two columns
+autoplot(sun_evening.spct, plot.data = "mean")
+autoplot(sun_evening.spct, idfactor = "Sequence")
+
+# multiple spectra as a collection
+autoplot(sun_evening.mspct)
+autoplot(sun_evening.mspct, facets = 1) # one column
+autoplot(sun_evening.mspct, facets = 2) # two columns
+autoplot(sun_evening.mspct, plot.data = "mean")
+autoplot(sun_evening.mspct, idfactor = "Time")
+
+}
 \seealso{
 \code{\link[photobiology]{normalize}},
   \code{\link[photobiology]{calibration_spct}},

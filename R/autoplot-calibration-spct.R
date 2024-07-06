@@ -193,7 +193,7 @@ cal_plot <- function(spct,
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
   plot <- plot + geom_line(na.rm = na.rm)
-  plot <- plot + labs(x = "Wavelength (nm)", y = s.counts.label)
+  plot <- plot + labs(x = expression("Wavelength, "*lambda~(nm)), y = s.counts.label)
 
   if (length(annotations) == 1 && annotations == "") {
     return(plot)
@@ -241,61 +241,10 @@ cal_plot <- function(spct,
 #'
 #' @inheritSection decoration Plot Annotations
 #' @inheritSection autotitle Title Annotations
+#' @inherit autoplot.source_spct
 #'
 #' @param object a calibration_spct object or a calibration_mspct object.
-#' @param ... in the case of collections of spectra, additional arguments passed
-#'   to the plot methods for individual spectra, otherwise currently ignored.
-#' @param w.band a single waveband object or a list of waveband objects.
-#' @param range an R object on which range() returns a vector of length 2, with
-#'   min and max wavelengths (nm).
-#' @param norm numeric Normalization wavelength (nm) or character string "max",
-#'   or "min" for normalization at the corresponding wavelength, "update" to
-#'   update the normalization after modifying units of expression, quantity
-#'   or range but respecting the previously used criterion, or "skip" to force
-#'   return of \code{object} unchanged. Always skipped for
-#'   \code{plot.qty == "all"}, which is the default.
 #' @param unit.out character IGNORED.
-#' @param pc.out logical, if TRUE use percent instead of fraction of one.
-#' @param label.qty character string giving the type of summary quantity to use
-#'   for labels, one of "mean", "total", "contribution", and "relative".
-#' @param span a peak is defined as an element in a sequence which is greater
-#'   than all other elements within a window of width span centered at that
-#'   element.
-#' @param wls.target numeric vector indicating the spectral quantity values for
-#'   which wavelengths are to be searched and interpolated if need. The
-#'   \code{character} strings "half.maximum" and "half.range" are also accepted
-#'   as arguments. A list with \code{numeric} and/or \code{character} values is
-#'   also accepted.
-#' @param annotations a character vector ("summaries" is ignored). For details
-#'   please see sections Plot Annotations and Title Annotations.
-#' @param geom character The name of a ggplot geometry, currently only
-#'   \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
-#'   selects between them based on \code{stacked}.
-#' @param time.format character Format as accepted by
-#'   \code{\link[base]{strptime}}.
-#' @param tz character Time zone to use for title and/or subtitle.
-#' @param norm numeric normalization wavelength (nm) or character string "max"
-#'   for normalization at the wavelength of highest peak.
-#' @param text.size numeric size of text in the plot decorations.
-#' @param idfactor character Name of an index column in data holding a
-#'   \code{factor} with each spectrum in a long-form multispectrum object
-#'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
-#'   the factor is retrieved from metadata or if no metadata found, the default
-#'   "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped to the
-#'   spectra and the user needs to use 'ggplot2' functions to manually map an
-#'   aesthetic or use facets for the spectra.
-#' @param facets logical or integer Indicating if facets are to be created for
-#'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
-#'   long form.
-#' @param plot.data character Data to plot. Default is "as.is" plotting one line
-#'   per spectrum. When passing "mean", "median", "sum", "prod", var", "sd",
-#'   "se" as argument all the spectra must contain data at the same wavelength
-#'   values.
-#' @param ylim numeric y axis limits,
-#' @param object.label character The name of the object being plotted.
-#' @param na.rm logical.
-#'
-#' @return a \code{ggplot} object.
 #'
 #' @seealso \code{\link[photobiology]{normalize}},
 #'   \code{\link[photobiology]{calibration_spct}},

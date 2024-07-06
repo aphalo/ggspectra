@@ -32,7 +32,7 @@
 \method{autoplot}{generic_mspct}(object, ...)
 }
 \arguments{
-\item{object}{a cps_spct object.}
+\item{object}{a generic_spct object.}
 
 \item{...}{in the case of collections of spectra, additional arguments passed
 to the plot methods for individual spectra, otherwise currently ignored.}
@@ -60,10 +60,11 @@ which wavelengths are to be searched and interpolated if need. The
 as arguments. A list with \code{numeric} and/or \code{character} values is
 also accepted.}
 
-\item{annotations}{a character vector ("summaries" is ignored). For details
-please see sections Plot Annotations and Title Annotations.}
+\item{annotations}{a character vector. For details please see sections Plot
+Annotations and Title Annotations.}
 
-\item{time.format}{character Format as accepted by \code{\link[base]{strptime}}.}
+\item{time.format}{character Format as accepted by
+\code{\link[base]{strptime}}.}
 
 \item{tz}{character Time zone to use for title and/or subtitle.}
 
@@ -71,15 +72,13 @@ please see sections Plot Annotations and Title Annotations.}
 
 \item{idfactor}{character Name of an index column in data holding a
 \code{factor} with each spectrum in a long-form multispectrum object
-corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
-the factor is retrieved from metadata or if no metadata found, the
-default "spct.idx" is tried.}
+corresponding to a distinct level of the factor.}
 
 \item{facets}{logical or integer Indicating if facets are to be created for
 the levels of \code{idfactor} when \code{spct} contain multiple spectra in
 long form.}
 
-\item{ylim}{numeric y axis limits (expansion only!).}
+\item{ylim}{numeric y axis limits,}
 
 \item{object.label}{character The name of the object being plotted.}
 
@@ -87,8 +86,6 @@ long form.}
 }
 \value{
 a \code{ggplot} object.
-
-A \code{ggplot} object.
 }
 \description{
 This function returns a ggplot object with an annotated plot of a
@@ -109,9 +106,11 @@ calling it with the spectrum as argument. There are also limitations on which
 annotations are accepted. On-the-fly normalization is not supported.
 }
 \note{
-Scales are expanded so as to make space for the annotations if these
-  are present. The object returned is a ggplot object, and can be further
-  manipulated.
+If \code{idfactor = NULL}, the default for single spectra, the name of
+  the factor is retrieved from metadata or if no metadata found, the default
+  "spct.idx" is tried. The default for multiple spectra is to create
+  a factor named "spct.idx", but if a different name is passed, it will be
+  used instead, possibly renaminig a pre-existing one.
 }
 \section{Plot Annotations}{
  The recognized annotation names are: \code{"summaries"}, \code{"peaks"},

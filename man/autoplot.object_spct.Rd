@@ -52,22 +52,22 @@
 \item{...}{in the case of collections of spectra, additional arguments passed
 to the plot methods for individual spectra, otherwise currently ignored.}
 
-\item{w.band}{a single waveband object or a list of waveband objects}
+\item{w.band}{a single waveband object or a list of waveband objects.}
 
 \item{range}{an R object on which range() returns a vector of length 2, with
-min annd max wavelengths (nm)}
+min annd max wavelengths (nm).}
 
 \item{norm}{numeric Normalization wavelength (nm) or character string "max",
 or "min" for normalization at the corresponding wavelength, "update" to
 update the normalization after modifying units of expression, quantity
 or range but respecting the previously used criterion, or "skip" to force
-return of \code{object} unchanged. Always skipped for
-\code{plot.qty == "all"}, which is the default.}
+return of \code{object} unchanged.}
 
 \item{plot.qty}{character string, one of "all", "transmittance",
 "absorbance", "absorptance", or "reflectance".}
 
-\item{pc.out}{logical, if TRUE use percents instead of fraction of one}
+\item{pc.out}{logical, if TRUE use percent instead of fraction of one for
+normalized spectral data.}
 
 \item{label.qty}{character string giving the type of summary quantity to use
 for labels, one of "mean", "total", "contribution", and "relative".}
@@ -104,11 +104,7 @@ selects between them based on \code{stacked}.}
 
 \item{idfactor}{character Name of an index column in data holding a
 \code{factor} with each spectrum in a long-form multispectrum object
-corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
-the factor is retrieved from metadata or if no metadata found, the
-default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
-to the spectra and the user needs to use 'ggplot2' functions to manually
-map an aesthetic or use facets for the spectra.}
+corresponding to a distinct level of the factor.}
 
 \item{facets}{logical or integer Indicating if facets are to be created for
 the levels of \code{idfactor} when \code{spct} contain multiple spectra in
@@ -126,19 +122,28 @@ values.}
 \item{na.rm}{logical.}
 }
 \value{
-a \code{ggplot} object.
+A \code{ggplot} object with a number of layers that depends on the
+  data and annotations.
 }
 \description{
 This function returns a ggplot object with an annotated plot of an
 object_spct object.
 }
 \details{
-The ggplot object returned can be further manipulated and added to. Except
-when no annotations are added, limits are set for the x-axis and y-axis
-scales. The y scale limits are expanded to include all data, or at least to
-the range of expected values. Scales are further expanded so as to make space
-for the annotations. When all \code{"all"} quantities are plotted, a single
-set of spectra is accepted as input.
+The plot object returned is a ggplot (an object of class "gg") and
+  it can be added to or modified as any other ggplot. The axis labels are
+  encoded as \emph{plotmath} expressions as they contain superscripts and
+  special characters. In 'ggplot2', plotmath expressions do not obey theme
+  settings related to text fonts, except for \code{size}.
+
+  Scale limits are expanded so as to make space for the annotations. If
+  annotaions are disabled, limits are not expanded unless
+  \code{reserve.space} is passed to parameter \code{annotations}.
+
+  The generic of the \code{\link[ggplot2]{autoplot}} method is defined in
+  package 'ggplot2'. Package 'ggspectra' defines specializations for the
+  different classes for storage of spectral data defined in package
+  \code{\link[photobiology]{photobiology}}.
 }
 \note{
 The method for collections of object spectra of length > 1 is

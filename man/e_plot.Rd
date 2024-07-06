@@ -61,10 +61,10 @@ selects between them based on \code{stacked}.}
 \item{idfactor}{character Name of an index column in data holding a
 \code{factor} with each spectrum in a long-form multispectrum object
 corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
-the factor is retrieved from metadata or if no metadata found, the
-default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
-to the spectra and the user needs to use 'ggplot2' functions to manually
-map an aesthetic or use facets for the spectra.}
+the factor is retrieved from metadata or if no metadata found, the default
+"spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped to the
+spectra and the user needs to use 'ggplot2' functions to manually map an
+aesthetic or use facets for the spectra.}
 
 \item{facets}{logical or integer Indicating if facets are to be created for
 the levels of \code{idfactor} when \code{spct} contain multiple spectra in

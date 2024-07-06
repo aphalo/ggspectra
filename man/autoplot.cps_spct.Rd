@@ -55,9 +55,11 @@ to the plot methods for individual spectra, otherwise currently ignored.}
 \item{range}{an R object on which range() returns a vector of length 2, with
 min annd max wavelengths (nm).}
 
-\item{norm}{numeric normalization wavelength (nm) or character string
-\code{"max"} for normalization at the wavelength of highest peak or
-\code{"skip"} for no change to exisitng normalization in \code{object}.}
+\item{norm}{numeric Normalization wavelength (nm) or character string "max",
+or "min" for normalization at the corresponding wavelength, "update" to
+update the normalization after modifying units of expression, quantity
+or range but respecting the previously used criterion, or "skip" to force
+return of \code{object} unchanged.}
 
 \item{unit.out}{character IGNORED.}
 
@@ -77,14 +79,15 @@ which wavelengths are to be searched and interpolated if need. The
 as arguments. A list with \code{numeric} and/or \code{character} values is
 also accepted.}
 
-\item{annotations}{a character vector ("summaries" is ignored). For details
-please see sections Plot Annotations and Title Annotations.}
+\item{annotations}{a character vector. For details please see sections Plot
+Annotations and Title Annotations.}
 
 \item{geom}{character The name of a ggplot geometry, currently only
 \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
 selects between them based on \code{stacked}.}
 
-\item{time.format}{character Format as accepted by \code{\link[base]{strptime}}.}
+\item{time.format}{character Format as accepted by
+\code{\link[base]{strptime}}.}
 
 \item{tz}{character Time zone to use for title and/or subtitle.}
 
@@ -92,16 +95,14 @@ selects between them based on \code{stacked}.}
 
 \item{idfactor}{character Name of an index column in data holding a
 \code{factor} with each spectrum in a long-form multispectrum object
-corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
-the factor is retrieved from metadata or if no metadata found, the
-default "spct.idx" is tried.}
+corresponding to a distinct level of the factor.}
 
 \item{facets}{logical or integer Indicating if facets are to be created for
 the levels of \code{idfactor} when \code{spct} contain multiple spectra in
 long form.}
 
 \item{plot.data}{character Data to plot. Default is "as.is" plotting one line
-per spectrum. When passing "mean", "median", "sum", "prod", "var", "sd",
+per spectrum. When passing "mean", "median", "sum", "prod", var", "sd",
 "se" as argument all the spectra must contain data at the same wavelength
 values.}
 
@@ -112,7 +113,8 @@ values.}
 \item{na.rm}{logical.}
 }
 \value{
-a \code{ggplot} object.
+A \code{ggplot} object with a number of layers that depends on the
+  data and annotations.
 }
 \description{
 This function returns a ggplot object with an annotated plot of a
@@ -121,6 +123,13 @@ response_spct object.
 \details{
 Note that scales are expanded so as to make space for the annotations. The
 object returned is a ggplot objects, and can be further manipulated.
+}
+\note{
+If \code{idfactor = NULL}, the default for single spectra, the name of
+  the factor is retrieved from metadata or if no metadata found, the default
+  "spct.idx" is tried. The default for multiple spectra is to create
+  a factor named "spct.idx", but if a different name is passed, it will be
+  used instead, possibly renaminig a pre-existing one.
 }
 \section{Plot Annotations}{
  The recognized annotation names are: \code{"summaries"}, \code{"peaks"},
