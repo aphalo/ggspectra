@@ -3,7 +3,7 @@
 \name{autoplot.filter_spct}
 \alias{autoplot.filter_spct}
 \alias{autoplot.filter_mspct}
-\title{Create a complete ggplot for a filter spectrum.}
+\title{Build a complete ggplot for one or more filter spectra.}
 \usage{
 \method{autoplot}{filter_spct}(
   object,
@@ -121,8 +121,8 @@ A \code{ggplot} object with a number of layers that depends on the
   data and annotations.
 }
 \description{
-These methods return a ggplot object with an annotated plot of a filter_spct
-object or of the spectra contained in a filter_mspct object.
+These methods return a ggplot object for an annotated plot from spectral data
+stored in a \code{filter_spct} or a \code{filter_mspct} object.
 }
 \details{
 The plot object returned is a ggplot (an object of class "gg") and
@@ -141,13 +141,19 @@ The plot object returned is a ggplot (an object of class "gg") and
   \code{\link[photobiology]{photobiology}}.
 }
 \note{
-The plotting of absorbance is an exception to scale limits as
-the y-axis is not extended past 6 a.u. In the case of absorbance, values
-larger than 6 a.u. are rarely meaningful due to stray light during
-measurement. However, when transmittance values below the detection limit are
-rounded to zero, and later converted into absorbance, values Inf a.u. result,
-disrupting the plot. Scales are further expanded so as to make space for the
-annotations.
+The plotting of absorbance is an exception to scale limits as the
+  \emph{y}-axis is not extended past 6 a.u. In the case of absorbance, values
+  larger than 6 a.u. are rarely meaningful due to stray light during
+  measurement. However, when transmittance values below the detection limit
+  are rounded to zero, and later converted into absorbance, values Inf a.u.
+  result, disrupting the plot. Scales are further expanded so as to make
+  space for the annotations.
+
+  If \code{idfactor = NULL}, the default for single spectra, the name of the
+  factor is retrieved from metadata or if no metadata found, the default
+  \code{"spct.idx"} is tried. The default for multiple spectra is to create a
+  factor named \code{"spct.idx"}, but if a different name is passed, it will
+  be used instead, possibly renaminig a pre-existing one.
 }
 \section{Plot Annotations}{
  The recognized annotation names are: \code{"summaries"}, \code{"peaks"},

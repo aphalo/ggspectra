@@ -216,11 +216,8 @@ cps_plot <- function(spct,
 
 #' Create a complete ggplot for detector-counts per second spectra.
 #'
-#' This function returns a ggplot object with an annotated plot of a
-#' response_spct object.
-#'
-#' Note that scales are expanded so as to make space for the annotations. The
-#' object returned is a ggplot objects, and can be further manipulated.
+#' This methods return a ggplot object with an annotated plot of a
+#' \code{response_spct} or a \code{response_mspct} object.
 #'
 #' @inheritSection decoration Plot Annotations
 #' @inheritSection autotitle Title Annotations

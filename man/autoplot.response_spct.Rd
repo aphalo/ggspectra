@@ -3,7 +3,7 @@
 \name{autoplot.response_spct}
 \alias{autoplot.response_spct}
 \alias{autoplot.response_mspct}
-\title{Create a complete ggplot for a response spectrum.}
+\title{Create a complete ggplot for one or more response spectra.}
 \usage{
 \method{autoplot}{response_spct}(
   object,
@@ -118,8 +118,8 @@ A \code{ggplot} object with a number of layers that depends on the
   data and annotations.
 }
 \description{
-These methods return a ggplot object with an annotated plot of a
-response_spct object or of the spectra contained in a response_mspct object.
+These methods return a ggplot object with an annotated plot of the spectral
+data stored in a \code{response_spct} or a \code{response_mspct} object.
 }
 \details{
 The plot object returned is a ggplot (an object of class "gg") and

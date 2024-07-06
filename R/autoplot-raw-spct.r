@@ -247,11 +247,8 @@ raw_plot <- function(spct,
 
 #' Create a complete ggplot for raw detector-counts spectra.
 #'
-#' This function returns a ggplot object with an annotated plot of a
-#' raw_spct object.
-#'
-#' Note that scales are expanded so as to make space for the annotations.
-#' The object returned is a ggplot objects, and can be further manipulated.
+#' These methods construct a ggplot object with an annotated plot of a
+#' \code{raw_spct} or a \code{raw_mspct} object.
 #'
 #' @inheritSection decoration Plot Annotations
 #' @inheritSection autotitle Title Annotations

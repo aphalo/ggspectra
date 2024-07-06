@@ -1130,18 +1130,24 @@ O_plot <- function(spct,
 
 # autoplot methods -------------------------------------------------------------
 
-#' Create a complete ggplot for a filter spectrum.
+#' Build a complete ggplot for one or more filter spectra.
 #'
-#' These methods return a ggplot object with an annotated plot of a filter_spct
-#' object or of the spectra contained in a filter_mspct object.
+#' These methods return a ggplot object for an annotated plot from spectral data
+#' stored in a \code{filter_spct} or a \code{filter_mspct} object.
 #'
-#' @note The plotting of absorbance is an exception to scale limits as
-#' the y-axis is not extended past 6 a.u. In the case of absorbance, values
-#' larger than 6 a.u. are rarely meaningful due to stray light during
-#' measurement. However, when transmittance values below the detection limit are
-#' rounded to zero, and later converted into absorbance, values Inf a.u. result,
-#' disrupting the plot. Scales are further expanded so as to make space for the
-#' annotations.
+#' @note The plotting of absorbance is an exception to scale limits as the
+#'   \emph{y}-axis is not extended past 6 a.u. In the case of absorbance, values
+#'   larger than 6 a.u. are rarely meaningful due to stray light during
+#'   measurement. However, when transmittance values below the detection limit
+#'   are rounded to zero, and later converted into absorbance, values Inf a.u.
+#'   result, disrupting the plot. Scales are further expanded so as to make
+#'   space for the annotations.
+#'
+#'   If \code{idfactor = NULL}, the default for single spectra, the name of the
+#'   factor is retrieved from metadata or if no metadata found, the default
+#'   \code{"spct.idx"} is tried. The default for multiple spectra is to create a
+#'   factor named \code{"spct.idx"}, but if a different name is passed, it will
+#'   be used instead, possibly renaminig a pre-existing one.
 #'
 #' @inheritSection decoration Plot Annotations
 #' @inheritSection autotitle Title Annotations
@@ -1419,17 +1425,10 @@ autoplot.filter_mspct <-
     }
   }
 
-#' Create a complete ggplot for a reflector spectrum.
+#' Build a complete ggplot for one or more reflector spectra.
 #'
-#' These methods return a ggplot object with an annotated plot of a
-#' reflector_spct object or of the spectra contained in a reflector_mspct
-#' object.
-#'
-#' The ggplot object returned can be further manipulated and added to. Except
-#' when no annotations are added, limits are set for the x-axis and y-axis
-#' scales. The y scale limits are expanded to include all data, or at least to
-#' the range of expected values. Scales are further expanded so as to make space
-#' for the annotations.
+#' These methods return a ggplot object for an annotated plot from spectral data
+#' stored in a \code{reflector_spct} or a \code{reflector_mspct} object.
 #'
 #' @inheritSection decoration Plot Annotations
 #' @inheritSection autotitle Title Annotations
@@ -1659,10 +1658,10 @@ autoplot.reflector_mspct <-
     }
   }
 
-#' Create a complete ggplot for a object spectrum.
+#' Create a complete ggplot for an object spectrum.
 #'
-#' This function returns a ggplot object with an annotated plot of an
-#' object_spct object.
+#' These methods return a ggplot object with an annotated plot of an
+#' \code{object_spct} or an \code{object_spct} object.
 #'
 #' @inheritSection decoration Plot Annotations
 #' @inheritSection autotitle Title Annotations
@@ -1677,10 +1676,17 @@ autoplot.reflector_mspct <-
 #' @param stacked logical Whether to use \code{position_stack()} or
 #'   \code{position_identity()}.
 #'
-#' @note The method for collections of object spectra of length > 1 is
-#'   implemented for \code{plot.qty = "all"} using facets. Other plot
-#'   quantities are handled by the methods for \code{filter_spct} and
-#'   \code{reflector_spct} objects after on-the-fly conversion.
+#' @note In the case of multiple spectra contained in the argument to
+#'   \code{object} plotting is for \code{plot.qty = "all"} is always done using
+#'   facets. Other plot quantities are handled by the methods for
+#'   \code{filter_spct} and \code{reflector_spct} objects after on-the-fly
+#'   conversion and the use of facets is possible but not the default.
+#'
+#'   If \code{idfactor = NULL}, the default for single spectra, the name of the
+#'   factor is retrieved from metadata or if no metadata found, the default
+#'   "spct.idx" is tried. The default for multiple spectra is to create a factor
+#'   named "spct.idx", but if a different name is passed, it will be used
+#'   instead, possibly renaminig a pre-existing one.
 #'
 #' @export
 #'

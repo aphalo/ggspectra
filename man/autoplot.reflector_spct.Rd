@@ -3,7 +3,7 @@
 \name{autoplot.reflector_spct}
 \alias{autoplot.reflector_spct}
 \alias{autoplot.reflector_mspct}
-\title{Create a complete ggplot for a reflector spectrum.}
+\title{Build a complete ggplot for one or more reflector spectra.}
 \usage{
 \method{autoplot}{reflector_spct}(
   object,
@@ -121,16 +121,24 @@ A \code{ggplot} object with a number of layers that depends on the
   data and annotations.
 }
 \description{
-These methods return a ggplot object with an annotated plot of a
-reflector_spct object or of the spectra contained in a reflector_mspct
-object.
+These methods return a ggplot object for an annotated plot from spectral data
+stored in a \code{reflector_spct} or a \code{reflector_mspct} object.
 }
 \details{
-The ggplot object returned can be further manipulated and added to. Except
-when no annotations are added, limits are set for the x-axis and y-axis
-scales. The y scale limits are expanded to include all data, or at least to
-the range of expected values. Scales are further expanded so as to make space
-for the annotations.
+The plot object returned is a ggplot (an object of class "gg") and
+  it can be added to or modified as any other ggplot. The axis labels are
+  encoded as \emph{plotmath} expressions as they contain superscripts and
+  special characters. In 'ggplot2', plotmath expressions do not obey theme
+  settings related to text fonts, except for \code{size}.
+
+  Scale limits are expanded so as to make space for the annotations. If
+  annotaions are disabled, limits are not expanded unless
+  \code{reserve.space} is passed to parameter \code{annotations}.
+
+  The generic of the \code{\link[ggplot2]{autoplot}} method is defined in
+  package 'ggplot2'. Package 'ggspectra' defines specializations for the
+  different classes for storage of spectral data defined in package
+  \code{\link[photobiology]{photobiology}}.
 }
 \note{
 If \code{idfactor = NULL}, the default for single spectra, the name of

@@ -28,6 +28,9 @@ derived so that summaries requested by arguments passed to parameter `plot.data`
 are computed for multiple spectra in long form like they were for collections
 of spectra.
 - Fix broken `idfactor` handling in `autoplot()` methods for objects of class `generic_spct` and derived.
+- Use in `autoplot()` methods a plotmath expression for the wavelength axis 
+label, including lambda as symbol, for consistency with the labels of the 
+_y_-axis.
 
 # ggspectra 0.3.12
 

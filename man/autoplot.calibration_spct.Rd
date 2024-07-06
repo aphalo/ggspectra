@@ -118,8 +118,8 @@ A \code{ggplot} object with a number of layers that depends on the
 }
 \description{
 These methods return a ggplot object with an annotated plot of a
-calibration_spct object or of the spectra contained in a calibration_mspct
-object.
+\code{calibration_spct} object or of the spectra contained in a
+calibration_mspct object.
 }
 \details{
 The plot object returned is a ggplot (an object of class "gg") and
@@ -138,8 +138,11 @@ The plot object returned is a ggplot (an object of class "gg") and
   \code{\link[photobiology]{photobiology}}.
 }
 \note{
-Note that scales are expanded so as to make space for the annotations.
-The object returned is a ggplot object, and can be further manipulated.
+If \code{idfactor = NULL}, the default for single spectra, the name of
+  the factor is retrieved from metadata or if no metadata found, the default
+  "spct.idx" is tried. The default for multiple spectra is to create
+  a factor named "spct.idx", but if a different name is passed, it will be
+  used instead, possibly renaminig a pre-existing one.
 }
 \section{Plot Annotations}{
  The recognized annotation names are: \code{"summaries"}, \code{"peaks"},

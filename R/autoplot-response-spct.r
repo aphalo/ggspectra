@@ -494,10 +494,10 @@ q_rsp_plot <- function(spct,
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 }
 
-#' Create a complete ggplot for a response spectrum.
+#' Create a complete ggplot for one or more response spectra.
 #'
-#' These methods return a ggplot object with an annotated plot of a
-#' response_spct object or of the spectra contained in a response_mspct object.
+#' These methods return a ggplot object with an annotated plot of the spectral
+#' data stored in a \code{response_spct} or a \code{response_mspct} object.
 #'
 #' @inheritSection decoration Plot Annotations
 #' @inheritSection autotitle Title Annotations

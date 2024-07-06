@@ -233,11 +233,8 @@ cal_plot <- function(spct,
 #' Create a complete ggplot for an irradiation calibration spectrum.
 #'
 #' These methods return a ggplot object with an annotated plot of a
-#' calibration_spct object or of the spectra contained in a calibration_mspct
-#' object.
-#'
-#' @note Note that scales are expanded so as to make space for the annotations.
-#' The object returned is a ggplot object, and can be further manipulated.
+#' \code{calibration_spct} object or of the spectra contained in a
+#' calibration_mspct object.
 #'
 #' @inheritSection decoration Plot Annotations
 #' @inheritSection autotitle Title Annotations

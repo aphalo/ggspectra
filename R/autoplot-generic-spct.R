@@ -1,9 +1,9 @@
 #' Create a complete ggplot for generic spectral data.
 #'
 #' This function returns a ggplot object with an annotated plot of a
-#' generic_spct object.
+#' \code{generic_spct object}.
 #'
-#' Note that scales are expanded so as to make space for the annotations. The
+#' @note Note that scales are expanded so as to make space for the annotations. The
 #' object returned is a ggplot object, and can be further manipulated. When spct
 #' has more than one column with spectral data, each of these columns is
 #' normalized individually.
@@ -163,21 +163,25 @@ generic_plot <- function(spct,
 
 #' Create a complete ggplot for generic spectral data.
 #'
-#' This function returns a ggplot object with an annotated plot of a
-#' generic_spct object.
+#' This function returns a ggplot object with an annotated plot from
+#' spectral data stored in a \code{generic_spct} object.
 #'
-#' @details No automatic plot method is possible for objects of class \code{generic_spct}
-#' as this class is meant to be mainly used only as a pure base class for
-#' derivation. A method is provided for \code{generic_spct} but not for
-#' \code{generic_mspct} as \code{generic_mspct} objects can contain an
-#' assortment of objects including \code{generic_spct} and classes derived from
-#' \code{generic_spct} making the spectra are unlikely be suitable for plotting
-#' in the same ggplot.
+#' @details No automatic plot method is possible for objects of class
+#'   \code{generic_spct} as this class is meant to be mainly used only as a pure
+#'   base class for derivation. A method is provided for \code{generic_spct} but
+#'   not for \code{generic_mspct} as \code{generic_mspct} objects can contain an
+#'   assortment of objects including \code{generic_spct} and classes derived
+#'   from \code{generic_spct} making the spectra are unlikely be suitable for
+#'   plotting in the same ggplot.
 #'
-#' Contrary to other autoplot methods, the method for \code{generic_spct} does
-#' not supply defaults to several of its parameters and cannot be used simply by
-#' calling it with the spectrum as argument. There are also limitations on which
-#' annotations are accepted. On-the-fly normalization is not supported.
+#'   Contrary to other autoplot methods, the method for \code{generic_spct} does
+#'   not supply defaults to several of its parameters and cannot be used simply
+#'   by calling it with the spectrum as argument. There are also limitations on
+#'   which annotations are accepted. On-the-fly normalization is not supported.
+#'
+#'   No method is implemented for \code{generic_mspct} objects as they can
+#'   contain an heterogeneous collection of objects of class \code{generic_spct}
+#'   or any other class derived from it.
 #'
 #' @inheritSection decoration Plot Annotations
 #' @inheritSection autotitle Title Annotations

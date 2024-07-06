@@ -88,22 +88,26 @@ long form.}
 a \code{ggplot} object.
 }
 \description{
-This function returns a ggplot object with an annotated plot of a
-generic_spct object.
+This function returns a ggplot object with an annotated plot from
+spectral data stored in a \code{generic_spct} object.
 }
 \details{
-No automatic plot method is possible for objects of class \code{generic_spct}
-as this class is meant to be mainly used only as a pure base class for
-derivation. A method is provided for \code{generic_spct} but not for
-\code{generic_mspct} as \code{generic_mspct} objects can contain an
-assortment of objects including \code{generic_spct} and classes derived from
-\code{generic_spct} making the spectra are unlikely be suitable for plotting
-in the same ggplot.
+No automatic plot method is possible for objects of class
+  \code{generic_spct} as this class is meant to be mainly used only as a pure
+  base class for derivation. A method is provided for \code{generic_spct} but
+  not for \code{generic_mspct} as \code{generic_mspct} objects can contain an
+  assortment of objects including \code{generic_spct} and classes derived
+  from \code{generic_spct} making the spectra are unlikely be suitable for
+  plotting in the same ggplot.
 
-Contrary to other autoplot methods, the method for \code{generic_spct} does
-not supply defaults to several of its parameters and cannot be used simply by
-calling it with the spectrum as argument. There are also limitations on which
-annotations are accepted. On-the-fly normalization is not supported.
+  Contrary to other autoplot methods, the method for \code{generic_spct} does
+  not supply defaults to several of its parameters and cannot be used simply
+  by calling it with the spectrum as argument. There are also limitations on
+  which annotations are accepted. On-the-fly normalization is not supported.
+
+  No method is implemented for \code{generic_mspct} objects as they can
+  contain an heterogeneous collection of objects of class \code{generic_spct}
+  or any other class derived from it.
 }
 \note{
 If \code{idfactor = NULL}, the default for single spectra, the name of

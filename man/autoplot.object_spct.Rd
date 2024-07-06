@@ -3,7 +3,7 @@
 \name{autoplot.object_spct}
 \alias{autoplot.object_spct}
 \alias{autoplot.object_mspct}
-\title{Create a complete ggplot for a object spectrum.}
+\title{Create a complete ggplot for an object spectrum.}
 \usage{
 \method{autoplot}{object_spct}(
   object,
@@ -126,8 +126,8 @@ A \code{ggplot} object with a number of layers that depends on the
   data and annotations.
 }
 \description{
-This function returns a ggplot object with an annotated plot of an
-object_spct object.
+These methods return a ggplot object with an annotated plot of an
+\code{object_spct} or an \code{object_spct} object.
 }
 \details{
 The plot object returned is a ggplot (an object of class "gg") and
@@ -146,10 +146,17 @@ The plot object returned is a ggplot (an object of class "gg") and
   \code{\link[photobiology]{photobiology}}.
 }
 \note{
-The method for collections of object spectra of length > 1 is
-  implemented for \code{plot.qty = "all"} using facets. Other plot
-  quantities are handled by the methods for \code{filter_spct} and
-  \code{reflector_spct} objects after on-the-fly conversion.
+In the case of multiple spectra contained in the argument to
+  \code{object} plotting is for \code{plot.qty = "all"} is always done using
+  facets. Other plot quantities are handled by the methods for
+  \code{filter_spct} and \code{reflector_spct} objects after on-the-fly
+  conversion and the use of facets is possible but not the default.
+
+  If \code{idfactor = NULL}, the default for single spectra, the name of the
+  factor is retrieved from metadata or if no metadata found, the default
+  "spct.idx" is tried. The default for multiple spectra is to create a factor
+  named "spct.idx", but if a different name is passed, it will be used
+  instead, possibly renaminig a pre-existing one.
 }
 \section{Plot Annotations}{
  The recognized annotation names are: \code{"summaries"}, \code{"peaks"},
