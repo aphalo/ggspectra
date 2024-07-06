@@ -245,7 +245,7 @@ raw_plot <- function(spct,
 }
 
 
-#' Create a complete ggplot for raw detector-counts spectra.
+#' Plot one or more raw-detector-counts spectra.
 #'
 #' These methods construct a ggplot object with an annotated plot of a
 #' \code{raw_spct} or a \code{raw_mspct} object.

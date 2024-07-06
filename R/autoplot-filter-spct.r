@@ -1130,10 +1130,11 @@ O_plot <- function(spct,
 
 # autoplot methods -------------------------------------------------------------
 
-#' Build a complete ggplot for one or more filter spectra.
+#' Plot one or more "filter" spectra.
 #'
-#' These methods return a ggplot object for an annotated plot from spectral data
-#' stored in a \code{filter_spct} or a \code{filter_mspct} object.
+#' These methods return a ggplot object of an annotated plot from spectral data
+#' contained in a \code{filter_spct} or a \code{filter_mspct} object. Data can
+#' be expressed as absorbance, absorptance or transmittance.
 #'
 #' @note The plotting of absorbance is an exception to scale limits as the
 #'   \emph{y}-axis is not extended past 6 a.u. In the case of absorbance, values
@@ -1425,7 +1426,7 @@ autoplot.filter_mspct <-
     }
   }
 
-#' Build a complete ggplot for one or more reflector spectra.
+#' Plot one or more reflector spectra.
 #'
 #' These methods return a ggplot object for an annotated plot from spectral data
 #' stored in a \code{reflector_spct} or a \code{reflector_mspct} object.
@@ -1658,10 +1659,12 @@ autoplot.reflector_mspct <-
     }
   }
 
-#' Create a complete ggplot for an object spectrum.
+#' Plot one or more "object" spectra.
 #'
 #' These methods return a ggplot object with an annotated plot of an
-#' \code{object_spct} or an \code{object_spct} object.
+#' \code{object_spct} or an \code{object_spct} object. This objects contain
+#' spectral transmittance, reflectance and possibly absorptance data. As these
+#' quantities add up to one, only two are needed.
 #'
 #' @inheritSection decoration Plot Annotations
 #' @inheritSection autotitle Title Annotations

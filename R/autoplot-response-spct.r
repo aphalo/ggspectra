@@ -494,18 +494,18 @@ q_rsp_plot <- function(spct,
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 }
 
-#' Create a complete ggplot for one or more response spectra.
+#' Plot one or more response spectra.
 #'
 #' These methods return a ggplot object with an annotated plot of the spectral
-#' data stored in a \code{response_spct} or a \code{response_mspct} object.
+#' data contained in a \code{response_spct} or a \code{response_mspct} object.
+#' Spectral responsitivity can be expressed either on an energy basis or a photon
+#' or quantum basis.
 #'
 #' @inheritSection decoration Plot Annotations
 #' @inheritSection autotitle Title Annotations
 #' @inherit autoplot.source_spct
 #'
-#' @param object a response_spct object or a response_mspct object.
-#' @param unit.out character string indicating type of radiation units to use
-#'   for plotting: "photon" or its synonym "quantum", or "energy".
+#' @param object a \code{response_spct} object or a \code{response_mspct} object.
 #'
 #' @export
 #'

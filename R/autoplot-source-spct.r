@@ -579,10 +579,10 @@ q_plot <- function(spct,
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 }
 
-#' Create a complete ggplot for light-source spectra.
+#' Plot one or more light-source spectra.
 #'
-#' These methods return a ggplot object with an annotated plot of a source_spct
-#' object or of the spectra contained in a source_mspct object.
+#' These methods return a ggplot object with an annotated plot of the spectral
+#' data contained in a \code{source_spct} or a \code{source_mspct} object.
 #'
 #' @inheritSection decoration Plot Annotations
 #' @inheritSection autotitle Title Annotations
@@ -591,29 +591,31 @@ q_plot <- function(spct,
 #' @param ... in the case of collections of spectra, additional arguments passed
 #'   to the plot methods for individual spectra, otherwise currently ignored.
 #' @param w.band a single waveband object or a list of waveband objects.
-#' @param range an R object on which range() returns a vector of length 2, with
-#'   min annd max wavelengths (nm).
-#' @param norm numeric Normalization wavelength (nm) or character string "max",
-#'   or "min" for normalization at the corresponding wavelength, "update" to
-#'   update the normalization after modifying units of expression, quantity
-#'   or range but respecting the previously used criterion, or "skip" to force
-#'   return of \code{object} unchanged.
+#' @param range an R object on which \code{range()} returns a vector of length
+#'   2, with minimum and maximum wavelengths (nm).
+#' @param norm numeric Normalization wavelength (nm) or character string
+#'   \code{"max"}, or \code{"min"} for normalization at the corresponding
+#'   wavelength, \code{"update"} to update the normalization after modifying
+#'   units of expression, quantity or range but respecting the previously used
+#'   criterion, or \code{"skip"} to force return of \code{object} unchanged.
 #' @param unit.out character string indicating type of radiation units to use
-#'   for plotting: "photon" or its synonym "quantum", or "energy".
-#' @param pc.out logical, if TRUE use percent instead of fraction of one for
-#'   normalized spectral data.
+#'   for plotting: \code{"photon"} or its synonym \code{"quantum"}, or
+#'   \code{"energy"}.
+#' @param pc.out logical, if \code{TRUE} use percent instead of fraction of one
+#'   for normalized spectral data.
 #' @param label.qty character string giving the type of summary quantity to use
-#'   for labels, one of "mean", "total", "contribution", and "relative".
+#'   for labels, one of \code{"mean"}, \code{"total"}, \code{"contribution"},
+#'   and \code{"relative"}.
 #' @param span a peak is defined as an element in a sequence which is greater
-#'   than all other elements within a window of width span centered at that
+#'   than all other elements within a window of width span centred at that
 #'   element.
 #' @param wls.target numeric vector indicating the spectral quantity values for
 #'   which wavelengths are to be searched and interpolated if need. The
-#'   \code{character} strings "half.maximum" and "half.range" are also accepted
-#'   as arguments. A list with \code{numeric} and/or \code{character} values is
-#'   also accepted.
+#'   \code{character} strings \code{"half.maximum"} and \code{"half.range"} are
+#'   also accepted as arguments. A list with \code{numeric} and/or
+#'   \code{character} values is also accepted.
 #' @param annotations a character vector. For details please see sections Plot
-#'   Annotations and Title Annotations.
+#'   \strong{Annotations} and \strong{Title Annotations}.
 #' @param geom character The name of a ggplot geometry, currently only
 #'   \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
 #'   selects between them based on \code{stacked}.
@@ -621,30 +623,31 @@ q_plot <- function(spct,
 #'   \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
 #' @param text.size numeric size of text in the plot decorations.
-#' @param chroma.type character one of "CMF" (color matching function) or "CC"
-#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
+#' @param chroma.type character one of \code{"CMF"} (color matching function) or
+#'   \code{"CC"} (color coordinates) or a
+#'   \code{\link[photobiology]{chroma_spct}} object.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
 #'   corresponding to a distinct level of the factor.
 #' @param facets logical or integer Indicating if facets are to be created for
 #'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
 #'   long form.
-#' @param plot.data character Data to plot. Default is "as.is" plotting one line
-#'   per spectrum. When passing "mean", "median", "sum", "prod", var", "sd",
-#'   "se" as argument all the spectra must contain data at the same wavelength
-#'   values.
+#' @param plot.data character Data to plot. Default is \code{"as.is"} plotting
+#'   one line per spectrum. When passing \code{"mean"}, \code{"median"},
+#'   \code{"sum"}, \code{"prod"}, \code{"var"}, \code{"sd"}, \code{"se"} as
+#'   argument all the spectra must contain data at the same wavelength values.
 #' @param ylim numeric y axis limits,
 #' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.
 #'
-#' @details The plot object returned is a ggplot (an object of class "gg") and
-#'   it can be added to or modified as any other ggplot. The axis labels are
-#'   encoded as \emph{plotmath} expressions as they contain superscripts and
-#'   special characters. In 'ggplot2', plotmath expressions do not obey theme
-#'   settings related to text fonts, except for \code{size}.
+#' @details The plot object returned is a ggplot (an object of class
+#'   \code{"gg"}) and it can be added to or modified as any other ggplot. The
+#'   axis labels are encoded as \emph{plotmath} expressions as they contain
+#'   superscripts and special characters. In 'ggplot2', plotmath expressions do
+#'   not obey theme settings related to text fonts, except for \code{size}.
 #'
 #'   Scale limits are expanded so as to make space for the annotations. If
-#'   annotaions are disabled, limits are not expanded unless
+#'   annotations are disabled, limits are not expanded unless
 #'   \code{reserve.space} is passed to parameter \code{annotations}.
 #'
 #'   The generic of the \code{\link[ggplot2]{autoplot}} method is defined in
@@ -654,9 +657,9 @@ q_plot <- function(spct,
 #'
 #' @note  If \code{idfactor = NULL}, the default for single spectra, the name of
 #'   the factor is retrieved from metadata or if no metadata found, the default
-#'   "spct.idx" is tried. The default for multiple spectra is to create
-#'   a factor named "spct.idx", but if a different name is passed, it will be
-#'   used instead, possibly renaminig a pre-existing one.
+#'   \code{"spct.idx"} is tried. The default for multiple spectra is to create a
+#'   factor named \code{"spct.idx"}, but if a different name is passed, it will
+#'   be used instead, possibly renaming a pre-existing one.
 #'
 #' @return A \code{ggplot} object with a number of layers that depends on the
 #'   data and annotations.

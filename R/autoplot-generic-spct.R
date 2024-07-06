@@ -161,10 +161,10 @@ generic_plot <- function(spct,
 
 }
 
-#' Create a complete ggplot for generic spectral data.
+#' Plot generic spectral data.
 #'
 #' This function returns a ggplot object with an annotated plot from
-#' spectral data stored in a \code{generic_spct} object.
+#' spectral data contained in a \code{generic_spct} object.
 #'
 #' @details No automatic plot method is possible for objects of class
 #'   \code{generic_spct} as this class is meant to be mainly used only as a pure

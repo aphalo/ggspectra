@@ -214,10 +214,10 @@ cps_plot <- function(spct,
 
 }
 
-#' Create a complete ggplot for detector-counts per second spectra.
+#' Plot one or more detector-counts-per-second spectra.
 #'
-#' This methods return a ggplot object with an annotated plot of a
-#' \code{response_spct} or a \code{response_mspct} object.
+#' These methods return a ggplot object with an annotated plot of a
+#' \code{cps_spct} or a \code{cps_mspct} object.
 #'
 #' @inheritSection decoration Plot Annotations
 #' @inheritSection autotitle Title Annotations

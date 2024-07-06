@@ -3,7 +3,7 @@
 \name{autoplot.generic_spct}
 \alias{autoplot.generic_spct}
 \alias{autoplot.generic_mspct}
-\title{Create a complete ggplot for generic spectral data.}
+\title{Plot generic spectral data.}
 \usage{
 \method{autoplot}{generic_spct}(
   object,
@@ -44,24 +44,25 @@ to the y aesthetic.}
 
 \item{w.band}{a single waveband object or a list of waveband objects.}
 
-\item{range}{an R object on which range() returns a vector of length 2, with
-min annd max wavelengths (nm).}
+\item{range}{an R object on which \code{range()} returns a vector of length
+2, with minimum and maximum wavelengths (nm).}
 
 \item{label.qty}{character string giving the type of summary quantity to use
-for labels, one of "mean", "total", "contribution", and "relative".}
+for labels, one of \code{"mean"}, \code{"total"}, \code{"contribution"},
+and \code{"relative"}.}
 
 \item{span}{a peak is defined as an element in a sequence which is greater
-than all other elements within a window of width span centered at that
+than all other elements within a window of width span centred at that
 element.}
 
 \item{wls.target}{numeric vector indicating the spectral quantity values for
 which wavelengths are to be searched and interpolated if need. The
-\code{character} strings "half.maximum" and "half.range" are also accepted
-as arguments. A list with \code{numeric} and/or \code{character} values is
-also accepted.}
+\code{character} strings \code{"half.maximum"} and \code{"half.range"} are
+also accepted as arguments. A list with \code{numeric} and/or
+\code{character} values is also accepted.}
 
 \item{annotations}{a character vector. For details please see sections Plot
-Annotations and Title Annotations.}
+\strong{Annotations} and \strong{Title Annotations}.}
 
 \item{time.format}{character Format as accepted by
 \code{\link[base]{strptime}}.}
@@ -89,7 +90,7 @@ a \code{ggplot} object.
 }
 \description{
 This function returns a ggplot object with an annotated plot from
-spectral data stored in a \code{generic_spct} object.
+spectral data contained in a \code{generic_spct} object.
 }
 \details{
 No automatic plot method is possible for objects of class
@@ -112,9 +113,9 @@ No automatic plot method is possible for objects of class
 \note{
 If \code{idfactor = NULL}, the default for single spectra, the name of
   the factor is retrieved from metadata or if no metadata found, the default
-  "spct.idx" is tried. The default for multiple spectra is to create
-  a factor named "spct.idx", but if a different name is passed, it will be
-  used instead, possibly renaminig a pre-existing one.
+  \code{"spct.idx"} is tried. The default for multiple spectra is to create a
+  factor named \code{"spct.idx"}, but if a different name is passed, it will
+  be used instead, possibly renaming a pre-existing one.
 }
 \section{Plot Annotations}{
  The recognized annotation names are: \code{"summaries"}, \code{"peaks"},
