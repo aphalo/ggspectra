@@ -330,7 +330,14 @@ autoplot.calibration_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
-    if (getMultipleWl(object) > 1L && plot.data != "as.is") {
+    if (is.null(idfactor)) {
+      idfactor <- getIdFactor(object)
+    }
+    if (is.na(idfactor) || !is.character(idfactor)) {
+      idfactor <- getMultipleWl(object) > 1L
+    }
+
+    if (plot.data != "as.is") {
       return(
         autoplot(object = subset2mspct(object),
                  w.band = w.band,
@@ -347,7 +354,7 @@ autoplot.calibration_spct <-
                  tz = tz,
                  text.size = text.size,
 #                 chroma.type = chroma.type,
-                 idfactor = ifelse(is.null(idfactor), TRUE, idfactor),
+                 idfactor = idfactor,
                  facets = facets,
                  plot.data = plot.data,
                  ylim = ylim,

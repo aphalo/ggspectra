@@ -710,14 +710,14 @@ autoplot.source_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
+    if (is.null(idfactor)) {
+      idfactor <- getIdFactor(object)
+    }
+    if (is.na(idfactor) || !is.character(idfactor)) {
+      idfactor <- getMultipleWl(object) > 1L
+    }
+
     if (plot.data != "as.is") {
-      if (is.null(idfactor)) {
-        idfactor <- getIdFactor(object)
-      }
-      if (is.na(idfactor) || !is.character(idfactor)) {
-        idfactor <- TRUE
-      }
-      print(idfactor)
       return(
         autoplot(object = subset2mspct(object),
                  w.band = w.band,
@@ -896,7 +896,7 @@ autoplot.source_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
-    print(getIdFactor(z))
+
     col.name <- c(photon = "s.q.irrad", energy = "s.e.irrad")
     if (is.source_spct(z) && any(col.name %in% names(z))) {
       ggplot2::autoplot(object = z,

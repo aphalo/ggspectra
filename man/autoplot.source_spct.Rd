@@ -184,12 +184,14 @@ autoplot(sun_evening.spct)
 autoplot(sun_evening.spct, facets = 1) # one column
 autoplot(sun_evening.spct, facets = 2) # two columns
 autoplot(sun_evening.spct, plot.data = "mean")
+autoplot(sun_evening.spct, idfactor = "Sequence")
 
 # multiple spectra as a collection
 autoplot(sun_evening.mspct)
 autoplot(sun_evening.mspct, facets = 1) # one column
 autoplot(sun_evening.mspct, facets = 2) # two columns
 autoplot(sun_evening.mspct, plot.data = "mean")
+autoplot(sun_evening.mspct, idfactor = "Time")
 
 }
 \seealso{
