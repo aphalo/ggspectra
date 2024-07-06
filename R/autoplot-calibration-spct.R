@@ -247,7 +247,7 @@ cal_plot <- function(spct,
 #'   to the plot methods for individual spectra, otherwise currently ignored.
 #' @param w.band a single waveband object or a list of waveband objects.
 #' @param range an R object on which range() returns a vector of length 2, with
-#'   min annd max wavelengths (nm).
+#'   min and max wavelengths (nm).
 #' @param norm numeric Normalization wavelength (nm) or character string "max",
 #'   or "min" for normalization at the corresponding wavelength, "update" to
 #'   update the normalization after modifying units of expression, quantity
@@ -255,7 +255,7 @@ cal_plot <- function(spct,
 #'   return of \code{object} unchanged. Always skipped for
 #'   \code{plot.qty == "all"}, which is the default.
 #' @param unit.out character IGNORED.
-#' @param pc.out logical, if TRUE use percents instead of fraction of one.
+#' @param pc.out logical, if TRUE use percent instead of fraction of one.
 #' @param label.qty character string giving the type of summary quantity to use
 #'   for labels, one of "mean", "total", "contribution", and "relative".
 #' @param span a peak is defined as an element in a sequence which is greater
@@ -287,6 +287,10 @@ cal_plot <- function(spct,
 #' @param facets logical or integer Indicating if facets are to be created for
 #'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
 #'   long form.
+#' @param plot.data character Data to plot. Default is "as.is" plotting one line
+#'   per spectrum. When passing "mean", "median", "sum", "prod", var", "sd",
+#'   "se" as argument all the spectra must contain data at the same wavelength
+#'   values.
 #' @param ylim numeric y axis limits,
 #' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.
@@ -321,9 +325,36 @@ autoplot.calibration_spct <-
            text.size = 2.5,
            idfactor = NULL,
            facets = FALSE,
+           plot.data = "as.is",
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
+
+    if (getMultipleWl(object) > 1L && plot.data != "as.is") {
+      return(
+        autoplot(object = subset2mspct(object),
+                 w.band = w.band,
+                 range = range,
+                 norm = norm,
+                 unit.out = unit.out,
+                 pc.out = pc.out,
+                 label.qty = label.qty,
+                 span = span,
+                 wls.target = wls.target,
+                 annotations = annotations,
+                 geom = geom,
+                 time.format = time.format,
+                 tz = tz,
+                 text.size = text.size,
+#                 chroma.type = chroma.type,
+                 idfactor = ifelse(is.null(idfactor), TRUE, idfactor),
+                 facets = facets,
+                 plot.data = plot.data,
+                 ylim = ylim,
+                 object.label = object.label,
+                 na.rm = na.rm)
+      )
+    }
 
     force(object.label)
 
@@ -366,11 +397,6 @@ autoplot.calibration_spct <-
   }
 
 #' @rdname autoplot.calibration_spct
-#'
-#' @param plot.data character Data to plot. Default is "as.is" plotting one line
-#'   per spectrum. When passing "mean", "median", "sum", "prod", var", "sd",
-#'   "se" as argument all the spectra must contain data at the same wavelength
-#'   values.
 #'
 #' @export
 #'

@@ -24,6 +24,7 @@
   text.size = 2.5,
   idfactor = NULL,
   facets = FALSE,
+  plot.data = "as.is",
   ylim = c(NA, NA),
   object.label = deparse(substitute(object)),
   na.rm = TRUE
@@ -52,11 +53,11 @@ to the plot methods for individual spectra, otherwise currently ignored.}
 \item{w.band}{a single waveband object or a list of waveband objects.}
 
 \item{range}{an R object on which range() returns a vector of length 2, with
-min annd max wavelengths (nm).}
+min and max wavelengths (nm).}
 
 \item{unit.out}{character IGNORED.}
 
-\item{pc.out}{logical, if TRUE use percents instead of fraction of one.}
+\item{pc.out}{logical, if TRUE use percent instead of fraction of one.}
 
 \item{label.qty}{character string giving the type of summary quantity to use
 for labels, one of "mean", "total", "contribution", and "relative".}
@@ -100,16 +101,16 @@ aesthetic or use facets for the spectra.}
 the levels of \code{idfactor} when \code{spct} contain multiple spectra in
 long form.}
 
+\item{plot.data}{character Data to plot. Default is "as.is" plotting one line
+per spectrum. When passing "mean", "median", "sum", "prod", var", "sd",
+"se" as argument all the spectra must contain data at the same wavelength
+values.}
+
 \item{ylim}{numeric y axis limits,}
 
 \item{object.label}{character The name of the object being plotted.}
 
 \item{na.rm}{logical.}
-
-\item{plot.data}{character Data to plot. Default is "as.is" plotting one line
-per spectrum. When passing "mean", "median", "sum", "prod", var", "sd",
-"se" as argument all the spectra must contain data at the same wavelength
-values.}
 }
 \value{
 a \code{ggplot} object.

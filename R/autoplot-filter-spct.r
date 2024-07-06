@@ -1192,6 +1192,10 @@ O_plot <- function(spct,
 #' @param facets logical or integer Indicating if facets are to be created for
 #'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
 #'   long form.
+#' @param plot.data character Data to plot. Default is "as.is" plotting one line
+#'   per spectrum. When passing "mean", "median", "sum", "prod", var", "sd",
+#'   "se" as argument all the spectra must contain data at the same wavelength
+#'   values.
 #' @param ylim numeric y axis limits,
 #' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.
@@ -1209,7 +1213,7 @@ O_plot <- function(spct,
 #' @keywords hplot
 #'
 #' @examples
-#'
+#' # one spectrum
 #' autoplot(yellow_gel.spct)
 #' autoplot(yellow_gel.spct, geom = "spct")
 #' autoplot(yellow_gel.spct, plot.qty = "transmittance")
@@ -1218,9 +1222,12 @@ O_plot <- function(spct,
 #' autoplot(yellow_gel.spct, pc.out = TRUE)
 #' autoplot(yellow_gel.spct, annotations = c("+", "wls"))
 #'
-#' two_filters.mspct <-
-#'  filter_mspct(list("Yellow gel" = yellow_gel.spct,
-#'                    "Polyester film" = polyester.spct))
+#' # spectra for two filters in long form
+#' autoplot(two_filters.spct)
+#' autoplot(two_filters.spct, idfactor = "Spectra")
+#' autoplot(two_filters.spct, facets = TRUE)
+#'
+#' # spectra for two filters as a collection
 #' autoplot(two_filters.mspct)
 #' autoplot(two_filters.mspct, idfactor = "Spectra")
 #' autoplot(two_filters.mspct, facets = TRUE)
@@ -1249,9 +1256,36 @@ autoplot.filter_spct <-
            chroma.type = "CMF",
            idfactor = NULL,
            facets = FALSE,
+           plot.data = "as.is",
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
+
+    if (getMultipleWl(object) > 1L && plot.data != "as.is") {
+      return(
+        autoplot(object = subset2mspct(object),
+                 w.band = w.band,
+                 range = range,
+                 norm = norm,
+                 plot.qty = plot.qty,
+                 pc.out = pc.out,
+                 label.qty = label.qty,
+                 span = span,
+                 wls.target = wls.target,
+                 annotations = annotations,
+                 geom = geom,
+                 time.format = time.format,
+                 tz = tz,
+                 text.size = text.size,
+                 chroma.type = chroma.type,
+                 idfactor = ifelse(is.null(idfactor), TRUE, idfactor),
+                 facets = facets,
+                 plot.data = plot.data,
+                 ylim = ylim,
+                 object.label = object.label,
+                 na.rm = na.rm)
+      )
+    }
 
     force(object.label)
 
@@ -1350,11 +1384,6 @@ autoplot.filter_spct <-
   }
 
 #' @rdname autoplot.filter_spct
-#'
-#' @param plot.data character Data to plot. Default is "as.is" plotting one line
-#'   per spectrum. When passing "mean", "median", "sum", "prod", var", "sd",
-#'   "se" as argument all the spectra must contain data at the same wavelength
-#'   values.
 #'
 #' @export
 #'
@@ -1496,6 +1525,11 @@ autoplot.filter_mspct <-
 #' @param facets logical or integer Indicating if facets are to be created for
 #'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
 #'   long form.
+#' @param plot.data character Data to plot. Default is "as.is" plotting one line
+#'   per spectrum. When passing "mean", "median", "sum", "prod", "var", "sd",
+#'   "se" as argument all the spectra must contain data at the same wavelength
+#'   values.
+#'
 #' @param ylim numeric y axis limits,
 #' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.
@@ -1547,9 +1581,36 @@ autoplot.reflector_spct <-
            chroma.type = "CMF",
            idfactor = NULL,
            facets = FALSE,
+           plot.data = "as.is",
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
+
+    if (getMultipleWl(object) > 1L && plot.data != "as.is") {
+      return(
+        autoplot(object = subset2mspct(object),
+                 w.band = w.band,
+                 range = range,
+                 norm = norm,
+                 plot.qty = plot.qty,
+                 pc.out = pc.out,
+                 label.qty = label.qty,
+                 span = span,
+                 wls.target = wls.target,
+                 annotations = annotations,
+                 geom = geom,
+                 time.format = time.format,
+                 tz = tz,
+                 text.size = text.size,
+                 chroma.type = chroma.type,
+                 idfactor = ifelse(is.null(idfactor), TRUE, idfactor),
+                 facets = facets,
+                 plot.data = plot.data,
+                 ylim = ylim,
+                 object.label = object.label,
+                 na.rm = na.rm)
+      )
+    }
 
     force(object.label)
 
@@ -1614,11 +1675,6 @@ autoplot.reflector_spct <-
   }
 
 #' @rdname autoplot.reflector_spct
-#'
-#' @param plot.data character Data to plot. Default is "as.is" plotting one line
-#'   per spectrum. When passing "mean", "median", "sum", "prod", "var", "sd",
-#'   "se" as argument all the spectra must contain data at the same wavelength
-#'   values.
 #'
 #' @export
 #'
@@ -1757,6 +1813,11 @@ autoplot.reflector_mspct <-
 #' @param facets logical or integer Indicating if facets are to be created for
 #'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
 #'   long form.
+#' @param plot.data character Data to plot. Default is "as.is" plotting one line
+#'   per spectrum. When passing "mean", "median", "sum", "prod", var", "sd",
+#'   "se" as argument all the spectra must contain data at the same wavelength
+#'   values.
+#'
 #' @param ylim numeric y axis limits,
 #' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.
@@ -1814,9 +1875,37 @@ autoplot.object_spct <-
            chroma.type = "CMF",
            idfactor = NULL,
            facets = NULL,
+           plot.data = "as.is",
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
+
+    if (getMultipleWl(object) > 1L && plot.data != "as.is") {
+      return(
+        autoplot(object = subset2mspct(object),
+                 w.band = w.band,
+                 range = range,
+                 norm = norm,
+                 plot.qty = plot.qty,
+                 pc.out = pc.out,
+                 label.qty = label.qty,
+                 span = span,
+                 wls.target = wls.target,
+                 annotations = annotations,
+                 geom = geom,
+                 time.format = time.format,
+                 tz = tz,
+                 stacked = stacked,
+                 text.size = text.size,
+                 chroma.type = chroma.type,
+                 idfactor = ifelse(is.null(idfactor), TRUE, idfactor),
+                 facets = facets,
+                 plot.data = plot.data,
+                 ylim = ylim,
+                 object.label = object.label,
+                 na.rm = na.rm)
+      )
+    }
 
     force(object.label)
     if (is.null(plot.qty)) {
@@ -1907,11 +1996,6 @@ autoplot.object_spct <-
   }
 
 #' @rdname autoplot.object_spct
-#'
-#' @param plot.data character Data to plot. Default is "as.is" plotting one line
-#'   per spectrum. When passing "mean", "median", "sum", "prod", var", "sd",
-#'   "se" as argument all the spectra must contain data at the same wavelength
-#'   values.
 #'
 #' @export
 #'

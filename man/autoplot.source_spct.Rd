@@ -26,6 +26,7 @@
   chroma.type = "CMF",
   idfactor = NULL,
   facets = FALSE,
+  plot.data = "as.is",
   ylim = c(NA, NA),
   object.label = deparse(substitute(object)),
   na.rm = TRUE
@@ -106,16 +107,16 @@ corresponding to a distinct level of the factor.}
 the levels of \code{idfactor} when \code{spct} contain multiple spectra in
 long form.}
 
+\item{plot.data}{character Data to plot. Default is "as.is" plotting one line
+per spectrum. When passing "mean", "median", "sum", "prod", var", "sd",
+"se" as argument all the spectra must contain data at the same wavelength
+values.}
+
 \item{ylim}{numeric y axis limits,}
 
 \item{object.label}{character The name of the object being plotted.}
 
 \item{na.rm}{logical.}
-
-\item{plot.data}{character Data to plot. Default is "as.is" plotting one line
-per spectrum. When passing "mean", "median", "sum", "prod", var", "sd",
-"se" as argument all the spectra must contain data at the same wavelength
-values.}
 }
 \value{
 a \code{ggplot} object.
@@ -176,12 +177,19 @@ autoplot(sun.spct)
 autoplot(sun.spct, geom = "spct")
 autoplot(sun.spct, unit.out = "photon")
 autoplot(sun.spct, norm = "max")
+autoplot(sun.spct, norm = "max", pc.out = TRUE)
 
-two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct / 2))
-autoplot(two_suns.mspct)
-autoplot(two_suns.mspct, facets = 1) # one column
-autoplot(two_suns.mspct, facets = 2) # two columns
-autoplot(two_suns.mspct, plot.data = "mean")
+# multiple spectra in long form
+autoplot(sun_evening.spct)
+autoplot(sun_evening.spct, facets = 1) # one column
+autoplot(sun_evening.spct, facets = 2) # two columns
+autoplot(sun_evening.spct, plot.data = "mean")
+
+# multiple spectra as a collection
+autoplot(sun_evening.mspct)
+autoplot(sun_evening.mspct, facets = 1) # one column
+autoplot(sun_evening.mspct, facets = 2) # two columns
+autoplot(sun_evening.mspct, plot.data = "mean")
 
 }
 \seealso{

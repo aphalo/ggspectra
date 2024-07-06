@@ -633,6 +633,10 @@ q_plot <- function(spct,
 #' @param facets logical or integer Indicating if facets are to be created for
 #'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
 #'   long form.
+#' @param plot.data character Data to plot. Default is "as.is" plotting one line
+#'   per spectrum. When passing "mean", "median", "sum", "prod", var", "sd",
+#'   "se" as argument all the spectra must contain data at the same wavelength
+#'   values.
 #' @param ylim numeric y axis limits,
 #' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.
@@ -659,12 +663,21 @@ q_plot <- function(spct,
 #' autoplot(sun.spct, geom = "spct")
 #' autoplot(sun.spct, unit.out = "photon")
 #' autoplot(sun.spct, norm = "max")
+#' autoplot(sun.spct, norm = "max", pc.out = TRUE)
 #'
-#' two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct / 2))
-#' autoplot(two_suns.mspct)
-#' autoplot(two_suns.mspct, facets = 1) # one column
-#' autoplot(two_suns.mspct, facets = 2) # two columns
-#' autoplot(two_suns.mspct, plot.data = "mean")
+#' # multiple spectra in long form
+#' autoplot(sun_evening.spct)
+#' autoplot(sun_evening.spct, facets = 1) # one column
+#' autoplot(sun_evening.spct, facets = 2) # two columns
+#' autoplot(sun_evening.spct, plot.data = "mean")
+#' autoplot(sun_evening.spct, idfactor = "Sequence")
+#'
+#' # multiple spectra as a collection
+#' autoplot(sun_evening.mspct)
+#' autoplot(sun_evening.mspct, facets = 1) # one column
+#' autoplot(sun_evening.mspct, facets = 2) # two columns
+#' autoplot(sun_evening.mspct, plot.data = "mean")
+#' autoplot(sun_evening.mspct, idfactor = "Time")
 #'
 #' @family autoplot methods
 #'
@@ -692,10 +705,48 @@ autoplot.source_spct <-
            chroma.type = "CMF",
            idfactor = NULL,
            facets = FALSE,
+           plot.data = "as.is",
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
+    if (plot.data != "as.is") {
+      if (is.null(idfactor)) {
+        idfactor <- getIdFactor(object)
+      }
+      if (is.na(idfactor) || !is.character(idfactor)) {
+        idfactor <- TRUE
+      }
+      print(idfactor)
+      return(
+        autoplot(object = subset2mspct(object),
+                 w.band = w.band,
+                 range = range,
+                 norm = norm,
+                 unit.out = unit.out,
+                 pc.out = pc.out,
+                 label.qty = label.qty,
+                 span = span,
+                 wls.target = wls.target,
+                 annotations = annotations,
+                 geom = geom,
+                 time.format = time.format,
+                 tz = tz,
+                 text.size = text.size,
+                 chroma.type = chroma.type,
+                 idfactor = idfactor,
+                 facets = facets,
+                 plot.data = plot.data,
+                 ylim = ylim,
+                 object.label = object.label,
+                 na.rm = na.rm)
+      )
+    }
+
+    # support renaming of the idfactor
+    if (getMultipleWl(object) > 1L && is.character(idfactor) && length(idfactor)) {
+      setIdFactor(object, idfactor)
+    }
     force(object.label)
 
     annotations.default <-
@@ -790,11 +841,6 @@ autoplot.source_spct <-
 
 #' @rdname autoplot.source_spct
 #'
-#' @param plot.data character Data to plot. Default is "as.is" plotting one line
-#'   per spectrum. When passing "mean", "median", "sum", "prod", var", "sd",
-#'   "se" as argument all the spectra must contain data at the same wavelength
-#'   values.
-#'
 #' @export
 #'
 autoplot.source_mspct <-
@@ -840,7 +886,7 @@ autoplot.source_mspct <-
     z <- switch(plot.data,
                 as.is = photobiology::rbindspct(object,
                                                 idfactor = ifelse(is.na(idfactor),
-                                                                  TRUE,
+                                                                  "spct.idx",
                                                                   idfactor)),
                 mean = photobiology::s_mean(object),
                 median = photobiology::s_median(object),
@@ -850,6 +896,7 @@ autoplot.source_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
+    print(getIdFactor(z))
     col.name <- c(photon = "s.q.irrad", energy = "s.e.irrad")
     if (is.source_spct(z) && any(col.name %in% names(z))) {
       ggplot2::autoplot(object = z,
