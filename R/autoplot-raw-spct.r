@@ -192,7 +192,7 @@ raw_plot <- function(spct,
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
   plot <- plot + geom_line(na.rm = na.rm)
-  plot <- plot + labs(x = "Wavelength (nm)", y = s.counts.label)
+  plot <- plot + labs(x = expression("Wavelength, "*lambda~(nm)), y = s.counts.label)
 
   if (length(annotations) == 1 && annotations == "") {
     return(plot)
@@ -245,59 +245,17 @@ raw_plot <- function(spct,
 }
 
 
-#' Create a complete ggplot for raw detector-counts spectra.
+#' Plot one or more raw-detector-counts spectra.
 #'
-#' This function returns a ggplot object with an annotated plot of a
-#' raw_spct object.
-#'
-#' Note that scales are expanded so as to make space for the annotations.
-#' The object returned is a ggplot objects, and can be further manipulated.
+#' These methods construct a ggplot object with an annotated plot of a
+#' \code{raw_spct} or a \code{raw_mspct} object.
 #'
 #' @inheritSection decoration Plot Annotations
 #' @inheritSection autotitle Title Annotations
+#' @inherit autoplot.source_spct
 #'
 #' @param object a raw_spct object.
-#' @param ... in the case of collections of spectra, additional arguments passed
-#'   to the plot methods for individual spectra, otherwise currently ignored.
-#' @param w.band a single waveband object or a list of waveband objects.
-#' @param range an R object on which range() returns a vector of length 2,
-#' with min annd max wavelengths (nm).
 #' @param unit.out character IGNORED.
-#' @param pc.out logical, if TRUE use percent instead of fraction of one for
-#'   normalized spectral data.
-#' @param label.qty character string giving the type of summary quantity to use
-#'   for labels, one of "mean", "total", "contribution", and "relative".
-#' @param span a peak is defined as an element in a sequence which is greater
-#'   than all other elements within a window of width span centered at that
-#'   element.
-#' @param wls.target numeric vector indicating the spectral quantity values for
-#'   which wavelengths are to be searched and interpolated if need. The
-#'   \code{character} strings "half.maximum" and "half.range" are also accepted
-#'   as arguments. A list with \code{numeric} and/or \code{character} values is
-#'   also accepted.
-#' @param annotations a character vector ("summaries" is ignored). For details
-#'   please see sections Plot Annotations and Title Annotations.
-#' @param geom character The name of a ggplot geometry, currently only
-#'   \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
-#'   selects between them based on \code{stacked}.
-#' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
-#' @param tz character Time zone to use for title and/or subtitle.
-#' @param norm numeric normalization wavelength (nm) or character string "max"
-#' for normalization at the wavelength of highest peak.
-#' @param text.size numeric size of text in the plot decorations.
-#' @param idfactor character Name of an index column in data holding a
-#'   \code{factor} with each spectrum in a long-form multispectrum object
-#'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
-#'   the factor is retrieved from metadata or if no metadata found, the
-#'   default "spct.idx" is tried.
-#' @param facets logical or integer Indicating if facets are to be created for
-#'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
-#'   long form.
-#' @param ylim numeric y axis limits,
-#' @param object.label character The name of the object being plotted.
-#' @param na.rm logical.
-#'
-#' @return a \code{ggplot} object.
 #'
 #' @seealso \code{\link[photobiology]{normalize}},
 #'   \code{\link[photobiology]{raw_spct}},
@@ -342,9 +300,43 @@ autoplot.raw_spct <-
            text.size = 2.5,
            idfactor = NULL,
            facets = FALSE,
+           plot.data = "as.is",
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
+
+    if (is.null(idfactor)) {
+      idfactor <- getIdFactor(object)
+    }
+    if (is.na(idfactor) || !is.character(idfactor)) {
+      idfactor <- getMultipleWl(object) > 1L
+    }
+
+    if (plot.data != "as.is") {
+      return(
+        autoplot(object = subset2mspct(object),
+                 w.band = w.band,
+                 range = range,
+                 norm = norm,
+                 unit.out = unit.out,
+                 pc.out = pc.out,
+                 label.qty = label.qty,
+                 span = span,
+                 wls.target = wls.target,
+                 annotations = annotations,
+                 geom = geom,
+                 time.format = time.format,
+                 tz = tz,
+                 text.size = text.size,
+#                 chroma.type = chroma.type,
+                 idfactor = idfactor,
+                 facets = facets,
+                 plot.data = plot.data,
+                 ylim = ylim,
+                 object.label = object.label,
+                 na.rm = na.rm)
+      )
+    }
 
     force(object.label)
 
@@ -397,11 +389,6 @@ autoplot.raw_spct <-
   }
 
 #' @rdname autoplot.raw_spct
-#'
-#' @param plot.data character Data to plot. Default is "as.is" plotting one line
-#'   per spectrum. When passing "mean", "median", "sum", "prod", "var", "sd",
-#'   "se" as argument all the spectra must contain data at the same wavelength
-#'   values.
 #'
 #' @export
 #'

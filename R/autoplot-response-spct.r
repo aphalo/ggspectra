@@ -190,7 +190,7 @@ e_rsp_plot <- function(spct,
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
   plot <- plot + geom_line(na.rm = na.rm)
-  plot <- plot + labs(x = "Wavelength (nm)", y = s.rsp.label)
+  plot <- plot + labs(x = expression("Wavelength, "*lambda~(nm)), y = s.rsp.label)
 
   if (length(annotations) == 1 && annotations == "") {
     return(plot)
@@ -433,7 +433,7 @@ q_rsp_plot <- function(spct,
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
   plot <- plot + geom_line(na.rm = na.rm)
-  plot <- plot + labs(x = "Wavelength (nm)", y = s.rsp.label)
+  plot <- plot + labs(x = expression("Wavelength, "*lambda~(nm)), y = s.rsp.label)
 
   if (length(annotations) == 1 && annotations == "") {
     return(plot)
@@ -494,68 +494,18 @@ q_rsp_plot <- function(spct,
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 }
 
-#' Create a complete ggplot for a response spectrum.
+#' Plot one or more response spectra.
 #'
-#' These methods return a ggplot object with an annotated plot of a
-#' response_spct object or of the spectra contained in a response_mspct object.
-#'
-#' Note that scales are expanded so as to make space for the annotations. The
-#' object returned is a ggplot object, and can be further manipulated and added
-#' to.
+#' These methods return a ggplot object with an annotated plot of the spectral
+#' data contained in a \code{response_spct} or a \code{response_mspct} object.
+#' Spectral responsitivity can be expressed either on an energy basis or a photon
+#' or quantum basis.
 #'
 #' @inheritSection decoration Plot Annotations
 #' @inheritSection autotitle Title Annotations
+#' @inherit autoplot.source_spct
 #'
-#' @param object a response_spct object or a response_mspct object.
-#' @param ... in the case of collections of spectra, additional arguments passed
-#'   to the plot methods for individual spectra, otherwise currently ignored.
-#' @param w.band a single waveband object or a list of waveband objects.
-#' @param range an R object on which range() returns a vector of length 2, with
-#'   min annd max wavelengths (nm).
-#' @param norm numeric Normalization wavelength (nm) or character string "max",
-#'   or "min" for normalization at the corresponding wavelength, "update" to
-#'   update the normalization after modifying units of expression, quantity
-#'   or range but respecting the previously used criterion, or "skip" to force
-#'   return of \code{object} unchanged.
-#' @param unit.out character string indicating type of radiation units to use
-#'   for plotting: "photon" or its synomin "quantum", or "energy".
-#' @param pc.out logical, if TRUE use percent instead of fraction of one for
-#'   normalized spectral data.
-#' @param label.qty character string giving the type of summary quantity to use
-#'   for labels, one of "mean", "total", "contribution", and "relative".
-#' @param span a peak is defined as an element in a sequence which is greater
-#'   than all other elements within a window of width span centered at that
-#'   element.
-#' @param wls.target numeric vector indicating the spectral quantity values for
-#'   which wavelengths are to be searched and interpolated if need. The
-#'   \code{character} strings "half.maximum" and "half.range" are also accepted
-#'   as arguments. A list with \code{numeric} and/or \code{character} values is
-#'   also accepted.
-#' @param annotations a character vector. For details please see sections Plot
-#'   Annotations and Title Annotations.
-#' @param geom character The name of a ggplot geometry, currently only
-#'   \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
-#'   selects between them based on \code{stacked}.
-#' @param time.format character Format as accepted by
-#'   \code{\link[base]{strptime}}.
-#' @param tz character Time zone to use for title and/or subtitle.
-#' @param norm numeric normalization wavelength (nm) or character string \code{"max"}
-#'   for normalization at the wavelength of highest peak, or \code{NULL} for
-#'   plotting the spectrum as is.
-#' @param text.size numeric size of text in the plot decorations.
-#' @param idfactor character Name of an index column in data holding a
-#'   \code{factor} with each spectrum in a long-form multispectrum object
-#'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
-#'   the factor is retrieved from metadata or if no metadata found, the
-#'   default "spct.idx" is tried.
-#' @param facets logical or integer Indicating if facets are to be created for
-#'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
-#'   long form.
-#' @param ylim numeric y axis limits,
-#' @param object.label character The name of the object being plotted.
-#' @param na.rm logical.
-#'
-#' @return a \code{ggplot} object.
+#' @param object a \code{response_spct} object or a \code{response_mspct} object.
 #'
 #' @export
 #'
@@ -603,9 +553,36 @@ autoplot.response_spct <-
            text.size = 2.5,
            idfactor = NULL,
            facets = FALSE,
+           plot.data = "as.is",
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
+
+    if (getMultipleWl(object) > 1L && plot.data != "as.is") {
+      return(
+        autoplot(object = subset2mspct(object),
+                 w.band = w.band,
+                 range = range,
+                 norm = norm,
+                 unit.out = unit.out,
+                 pc.out = pc.out,
+                 label.qty = label.qty,
+                 span = span,
+                 wls.target = wls.target,
+                 annotations = annotations,
+                 geom = geom,
+                 time.format = time.format,
+                 tz = tz,
+                 text.size = text.size,
+#                 chroma.type = chroma.type,
+                 idfactor = ifelse(is.null(idfactor), TRUE, idfactor),
+                 facets = facets,
+                 plot.data = plot.data,
+                 ylim = ylim,
+                 object.label = object.label,
+                 na.rm = na.rm)
+      )
+    }
 
     force(object.label)
     force(norm)
@@ -702,11 +679,6 @@ autoplot.response_spct <-
   }
 
 #' @rdname autoplot.response_spct
-#'
-#' @param plot.data character Data to plot. Default is "as.is" plotting one line
-#'   per spectrum. When passing "mean", "median", "sum", "prod", "var", "sd",
-#'   "se" as argument all the spectra must contain data at the same wavelength
-#'   values.
 #'
 #' @export
 #'

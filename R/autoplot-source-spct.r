@@ -32,10 +32,10 @@
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
 #'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
-#'   the factor is retrieved from metadata or if no metadata found, the
-#'   default "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped
-#'   to the spectra and the user needs to use 'ggplot2' functions to manually
-#'   map an aesthetic or use facets for the spectra.
+#'   the factor is retrieved from metadata or if no metadata found, the default
+#'   "spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped to the
+#'   spectra and the user needs to use 'ggplot2' functions to manually map an
+#'   aesthetic or use facets for the spectra.
 #' @param facets logical or integer Indicating if facets are to be created for
 #'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
 #'   long form.
@@ -209,7 +209,7 @@ e_plot <- function(spct,
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
   plot <- plot + geom_line(na.rm = na.rm)
-  plot <- plot + labs(x = "Wavelength (nm)", y = s.irrad.label)
+  plot <- plot + labs(x = expression("Wavelength, "*lambda~(nm)), y = s.irrad.label)
 
   if (length(annotations) == 1 && annotations == "") {
     return(plot)
@@ -500,7 +500,7 @@ q_plot <- function(spct,
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
   plot <- plot + geom_line(na.rm = na.rm)
-  plot <- plot + labs(x = "Wavelength (nm)", y = s.irrad.label)
+  plot <- plot + labs(x = expression("Wavelength, "*lambda~(nm)), y = s.irrad.label)
 
   if (length(annotations) == 1 && annotations == "") {
     return(plot)
@@ -579,14 +579,10 @@ q_plot <- function(spct,
   plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 }
 
-#' Create a complete ggplot for light-source spectra.
+#' Plot one or more light-source spectra.
 #'
-#' These methods return a ggplot object with an annotated plot of a source_spct
-#' object or of the spectra contained in a source_mspct object.
-#'
-#' Note that scales are expanded so as to make space for the annotations. The
-#' object returned is a ggplot object, and can be further manipulated and added
-#' to.
+#' These methods return a ggplot object with an annotated plot of the spectral
+#' data contained in a \code{source_spct} or a \code{source_mspct} object.
 #'
 #' @inheritSection decoration Plot Annotations
 #' @inheritSection autotitle Title Annotations
@@ -595,29 +591,31 @@ q_plot <- function(spct,
 #' @param ... in the case of collections of spectra, additional arguments passed
 #'   to the plot methods for individual spectra, otherwise currently ignored.
 #' @param w.band a single waveband object or a list of waveband objects.
-#' @param range an R object on which range() returns a vector of length 2, with
-#'   min annd max wavelengths (nm).
-#' @param norm numeric Normalization wavelength (nm) or character string "max",
-#'   or "min" for normalization at the corresponding wavelength, "update" to
-#'   update the normalization after modifying units of expression, quantity
-#'   or range but respecting the previously used criterion, or "skip" to force
-#'   return of \code{object} unchanged.
+#' @param range an R object on which \code{range()} returns a vector of length
+#'   2, with minimum and maximum wavelengths (nm).
+#' @param norm numeric Normalization wavelength (nm) or character string
+#'   \code{"max"}, or \code{"min"} for normalization at the corresponding
+#'   wavelength, \code{"update"} to update the normalization after modifying
+#'   units of expression, quantity or range but respecting the previously used
+#'   criterion, or \code{"skip"} to force return of \code{object} unchanged.
 #' @param unit.out character string indicating type of radiation units to use
-#'   for plotting: "photon" or its synonym "quantum", or "energy".
-#' @param pc.out logical, if TRUE use percent instead of fraction of one for
-#'   normalized spectral data.
+#'   for plotting: \code{"photon"} or its synonym \code{"quantum"}, or
+#'   \code{"energy"}.
+#' @param pc.out logical, if \code{TRUE} use percent instead of fraction of one
+#'   for normalized spectral data.
 #' @param label.qty character string giving the type of summary quantity to use
-#'   for labels, one of "mean", "total", "contribution", and "relative".
+#'   for labels, one of \code{"mean"}, \code{"total"}, \code{"contribution"},
+#'   and \code{"relative"}.
 #' @param span a peak is defined as an element in a sequence which is greater
-#'   than all other elements within a window of width span centered at that
+#'   than all other elements within a window of width span centred at that
 #'   element.
 #' @param wls.target numeric vector indicating the spectral quantity values for
 #'   which wavelengths are to be searched and interpolated if need. The
-#'   \code{character} strings "half.maximum" and "half.range" are also accepted
-#'   as arguments. A list with \code{numeric} and/or \code{character} values is
-#'   also accepted.
+#'   \code{character} strings \code{"half.maximum"} and \code{"half.range"} are
+#'   also accepted as arguments. A list with \code{numeric} and/or
+#'   \code{character} values is also accepted.
 #' @param annotations a character vector. For details please see sections Plot
-#'   Annotations and Title Annotations.
+#'   \strong{Annotations} and \strong{Title Annotations}.
 #' @param geom character The name of a ggplot geometry, currently only
 #'   \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
 #'   selects between them based on \code{stacked}.
@@ -625,25 +623,46 @@ q_plot <- function(spct,
 #'   \code{\link[base]{strptime}}.
 #' @param tz character Time zone to use for title and/or subtitle.
 #' @param text.size numeric size of text in the plot decorations.
-#' @param chroma.type character one of "CMF" (color matching function) or "CC"
-#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
+#' @param chroma.type character one of \code{"CMF"} (color matching function) or
+#'   \code{"CC"} (color coordinates) or a
+#'   \code{\link[photobiology]{chroma_spct}} object.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
 #'   corresponding to a distinct level of the factor.
 #' @param facets logical or integer Indicating if facets are to be created for
 #'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
 #'   long form.
+#' @param plot.data character Data to plot. Default is \code{"as.is"} plotting
+#'   one line per spectrum. When passing \code{"mean"}, \code{"median"},
+#'   \code{"sum"}, \code{"prod"}, \code{"var"}, \code{"sd"}, \code{"se"} as
+#'   argument all the spectra must contain data at the same wavelength values.
 #' @param ylim numeric y axis limits,
 #' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.
 #'
+#' @details The plot object returned is a ggplot (an object of class
+#'   \code{"gg"}) and it can be added to or modified as any other ggplot. The
+#'   axis labels are encoded as \emph{plotmath} expressions as they contain
+#'   superscripts and special characters. In 'ggplot2', plotmath expressions do
+#'   not obey theme settings related to text fonts, except for \code{size}.
+#'
+#'   Scale limits are expanded so as to make space for the annotations. If
+#'   annotations are disabled, limits are not expanded unless
+#'   \code{reserve.space} is passed to parameter \code{annotations}.
+#'
+#'   The generic of the \code{\link[ggplot2]{autoplot}} method is defined in
+#'   package 'ggplot2'. Package 'ggspectra' defines specializations for the
+#'   different classes for storage of spectral data defined in package
+#'   \code{\link[photobiology]{photobiology}}.
+#'
 #' @note  If \code{idfactor = NULL}, the default for single spectra, the name of
 #'   the factor is retrieved from metadata or if no metadata found, the default
-#'   "spct.idx" is tried. The default for collections of spectra is to create
-#'   a factor named "spct.idx", but if a different name is passed, it will be
-#'   used instead.
+#'   \code{"spct.idx"} is tried. The default for multiple spectra is to create a
+#'   factor named \code{"spct.idx"}, but if a different name is passed, it will
+#'   be used instead, possibly renaming a pre-existing one.
 #'
-#' @return a \code{ggplot} object.
+#' @return A \code{ggplot} object with a number of layers that depends on the
+#'   data and annotations.
 #'
 #' @seealso \code{\link[photobiology]{normalize}},
 #'   \code{\link[photobiology]{source_spct}},
@@ -659,12 +678,21 @@ q_plot <- function(spct,
 #' autoplot(sun.spct, geom = "spct")
 #' autoplot(sun.spct, unit.out = "photon")
 #' autoplot(sun.spct, norm = "max")
+#' autoplot(sun.spct, norm = "max", pc.out = TRUE)
 #'
-#' two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct / 2))
-#' autoplot(two_suns.mspct)
-#' autoplot(two_suns.mspct, facets = 1) # one column
-#' autoplot(two_suns.mspct, facets = 2) # two columns
-#' autoplot(two_suns.mspct, plot.data = "mean")
+#' # multiple spectra in long form
+#' autoplot(sun_evening.spct)
+#' autoplot(sun_evening.spct, facets = 1) # one column
+#' autoplot(sun_evening.spct, facets = 2) # two columns
+#' autoplot(sun_evening.spct, plot.data = "mean")
+#' autoplot(sun_evening.spct, idfactor = "Sequence")
+#'
+#' # multiple spectra as a collection
+#' autoplot(sun_evening.mspct)
+#' autoplot(sun_evening.mspct, facets = 1) # one column
+#' autoplot(sun_evening.mspct, facets = 2) # two columns
+#' autoplot(sun_evening.mspct, plot.data = "mean")
+#' autoplot(sun_evening.mspct, idfactor = "Time")
 #'
 #' @family autoplot methods
 #'
@@ -692,10 +720,48 @@ autoplot.source_spct <-
            chroma.type = "CMF",
            idfactor = NULL,
            facets = FALSE,
+           plot.data = "as.is",
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
+    if (is.null(idfactor)) {
+      idfactor <- getIdFactor(object)
+    }
+    if (is.na(idfactor) || !is.character(idfactor)) {
+      idfactor <- getMultipleWl(object) > 1L
+    }
+
+    if (plot.data != "as.is") {
+      return(
+        autoplot(object = subset2mspct(object),
+                 w.band = w.band,
+                 range = range,
+                 norm = norm,
+                 unit.out = unit.out,
+                 pc.out = pc.out,
+                 label.qty = label.qty,
+                 span = span,
+                 wls.target = wls.target,
+                 annotations = annotations,
+                 geom = geom,
+                 time.format = time.format,
+                 tz = tz,
+                 text.size = text.size,
+                 chroma.type = chroma.type,
+                 idfactor = idfactor,
+                 facets = facets,
+                 plot.data = plot.data,
+                 ylim = ylim,
+                 object.label = object.label,
+                 na.rm = na.rm)
+      )
+    }
+
+    # support renaming of the idfactor
+    if (getMultipleWl(object) > 1L && is.character(idfactor) && length(idfactor)) {
+      setIdFactor(object, idfactor)
+    }
     force(object.label)
 
     annotations.default <-
@@ -790,11 +856,6 @@ autoplot.source_spct <-
 
 #' @rdname autoplot.source_spct
 #'
-#' @param plot.data character Data to plot. Default is "as.is" plotting one line
-#'   per spectrum. When passing "mean", "median", "sum", "prod", var", "sd",
-#'   "se" as argument all the spectra must contain data at the same wavelength
-#'   values.
-#'
 #' @export
 #'
 autoplot.source_mspct <-
@@ -840,7 +901,7 @@ autoplot.source_mspct <-
     z <- switch(plot.data,
                 as.is = photobiology::rbindspct(object,
                                                 idfactor = ifelse(is.na(idfactor),
-                                                                  TRUE,
+                                                                  "spct.idx",
                                                                   idfactor)),
                 mean = photobiology::s_mean(object),
                 median = photobiology::s_median(object),
@@ -850,6 +911,7 @@ autoplot.source_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
+
     col.name <- c(photon = "s.q.irrad", energy = "s.e.irrad")
     if (is.source_spct(z) && any(col.name %in% names(z))) {
       ggplot2::autoplot(object = z,

@@ -19,11 +19,18 @@ to avoid "surprising" users.
 formal parameter `add.symbols` with default given by R option 
 `ggspectra.add.symbols`.
 - Revise _scales_ for transmittance, absorptance and reflectance and the 
-matching _axis-label building functions_ by adding
-formal parameter `pc.out` with default given by R option 
-`ggspectra.pc.out`.
-- Revise all autoplot methods so that the default for their `pc.out` defaults
+matching _axis-label building functions_ by adding formal parameter `pc.out` 
+with default given by R option `ggspectra.pc.out`.
+- Revise all `autoplot()` methods so that the default for their `pc.out` defaults
 to the value of R option `ggspectra.pc.out`.
+- Revise all `autoplot()` methods  for objects of class `generic_spct` and 
+derived so that summaries requested by arguments passed to parameter `plot.data`
+are computed for multiple spectra in long form like they were for collections
+of spectra.
+- Fix broken `idfactor` handling in `autoplot()` methods for objects of class `generic_spct` and derived.
+- Use in `autoplot()` methods a plotmath expression for the wavelength axis 
+label, including lambda as symbol, for consistency with the labels of the 
+_y_-axis.
 
 # ggspectra 0.3.12
 

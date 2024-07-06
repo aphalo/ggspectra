@@ -1,9 +1,9 @@
 #' Create a complete ggplot for generic spectral data.
 #'
 #' This function returns a ggplot object with an annotated plot of a
-#' generic_spct object.
+#' \code{generic_spct object}.
 #'
-#' Note that scales are expanded so as to make space for the annotations. The
+#' @note Note that scales are expanded so as to make space for the annotations. The
 #' object returned is a ggplot object, and can be further manipulated. When spct
 #' has more than one column with spectral data, each of these columns is
 #' normalized individually.
@@ -161,66 +161,36 @@ generic_plot <- function(spct,
 
 }
 
-#' Create a complete ggplot for generic spectral data.
+#' Plot generic spectral data.
 #'
-#' This function returns a ggplot object with an annotated plot of a
-#' generic_spct object.
+#' This function returns a ggplot object with an annotated plot from
+#' spectral data contained in a \code{generic_spct} object.
 #'
-#' @details No automatic plot method is possible for objects of class \code{generic_spct}
-#' as this class is meant to be mainly used only as a pure base class for
-#' derivation. A method is provided for \code{generic_spct} but not for
-#' \code{generic_mspct} as \code{generic_mspct} objects can contain an
-#' assortment of objects including \code{generic_spct} and classes derived from
-#' \code{generic_spct} making the spectra are unlikely be suitable for plotting
-#' in the same ggplot.
+#' @details No automatic plot method is possible for objects of class
+#'   \code{generic_spct} as this class is meant to be mainly used only as a pure
+#'   base class for derivation. A method is provided for \code{generic_spct} but
+#'   not for \code{generic_mspct} as \code{generic_mspct} objects can contain an
+#'   assortment of objects including \code{generic_spct} and classes derived
+#'   from \code{generic_spct} making the spectra are unlikely be suitable for
+#'   plotting in the same ggplot.
 #'
-#' Contrary to other autoplot methods, the method for \code{generic_spct} does
-#' not supply defaults to several of its parameters and cannot be used simply by
-#' calling it with the spectrum as argument. There are also limitations on which
-#' annotations are accepted. On-the-fly normalization is not supported.
+#'   Contrary to other autoplot methods, the method for \code{generic_spct} does
+#'   not supply defaults to several of its parameters and cannot be used simply
+#'   by calling it with the spectrum as argument. There are also limitations on
+#'   which annotations are accepted. On-the-fly normalization is not supported.
+#'
+#'   No method is implemented for \code{generic_mspct} objects as they can
+#'   contain an heterogeneous collection of objects of class \code{generic_spct}
+#'   or any other class derived from it.
 #'
 #' @inheritSection decoration Plot Annotations
 #' @inheritSection autotitle Title Annotations
+#' @inherit autoplot.source_spct
 #'
-#' @note Scales are expanded so as to make space for the annotations if these
-#'   are present. The object returned is a ggplot object, and can be further
-#'   manipulated.
-#'
-#' @param object a cps_spct object.
-#' @param ... in the case of collections of spectra, additional arguments passed
-#'   to the plot methods for individual spectra, otherwise currently ignored.
+#' @param object a generic_spct object.
 #' @param y.name,ymin.name,ymax.name character Names of the columns to be mapped
 #'   to the y aesthetic.
 #' @param ylab character or expression The y-axis label.
-#' @param w.band a single waveband object or a list of waveband objects.
-#' @param range an R object on which range() returns a vector of length 2, with
-#'   min annd max wavelengths (nm).
-#' @param label.qty character string giving the type of summary quantity to use
-#'   for labels, one of "mean", "total", "contribution", and "relative".
-#' @param span a peak is defined as an element in a sequence which is greater
-#'   than all other elements within a window of width span centered at that
-#'   element.
-#' @param wls.target numeric vector indicating the spectral quantity values for
-#'   which wavelengths are to be searched and interpolated if need. The
-#'   \code{character} strings "half.maximum" and "half.range" are also accepted
-#'   as arguments. A list with \code{numeric} and/or \code{character} values is
-#'   also accepted.
-#' @param annotations a character vector ("summaries" is ignored). For details
-#'   please see sections Plot Annotations and Title Annotations.
-#' @param time.format character Format as accepted by \code{\link[base]{strptime}}.
-#' @param tz character Time zone to use for title and/or subtitle.
-#' @param text.size numeric size of text in the plot decorations.
-#' @param idfactor character Name of an index column in data holding a
-#'   \code{factor} with each spectrum in a long-form multispectrum object
-#'   corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
-#'   the factor is retrieved from metadata or if no metadata found, the
-#'   default "spct.idx" is tried.
-#' @param facets logical or integer Indicating if facets are to be created for
-#'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
-#'   long form.
-#' @param ylim numeric y axis limits (expansion only!).
-#' @param object.label character The name of the object being plotted.
-#' @param na.rm logical.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -230,8 +200,6 @@ generic_plot <- function(spct,
 #'   \code{\link[photobiologyWavebands]{photobiologyWavebands-package}},
 #'   \code{\link[ggplot2]{scale_continuous}} and
 #'   \code{\link[ggplot2]{autoplot}}
-#'
-#' @return A \code{ggplot} object.
 #'
 #' @examples
 #'

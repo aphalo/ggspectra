@@ -3,7 +3,7 @@
 \name{autoplot.calibration_spct}
 \alias{autoplot.calibration_spct}
 \alias{autoplot.calibration_mspct}
-\title{Create a complete ggplot for an irradiation calibration spectrum.}
+\title{Plot one or more irradiance-calibration spectra.}
 \usage{
 \method{autoplot}{calibration_spct}(
   object,
@@ -24,6 +24,7 @@
   text.size = 2.5,
   idfactor = NULL,
   facets = FALSE,
+  plot.data = "as.is",
   ylim = c(NA, NA),
   object.label = deparse(substitute(object)),
   na.rm = TRUE
@@ -51,28 +52,30 @@ to the plot methods for individual spectra, otherwise currently ignored.}
 
 \item{w.band}{a single waveband object or a list of waveband objects.}
 
-\item{range}{an R object on which range() returns a vector of length 2, with
-min annd max wavelengths (nm).}
+\item{range}{an R object on which \code{range()} returns a vector of length
+2, with minimum and maximum wavelengths (nm).}
 
 \item{unit.out}{character IGNORED.}
 
-\item{pc.out}{logical, if TRUE use percents instead of fraction of one.}
+\item{pc.out}{logical, if \code{TRUE} use percent instead of fraction of one
+for normalized spectral data.}
 
 \item{label.qty}{character string giving the type of summary quantity to use
-for labels, one of "mean", "total", "contribution", and "relative".}
+for labels, one of \code{"mean"}, \code{"total"}, \code{"contribution"},
+and \code{"relative"}.}
 
 \item{span}{a peak is defined as an element in a sequence which is greater
-than all other elements within a window of width span centered at that
+than all other elements within a window of width span centred at that
 element.}
 
 \item{wls.target}{numeric vector indicating the spectral quantity values for
 which wavelengths are to be searched and interpolated if need. The
-\code{character} strings "half.maximum" and "half.range" are also accepted
-as arguments. A list with \code{numeric} and/or \code{character} values is
-also accepted.}
+\code{character} strings \code{"half.maximum"} and \code{"half.range"} are
+also accepted as arguments. A list with \code{numeric} and/or
+\code{character} values is also accepted.}
 
-\item{annotations}{a character vector ("summaries" is ignored). For details
-please see sections Plot Annotations and Title Annotations.}
+\item{annotations}{a character vector. For details please see sections Plot
+\strong{Annotations} and \strong{Title Annotations}.}
 
 \item{geom}{character The name of a ggplot geometry, currently only
 \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
@@ -83,45 +86,64 @@ selects between them based on \code{stacked}.}
 
 \item{tz}{character Time zone to use for title and/or subtitle.}
 
-\item{norm}{numeric normalization wavelength (nm) or character string "max"
-for normalization at the wavelength of highest peak.}
+\item{norm}{numeric Normalization wavelength (nm) or character string
+\code{"max"}, or \code{"min"} for normalization at the corresponding
+wavelength, \code{"update"} to update the normalization after modifying
+units of expression, quantity or range but respecting the previously used
+criterion, or \code{"skip"} to force return of \code{object} unchanged.}
 
 \item{text.size}{numeric size of text in the plot decorations.}
 
 \item{idfactor}{character Name of an index column in data holding a
 \code{factor} with each spectrum in a long-form multispectrum object
-corresponding to a distinct spectrum. If \code{idfactor=NULL} the name of
-the factor is retrieved from metadata or if no metadata found, the default
-"spct.idx" is tried. If \code{idfactor=NA} no aesthetic is mapped to the
-spectra and the user needs to use 'ggplot2' functions to manually map an
-aesthetic or use facets for the spectra.}
+corresponding to a distinct level of the factor.}
 
 \item{facets}{logical or integer Indicating if facets are to be created for
 the levels of \code{idfactor} when \code{spct} contain multiple spectra in
 long form.}
+
+\item{plot.data}{character Data to plot. Default is \code{"as.is"} plotting
+one line per spectrum. When passing \code{"mean"}, \code{"median"},
+\code{"sum"}, \code{"prod"}, \code{"var"}, \code{"sd"}, \code{"se"} as
+argument all the spectra must contain data at the same wavelength values.}
 
 \item{ylim}{numeric y axis limits,}
 
 \item{object.label}{character The name of the object being plotted.}
 
 \item{na.rm}{logical.}
-
-\item{plot.data}{character Data to plot. Default is "as.is" plotting one line
-per spectrum. When passing "mean", "median", "sum", "prod", var", "sd",
-"se" as argument all the spectra must contain data at the same wavelength
-values.}
 }
 \value{
-a \code{ggplot} object.
+A \code{ggplot} object with a number of layers that depends on the
+  data and annotations.
 }
 \description{
-These methods return a ggplot object with an annotated plot of a
-calibration_spct object or of the spectra contained in a calibration_mspct
+These methods return a ggplot object with an annotated plot of the spectral
+data contained in a \code{calibration_spct} or a \code{calibration_mspct}
 object.
 }
+\details{
+The plot object returned is a ggplot (an object of class
+  \code{"gg"}) and it can be added to or modified as any other ggplot. The
+  axis labels are encoded as \emph{plotmath} expressions as they contain
+  superscripts and special characters. In 'ggplot2', plotmath expressions do
+  not obey theme settings related to text fonts, except for \code{size}.
+
+  Scale limits are expanded so as to make space for the annotations. If
+  annotations are disabled, limits are not expanded unless
+  \code{reserve.space} is passed to parameter \code{annotations}.
+
+  The generic of the \code{\link[ggplot2]{autoplot}} method is defined in
+  package 'ggplot2'. Package 'ggspectra' defines specializations for the
+  different classes for storage of spectral data defined in package
+  \code{\link[photobiology]{photobiology}}.
+}
 \note{
-Note that scales are expanded so as to make space for the annotations.
-The object returned is a ggplot object, and can be further manipulated.
+If \code{idfactor = NULL}, the default for single spectra, the name of
+  the factor is retrieved from metadata or if no metadata found, the default
+  \code{"spct.idx"} is tried. The default for multiple spectra is to create a
+  factor named \code{"spct.idx"}, but if a different name is passed, it will
+  be used instead, possibly renaming a pre-existing one.
 }
 \section{Plot Annotations}{
  The recognized annotation names are: \code{"summaries"}, \code{"peaks"},
@@ -157,6 +179,29 @@ The object returned is a ggplot object, and can be further manipulated.
   \code{"title:objt"} or no title depending on the context.
 }
 
+\examples{
+
+autoplot(sun.spct)
+autoplot(sun.spct, geom = "spct")
+autoplot(sun.spct, unit.out = "photon")
+autoplot(sun.spct, norm = "max")
+autoplot(sun.spct, norm = "max", pc.out = TRUE)
+
+# multiple spectra in long form
+autoplot(sun_evening.spct)
+autoplot(sun_evening.spct, facets = 1) # one column
+autoplot(sun_evening.spct, facets = 2) # two columns
+autoplot(sun_evening.spct, plot.data = "mean")
+autoplot(sun_evening.spct, idfactor = "Sequence")
+
+# multiple spectra as a collection
+autoplot(sun_evening.mspct)
+autoplot(sun_evening.mspct, facets = 1) # one column
+autoplot(sun_evening.mspct, facets = 2) # two columns
+autoplot(sun_evening.mspct, plot.data = "mean")
+autoplot(sun_evening.mspct, idfactor = "Time")
+
+}
 \seealso{
 \code{\link[photobiology]{normalize}},
   \code{\link[photobiology]{calibration_spct}},
