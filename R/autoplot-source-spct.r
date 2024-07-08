@@ -685,7 +685,8 @@ q_plot <- function(spct,
 #' autoplot(sun_evening.spct, facets = 1) # one column
 #' autoplot(sun_evening.spct, facets = 2) # two columns
 #' autoplot(sun_evening.spct, plot.data = "mean")
-#' autoplot(sun_evening.spct, idfactor = "Sequence")
+#' # needs 'photobiology' (> 0.11.2)
+#' # autoplot(sun_evening.spct, idfactor = "Sequence")
 #'
 #' # multiple spectra as a collection
 #' autoplot(sun_evening.mspct)

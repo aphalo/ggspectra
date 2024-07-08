@@ -180,26 +180,7 @@ If \code{idfactor = NULL}, the default for single spectra, the name of
 }
 
 \examples{
-
-autoplot(sun.spct)
-autoplot(sun.spct, geom = "spct")
-autoplot(sun.spct, unit.out = "photon")
-autoplot(sun.spct, norm = "max")
-autoplot(sun.spct, norm = "max", pc.out = TRUE)
-
-# multiple spectra in long form
-autoplot(sun_evening.spct)
-autoplot(sun_evening.spct, facets = 1) # one column
-autoplot(sun_evening.spct, facets = 2) # two columns
-autoplot(sun_evening.spct, plot.data = "mean")
-autoplot(sun_evening.spct, idfactor = "Sequence")
-
-# multiple spectra as a collection
-autoplot(sun_evening.mspct)
-autoplot(sun_evening.mspct, facets = 1) # one column
-autoplot(sun_evening.mspct, facets = 2) # two columns
-autoplot(sun_evening.mspct, plot.data = "mean")
-autoplot(sun_evening.mspct, idfactor = "Time")
+# to be added
 
 }
 \seealso{

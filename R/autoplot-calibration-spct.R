@@ -249,6 +249,9 @@ cal_plot <- function(spct,
 #'   \code{\link[photobiologyWavebands]{photobiologyWavebands-package}} and
 #'   \code{\link[ggplot2]{autoplot}}
 #'
+#' @examples
+#' # to be added
+#'
 #' @export
 #'
 #' @family autoplot methods
