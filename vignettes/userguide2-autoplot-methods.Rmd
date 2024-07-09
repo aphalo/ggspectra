@@ -398,7 +398,7 @@ autoplot(sun.daily.spct)
 Even though the `autoplot()` methods can return a finished plot, the returned object is a `ggplot` object and can be built upon by adding additional elements like _facets_, _aesthetics_ and even additional _layers_. We pass `idfactor = NA` to suppress the mapping of the spectra to `linetype`.
 
 ```{r}
-autoplot(sun_evening.spct, idfactor = "Time", facets = 3) +
+autoplot(sun_evening.spct, facets = 3) +
   geom_vline(xintercept = c(400, 700), linetype = "dashed")
 ```
 
