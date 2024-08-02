@@ -1191,7 +1191,7 @@ autoplot.filter_spct <-
   function(object, ...,
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PhR())),
-           range = NULL,
+           range = getOption("ggspectra.wlrange", default = NULL),
            norm = getOption("ggspectra.norm",
                             default = "update"),
            plot.qty = getOption("photobiology.filter.qty",
@@ -1350,7 +1350,7 @@ autoplot.filter_spct <-
 autoplot.filter_mspct <-
   function(object,
            ...,
-           range = NULL,
+           range = getOption("ggspectra.wlrange", default = NULL),
            norm = getOption("ggspectra.norm",
                             default = "update"),
            plot.qty = getOption("photobiology.filter.qty",
@@ -1401,7 +1401,7 @@ autoplot.filter_mspct <-
     col.name <- c(transmittance = "Tfr", absorptance = "Afr", absorbance = "A")
     if (is.filter_spct(z) && col.name[plot.qty] %in% names(z)) {
       autoplot(object = z,
-               range = NULL,
+               range = getOption("ggspectra.wlrange", default = NULL),
                norm = norm,
                plot.qty = plot.qty,
                pc.out = pc.out,
@@ -1415,7 +1415,7 @@ autoplot.filter_mspct <-
       z <- as.generic_spct(z)
       autoplot(object = z,
                y.name = paste(col.name[plot.qty], plot.data, sep = "."),
-               range = NULL,
+               range = getOption("ggspectra.wlrange", default = NULL),
                norm = norm,
                pc.out = pc.out,
                idfactor = idfactor,
@@ -1465,7 +1465,7 @@ autoplot.reflector_spct <-
   function(object, ...,
            w.band=getOption("photobiology.plot.bands",
                             default = list(UVC(), UVB(), UVA(), PhR())),
-           range = NULL,
+           range = getOption("ggspectra.wlrange", default = NULL),
            norm = getOption("ggspectra.norm",
                             default = "update"),
            plot.qty = getOption("photobiology.reflector.qty",
@@ -1590,7 +1590,7 @@ autoplot.reflector_spct <-
 autoplot.reflector_mspct <-
   function(object,
            ...,
-           range = NULL,
+           range = getOption("ggspectra.wlrange", default = NULL),
            norm = getOption("ggspectra.normalize", default = "update"),
            plot.qty = getOption("photobiology.reflector.qty",
                                 default = "reflectance"),
@@ -1635,7 +1635,7 @@ autoplot.reflector_mspct <-
     )
     if (is.reflector_spct(z) && "Rfr" %in% names(z)) {
       autoplot(object = z,
-               range = NULL,
+               range = getOption("ggspectra.wlrange", default = NULL),
                norm = norm,
                plot.qty = plot.qty,
                pc.out = pc.out,
@@ -1648,7 +1648,7 @@ autoplot.reflector_mspct <-
       z <- as.generic_spct(z)
       autoplot(object = z,
                y.name = paste("Rfr", plot.data, sep = "."),
-               range = NULL,
+               range = getOption("ggspectra.wlrange", default = NULL),
                norm = norm,
                pc.out = pc.out,
                idfactor = idfactor,
@@ -1720,7 +1720,7 @@ autoplot.object_spct <-
            ...,
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PhR())),
-           range = NULL,
+           range = getOption("ggspectra.wlrange", default = NULL),
            norm = "skip",
            plot.qty = "all",
            pc.out = getOption("ggspectra.pc.out",
@@ -1871,7 +1871,7 @@ autoplot.object_spct <-
 autoplot.object_mspct <-
   function(object,
            ...,
-           range = NULL,
+           range = getOption("ggspectra.wlrange", default = NULL),
            norm = "skip",
            plot.qty = getOption("photobiology.filter.qty",
                                 default = "all"),
@@ -1925,7 +1925,7 @@ autoplot.object_mspct <-
         (is.filter_spct(z) && any(c("Tfr", "Afr", "A")) %in% names(z)) ||
         (is.reflector_spct(z) && "Rfr" %in% names(z)))  {
       autoplot(object = z,
-               range = NULL,
+               range = getOption("ggspectra.wlrange", default = NULL),
                norm = norm,
                plot.qty = plot.qty,
                pc.out = pc.out,
@@ -1938,7 +1938,7 @@ autoplot.object_mspct <-
       z <- as.generic_spct(z)
       autoplot(object = z,
                y.name = paste(col.name[plot.qty], plot.data, sep = "."),
-               range = NULL,
+               range = getOption("ggspectra.wlrange", default = NULL),
                norm = norm,
                pc.out = pc.out,
                idfactor = idfactor,
@@ -1950,7 +1950,7 @@ autoplot.object_mspct <-
       z <- as.generic_spct(z)
       autoplot(object = z,
                y.name = paste("Rfr", plot.data, sep = "."),
-               range = NULL,
+               range = getOption("ggspectra.wlrange", default = NULL),
                norm = norm,
                pc.out = pc.out,
                idfactor = idfactor,

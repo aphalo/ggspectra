@@ -10,7 +10,7 @@
   ...,
   w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
     PhR())),
-  range = NULL,
+  range = getOption("ggspectra.wlrange", default = NULL),
   norm = "skip",
   unit.out = NULL,
   pc.out = getOption("ggspectra.pc.out", default = FALSE),
@@ -33,7 +33,7 @@
 \method{autoplot}{cps_mspct}(
   object,
   ...,
-  range = NULL,
+  range = getOption("ggspectra.wlrange", default = NULL),
   norm = "skip",
   unit.out = NULL,
   pc.out = getOption("ggspectra.pc.out", default = FALSE),

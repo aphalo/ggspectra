@@ -704,7 +704,7 @@ autoplot.source_spct <-
                                              photobiologyWavebands::UVB(),
                                              photobiologyWavebands::UVA(),
                                              photobiologyWavebands::PhR())),
-           range = NULL,
+           range = getOption("ggspectra.wlrange", default = NULL),
            norm = getOption("ggspectra.norm",
                             default = "update"),
            unit.out = getOption("photobiology.radiation.unit",
@@ -862,7 +862,7 @@ autoplot.source_spct <-
 autoplot.source_mspct <-
   function(object,
            ...,
-           range = NULL,
+           range = getOption("ggspectra.wlrange", default = NULL),
            norm = getOption("ggspectra.normalize",
                             default = "update"),
            unit.out = getOption("photobiology.radiation.unit",
@@ -916,7 +916,7 @@ autoplot.source_mspct <-
     col.name <- c(photon = "s.q.irrad", energy = "s.e.irrad")
     if (is.source_spct(z) && any(col.name %in% names(z))) {
       ggplot2::autoplot(object = z,
-                        range = NULL,
+                        range = getOption("ggspectra.wlrange", default = NULL),
                         norm = norm,
                         unit.out = unit.out,
                         pc.out = pc.out,
@@ -929,7 +929,7 @@ autoplot.source_mspct <-
       z <- photobiology::as.generic_spct(z)
       ggplot2::autoplot(object = z,
                         y.name = paste(col.name[unit.out], plot.data, sep = "."),
-                        range = NULL,
+                        range = getOption("ggspectra.wlrange", default = NULL),
                         norm = norm,
                         pc.out = pc.out,
                         idfactor = idfactor,

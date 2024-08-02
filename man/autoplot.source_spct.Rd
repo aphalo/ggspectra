@@ -11,7 +11,7 @@
   w.band = getOption("photobiology.plot.bands", default =
     list(photobiologyWavebands::UVC(), photobiologyWavebands::UVB(),
     photobiologyWavebands::UVA(), photobiologyWavebands::PhR())),
-  range = NULL,
+  range = getOption("ggspectra.wlrange", default = NULL),
   norm = getOption("ggspectra.norm", default = "update"),
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
   pc.out = getOption("ggspectra.pc.out", default = FALSE),
@@ -35,7 +35,7 @@
 \method{autoplot}{source_mspct}(
   object,
   ...,
-  range = NULL,
+  range = getOption("ggspectra.wlrange", default = NULL),
   norm = getOption("ggspectra.normalize", default = "update"),
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
   pc.out = getOption("ggspectra.pc.out", default = FALSE),

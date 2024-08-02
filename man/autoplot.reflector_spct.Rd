@@ -10,7 +10,7 @@
   ...,
   w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
     PhR())),
-  range = NULL,
+  range = getOption("ggspectra.wlrange", default = NULL),
   norm = getOption("ggspectra.norm", default = "update"),
   plot.qty = getOption("photobiology.reflector.qty", default = "reflectance"),
   pc.out = getOption("ggspectra.pc.out", default = FALSE),
@@ -34,7 +34,7 @@
 \method{autoplot}{reflector_mspct}(
   object,
   ...,
-  range = NULL,
+  range = getOption("ggspectra.wlrange", default = NULL),
   norm = getOption("ggspectra.normalize", default = "update"),
   plot.qty = getOption("photobiology.reflector.qty", default = "reflectance"),
   pc.out = getOption("ggspectra.pc.out", default = FALSE),

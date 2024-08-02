@@ -538,7 +538,7 @@ autoplot.response_spct <-
   function(object, ...,
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PhR())),
-           range = NULL,
+           range = getOption("ggspectra.wlrange", default = NULL),
            norm = getOption("ggspectra.norm", default = "update"),
            unit.out = getOption("photobiology.radiation.unit",
                                 default = "energy"),
@@ -685,7 +685,7 @@ autoplot.response_spct <-
 autoplot.response_mspct <-
   function(object,
            ...,
-           range = NULL,
+           range = getOption("ggspectra.wlrange", default = NULL),
            norm = getOption("ggspectra.norm",
                             default = "update"),
            unit.out = getOption("photobiology.radiation.unit", default="energy"),
@@ -734,7 +734,7 @@ autoplot.response_mspct <-
     col.name <- c(photon = "s.q.response", energy = "s.e.response")
     if (is.response_spct(z) && any(col.name %in% names(z))) {
       autoplot(object = z,
-               range = NULL,
+               range = getOption("ggspectra.wlrange", default = NULL),
                norm = norm,
                unit.out = unit.out,
                pc.out = pc.out,
@@ -747,7 +747,7 @@ autoplot.response_mspct <-
       z <- as.generic_spct(z)
       autoplot(object = z,
                y.name = paste(col.name[unit.out], plot.data, sep = "."),
-               range = NULL,
+               range = getOption("ggspectra.wlrange", default = NULL),
                norm = norm,
                pc.out = pc.out,
                facets = facets,

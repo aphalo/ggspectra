@@ -260,7 +260,7 @@ autoplot.calibration_spct <-
   function(object, ...,
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PhR())),
-           range = NULL,
+           range = getOption("ggspectra.wlrange", default = NULL),
            unit.out = "ignored",
            pc.out = getOption("ggspectra.pc.out", default = FALSE),
            label.qty = "mean",
@@ -359,7 +359,7 @@ autoplot.calibration_spct <-
 autoplot.calibration_mspct <-
   function(object,
            ...,
-           range = NULL,
+           range = getOption("ggspectra.wlrange", default = NULL),
            unit.out = "ignored",
            norm = getOption("ggspectra.normalize",
                             default = "skip"),
@@ -391,7 +391,7 @@ autoplot.calibration_mspct <-
     )
     if (is.calibration_spct(z) && "irrad.mult" %in% names(z)) {
       autoplot(object = z,
-               range = NULL,
+               range = getOption("ggspectra.wlrange", default = NULL),
                unit.out = unit.out,
                norm = norm,
                pc.out = pc.out,
@@ -404,7 +404,7 @@ autoplot.calibration_mspct <-
       z <- as.generic_spct(z)
       autoplot(object = z,
                y.name = paste("irrad.mult", plot.data, sep = "."),
-               range = NULL,
+               range = getOption("ggspectra.wlrange", default = NULL),
                unit.out = unit.out,
                norm = norm,
                pc.out = pc.out,

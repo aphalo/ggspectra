@@ -254,7 +254,7 @@ autoplot.cps_spct <-
            ...,
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PhR())),
-           range = NULL,
+           range = getOption("ggspectra.wlrange", default = NULL),
            norm = "skip",
            unit.out = NULL,
            pc.out = getOption("ggspectra.pc.out", default = FALSE),
@@ -363,7 +363,7 @@ autoplot.cps_spct <-
 autoplot.cps_mspct <-
   function(object,
            ...,
-           range = NULL,
+           range = getOption("ggspectra.wlrange", default = NULL),
            norm = "skip",
            unit.out = NULL,
            pc.out = getOption("ggspectra.pc.out", default = FALSE),
@@ -387,7 +387,7 @@ autoplot.cps_mspct <-
     # otherwise normalization is applied to the "parallel-summary" spectrum
     if (plot.data == "as.is") {
       object <- photobiology::normalize(object,
-                                        range = NULL,
+                                        range = getOption("ggspectra.wlrange", default = NULL),
                                         norm = norm,
                                         na.rm = na.rm)
       norm <- "skip"
@@ -406,7 +406,7 @@ autoplot.cps_mspct <-
     )
     if (is.cps_spct(z) && any(c("cps", "cps_1") %in% names(z))) {
       autoplot(object = z,
-               range = NULL,
+               range = getOption("ggspectra.wlrange", default = NULL),
                norm = norm,
                pc.out = pc.out,
                idfactor = idfactor,
@@ -418,7 +418,7 @@ autoplot.cps_mspct <-
       z <- as.generic_spct(z)
       autoplot(object = z,
                y.name = paste("cps", plot.data, sep = "."),
-               range = NULL,
+               range = getOption("ggspectra.wlrange", default = NULL),
                norm = norm,
                pc.out = pc.out,
                idfactor = idfactor,

@@ -25,13 +25,15 @@ with default given by R option `ggspectra.pc.out`.
 to the value of R option `ggspectra.pc.out`.
 - Revise all `autoplot()` methods  for objects of class `generic_spct` and 
 derived so that summaries requested by arguments passed to parameter `plot.data`
-are computed for multiple spectra in long form like they were for collections
+are computed for multiple spectra in long form like they are for collections
 of spectra.
 - Fix broken `idfactor` handling in `autoplot()` methods for objects of class 
 `generic_spct` and derived.
 - Use in `autoplot()` methods a plotmath expression for the wavelength axis 
 label, including lambda as symbol, for consistency with the labels of the 
 _y_-axis.
+- Revise of `autoplot()` methods to support a user-set default argument for
+`range` given by R option `ggspectra.wlrange`.
 
 # ggspectra 0.3.12
 

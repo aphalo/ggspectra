@@ -10,7 +10,7 @@
   ...,
   w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
     PhR())),
-  range = NULL,
+  range = getOption("ggspectra.wlrange", default = NULL),
   unit.out = "counts",
   pc.out = getOption("ggspectra.pc.out", default = FALSE),
   label.qty = "mean",
@@ -33,7 +33,7 @@
 \method{autoplot}{raw_mspct}(
   object,
   ...,
-  range = NULL,
+  range = getOption("ggspectra.wlrange", default = NULL),
   norm = getOption("ggspectra.norm", default = "skip"),
   unit.out = "counts",
   pc.out = getOption("ggspectra.pc.out", default = FALSE),

@@ -228,7 +228,7 @@ autoplot.generic_spct <-
              ylab = ggplot2::waiver(),
              w.band = getOption("photobiology.plot.bands",
                                 default = list(UVC(), UVB(), UVA(), PhR())),
-             range = NULL,
+             range = getOption("ggspectra.wlrange", default = NULL),
              label.qty = "none",
              span = NULL,
              wls.target = "HM",

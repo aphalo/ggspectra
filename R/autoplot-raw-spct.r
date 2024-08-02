@@ -286,7 +286,7 @@ autoplot.raw_spct <-
   function(object, ...,
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PhR())),
-           range = NULL,
+           range = getOption("ggspectra.wlrange", default = NULL),
            unit.out = "counts",
            pc.out = getOption("ggspectra.pc.out", default = FALSE),
            label.qty = "mean",
@@ -395,7 +395,7 @@ autoplot.raw_spct <-
 autoplot.raw_mspct <-
   function(object,
            ...,
-           range = NULL,
+           range = getOption("ggspectra.wlrange", default = NULL),
            norm = getOption("ggspectra.norm",
                             default = "skip"),
            unit.out = "counts",
@@ -420,7 +420,7 @@ autoplot.raw_mspct <-
     # otherwise normalization is applied to the "parallel-summary" spectrum
     if (plot.data == "as.is") {
       object <- photobiology::normalize(object,
-                                        range = NULL,
+                                        range = getOption("ggspectra.wlrange", default = NULL),
                                         norm = norm,
                                         na.rm = na.rm)
       norm <- "skip"
@@ -439,7 +439,7 @@ autoplot.raw_mspct <-
     )
     if (is.raw_spct(z) && any(c("counts", "counts_1") %in% names(z))) {
       autoplot(object = z,
-               range = NULL,
+               range = getOption("ggspectra.wlrange", default = NULL),
                norm = norm,
                unit.out = unit.out,
                pc.out = pc.out,
@@ -452,7 +452,7 @@ autoplot.raw_mspct <-
       z <- as.generic_spct(z)
       autoplot(object = z,
                y.name = paste("counts", plot.data, sep = "."),
-               range = NULL,
+               range = getOption("ggspectra.wlrange", default = NULL),
                norm = norm,
                pc.out = pc.out,
                idfactor = idfactor,
