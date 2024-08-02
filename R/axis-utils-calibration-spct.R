@@ -10,7 +10,7 @@
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
-#' @param add.symbols logical If \code{TRUE} symbols of the quantities are
+#' @param axis.symbols logical If \code{TRUE} symbols of the quantities are
 #'   added to the \code{name}. Supported only by \code{format = "R.expression"}.
 #'
 #' @return a character string or an R expression.
@@ -32,16 +32,16 @@ multipliers_label <- function(unit.exponent = 0,
                               label.text = axis_labels()[["e.mult"]],
                               scaled = FALSE,
                               normalized = FALSE,
-                              add.symbols = getOption("ggspectra.add.symbols",
+                              axis.symbols = getOption("ggspectra.axis.symbols",
                                                       default = TRUE)) {
-  if (!add.symbols) {
+  if (!axis.symbols) {
     label.text <- gsub(",$", "", label.text)
   }
   if (scaled) {
     if (tolower(format) == "latex") {
       paste(label.text, "$k_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
-      if (add.symbols) {
+      if (axis.symbols) {
         bquote(.(label.text)~italic(k)[lambda]~plain((rel.~units)))
       } else {
         bquote(.(label.text)~plain((rel.~units)))
@@ -53,7 +53,7 @@ multipliers_label <- function(unit.exponent = 0,
     if (tolower(format) == "latex") {
       paste(label.text, " $k_{\\lambda} / k_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
-      if (add.symbols) {
+      if (axis.symbols) {
         bquote(.(label.text)~italic(k)[lambda]/italic(k)[.(normalized)]~plain("(/1)"))
       } else {
         bquote(.(label.text)*", normalised"~plain("(/1)"))
@@ -72,13 +72,13 @@ multipliers_label <- function(unit.exponent = 0,
       }
     } else if (format %in% c("R.expression")) {
       if (unit.exponent == 0) {
-        if (add.symbols) {
+        if (axis.symbols) {
           bquote(.(label.text)~italic(k)[lambda]~(plain(W~m^{-2}~nm^{-1}~counts^{-1}~s)))
         } else {
           bquote(.(label.text)~(plain(W~m^{-2}~nm^{-1}~counts^{-1}~s)))
         }
       } else {
-        if (add.symbols) {
+        if (axis.symbols) {
 
         } else {
 
@@ -110,7 +110,7 @@ multipliers_label <- function(unit.exponent = 0,
 #' @param scaled logical If \code{TRUE} relative units are assumed.
 #' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
 #'   in manometers (nm).
-#' @param add.symbols logical If \code{TRUE} symbols of the quantities are
+#' @param axis.symbols logical If \code{TRUE} symbols of the quantities are
 #'   added to the \code{name}. Supported only by \code{format = "R.expression"}.
 #' @param ... other named arguments passed to \code{scale_y_continuous}
 #'
@@ -126,14 +126,14 @@ scale_y_multipliers_continuous <-
                                     label.text = label.text,
                                     scaled = scaled,
                                     normalized = round(normalized, 1),
-                                    add.symbols = add.symbols),
+                                    axis.symbols = axis.symbols),
            labels = SI_pl_format(exponent = unit.exponent),
            format = getOption("photobiology.math",
                               default = "R.expression"),
            label.text = axis_labels()[["e.mult"]],
            scaled = FALSE,
            normalized = FALSE,
-           add.symbols = getOption("ggspectra.add.symbols",
+           axis.symbols = getOption("ggspectra.axis.symbols",
                                    default = TRUE),
            ...) {
     scale_y_continuous(name = name,

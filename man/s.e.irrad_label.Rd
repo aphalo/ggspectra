@@ -11,7 +11,7 @@ s.e.irrad_label(
   label.text = axis_labels()[["s.e.irrad"]],
   scaled = FALSE,
   normalized = FALSE,
-  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
+  axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)
 )
 
 s.q.irrad_label(
@@ -20,7 +20,7 @@ s.q.irrad_label(
   label.text = axis_labels()[["s.q.irrad"]],
   scaled = FALSE,
   normalized = FALSE,
-  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
+  axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)
 )
 }
 \arguments{
@@ -36,7 +36,7 @@ s.q.irrad_label(
 \item{normalized}{logical (\code{FALSE}) or numeric Normalization wavelength
 in manometers (nm).}
 
-\item{add.symbols}{logical If \code{TRUE} symbols of the quantities are
+\item{axis.symbols}{logical If \code{TRUE} symbols of the quantities are
 added to the \code{name}. Supported only by \code{format = "R.expression"}.}
 }
 \value{
@@ -50,13 +50,13 @@ default devices) or LaTeX (for tikz device).
 \examples{
 
 str(s.e.irrad_label())
-str(s.e.irrad_label(add.symbols = FALSE))
+str(s.e.irrad_label(axis.symbols = FALSE))
 str(s.e.irrad_label(format = "R.expression"))
 str(s.e.irrad_label(format = "LaTeX"))
 
 
 str(s.q.irrad_label())
-str(s.q.irrad_label(add.symbols = FALSE))
+str(s.q.irrad_label(axis.symbols = FALSE))
 str(s.q.irrad_label(format = "R.expression"))
 str(s.q.irrad_label(format = "LaTeX"))
 

@@ -82,8 +82,8 @@ ggplot(sun.spct) +
 ## -----------------------------------------------------------------------------
 ggplot(sun.spct) + 
   geom_line() +
-  scale_x_wl_continuous(add.symbols = FALSE) +
-  scale_y_s.e.irrad_continuous(add.symbols = FALSE)
+  scale_x_wl_continuous(axis.symbols = FALSE) +
+  scale_y_s.e.irrad_continuous(axis.symbols = FALSE)
 
 ## -----------------------------------------------------------------------------
 ggplot(sun.spct) + 

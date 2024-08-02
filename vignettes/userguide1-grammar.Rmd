@@ -331,14 +331,14 @@ ggplot(sun.spct) +
   scale_y_s.e.irrad_continuous()
 ```
 We can have also axis labels without symbols, either by passing an argument to
-parameter `add.symbols` or by seeting R option `ggspectra.add.symbols`, which
+parameter `axis.symbols` or by seeting R option `ggspectra.axis.symbols`, which
 sets the default.
 
 ```{r}
 ggplot(sun.spct) + 
   geom_line() +
-  scale_x_wl_continuous(add.symbols = FALSE) +
-  scale_y_s.e.irrad_continuous(add.symbols = FALSE)
+  scale_x_wl_continuous(axis.symbols = FALSE) +
+  scale_y_s.e.irrad_continuous(axis.symbols = FALSE)
 ```
 
 Here we change the `unit.exponent` from its default value of `-9`

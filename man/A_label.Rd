@@ -12,7 +12,7 @@ A_label(
   label.text = NULL,
   scaled = FALSE,
   normalized = FALSE,
-  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
+  axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE),
   Tfr.type
 )
 
@@ -22,7 +22,7 @@ A_internal_label(
   label.text = NULL,
   scaled = FALSE,
   normalized = FALSE,
-  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
+  axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)
 )
 
 A_total_label(
@@ -31,7 +31,7 @@ A_total_label(
   label.text = NULL,
   scaled = FALSE,
   normalized = FALSE,
-  add.symbols = getOption("ggspectra.add.symbols", default = TRUE)
+  axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)
 )
 }
 \arguments{
@@ -47,7 +47,7 @@ A_total_label(
 \item{normalized}{logical (\code{FALSE}) or numeric Normalization wavelength
 in manometers (nm).}
 
-\item{add.symbols}{logical If \code{TRUE} symbols of the quantities are
+\item{axis.symbols}{logical If \code{TRUE} symbols of the quantities are
 added to the \code{name}. Supported only by \code{format = "R.expression"}.}
 
 \item{Tfr.type}{character, either "total" or "internal".}
@@ -68,11 +68,11 @@ Default for \code{label.text} depends on the value passed as argument
 
 A_label(Tfr.type = "internal")
 A_label(Tfr.type = "total")
-A_label(Tfr.type = "total", add.symbols = FALSE)
+A_label(Tfr.type = "total", axis.symbols = FALSE)
 
 
 A_internal_label()
-A_internal_label(format = "R.expression", add.symbols = FALSE)
+A_internal_label(format = "R.expression", axis.symbols = FALSE)
 A_internal_label(-3)
 A_internal_label(format = "R.expression")
 A_internal_label(format = "LaTeX")
@@ -80,7 +80,7 @@ A_internal_label(-3, format = "LaTeX")
 
 
 A_total_label()
-A_total_label(format = "R.expression", add.symbols = FALSE)
+A_total_label(format = "R.expression", axis.symbols = FALSE)
 A_total_label(-3)
 A_total_label(format = "R.expression")
 A_total_label(format = "LaTeX")

@@ -8,22 +8,22 @@
 scale_x_energy_eV_continuous(
   unit.exponent = 0,
   name = w_energy_eV_label(unit.exponent = unit.exponent, label.text = label.text,
-    add.symbols = add.symbols),
+    axis.symbols = axis.symbols),
   breaks = scales::pretty_breaks(n = 7),
   labels = SI_pl_format(exponent = unit.exponent),
   label.text = axis_labels()[["energy"]],
-  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
+  axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE),
   ...
 )
 
 scale_x_energy_J_continuous(
   unit.exponent = -18,
   name = w_energy_J_label(unit.exponent = unit.exponent, label.text = label.text,
-    add.symbols = add.symbols),
+    axis.symbols = axis.symbols),
   breaks = scales::pretty_breaks(n = 7),
   labels = SI_pl_format(exponent = unit.exponent),
   label.text = axis_labels()[["energy"]],
-  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
+  axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE),
   ...
 )
 }
@@ -39,7 +39,7 @@ positions.}
 
 \item{label.text}{character Textual portion of the labels.}
 
-\item{add.symbols}{logical If \code{TRUE} symbols of the quantities are
+\item{axis.symbols}{logical If \code{TRUE} symbols of the quantities are
 added to the \code{name}. Supported only by \code{format = "R.expression"}.}
 
 \item{...}{other named arguments passed to \code{scale_y_continuous}}

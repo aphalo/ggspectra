@@ -60,7 +60,7 @@ w_frequency <- photobiology::wl2frequency
 #' @param format character string, "R", "R.expresion", "R.character", or
 #'   "LaTeX".
 #' @param label.text character Textual portion of the labels.
-#' @param add.symbols logical If \code{TRUE} symbols of the quantities are
+#' @param axis.symbols logical If \code{TRUE} symbols of the quantities are
 #'   added to the \code{name}. Supported only by \code{format = "R.expression"}.
 #'
 #' @return a character string or an R expression.
@@ -70,7 +70,7 @@ w_frequency <- photobiology::wl2frequency
 #' @examples
 #'
 #' w_length_label()
-#' w_length_label(add.symbols = FALSE)
+#' w_length_label(axis.symbols = FALSE)
 #' w_length_label(format = "R.expression")
 #' w_length_label(format = "LaTeX")
 #' w_number_label()
@@ -84,9 +84,9 @@ w_length_label <- function(unit.exponent = -9,
                            format = getOption("photobiology.math",
                                               default = "R.expression"),
                            label.text = axis_labels()[["w.length"]],
-                           add.symbols = getOption("ggspectra.add.symbols",
+                           axis.symbols = getOption("ggspectra.axis.symbols",
                                                    default = TRUE)) {
-  if (!add.symbols) {
+  if (!axis.symbols) {
     label.text <- gsub(",$", "", label.text)
   }
   if (tolower(format) == "latex") {
@@ -102,13 +102,13 @@ w_length_label <- function(unit.exponent = -9,
   } else if (format %in% c("R.expression")) {
     if (has_SI_prefix(unit.exponent)) {
       prefix <- exponent2prefix(unit.exponent)
-      if (add.symbols) {
+      if (axis.symbols) {
         bquote(.(label.text)~lambda~(plain(.(prefix))*plain(m)))
       } else {
         bquote(.(label.text)~(plain(.(prefix))*plain(m)))
       }
     } else {
-      if (add.symbols) {
+      if (axis.symbols) {
         bquote(.(label.text)~lambda~(10^{.(unit.exponent)}~plain(m)))
       } else {
         bquote(.(label.text)~(10^{.(unit.exponent)}~plain(m)))
@@ -133,9 +133,9 @@ w_number_label <- function(unit.exponent = 0,
                            format = getOption("photobiology.math",
                                               default = "R.expression"),
                            label.text = axis_labels()[["w.number"]],
-                           add.symbols = getOption("ggspectra.add.symbols",
+                           axis.symbols = getOption("ggspectra.axis.symbols",
                                                    default = TRUE)) {
-  if (!add.symbols) {
+  if (!axis.symbols) {
     label.text <- gsub(",$", "", label.text)
   }
   if (tolower(format) == "latex") {
@@ -151,13 +151,13 @@ w_number_label <- function(unit.exponent = 0,
   } else if (format %in% c("R.expression")) {
     if (has_SI_prefix(unit.exponent)) {
       prefix <- exponent2prefix(unit.exponent)
-      if (add.symbols) {
+      if (axis.symbols) {
         bquote(.(label.text)~nu~(plain(.(prefix))*plain(m)^{-1}))
       } else {
         bquote(.(label.text)~(plain(.(prefix))*plain(m)^{-1}))
       }
     } else {
-      if (add.symbols) {
+      if (axis.symbols) {
         bquote(.(label.text)~nu~(10^{.(unit.exponent)}~plain(m)^{-1}))
       } else {
         bquote(.(label.text)~(10^{.(unit.exponent)}~plain(m)^{-1}))
@@ -183,9 +183,9 @@ w_frequency_label <- function(unit.exponent = 9,
                               format = getOption("photobiology.math",
                                                  default = "R.expression"),
                               label.text = axis_labels()[["freq"]],
-                              add.symbols = getOption("ggspectra.add.symbols",
+                              axis.symbols = getOption("ggspectra.axis.symbols",
                                                       default = TRUE)) {
-  if (!add.symbols) {
+  if (!axis.symbols) {
     label.text <- gsub(",$", "", label.text)
   }
   if (tolower(format) == "latex") {
@@ -201,13 +201,13 @@ w_frequency_label <- function(unit.exponent = 9,
   } else if (format %in% c("R.expression")) {
     if (has_SI_prefix(unit.exponent)) {
       prefix <- exponent2prefix(unit.exponent)
-      if (add.symbols) {
+      if (axis.symbols) {
         bquote(.(label.text)~italic(f)~(plain(.(prefix))*plain(Hz)))
       } else {
         bquote(.(label.text)~(plain(.(prefix))*plain(Hz)))
       }
     } else {
-      if (add.symbols) {
+      if (axis.symbols) {
         bquote(.(label.text)~italic(f)~(10^{.(unit.exponent)}~plain(Hz)))
       } else {
         bquote(.(label.text)~(10^{.(unit.exponent)}~plain(Hz)))
@@ -233,9 +233,9 @@ w_energy_eV_label <- function(unit.exponent = 0,
                            format = getOption("photobiology.math",
                                               default = "R.expression"),
                            label.text = axis_labels()[["energy"]],
-                           add.symbols = getOption("ggspectra.add.symbols",
+                           axis.symbols = getOption("ggspectra.axis.symbols",
                                                    default = TRUE)) {
-  if (!add.symbols) {
+  if (!axis.symbols) {
     label.text <- gsub(",$", "", label.text)
   }
   if (tolower(format) == "latex") {
@@ -251,13 +251,13 @@ w_energy_eV_label <- function(unit.exponent = 0,
   } else if (format %in% c("R.expression")) {
     if (has_SI_prefix(unit.exponent)) {
       prefix <- exponent2prefix(unit.exponent)
-      if (add.symbols) {
+      if (axis.symbols) {
         bquote(.(label.text)~italic(E)~(plain(.(prefix))*plain(eV)))
       } else {
         bquote(.(label.text)~(plain(.(prefix))*plain(eV)))
       }
     } else {
-      if (add.symbols) {
+      if (axis.symbols) {
         bquote(.(label.text)~italic(E)~(10^{.(unit.exponent)}~plain(eV)))
       } else {
         bquote(.(label.text)~(10^{.(unit.exponent)}~plain(eV)))
@@ -283,9 +283,9 @@ w_energy_J_label <- function(unit.exponent = -18,
                              format = getOption("photobiology.math",
                                                 default = "R.expression"),
                              label.text = axis_labels()[["energy"]],
-                             add.symbols = getOption("ggspectra.add.symbols",
+                             axis.symbols = getOption("ggspectra.axis.symbols",
                                                      default = TRUE)) {
-  if (!add.symbols) {
+  if (!axis.symbols) {
     label.text <- gsub(",$", "", label.text)
   }
   if (tolower(format) == "latex") {
@@ -301,13 +301,13 @@ w_energy_J_label <- function(unit.exponent = -18,
   } else if (format %in% c("R.expression")) {
     if (has_SI_prefix(unit.exponent)) {
       prefix <- exponent2prefix(unit.exponent)
-      if (add.symbols) {
+      if (axis.symbols) {
         bquote(.(label.text)~italic(E)~(plain(.(prefix))*plain(J)))
       } else {
         bquote(.(label.text)~(plain(.(prefix))*plain(J)))
       }
     } else {
-      if (add.symbols) {
+      if (axis.symbols) {
         bquote(.(label.text)~italic(E)~(10^{.(unit.exponent)}~plain(J)))
       } else {
         bquote(.(label.text)~(10^{.(unit.exponent)}~plain(J)))
@@ -343,7 +343,7 @@ w_energy_J_label <- function(unit.exponent = -18,
 #' @param unit.exponent integer The exponent on base 10 of the scale multiplier
 #'   used for the axis labels, e.g., 3 for \eqn{10^3} or \eqn{k}.
 #' @param label.text character Textual portion of the labels.
-#' @param add.symbols logical If \code{TRUE} symbols of the quantities are
+#' @param axis.symbols logical If \code{TRUE} symbols of the quantities are
 #'   added to the \code{name}. Supported only by \code{format = "R.expression"}.
 #'
 #' @export
@@ -407,12 +407,12 @@ w_energy_J_label <- function(unit.exponent = -18,
 sec_axis_w_number <-
   function(unit.exponent = -6,
            label.text = axis_labels()[["w.number"]],
-           add.symbols = getOption("ggspectra.add.symbols",
+           axis.symbols = getOption("ggspectra.axis.symbols",
                                    default = TRUE)) {
     ggplot2::sec_axis(trans = ~photobiology::wl2wavenumber(., unit.exponent),
                       name = w_number_label(unit.exponent = unit.exponent,
                                             label.text = label.text,
-                                            add.symbols = add.symbols),
+                                            axis.symbols = axis.symbols),
                       breaks = scales::pretty_breaks(n = 7))
   }
 
@@ -423,12 +423,12 @@ sec_axis_w_number <-
 sec_axis_w_frequency <-
   function(unit.exponent = 12,
            label.text = axis_labels()[["freq"]],
-           add.symbols = getOption("ggspectra.add.symbols",
+           axis.symbols = getOption("ggspectra.axis.symbols",
                                    default = TRUE)) {
     ggplot2::sec_axis(trans = ~photobiology::wl2frequency(., unit.exponent),
                       name = w_frequency_label(unit.exponent = unit.exponent,
                                                label.text = label.text,
-                                               add.symbols = add.symbols),
+                                               axis.symbols = axis.symbols),
                       breaks = scales::pretty_breaks(n = 7)
     )
   }
@@ -440,12 +440,12 @@ sec_axis_w_frequency <-
 sec_axis_energy_eV <-
   function(unit.exponent = 0,
            label.text = axis_labels()[["energy"]],
-           add.symbols = getOption("ggspectra.add.symbols",
+           axis.symbols = getOption("ggspectra.axis.symbols",
                                    default = TRUE)) {
     ggplot2::sec_axis(trans = ~photobiology::wl2energy(., unit.exponent, unit = "eV"),
                       name = w_energy_eV_label(unit.exponent = unit.exponent,
                                                label.text = label.text,
-                                               add.symbols = add.symbols),
+                                               axis.symbols = axis.symbols),
                       breaks = scales::pretty_breaks(n = 8)
     )
   }
@@ -457,12 +457,12 @@ sec_axis_energy_eV <-
 sec_axis_energy_J <-
   function(unit.exponent = -18,
            label.text = axis_labels()[["energy"]],
-           add.symbols = getOption("ggspectra.add.symbols",
+           axis.symbols = getOption("ggspectra.axis.symbols",
                                    default = TRUE)) {
     ggplot2::sec_axis(trans = ~photobiology::wl2energy(., unit.exponent, unit = "joule"),
                       name = w_energy_J_label(unit.exponent = unit.exponent,
                                                label.text = label.text,
-                                              add.symbols = add.symbols),
+                                              axis.symbols = axis.symbols),
                       breaks = scales::pretty_breaks(n = 8)
     )
   }
@@ -474,12 +474,12 @@ sec_axis_energy_J <-
 sec_axis_wl <-
   function(unit.exponent = -9,
            label.text = axis_labels()[["w.length"]],
-           add.symbols = getOption("ggspectra.add.symbols",
+           axis.symbols = getOption("ggspectra.axis.symbols",
                                    default = TRUE)) {
     ggplot2::sec_axis(trans = function(x) {x / 10^(9 + unit.exponent)},
                       name = w_length_label(unit.exponent = unit.exponent,
                                             label.text = label.text,
-                                            add.symbols = add.symbols),
+                                            axis.symbols = axis.symbols),
                       breaks = scales::pretty_breaks(n = 7)
     )
   }
@@ -500,7 +500,7 @@ sec_axis_wl <-
 #' @param labels The tick labels or a function to generate them from the tick
 #'   positions.
 #' @param label.text character Textual portion of the labels.
-#' @param add.symbols logical If \code{TRUE} symbols of the quantities are
+#' @param axis.symbols logical If \code{TRUE} symbols of the quantities are
 #'   added to the \code{name}. Supported only by \code{format = "R.expression"}.
 #' @param ... other named arguments passed to \code{scale_y_continuous}
 #'
@@ -531,11 +531,11 @@ scale_x_wl_continuous <-
   function(unit.exponent = -9,
            name = w_length_label(unit.exponent = unit.exponent,
                                  label.text = label.text,
-                                 add.symbols= add.symbols),
+                                 axis.symbols= axis.symbols),
            breaks = scales::pretty_breaks(n = 7),
            labels = SI_pl_format(exponent = unit.exponent + 9),
            label.text = axis_labels()[["w.length"]],
-           add.symbols = getOption("ggspectra.add.symbols",
+           axis.symbols = getOption("ggspectra.axis.symbols",
                                    default = TRUE),
            ...) {
     scale_x_continuous(name = name,
@@ -563,7 +563,7 @@ scale_x_wl_continuous <-
 #' @param labels The tick labels or a function to generate them from the tick
 #'   positions.
 #' @param label.text character Textual portion of the labels.
-#' @param add.symbols logical If \code{TRUE} symbols of the quantities are
+#' @param axis.symbols logical If \code{TRUE} symbols of the quantities are
 #'   added to the \code{name}. Supported only by \code{format = "R.expression"}.
 #' @param ... other named arguments passed to \code{scale_y_continuous}
 #'
@@ -586,11 +586,11 @@ scale_x_wavenumber_continuous <-
   function(unit.exponent = -6,
            name = w_number_label(unit.exponent = unit.exponent,
                                  label.text = label.text,
-                                 add.symbols = add.symbols),
+                                 axis.symbols = axis.symbols),
            breaks = scales::pretty_breaks(n = 7),
            labels = SI_pl_format(exponent = -unit.exponent),
            label.text = axis_labels()[["w.number"]],
-           add.symbols = getOption("ggspectra.add.symbols",
+           axis.symbols = getOption("ggspectra.axis.symbols",
                                    default = TRUE),
            ...) {
     scale_x_continuous(name = name,
@@ -618,7 +618,7 @@ scale_x_wavenumber_continuous <-
 #' @param labels The tick labels or a function to generate them from the tick
 #'   positions.
 #' @param label.text character Textual portion of the labels.
-#' @param add.symbols logical If \code{TRUE} symbols of the quantities are
+#' @param axis.symbols logical If \code{TRUE} symbols of the quantities are
 #'   added to the \code{name}. Supported only by \code{format = "R.expression"}.
 #' @param ... other named arguments passed to \code{scale_y_continuous}
 #'
@@ -641,11 +641,11 @@ scale_x_frequency_continuous <-
   function(unit.exponent = 12,
            name = w_frequency_label(unit.exponent = unit.exponent,
                                     label.text = label.text,
-                                    add.symbols = add.symbols),
+                                    axis.symbols = axis.symbols),
            breaks = scales::pretty_breaks(n = 7),
            labels = SI_pl_format(exponent = unit.exponent),
            label.text = axis_labels()[["freq"]],
-           add.symbols = getOption("ggspectra.add.symbols",
+           axis.symbols = getOption("ggspectra.axis.symbols",
                                    default = TRUE),
            ...) {
     scale_x_continuous(name = name,
@@ -673,7 +673,7 @@ scale_x_frequency_continuous <-
 #' @param labels The tick labels or a function to generate them from the tick
 #'   positions.
 #' @param label.text character Textual portion of the labels.
-#' @param add.symbols logical If \code{TRUE} symbols of the quantities are
+#' @param axis.symbols logical If \code{TRUE} symbols of the quantities are
 #'   added to the \code{name}. Supported only by \code{format = "R.expression"}.
 #' @param ... other named arguments passed to \code{scale_y_continuous}
 #'
@@ -704,11 +704,11 @@ scale_x_energy_eV_continuous <-
   function(unit.exponent = 0,
            name = w_energy_eV_label(unit.exponent = unit.exponent,
                                     label.text = label.text,
-                                    add.symbols = add.symbols),
+                                    axis.symbols = axis.symbols),
            breaks = scales::pretty_breaks(n = 7),
            labels = SI_pl_format(exponent = unit.exponent),
            label.text = axis_labels()[["energy"]],
-           add.symbols = getOption("ggspectra.add.symbols",
+           axis.symbols = getOption("ggspectra.axis.symbols",
                                    default = TRUE),
            ...) {
     scale_x_continuous(name = name,
@@ -725,11 +725,11 @@ scale_x_energy_J_continuous <-
   function(unit.exponent = -18,
            name = w_energy_J_label(unit.exponent = unit.exponent,
                                    label.text = label.text,
-                                   add.symbols = add.symbols),
+                                   axis.symbols = axis.symbols),
            breaks = scales::pretty_breaks(n = 7),
            labels = SI_pl_format(exponent = unit.exponent),
            label.text = axis_labels()[["energy"]],
-           add.symbols = getOption("ggspectra.add.symbols",
+           axis.symbols = getOption("ggspectra.axis.symbols",
                                    default = TRUE),
            ...) {
     scale_x_continuous(name = name,

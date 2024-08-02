@@ -9,14 +9,14 @@
 scale_y_A_continuous(
   unit.exponent = 0,
   name = A_label(unit.exponent = unit.exponent, format = format, label.text = label.text,
-    scaled = scaled, normalized = round(normalized, 1), add.symbols = add.symbols,
+    scaled = scaled, normalized = round(normalized, 1), axis.symbols = axis.symbols,
     Tfr.type = Tfr.type),
   labels = SI_pl_format(exponent = unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = NULL,
   scaled = FALSE,
   normalized = FALSE,
-  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
+  axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE),
   Tfr.type,
   ...
 )
@@ -24,28 +24,28 @@ scale_y_A_continuous(
 scale_y_A_internal_continuous(
   unit.exponent = 0,
   name = A_label(unit.exponent = unit.exponent, format = format, label.text = label.text,
-    scaled = scaled, normalized = round(normalized, 1), add.symbols = add.symbols,
+    scaled = scaled, normalized = round(normalized, 1), axis.symbols = axis.symbols,
     Tfr.type = "internal"),
   labels = SI_pl_format(exponent = unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = NULL,
   scaled = FALSE,
   normalized = FALSE,
-  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
+  axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE),
   ...
 )
 
 scale_y_A_total_continuous(
   unit.exponent = 0,
   name = A_label(unit.exponent = unit.exponent, format = format, label.text = label.text,
-    scaled = scaled, normalized = round(normalized, 1), add.symbols = add.symbols,
+    scaled = scaled, normalized = round(normalized, 1), axis.symbols = axis.symbols,
     Tfr.type = "total"),
   labels = SI_pl_format(exponent = unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = NULL,
   scaled = FALSE,
   normalized = FALSE,
-  add.symbols = getOption("ggspectra.add.symbols", default = TRUE),
+  axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE),
   ...
 )
 }
@@ -66,7 +66,7 @@ scale_y_A_total_continuous(
 \item{normalized}{logical (\code{FALSE}) or numeric Normalization wavelength
 in manometers (nm).}
 
-\item{add.symbols}{logical If \code{TRUE} symbols of the quantities are
+\item{axis.symbols}{logical If \code{TRUE} symbols of the quantities are
 added to the \code{name}. Supported only by \code{format = "R.expression"}.}
 
 \item{Tfr.type}{character, either "total" or "internal".}
@@ -99,7 +99,7 @@ ggplot(yellow_gel.spct, plot.qty = "absorbance") +
 
 ggplot(yellow_gel.spct, plot.qty = "absorbance") +
   geom_line() +
-  scale_y_A_total_continuous(add.symbols = FALSE) +
-  scale_x_wl_continuous(add.symbols = FALSE)
+  scale_y_A_total_continuous(axis.symbols = FALSE) +
+  scale_x_wl_continuous(axis.symbols = FALSE)
 
 }
