@@ -116,8 +116,8 @@ navbar:
         href: articles/userguide1-grammar.html
       - text: '2 Autoplot Methods'
         href: articles/userguide2-autoplot-methods.html
-      - text: '3 Plotting transformed data'
-        href: articles/userguide3-data-manip.html
+      - text: 'Article: Plotting transformed spectral data'
+        href: articles/data-manipulation.html
     tutorials:
       text: Resources
       menu:
