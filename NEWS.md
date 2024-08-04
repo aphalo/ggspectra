@@ -35,7 +35,9 @@ _y_-axis.
 - Revise of `autoplot()` methods to support a user-set default argument for
 `range` given by R option `ggspectra.wlrange`.
 - The former vignette _Plotting transformed data_ is now an article, no longer
-part of the package and included only in the on-line documentation.
+part of the package and included only in the on-line documentation. It is
+updated with new code examples and use of the data objects added to
+package 'photobiology' (>= 0.11.1).
 
 # ggspectra 0.3.12
 

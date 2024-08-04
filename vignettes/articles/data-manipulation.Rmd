@@ -69,7 +69,9 @@ We change the default theme.
 theme_set(theme_bw())
 ```
 
-## Visualizing the effect of methods
+## Applying to spectral data in plot layers
+
+### A single spectrum
 
 In 'ggspectra' (< 0.3.5) we had to pass to the `data` parameter of layer functions always a data frame, or a transformation based on a method with an specialization for `data,frame`. A simple example passing spectral data to each layer function follows. Here to be able to use a method defined for `source_spct` objects like `sun.spct` we pass `sun.spct` as argument to method `smooth_spct()`.
 
@@ -210,6 +212,89 @@ ggplot(sun.spct) +
   scale_fill_identity()
 ```
 
+The examples above made use of `sun.spct` an object belonging to class `"source_spct"`, containing data for a single spectrum. Package 'photobiology' defines classes for different types of spectral data, and a base class `"generic_spct"`. Any object of belonging to one of these classes can be used as shown above for `sun.spct`. Next we show examples involving operations involving multiple spectra stored in a single R object.
+
 Some of the methods from 'photobiology' are also defined for `data.frame` and can be used as summary functions with data that are not radiation spectra, such as any `data` _seen_ by layer functions including `stat_summary()`. Furthermore, on-the-fly summaries and transformation can be used in any ggplot layer function and with any suitable function accepting data frames as input.
 
+### Multiple spectra
 
+Package 'photobiology' supports two alternative ways of storing multiple spectra in a single R object: collections of spectra in objects of classes with names ending in `_mspct` such as `source_mspct` and in objects of classes with names ending in `_spct` such as `source_spct`
+in objects. When passed to `ggplot()` they are both added to the `"gg"` object as objects of one
+of the `_spct` classes. (The former are an specilaization of lists of data frames, while the second are an specialization of data frame, and, thus, compatible with 'ggplot2'.)
+
+We use for this example data for a time series of five spectra measured close to sunset. We need to add a mapping to the factor used to identify the individual spectra.
+
+```{r}
+ggplot(data = sun_evening.spct) +
+  aes(linetype = spct.idx) +
+  geom_line()
+```
+
+Similarly as shown above for a single spectrum, we can smooth multiple spectra.
+
+```{r}
+ggplot(data = sun_evening.spct) +
+  aes(linetype = spct.idx) +
+   geom_line(data = . %>% smooth_spct(method = "supsmu"))
+```
+
+
+If we normalize the spectra to one at their maxima we get a clearer of how they differ in shape.
+
+```{r}
+ggplot(data = sun_evening.spct) +
+  aes(linetype = spct.idx) +
+   geom_line(data = . %>% normalize())
+```
+
+It is even clearer if we scale them so that the areas under the different curves are the same.
+
+```{r}
+ggplot(data = sun_evening.spct) +
+  aes(linetype = spct.idx) +
+   geom_line(data = . %>% fscale())
+```
+
+The three examples above are, of course, equivalent to applying the
+transformation to `data` for the whole plot as they have a single layer. 
+Transforming `data` when calling layer functions is useful, as shown in the
+previous section, when different transformations to the data are applied in
+different layers of the same plot.
+
+While above we used `sun_evening.spct`, here we use `sun_evening.mspct`, and
+plot only two out of the five spectra. Objects `sun_evening.spct` and
+`sun_evening.mspct` contain the same data but belong to classes `"source_spct"`
+and `"source_mspct"`, respectively.
+
+```{r}
+ggplot(data = sun_evening.mspct[c(1, 5)]) +
+  aes(linetype = spct.idx) +
+   geom_line() +
+   geom_line(data = . %>% smooth_spct(method = "supsmu"),
+             colour = "red")
+```
+
+There are few situations where applying different transformations to multiple
+spectra does not result in overcrowded plots, one example being animated plots 
+where different layers are displayed sequentially.
+
+```{r}
+library(gganimate)
+ggplot(data = sun_evening.mspct) +
+  geom_line() +
+  geom_line(data = . %>% smooth_spct(method = "supsmu"),
+            colour = "red") +
+  transition_states(spct.idx,
+                    transition_length = 2,
+                    state_length = 1) +
+  ggtitle('Now showing {closest_state}',
+          subtitle = 'Frame {frame} of {nframes}')
+```
+
+Another use case is when a layer displays a summary spectrum computed from multiple spectra shown in a different plot layer. In the example below the red line shows the median spectrum.
+
+```{r}
+ggplot(data = sun_evening.spct) +
+   geom_line(aes(group = spct.idx), alpha = 1/3) +
+   geom_line(data = . %>% subset2mspct() %>% s_median())
+```
