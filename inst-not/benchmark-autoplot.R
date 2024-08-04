@@ -112,11 +112,18 @@ z |> mutate(expression = fct_reorder(as.character(expression),
 base.name <- paste("bench-autoplot-",
                    as.character(today()),
                    "--ggspectra-",
-                   packageVersion("ggspectra"), "--",
+                   packageVersion("ggspectra"),
+                   "--ggplot2-",
+                   packageVersion("ggplot2"), "--",
                    paste("R-", R.version$major, ".", R.version$minor, sep = ""),
+                   "--nodename-",
+                   Sys.info()["nodename"],
                    sep = "")
+comment(z) <- base.name
 
-fig <- fig + ggtitle(base.name)
+
+fig <- fig + labs(title = paste("Benchmarks of", as.character(today())),
+                  subtitle = base.name)
 print(fig)
 
 object.name <- paste(base.name, "-tb", sep = "")

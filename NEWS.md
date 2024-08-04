@@ -34,6 +34,8 @@ label, including lambda as symbol, for consistency with the labels of the
 _y_-axis.
 - Revise of `autoplot()` methods to support a user-set default argument for
 `range` given by R option `ggspectra.wlrange`.
+- The former vignette _Plotting transformed data_ is now an article, no longer
+part of the package and included only in the on-line documentation.
 
 # ggspectra 0.3.12
 

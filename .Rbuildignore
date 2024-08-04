@@ -12,3 +12,4 @@ vignettes/figure
 ^\.github$
 ^CITATION\.cff$
 ^revdep
+^vignettes/articles$
