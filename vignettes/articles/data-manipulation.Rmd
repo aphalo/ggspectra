@@ -16,14 +16,14 @@ vignette: >
 
 Package `ggspectra` extends `ggplot2` with stats, geoms, scales and annotations suitable for light spectra. It also defines `ggplot()` and  `autoplot()` methods specialized for the classes defined in package `photobiology` for storing different types of spectral data. The `autoplot()` methods are described separately in vignette _User Guide: 2 Autoplot Methods_ and the `ggplot()` methods, statistics, and scales in _User Guide: 1 Grammar of Graphics_.
 
-The new elements can be freely combined with methods and functions defined in packages 'ggplot2', `scales`, `ggrepel`, `cowplot` and other extensions to 'ggplot2'.
+The new elements can be freely combined with methods and functions defined in packages 'ggplot2', `scales`, `ggrepel`, `gganimate`, `cowplot` and other extensions to 'ggplot2'.
 
-This articles, formerly the third part of the User Guide, describes how to combine manipulation of spectral data with plotting. This streamlined coding is made possible by an enhancement implemented in 'ggspectra' (>= 0.3.5). In addition, some of the examples make use of methods available only in 'photobiology' (>= 0.10.0).
+This article, formerly the third part of the User Guide, describes how to combine manipulation of spectral data with plotting. This streamlined coding is made possible by an enhancement implemented in 'ggspectra' (>= 0.3.5). In addition, some of the examples make use of methods available only in 'photobiology' (>= 0.10.0).
 
-In 'ggspectra' (>= 0.3.5) the data member of `gg` (ggplot) objects remains as an object of the classes for spectral data defined in 'photobiology' instead of being converted into a plain `data.frame`. This makes it possible data manipulations in layers to be done with methods specific to spectral data. In other words, the `data` object used a default for individual plot layers retains its original attributes, including its class. This makes it possible to use methods applicable to the original object to modify it for individual plot layers.
+In 'ggspectra' (>= 0.3.5) the data member of `gg` (ggplot) objects remains as an object of the classes for spectral data defined in 'photobiology' instead of being converted into a plain `data.frame`. This makes it possible data manipulations in layers to be done with methods specific to spectral data. In other words, the `data` object used as default for individual plot layers retains its original attributes, including its class. This makes it possible to use methods applicable to the original object to modify it for individual plot layers.
 
-The examples in this vignette depend conditionally on packages 'rlang' and 
-'magrittr'. If these packages are not available when the article is built, the
+The examples in this vignette depend conditionally on packages 'rlang', 
+'magrittr', and 'gganimate'. If these packages are not available when the article is built, the
 code chunks that require them are not evaluated.
 
 ## Set up 
@@ -43,6 +43,7 @@ if (eval_chunks) {
 } else {
   message("Please, install packages 'rlang' and 'magrittr'.")
 }
+gganimate_installed <- requireNamespace("gganimate", quietly = TRUE)
 ```
 
 ```{r, include=FALSE, echo=FALSE}
@@ -52,16 +53,6 @@ opts_chunk$set(fig.align = 'center',
                cache = FALSE)
 options(warnPartialMatchArgs = FALSE)
 ```
-
-Create a collection of two source_spct objects.
-
-```{r}
-two_suns.mspct <- source_mspct(list(sun1 = sun.spct, sun2 = sun.spct / 2))
-```
-
-We bind the two spectra in the collection into a single spectral object. This object
-includes an indexing factor, by default named `spct.idx`. We use this new object to 
-later on demonstrate grouping in ggplots.
 
 We change the default theme.
 
@@ -278,7 +269,7 @@ There are few situations where applying different transformations to multiple
 spectra does not result in overcrowded plots, one example being animated plots 
 where different layers are displayed sequentially.
 
-```{r}
+```{r, eval=gganimate_installed}
 library(gganimate)
 ggplot(data = sun_evening.mspct) +
   geom_line() +
