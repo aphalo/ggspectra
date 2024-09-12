@@ -37,7 +37,6 @@
 #'   long form.
 #' @param na.rm logical.
 #' @param ylim numeric y axis limits,
-#' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -56,8 +55,7 @@ e_rsp_plot <- function(spct,
                        idfactor,
                        facets,
                        ylim,
-                       na.rm,
-                       ...) {
+                       na.rm) {
   if (!is.response_spct(spct)) {
     stop("e_Rsp_plot() can only plot response_spct objects.")
   }
@@ -280,7 +278,6 @@ e_rsp_plot <- function(spct,
 #'   long form.
 #' @param ylim numeric y axis limits,
 #' @param na.rm logical.
-#' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -299,8 +296,7 @@ q_rsp_plot <- function(spct,
                        idfactor,
                        facets,
                        ylim,
-                       na.rm,
-                       ...) {
+                       na.rm) {
   if (!is.response_spct(spct)) {
     stop("q_Rsp_plot() can only plot response_spct objects.")
   }
@@ -643,13 +639,11 @@ autoplot.response_spct <-
                                wls.target = wls.target,
                                annotations = annotations,
                                geom = geom,
-                               norm = norm,              # read from object
                                text.size = text.size,
                                idfactor = idfactor,
                                facets = facets,
                                ylim = ylim,
-                               na.rm = na.rm,
-                               ...)
+                               na.rm = na.rm)
     } else if (unit.out=="energy") {
       out.ggplot <- e_rsp_plot(spct = object,
                                w.band = w.band,
@@ -660,13 +654,11 @@ autoplot.response_spct <-
                                wls.target = wls.target,
                                annotations = annotations,
                                geom = geom,
-                               norm = norm,
                                text.size = text.size,
                                idfactor = idfactor,
                                facets = facets,
                                ylim = ylim,
-                               na.rm = na.rm,
-                               ...)
+                               na.rm = na.rm)
     } else {
       stop("Invalid 'unit.out' argument: '", unit.out, "'")
     }

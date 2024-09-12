@@ -19,8 +19,7 @@ O_plot(
   chroma.type,
   facets,
   na.rm,
-  ylim,
-  ...
+  ylim
 )
 }
 \arguments{
@@ -60,8 +59,6 @@ also accepted.}
 \item{na.rm}{logical.}
 
 \item{ylim}{numeric y axis limits,}
-
-\item{...}{currently ignored.}
 }
 \value{
 a \code{ggplot} object.

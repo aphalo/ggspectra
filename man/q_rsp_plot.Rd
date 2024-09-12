@@ -18,8 +18,7 @@ q_rsp_plot(
   idfactor,
   facets,
   ylim,
-  na.rm,
-  ...
+  na.rm
 )
 }
 \arguments{
@@ -67,8 +66,6 @@ long form.}
 \item{ylim}{numeric y axis limits,}
 
 \item{na.rm}{logical.}
-
-\item{...}{currently ignored.}
 }
 \value{
 a \code{ggplot} object.

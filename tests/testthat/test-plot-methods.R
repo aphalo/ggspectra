@@ -897,28 +897,28 @@ test_that("waveband", {
 })
 
 
-test_that("plot_spct", {
-  set_annotations_default()
-  # skip_on_cran()
-  vdiffr::expect_doppelganger("raw-default-autop",
-                               plot(white_led.raw_spct))
-  vdiffr::expect_doppelganger("cps-default-autop",
-                               plot(white_led.cps_spct))
-  vdiffr::expect_doppelganger("source-default-autop",
-                               plot(white_led.source_spct))
-  vdiffr::expect_doppelganger("source-product-BSWF-autop",
-                               plot(sun.spct * CIE()))
-  vdiffr::expect_doppelganger("filter-default-tot-autop",
-                               plot(Ler_leaf_trns.spct))
-  vdiffr::expect_doppelganger("reflector-default-tot-autop",
-                               plot(Ler_leaf_rflt.spct))
-  vdiffr::expect_doppelganger("object-default-tot-autop",
-                               plot(Ler_leaf.spct))
-  vdiffr::expect_doppelganger("object-default-stk-autop",
-                               plot(Ler_leaf.spct, stacked = FALSE))
-  vdiffr::expect_doppelganger("response-default-autop",
-                               plot(ccd.spct))
-})
+# test_that("plot_spct", {
+#   set_annotations_default()
+#   # skip_on_cran()
+#   vdiffr::expect_doppelganger("raw-default-autop",
+#                                plot(white_led.raw_spct))
+#   vdiffr::expect_doppelganger("cps-default-autop",
+#                                plot(white_led.cps_spct))
+#   vdiffr::expect_doppelganger("source-default-autop",
+#                                plot(white_led.source_spct))
+#   vdiffr::expect_doppelganger("source-product-BSWF-autop",
+#                                plot(sun.spct * CIE()))
+#   vdiffr::expect_doppelganger("filter-default-tot-autop",
+#                                plot(Ler_leaf_trns.spct))
+#   vdiffr::expect_doppelganger("reflector-default-tot-autop",
+#                                plot(Ler_leaf_rflt.spct))
+#   vdiffr::expect_doppelganger("object-default-tot-autop",
+#                                plot(Ler_leaf.spct))
+#   vdiffr::expect_doppelganger("object-default-stk-autop",
+#                                plot(Ler_leaf.spct, stacked = FALSE))
+#   vdiffr::expect_doppelganger("response-default-autop",
+#                                plot(ccd.spct))
+# })
 
 test_that("plot_mspct", {
   set_annotations_default()

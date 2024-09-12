@@ -4,7 +4,7 @@
 #' as character, expression (R default devices) or LaTeX (for tikz device).
 #'
 #' @param unit.exponent integer
-#' @param format character string, "R", "R.expresion", "R.character", or
+#' @param format character string, "R", "R.expression", "R.character", or
 #'   "LaTeX".
 #' @param label.text character Textual portion of the labels.
 #' @param scaled logical If \code{TRUE} relative units are assumed.

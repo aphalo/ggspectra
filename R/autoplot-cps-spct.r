@@ -38,7 +38,6 @@
 #'   long form.
 #' @param ylim numeric y axis limits,
 #' @param na.rm logical.
-#' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -58,8 +57,7 @@ cps_plot <- function(spct,
                      facets,
                      ylim,
                      object.label,
-                     na.rm,
-                     ...) {
+                     na.rm) {
   if (!is.cps_spct(spct)) {
     stop("cps_plot() can only plot cps_spct objects.")
   }
@@ -335,7 +333,6 @@ autoplot.cps_spct <-
     cps_plot(spct = object,
              w.band = w.band,
              range = range,
-             norm = norm,
              pc.out = pc.out,
              label.qty = label.qty,
              span = span,
@@ -347,8 +344,7 @@ autoplot.cps_spct <-
              facets = facets,
              ylim = ylim,
              object.label = object.label,
-             na.rm = na.rm,
-             ...) +
+             na.rm = na.rm) +
       autotitle(object = object,
                 time.format = time.format,
                 tz = tz,

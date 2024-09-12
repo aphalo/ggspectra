@@ -41,7 +41,6 @@
 #'   long form.
 #' @param ylim numeric y axis limits,
 #' @param na.rm logical.
-#' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -61,8 +60,7 @@ e_plot <- function(spct,
                    idfactor,
                    facets,
                    ylim,
-                   na.rm,
-                   ...) {
+                   na.rm) {
   if (!is.source_spct(spct)) {
     stop("e_plot() can only plot source_spct objects.")
   }
@@ -331,7 +329,6 @@ e_plot <- function(spct,
 #'   form.
 #' @param ylim numeric y axis limits,
 #' @param na.rm logical.
-#' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -351,8 +348,7 @@ q_plot <- function(spct,
                    idfactor,
                    facets,
                    ylim,
-                   na.rm,
-                   ...) {
+                   na.rm) {
   if (!is.source_spct(spct)) {
     stop("q_plot() can only plot source_spct objects.")
   }
@@ -825,8 +821,7 @@ autoplot.source_spct <-
                            idfactor = idfactor,
                            facets = facets,
                            ylim = ylim,
-                           na.rm = na.rm,
-                           ...)
+                           na.rm = na.rm)
     } else if (unit.out == "energy") {
       out.ggplot <- e_plot(spct = object,
                            w.band = w.band,
@@ -842,8 +837,7 @@ autoplot.source_spct <-
                            idfactor = idfactor,
                            facets = facets,
                            ylim = ylim,
-                           na.rm = na.rm,
-                           ...)
+                           na.rm = na.rm)
     } else {
       stop("Invalid 'radiation.unit' argument value: '", unit.out, "'")
     }

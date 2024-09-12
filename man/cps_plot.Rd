@@ -19,8 +19,7 @@ cps_plot(
   facets,
   ylim,
   object.label,
-  na.rm,
-  ...
+  na.rm
 )
 }
 \arguments{
@@ -67,8 +66,6 @@ long form.}
 \item{ylim}{numeric y axis limits,}
 
 \item{na.rm}{logical.}
-
-\item{...}{currently ignored.}
 }
 \value{
 a \code{ggplot} object.

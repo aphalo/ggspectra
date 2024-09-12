@@ -917,7 +917,6 @@ R_plot <- function(spct,
 #'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param na.rm logical.
 #' @param ylim numeric y axis limits,
-#' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -937,8 +936,7 @@ O_plot <- function(spct,
                    chroma.type,
                    facets,
                    na.rm,
-                   ylim,
-                   ...) {
+                   ylim) {
   if (!is.object_spct(spct)) {
     stop("O_plot() can only plot object_spct objects.")
   }
@@ -1297,8 +1295,7 @@ autoplot.filter_spct <-
                            idfactor = idfactor,
                            facets = facets,
                            ylim = ylim,
-                           na.rm = na.rm,
-                           ...)
+                           na.rm = na.rm)
     } else if (plot.qty == "absorbance") {
       out.ggplot <- A_plot(spct = object,
                            w.band = w.band,
@@ -1313,8 +1310,7 @@ autoplot.filter_spct <-
                            idfactor = idfactor,
                            facets = facets,
                            ylim = ylim,
-                           na.rm = na.rm,
-                           ...)
+                           na.rm = na.rm)
     } else if (plot.qty == "absorptance") {
       out.ggplot <- Afr_plot(spct = object,
                              w.band = w.band,
@@ -1330,8 +1326,7 @@ autoplot.filter_spct <-
                              idfactor = idfactor,
                              facets = facets,
                              ylim = ylim,
-                             na.rm = na.rm,
-                             ...)
+                             na.rm = na.rm)
     } else {
       stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
     }
@@ -1822,8 +1817,7 @@ autoplot.object_spct <-
                            chroma.type = chroma.type,
                            facets = facets,
                            ylim = ylim,
-                           na.rm = na.rm,
-                           ...)
+                           na.rm = na.rm)
       out.ggplot +
         autotitle(object = object,
                   time.format = time.format,
@@ -1841,7 +1835,6 @@ autoplot.object_spct <-
         stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
       }
       autoplot(object = object,
-               ...,
                w.band = w.band,
                range = range,
                norm = norm,

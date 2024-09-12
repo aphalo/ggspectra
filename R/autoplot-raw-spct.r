@@ -40,7 +40,6 @@
 #'   long form.
 #' @param ylim numeric y axis limits,
 #' @param na.rm logical.
-#' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -60,8 +59,7 @@ raw_plot <- function(spct,
                      idfactor,
                      facets,
                      ylim,
-                     na.rm,
-                     ...) {
+                     na.rm) {
   if (!is.raw_spct(spct)) {
     stop("raw_plot() can only plot response_spct objects.")
   }
@@ -374,13 +372,11 @@ autoplot.raw_spct <-
              pc.out = pc.out,
              annotations = annotations,
              geom = geom,
-             norm = norm,
              text.size = text.size,
              idfactor = idfactor,
              facets = facets,
              ylim = ylim,
-             na.rm = na.rm,
-             ...) +
+             na.rm = na.rm) +
       autotitle(object = object,
                 time.format = time.format,
                 tz = tz,

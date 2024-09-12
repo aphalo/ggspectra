@@ -118,7 +118,7 @@ ggplot.source_spct <-
     # private (not exported) method or function from 'ggplot2'
     data.tb <- data
     removed <- photobiology::rmDerivedSpct(data.tb)
-    p <- ggplot2::ggplot(data = data.tb, mapping = mapping, ...,
+    p <- ggplot2::ggplot(data = data.tb, mapping = mapping,
                          environment = environment)
     class(p[["data"]]) <- c(removed, class(p[["data"]]))
 
@@ -162,7 +162,7 @@ ggplot.response_spct <-
     # private (not exported) method or function from 'ggplot2'
     data.tb <- data
     removed <- photobiology::rmDerivedSpct(data.tb)
-    p <- ggplot2::ggplot(data = data.tb, mapping = mapping, ...,
+    p <- ggplot2::ggplot(data = data.tb, mapping = mapping,
                          environment = environment)
     class(p[["data"]]) <- c(removed, class(p[["data"]]))
 
@@ -209,7 +209,7 @@ ggplot.filter_spct <-
     # private (not exported) method or function from 'ggplot2'
     data.tb <- data
     removed <- photobiology::rmDerivedSpct(data.tb)
-    p <- ggplot2::ggplot(data = data.tb, mapping = mapping, ...,
+    p <- ggplot2::ggplot(data = data.tb, mapping = mapping,
                          environment = environment)
     class(p[["data"]]) <- c(removed, class(p[["data"]]))
 
@@ -247,7 +247,7 @@ ggplot.reflector_spct <-
     # private (not exported) method or function from 'ggplot2'
     data.tb <- data
     removed <- photobiology::rmDerivedSpct(data.tb)
-    p <- ggplot2::ggplot(data = data.tb, mapping = mapping, ...,
+    p <- ggplot2::ggplot(data = data.tb, mapping = mapping,
                          environment = environment)
     class(p[["data"]]) <- c(removed, class(p[["data"]]))
 
@@ -286,7 +286,7 @@ ggplot.cps_spct <-
     # private (not exported) method or function from 'ggplot2'
     data.tb <- data
     removed <- photobiology::rmDerivedSpct(data.tb)
-    p <- ggplot2::ggplot(data = data.tb, mapping = mapping, ...,
+    p <- ggplot2::ggplot(data = data.tb, mapping = mapping,
                          environment = environment)
     class(p[["data"]]) <- c(removed, class(p[["data"]]))
 
@@ -325,7 +325,7 @@ ggplot.calibration_spct <-
     # private (not exported) method or function from 'ggplot2'
     data.tb <- data
     removed <- photobiology::rmDerivedSpct(data.tb)
-    p <- ggplot2::ggplot(data = data.tb, mapping = mapping, ...,
+    p <- ggplot2::ggplot(data = data.tb, mapping = mapping,
                          environment = environment)
     class(p[["data"]]) <- c(removed, class(p[["data"]]))
 
@@ -364,7 +364,7 @@ ggplot.raw_spct <-
     # private (not exported) method or function from 'ggplot2'
     data.tb <- data
     removed <- photobiology::rmDerivedSpct(data.tb)
-    p <- ggplot2::ggplot(data = data.tb, mapping = mapping, ...,
+    p <- ggplot2::ggplot(data = data.tb, mapping = mapping,
                          environment = environment)
     class(p[["data"]]) <- c(removed, class(p[["data"]]))
 
@@ -416,7 +416,7 @@ ggplot.object_spct <-
     if (plot.qty == "as.is") {
       data.class <- class(data)
       photobiology::rmDerivedSpct(data)
-      p <- ggplot2::ggplot(data = data, mapping = mapping, ...,
+      p <- ggplot2::ggplot(data = data, mapping = mapping,
                            environment = environment)
       class(p[["data"]]) <- data.class
     } else {
@@ -479,7 +479,8 @@ ggplot.generic_spct <-
                  tibble = tibble::as_tibble)
     spct <- funs[[spct_class]](data, ...)
 
-    ggplot2::ggplot(data = spct, mapping = mapping, ..., range = range,
+    # dispatched to one of the methods defined above
+    ggplot2::ggplot(data = spct, mapping = mapping, range = range,
                     environment = environment)
   }
 

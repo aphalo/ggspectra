@@ -37,7 +37,6 @@
 #'   long form.
 #' @param ylim numeric y axis limits,
 #' @param na.rm logical.
-#' @param ... currently ignored.
 #'
 #' @return a \code{ggplot} object.
 #'
@@ -58,8 +57,7 @@ generic_plot <- function(spct,
                          idfactor,
                          facets,
                          ylim,
-                         na.rm,
-                         ...) {
+                         na.rm) {
   if (!photobiology::is.generic_spct(spct)) {
     stop("generic_plot() can only plot generic_spct objects.")
   }
@@ -274,8 +272,7 @@ autoplot.generic_spct <-
                    idfactor = idfactor,
                    facets = facets,
                    ylim = ylim,
-                   na.rm = na.rm,
-                   ...) +
+                   na.rm = na.rm) +
         autotitle(object = object,
                   time.format = time.format,
                   tz = tz,
