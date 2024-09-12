@@ -465,6 +465,13 @@ ggplot.generic_spct <-
       stop("Invalid 'spct_class' argument: \"", spct_class)
     }
 
+    if (!is.null(range)) {
+      spct <- trim_wl(x = spct,
+                      range = range,
+                      use.hinges = TRUE,
+                      fill = NULL)
+    }
+
     # this list could be defined in package 'photobiology'
     funs <- list(filter_spct = photobiology::setFilterSpct,
                  reflector_spct = photobiology::setReflectorSpct,
@@ -480,7 +487,8 @@ ggplot.generic_spct <-
     spct <- funs[[spct_class]](data, ...)
 
     # dispatched to one of the methods defined above
-    ggplot2::ggplot(data = spct, mapping = mapping, range = range,
+    ggplot2::ggplot(data = spct,
+                    mapping = mapping,
                     environment = environment)
   }
 

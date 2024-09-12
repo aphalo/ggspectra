@@ -16,7 +16,7 @@ multipliers_label(
 \arguments{
 \item{unit.exponent}{integer}
 
-\item{format}{character string, "R", "R.expresion", "R.character", or
+\item{format}{character string, "R", "R.expression", "R.character", or
 "LaTeX".}
 
 \item{label.text}{character Textual portion of the labels.}

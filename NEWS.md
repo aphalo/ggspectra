@@ -12,6 +12,7 @@ multiple spectra in long form.
 introduced in version 0.3.12).
 - Fix bug: Error when attempting to plot `cps_spct` objects with multiple 
 columns of `cps` data (bug introduced in version 0.3.12).
+- Fix previously inconsequential bug in `autoplot()` methods revealed by stricter checks.
 - In `autoplot.response_spct()` change default argument `norm = "max"` to 
 `norm = "update"` for consistency with the other `autoplot()` methods and 
 to avoid "surprising" users.
@@ -32,7 +33,7 @@ of spectra.
 - Use in `autoplot()` methods a plotmath expression for the wavelength axis 
 label, including lambda as symbol, for consistency with the labels of the 
 _y_-axis.
-- Revise of `autoplot()` methods to support a user-set default argument for
+- Revise `autoplot()` methods to support a user-set default argument for
 `range` given by R option `ggspectra.wlrange`.
 - The former vignette _Plotting transformed data_ is now an article, no longer
 part of the package and included only in the on-line documentation. It is

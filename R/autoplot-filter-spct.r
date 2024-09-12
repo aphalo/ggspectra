@@ -1036,7 +1036,7 @@ O_plot <- function(spct,
   idfactor <- getIdFactor(spct) # needed as we will get a tibble back
   molten.tb <- photobiology::spct_wide2long(spct, idfactor = "variable", rm.spct.class = TRUE)
 
-  plot <- ggplot(molten.tb, aes(x = .data[["w.length"]], y = .data[["value"]]), na.rm = na.rm)
+  plot <- ggplot(molten.tb, aes(x = .data[["w.length"]], y = .data[["value"]]))
   attributes(plot[["data"]]) <- c(attributes(plot[["data"]]), get_attributes(spct))
   if (stacked) {
     if (is.null(geom) || geom %in% c("spct", "area")) {
