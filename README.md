@@ -83,8 +83,8 @@ remotes::install_github("aphalo/ggspectra")
 ## Documentation
 
 HTML documentation is available at
-(<https://docs.r4photobiology.info/ggspectra/>), including a *User
-Guide*.
+(<https://docs.r4photobiology.info/ggspectra/>), including additional
+on-line-only articles.
 
 News on updates to the different packages of the ‘r4photobiology’ suite
 are regularly posted at (<https://www.r4photobiology.info/>).

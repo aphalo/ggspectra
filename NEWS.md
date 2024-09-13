@@ -16,29 +16,24 @@ columns of `cps` data (bug introduced in version 0.3.12).
 - In `autoplot.response_spct()` change default argument `norm = "max"` to 
 `norm = "update"` for consistency with the other `autoplot()` methods and 
 to avoid "surprising" users.
-- Revise all _scales_ and the matching _axis-label building functions_ by adding
-formal parameter `axis.symbols` with default given by R option 
+- Revise all _scales_ and the matching _axis-label building functions_ by adding formal parameter `axis.symbols` with default given by R option 
 `ggspectra.axis.symbols`.
 - Revise _scales_ for transmittance, absorptance and reflectance and the 
 matching _axis-label building functions_ by adding formal parameter `pc.out` 
 with default given by R option `ggspectra.pc.out`.
-- Revise all `autoplot()` methods so that the default for their `pc.out` defaults
-to the value of R option `ggspectra.pc.out`.
+- Revise all `autoplot()` methods so that the default argument for the `pc.out` can be set with R option `ggspectra.pc.out`.
 - Revise all `autoplot()` methods  for objects of class `generic_spct` and 
-derived so that summaries requested by arguments passed to parameter `plot.data`
-are computed for multiple spectra in long form like they are for collections
-of spectra.
+derived so that summaries requested by arguments passed to parameter `plot.data` are computed for multiple spectra in long form like they are for collections of spectra.
 - Fix broken `idfactor` handling in `autoplot()` methods for objects of class 
 `generic_spct` and derived.
 - Use in `autoplot()` methods a plotmath expression for the wavelength axis 
 label, including lambda as symbol, for consistency with the labels of the 
 _y_-axis.
-- Revise `autoplot()` methods to support a user-set default argument for
-`range` given by R option `ggspectra.wlrange`.
+- Revise `autoplot()` methods to that the default argument for
+`range` can be set with R option `ggspectra.wlrange`.
 - The former vignette _Plotting transformed data_ is now an article, no longer
-part of the package and included only in the on-line documentation. It is
-updated with new code examples and use of the data objects added to
-package 'photobiology' (>= 0.11.1).
+part of the package. It is replaced by the on-line only article _Plotting transformed spectral data_ that includes new code examples using example data objects from package 'photobiology' (>= 0.11.1).
+- Add new on-line only article _Animated plots of spectral data_ with examples that use package 'gganimate' together with 'ggspectra'.
 
 # ggspectra 0.3.12
 
