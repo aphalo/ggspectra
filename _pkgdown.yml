@@ -118,6 +118,8 @@ navbar:
         href: articles/userguide2-autoplot-methods.html
       - text: 'Article: Plotting transformed spectral data'
         href: articles/data-manipulation.html
+      - text: 'Article: Animated plots of spectral data'
+        href: articles/animated-plots.html
     tutorials:
       text: Resources
       menu:

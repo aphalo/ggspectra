@@ -60,7 +60,7 @@ We change the default theme.
 theme_set(theme_bw())
 ```
 
-## Applying to spectral data in plot layers
+## Applying methods to spectral data in plot layers
 
 ### A single spectrum
 
@@ -93,6 +93,7 @@ use the specialized methods from package 'photobiology'. The next two code chunk
 p <- ggplot(sun.spct) + geom_line()
 class(p$data)
 ```
+
 ```{r, eval = eval_chunks}
 summary(p$data)
 ```
@@ -143,7 +144,7 @@ sun.spct |>
   geom_line(colour = "red", linewidth = 1)
 ```
 
-However, when using different transformations in different layers we need to apply them at each layer. Here we compare three different smoothing methods.
+However, when using different transformations in different layers we need to apply them in each layer. Here we compare three different smoothing methods.
 
 ```{r, eval = eval_chunks}
 ggplot(sun.spct) + 
@@ -155,7 +156,7 @@ ggplot(sun.spct) +
             colour = "red", linewidth = 0.7)
 ```
 
-Of course, this approach works both with _geoms_ and _stats_, but one should remember that these layer functions do not "see" the original data objects (neither the default or that passed as argument to the layers' `data` parameter), but instead a new `data.frame` containing the mapped variables in columns named according to _aesthetics_. The next example demonstrates this and illustrates that smoothing displaces the wavelength of maximum spectral irradiance.
+Of course, this approach works both with _geoms_ and _stats_, but one should remember that these layer functions do not "see" the original data objects (neither the default nor that passed as argument to the layers' `data` parameter), but instead a new `data.frame` containing the mapped variables in columns named according to _aesthetics_. The next example demonstrates this and illustrates that smoothing displaces the wavelength of maximum spectral irradiance.
 
 ```{r, eval = eval_chunks}
 ggplot(sun.spct) + 
@@ -226,24 +227,24 @@ Similarly as shown above for a single spectrum, we can smooth multiple spectra.
 ```{r}
 ggplot(data = sun_evening.spct) +
   aes(linetype = spct.idx) +
-   geom_line(data = . %>% smooth_spct(method = "supsmu"))
+  geom_line(data = . %>% smooth_spct(method = "supsmu"))
 ```
 
 
-If we normalize the spectra to one at their maxima we get a clearer of how they differ in shape.
+If we normalize the spectra to one at their maxima we get a clearer view of how they differ in shape.
 
 ```{r}
 ggplot(data = sun_evening.spct) +
   aes(linetype = spct.idx) +
-   geom_line(data = . %>% normalize())
+  geom_line(data = . %>% normalize())
 ```
 
-It is even clearer if we scale them so that the areas under the different curves are the same.
+It is even clearer if we scale the spectra so that the areas under the different curves are the same.
 
 ```{r}
 ggplot(data = sun_evening.spct) +
   aes(linetype = spct.idx) +
-   geom_line(data = . %>% fscale())
+  geom_line(data = . %>% fscale())
 ```
 
 The three examples above are, of course, equivalent to applying the
@@ -260,9 +261,9 @@ and `"source_mspct"`, respectively.
 ```{r}
 ggplot(data = sun_evening.mspct[c(1, 5)]) +
   aes(linetype = spct.idx) +
-   geom_line() +
-   geom_line(data = . %>% smooth_spct(method = "supsmu"),
-             colour = "red")
+  geom_line() +
+  geom_line(data = . %>% smooth_spct(method = "supsmu"),
+            colour = "red")
 ```
 
 There are few situations where applying different transformations to multiple
@@ -282,7 +283,7 @@ ggplot(data = sun_evening.mspct) +
           subtitle = 'Frame {frame} of {nframes}')
 ```
 
-Another use case is when a layer displays a summary spectrum computed from multiple spectra shown in a different plot layer. In the example below the red line shows the median spectrum.
+Another use case is when a layer displays a summary spectrum computed from multiple spectra shown in a different plot layer. In the example below the black line shows the median spectru. Other spectra are semitransparent and show as grey lines.
 
 ```{r}
 ggplot(data = sun_evening.spct) +

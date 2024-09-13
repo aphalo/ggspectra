@@ -7,18 +7,18 @@ output:
   rmarkdown::html_vignette:
     toc: yes
 vignette: >
-  %\VignetteIndexEntry{Article: Plotting transformed spectral data}
+  %\VignetteIndexEntry{Article: Animated plots of spectral data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ## Introduction
 
-Package `ggspectra` extends `ggplot2` with stats, geoms, scales and annotations suitable for light spectra. It also defines `ggplot()` and  `autoplot()` methods specialized for the classes defined in package `photobiology` for storing different types of spectral data. The `autoplot()` methods are described separately in vignette _User Guide: 2 Autoplot Methods_ and the `ggplot()` methods, statistics, and scales in _User Guide: 1 Grammar of Graphics_.
+Package `ggspectra` extends `ggplot2` with stats, geoms, scales and annotations suitable for light- or radiation-related spectra. It also defines `ggplot()` and  `autoplot()` methods specialized for the classes defined in package `photobiology` for storing different types of spectral data. The `autoplot()` methods are described separately in vignette _User Guide: 2 Autoplot Methods_ and the `ggplot()` methods, statistics, and scales in _User Guide: 1 Grammar of Graphics_.
 
 The new elements can be freely combined with methods and functions defined in packages 'ggplot2', `scales`, `ggrepel`, `gganimate` and other extensions to 'ggplot2'.
 
-This article, focuses on the animation of plots of time-series of spectra, which can be obtained easily with the current version of package 'ooacquire' from Ocean Optics spectrometers. Such data can also be obtained with radiation transfer models. Kinetics of chemical reactions, or any other temporal change in colour and or intensity. In addition to time, other continuous explanatory variables are well suited to using animations. 
+This article, focuses on the animation of plots of time-series of spectra, which can be acquired easily using Ocean Optics spectrometers toether with R package 'ooacquire'. Such data can also be obtained with radiation transfer models. Simlarly, kinetics of chemical reactions involving light absorbing reactants and/or products as well as any other temporal change in colour and or intensity can be characterised through spectral data. In addition to time, as exemplified below using time-series, other series of measurements in response to changes in other continuous explanatory variables are well suited to animations. 
 
 Currently, plots of spectra created with method `autoplot()` cannot be animated with 'gganimate'.
 
@@ -55,7 +55,7 @@ We change the default theme.
 theme_set(theme_bw())
 ```
 
-## Short series
+## A short time series of spectra
 
 We change the labels in the factor so that the time of measurement can be shown.
 
@@ -78,7 +78,7 @@ ggplot(data = my_sun.spct) +
   scale_y_s.e.irrad_continuous()
 ```
 
-We can animate it in different ways.
+We can animate a plot in different ways. Here, using long transitions between spectra. During the transitions interpolated data values are used to create an artificial smooth transition.
 
 ```{r, eval=eval_chunks}
 ggplot(data = my_sun.spct) +
@@ -89,7 +89,8 @@ ggplot(data = my_sun.spct) +
                     transition_length = 2,
                     state_length = 1)
 ```
-We need some indication of what spectrum is being displayed.
+
+We add an indication of which spectrum is being displayed. Here we define the title and subtitle of the plot to be dynamic, showing information about the currently displayed frame of the animation.
 
 ```{r, eval=eval_chunks}
 ggplot(data = my_sun.spct) +
@@ -99,68 +100,98 @@ ggplot(data = my_sun.spct) +
   transition_states(spct.idx,
                     transition_length = 2,
                     state_length = 1) +
-  ggtitle('Now showing {closest_state}',
+  ggtitle('Now showing {closest_state} UTC',
           subtitle = 'Frame {frame} of {nframes}')
 ```
 
-It is possible to add some annotations. Here some energy irradiances.
+It is possible to add some annotations. Here energy irradiances for red and far-red light.
 
 ```{r, eval=eval_chunks}
 ggplot(data = sun_evening.mspct |> smooth_spct(method = "supsmu", strength = 0.5)) +
   geom_line() +
-  stat_wb_e_irrad(w.band = list(PAR(), Red("Sellaro"), Far_red("Sellaro")), ypos.fixed = 0.075) +
+  stat_wb_e_irrad(aes(colour = after_stat(wb.color)),
+                  w.band = list(Red("Sellaro"), Far_red("Sellaro")),
+                  ypos.fixed = 0.078) +
+  stat_wb_hbar(aes(colour = after_stat(wb.color)),
+                  w.band = list(Red("Sellaro"), Far_red("Sellaro")),
+                  ypos.fixed = 0.082) +
   scale_x_wl_continuous() +
   scale_y_s.e.irrad_continuous() +
+  scale_colour_identity() +
   transition_states(spct.idx,
                     transition_length = 2,
                     state_length = 1,
                     ) +
-  ggtitle('Now showing {closest_state}',
+  ggtitle('Now showing {closest_state} UTC',
           subtitle = 'Frame {frame} of {nframes}')
 ```
 
 
-## A longer time series
+## A longer time series of spectra
 
 ```{r}
 my_sun.spct <- sun_hourly_august.spct
-time <- when_measured(my_sun.spct, as.df = TRUE)
-my_sun.spct$spct.idx <- factor(my_sun.spct$spct.idx, 
-                               levels = time[["spct.idx"]], 
-                               labels = as.character(round_date(time[["when.measured"]], unit = "hour")))
 my_sun.spct
 ```
-```{r, eval=eval_chunks}
+
+Object `my_sun.spct` contains multiple spectra in long form. A variable identifies which rows belong to each spectrum, based on date and time. The data cover most of the daytime of two successive days. We select data for one day.
+
+```{r}
+my_sun.spct <- subset(my_sun.spct, day(UTC) == 21)
+```
+
+
+```{r}
+idfactor <- getIdFactor(my_sun.spct)
+idfactor
+class(my_sun.spct[[idfactor]])
+unique(my_sun.spct[[idfactor]])
+```
+
+For building an animation, we need the indexing variable to be a `factor`.
+
+```{r, eval=eval_chunks, warning=FALSE}
+my_sun.spct[["time"]] <- my_sun.spct[[idfactor]]
+my_sun.spct[[idfactor]] <- factor(my_sun.spct[[idfactor]])
+length(levels(my_sun.spct[[idfactor]]))
+```
+
+We can display all 16 spectra in a single static plot.
+
+```{r, eval=eval_chunks, warning=FALSE}
 ggplot(data = my_sun.spct) +
-  aes(group = spct.idx) +
+  aes(group = get(idfactor)) +
   geom_line(alpha = 1/3) +
   scale_x_wl_continuous() +
   scale_y_s.e.irrad_continuous()
 ```
 
+The same data as above, but displayed as an animated plot.
 
-```{r, eval=eval_chunks}
+```{r, eval=eval_chunks, warning=FALSE}
 anim <- ggplot(data = my_sun.spct) +
   geom_line() +
   scale_x_wl_continuous() +
   scale_y_s.e.irrad_continuous() +
-  transition_states(spct.idx,
+  transition_states(get(idfactor),
                     transition_length = 2,
                     state_length = 1) +
-  ggtitle('Now showing {closest_state}',
+  ggtitle('Now showing {closest_state} UTC',
           subtitle = 'Frame {frame} of {nframes}')
-animate(anim, duration = 40, fps = 10)
+animate(anim, duration = 20, fps = 10)
 ```
 
-```{r, eval=eval_chunks}
-anim <- ggplot(data = fscale(my_sun.spct, target = 0.5)) +
-  geom_line() +
+To more easily see the differences in the shape of the spectra we can scale them to an equal total irradiance, i.e., equal area under the curves. To emphasize this, we can use `geom_spct()` instead of `geom_line()` that was used in the examples above 
+
+```{r, eval=eval_chunks, warning=FALSE}
+anim <- ggplot(data = fscale(my_sun.spct, f = e_irrad, target = 100)) +
+  geom_spct() +
   scale_x_wl_continuous() +
-  scale_y_s.e.irrad_continuous() +
-  transition_states(spct.idx,
+  scale_y_s.e.irrad_continuous(name = s.e.irrad_label(scaled = TRUE)) +
+  transition_states(get(idfactor),
                     transition_length = 2,
                     state_length = 1) +
-  ggtitle('Now showing {closest_state}',
+  ggtitle('Now showing {closest_state} UTC',
           subtitle = 'Frame {frame} of {nframes}')
-animate(anim, duration = 40, fps = 10)
+animate(anim, duration = 20, fps = 10)
 ```
