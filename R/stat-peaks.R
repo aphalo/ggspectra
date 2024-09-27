@@ -43,12 +43,11 @@
 #'   fitting. Currently only spline interpolation is implemented.
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
 #'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
-#' @param label.fmt character  string giving a format definition for converting
-#'   values into character strings by means of function \code{\link{sprintf}}.
-#' @param x.label.fmt character  string giving a format definition for converting
-#'   $x$-values into character strings by means of function \code{\link{sprintf}}.
-#' @param y.label.fmt character  string giving a format definition for converting
-#'   $y$-values into character strings by means of function \code{\link{sprintf}}.
+#' @param label.fmt,x.label.fmt,y.label.fmt character  strings giving a format
+#'   definition for construction of character strings labels with function
+#'   \code{\link{sprintf}} from \code{x} and/or \code{y} values.
+#' @param x.label.transform,y.label.transform,colour.transform function Applied
+#'   to \code{x} or \code{y} values when constructing the character labels.
 #'
 #' @return A data frame with one row for each peak (or valley) found in the
 #'   data.
@@ -158,6 +157,9 @@ stat_peaks <- function(mapping = NULL,
                        label.fmt = "%.3g",
                        x.label.fmt = label.fmt,
                        y.label.fmt = label.fmt,
+                       x.label.transform = I,
+                       y.label.transform = I,
+                       colour.transform = x.label.transform,
                        na.rm = FALSE,
                        show.legend = FALSE,
                        inherit.aes = TRUE) {
@@ -173,6 +175,9 @@ stat_peaks <- function(mapping = NULL,
                   label.fmt = label.fmt,
                   x.label.fmt = x.label.fmt,
                   y.label.fmt = y.label.fmt,
+                  x.label.transform = x.label.transform,
+                  y.label.transform = y.label.transform,
+                  colour.transform = colour.transform,
                   na.rm = na.rm,
                   ...)
   )
@@ -208,21 +213,29 @@ StatPeaks <-
                                             chroma.type,
                                             label.fmt,
                                             x.label.fmt,
-                                            y.label.fmt) {
-                     peaks.df <- photobiology::peaks(data,
-                                                     x.var.name = "x",
-                                                     y.var.name = "y",
-                                                     span = span,
-                                                     ignore_threshold = ignore_threshold,
-                                                     strict = strict,
-                                                     refine.wl = refine.wl,
-                                                     method = method,
-                                                     na.rm = FALSE)
-                     peaks.df[["x.label"]] <- sprintf(x.label.fmt, peaks.df[["x"]])
-                     peaks.df[["y.label"]] <- sprintf(y.label.fmt, peaks.df[["y"]])
+                                            y.label.fmt,
+                                            x.label.transform,
+                                            y.label.transform,
+                                            colour.transform) {
+                     peaks.df <-
+                       photobiology::peaks(data,
+                                           x.var.name = "x",
+                                           y.var.name = "y",
+                                           span = span,
+                                           ignore_threshold = ignore_threshold,
+                                           strict = strict,
+                                           refine.wl = refine.wl,
+                                           method = method,
+                                           na.rm = FALSE)
+                     peaks.df[["x.label"]] <-
+                       sprintf(x.label.fmt, x.label.transform(peaks.df[["x"]]))
+                     peaks.df[["y.label"]] <-
+                       sprintf(y.label.fmt, y.label.transform(peaks.df[["y"]]))
                      peaks.df[["wl.color"]] <-
-                       photobiology::fast_color_of_wl(peaks.df[["x"]], chroma.type = chroma.type)
-                     peaks.df[["BW.color"]] <-  black_or_white(peaks.df[["wl.color"]])
+                       photobiology::fast_color_of_wl(colour.transform(peaks.df[["x"]]),
+                                                      chroma.type = chroma.type)
+                     peaks.df[["BW.color"]] <-
+                       black_or_white(peaks.df[["wl.color"]])
                      peaks.df
                    },
                    default_aes = ggplot2::aes(label = after_stat(x.label),
@@ -250,6 +263,9 @@ stat_valleys <- function(mapping = NULL,
                          label.fmt = "%.3g",
                          x.label.fmt = label.fmt,
                          y.label.fmt = label.fmt,
+                         x.label.transform = I,
+                         y.label.transform = I,
+                         colour.transform = x.label.transform,
                          na.rm = FALSE,
                          show.legend = FALSE,
                          inherit.aes = TRUE) {
@@ -265,6 +281,9 @@ stat_valleys <- function(mapping = NULL,
                   label.fmt = label.fmt,
                   x.label.fmt = x.label.fmt,
                   y.label.fmt = y.label.fmt,
+                  x.label.transform = x.label.transform,
+                  y.label.transform = y.label.transform,
+                  colour.transform = colour.transform,
                   na.rm = na.rm,
                   ...)
   )
@@ -286,21 +305,29 @@ StatValleys <-
                                             chroma.type,
                                             label.fmt,
                                             x.label.fmt,
-                                            y.label.fmt) {
-                     valleys.df <- photobiology::valleys(data,
-                                                         x.var.name = "x",
-                                                         y.var.name = "y",
-                                                         span = span,
-                                                         ignore_threshold = ignore_threshold,
-                                                         strict = strict,
-                                                         refine.wl = refine.wl,
-                                                         method = method,
-                                                         na.rm = FALSE)
-                     valleys.df[["x.label"]] <- sprintf(x.label.fmt, valleys.df[["x"]])
-                     valleys.df[["y.label"]] <- sprintf(y.label.fmt, valleys.df[["y"]])
+                                            y.label.fmt,
+                                            x.label.transform,
+                                            y.label.transform,
+                                            colour.transform) {
+                     valleys.df <-
+                       photobiology::valleys(data,
+                                             x.var.name = "x",
+                                             y.var.name = "y",
+                                             span = span,
+                                             ignore_threshold = ignore_threshold,
+                                             strict = strict,
+                                             refine.wl = refine.wl,
+                                             method = method,
+                                             na.rm = FALSE)
+                     valleys.df[["x.label"]] <-
+                       sprintf(x.label.fmt, x.label.transform(valleys.df[["x"]]))
+                     valleys.df[["y.label"]] <-
+                       sprintf(y.label.fmt, y.label.transform(valleys.df[["y"]]))
                      valleys.df[["wl.color"]] <-
-                       photobiology::fast_color_of_wl(valleys.df[["x"]], chroma.type = chroma.type)
-                     valleys.df[["BW.color"]] <-  black_or_white(valleys.df[["wl.color"]])
+                       photobiology::fast_color_of_wl(colour.transform(valleys.df[["x"]]),
+                                                      chroma.type = chroma.type)
+                     valleys.df[["BW.color"]] <-
+                       black_or_white(valleys.df[["wl.color"]])
                      valleys.df
                    },
                    default_aes = ggplot2::aes(label = after_stat(x.label),

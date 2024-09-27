@@ -1,7 +1,7 @@
 Package: ggspectra
 Type: Package
 Title: Extensions to 'ggplot2' for Radiation Spectra
-Version: 0.3.13
+Version: 0.3.13.9000
 Date: 2024-09-12
 Authors@R:
    c(
