@@ -170,6 +170,17 @@ stat_label_peaks <-
            na.rm = TRUE,
            show.legend = FALSE,
            inherit.aes = TRUE) {
+    if (!(is.function(x.label.transform) &&
+          is.function(y.label.transform) &&
+          is.function(colour.transform))) {
+      stop("'transform' arguments must be function defintions")
+    }
+
+    # for performance
+    if (!grepl("repel$", geom) && label.fill == "") {
+      label.fill <- NA_character_
+    }
+
     ggplot2::layer(
       stat = StatLabelPeaks, data = data, mapping = mapping, geom = geom,
       position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -293,7 +304,18 @@ stat_label_valleys <- function(mapping = NULL,
                                na.rm = TRUE,
                                show.legend = FALSE,
                                inherit.aes = TRUE) {
-    ggplot2::layer(
+  if (!(is.function(x.label.transform) &&
+        is.function(y.label.transform) &&
+        is.function(colour.transform))) {
+    stop("'transform' arguments must be function defintions")
+  }
+
+  # for performance
+  if (!grepl("repel$", geom) && label.fill == "") {
+    label.fill <- NA_character_
+  }
+
+  ggplot2::layer(
     stat = StatLabelValleys, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(span = span,

@@ -163,6 +163,12 @@ stat_peaks <- function(mapping = NULL,
                        na.rm = FALSE,
                        show.legend = FALSE,
                        inherit.aes = TRUE) {
+  if (!(is.function(x.label.transform) &&
+        is.function(y.label.transform) &&
+        is.function(colour.transform))) {
+    stop("'transform' arguments must be function defintions")
+  }
+
   ggplot2::layer(
     stat = StatPeaks, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -269,6 +275,12 @@ stat_valleys <- function(mapping = NULL,
                          na.rm = FALSE,
                          show.legend = FALSE,
                          inherit.aes = TRUE) {
+  if (!(is.function(x.label.transform) &&
+        is.function(y.label.transform) &&
+        is.function(colour.transform))) {
+    stop("'transform' arguments must be function defintions")
+  }
+
   ggplot2::layer(
     stat = StatValleys, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
