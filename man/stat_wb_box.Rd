@@ -15,7 +15,6 @@ stat_wb_box(
   ypos.mult = 1.07,
   ypos.fixed = NULL,
   box.height = 0.06,
-  w.band.transform = I,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE

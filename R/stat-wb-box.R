@@ -105,7 +105,6 @@ stat_wb_box <- function(mapping = NULL,
                         ypos.mult = 1.07,
                         ypos.fixed = NULL,
                         box.height = 0.06,
-                        w.band.transform = I,
                         na.rm = FALSE,
                         show.legend = NA,
                         inherit.aes = TRUE) {
@@ -117,7 +116,6 @@ stat_wb_box <- function(mapping = NULL,
                   ypos.mult = ypos.mult,
                   ypos.fixed = ypos.fixed,
                   box.height = box.height,
-                  w.band.transform = w.band.transform,
                   na.rm = na.rm,
                   ...)
   )

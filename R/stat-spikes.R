@@ -1,7 +1,7 @@
 #' Find spikes
 #'
-#' \code{stat_spikes} finds at which x positions spikes are located. Spikes
-#' can be either upwards or downwards from the baseline.
+#' \code{stat_spikes} finds at which \code{x} positions spikes are located.
+#' Spikes can be either upwards or downwards from the baseline.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'    \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be set

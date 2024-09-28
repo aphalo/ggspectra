@@ -69,6 +69,10 @@ stat_color <- function(mapping = NULL,
                        na.rm = FALSE,
                        show.legend = FALSE,
                        inherit.aes = TRUE) {
+  if (!is.function(x.colour.transform)) {
+    stop("'transform' arguments must be function defintions")
+  }
+
   ggplot2::layer(
     stat = StatColor, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
