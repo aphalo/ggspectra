@@ -9,10 +9,10 @@ geom_spct(
   data = NULL,
   stat = "identity",
   position = "identity",
+  ...,
   na.rm = FALSE,
   show.legend = NA,
-  inherit.aes = TRUE,
-  ...
+  inherit.aes = TRUE
 )
 }
 \arguments{
@@ -29,6 +29,10 @@ as a string.}
 \item{position}{Position adjustment, either as a string, or the result of a
 call to a position adjustment function.}
 
+\item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This
+can include aesthetics whose values you want to set, not map. See
+\code{\link[ggplot2]{layer}} for more details.}
+
 \item{na.rm}{If FALSE (the default), removes missing values with a warning.
 If TRUE silently removes missing values.}
 
@@ -40,10 +44,6 @@ never includes, and \code{TRUE} always includes.}
 than combining with them. This is most useful for helper functions that
 define both data and aesthetics and shouldn't inherit behaviour from the
 default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
-
-\item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This
-can include aesthetics whose values you want to set, not map. See
-\code{\link[ggplot2]{layer}} for more details.}
 }
 \description{
 For each continuous x value, \code{geom_spct} displays a y interval.

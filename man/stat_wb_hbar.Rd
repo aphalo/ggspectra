@@ -69,7 +69,8 @@ A data frame with one row for each waveband object in the argument to
 area under a spectral curve and also the mean expressed per nanaometre of
 wavelength for each waveband in the input. Sets suitable default aesthetics
 for geoms "errorbarh" and "hline" from 'ggplot', and "linerangeh",
-and "errorbarh" from 'ggstance'.
+and "errorbarh" from 'ggstance'. \strong{\code{x}-scale transformations and
+axis flipping are currently not supported}.
 }
 \note{
 If the argument passed to \code{w.band} is a BSWF it is silently

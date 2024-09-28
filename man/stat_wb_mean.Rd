@@ -79,10 +79,10 @@ to \code{w.band}. Wavebeand outside the range of the spectral data are
 trimmed or discarded.
 }
 \description{
-\code{stat_wb_mean} computes means under a curve. It first integrates the
-  area under a spectral curve and also the mean expressed per nanaometre of
-  wavelength for each waveband in the input. Sets suitable default aesthetics
-  for "rect", "hline", "vline", "text" and "label" geoms.
+\code{stat_wb_mean} computes mean spectral irradiance under a curve for each
+waveband in the input. Sets suitable default aesthetics for "rect", "hline",
+"vline", "text" and "label" geoms. \strong{\code{x}-scale transformations
+and axis flipping are currently not supported}.
 }
 \section{Computed variables}{
 

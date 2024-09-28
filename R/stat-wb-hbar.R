@@ -4,7 +4,8 @@
 #' area under a spectral curve and also the mean expressed per nanaometre of
 #' wavelength for each waveband in the input. Sets suitable default aesthetics
 #' for geoms "errorbarh" and "hline" from 'ggplot', and "linerangeh",
-#' and "errorbarh" from 'ggstance'.
+#' and "errorbarh" from 'ggstance'. \strong{\code{x}-scale transformations and
+#' axis flipping are currently not supported}.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs

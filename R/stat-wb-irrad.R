@@ -1,6 +1,10 @@
 #' Integrate irradiance for wavebands.
 #'
-#' \code{stat_wb_irrad} computes areas under a curve.
+#' \code{stat_wb_irrad} integrates the area under a spectral irradiance curve,
+#' yielding energy or photon irradiance. The range(s) of wavelengths to
+#' integrate are set with a list of \code{waveband} objects.
+#' \strong{\code{x}-scale transformations and axis flipping are currently not
+#' supported}.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs

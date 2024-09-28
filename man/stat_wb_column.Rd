@@ -64,7 +64,8 @@ trimmed or discarded.
 \code{stat_wb_column} computes means under a curve. It first integrates the
   area under a spectral curve and also the mean expressed per nanaometre of
   wavelength for each waveband in the input. Sets suitable default aesthetics
-  for "rect" geom.
+  for \code{geom_rect()}. \strong{\code{x}-scale transformations and axis
+  flipping are currently not supported}.
 }
 \note{
 If the argument passed to \code{w.band} is a BSWF it is silently

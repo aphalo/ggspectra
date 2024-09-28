@@ -3,7 +3,8 @@
 #' \code{stat_wb_column} computes means under a curve. It first integrates the
 #'   area under a spectral curve and also the mean expressed per nanaometre of
 #'   wavelength for each waveband in the input. Sets suitable default aesthetics
-#'   for "rect" geom.
+#'   for \code{geom_rect()}. \strong{\code{x}-scale transformations and axis
+#'   flipping are currently not supported}.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs

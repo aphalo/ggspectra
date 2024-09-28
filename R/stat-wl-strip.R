@@ -1,30 +1,33 @@
 #' Calculate colours from wavelength.
 #'
-#' \code{stat_wl_strip} computes color definitions according to human vision.
+#' \code{stat_wl_strip} computes color definitions according to human vision and
+#' by default plots a narrow, guide-like colour gradient strip based on
+#' wavelength. \strong{\code{x}-scale transformations and axis flipping are
+#' currently not supported}.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
-#'    \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be set
-#'    at the layer level if you are overriding the plot defaults.
+#'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be
+#'   set at the layer level if you are overriding the plot defaults.
 #' @param data A layer specific dataset - only needed if you want to override
-#'    the plot defaults.
-#' @param geom The geometric object to use display the data
-#' @param position The position adjustment to use for overlapping points
-#'    on this layer
+#'   the plot defaults.
+#' @param geom The geometric object to use display the data.
+#' @param position The position adjustment to use for overlapping points on this
+#'   layer.
 #' @param show.legend logical. Should this layer be included in the legends?
-#'   \code{NA}, the default, includes if any aesthetics are mapped.
-#'   \code{FALSE} never includes, and \code{TRUE} always includes.
-#' @param inherit.aes If \code{FALSE}, overrides the default aesthetics,
-#'   rather than combining with them. This is most useful for helper functions
-#'   that define both data and aesthetics and shouldn't inherit behaviour from
-#'   the default plot specification, e.g. \code{\link[ggplot2]{borders}}.
-#' @param ... other arguments passed on to \code{\link[ggplot2]{layer}}. This can
-#'   include aesthetics whose values you want to set, not map. See
+#'   \code{NA}, the default, includes if any aesthetics are mapped. \code{FALSE}
+#'   never includes, and \code{TRUE} always includes.
+#' @param inherit.aes If \code{FALSE}, overrides the default aesthetics, rather
+#'   than combining with them. This is most useful for helper functions that
+#'   define both data and aesthetics and shouldn't inherit behaviour from the
+#'   default plot specification, e.g. \code{\link[ggplot2]{borders}}.
+#' @param ... other arguments passed on to \code{\link[ggplot2]{layer}}. This
+#'   can include aesthetics whose values you want to set, not map. See
 #'   \code{\link[ggplot2]{layer}} for more details.
-#' @param na.rm	a logical value indicating whether NA values should be
-#'   stripped before the computation proceeds.
+#' @param na.rm	a logical value indicating whether NA values should be stripped
+#'   before the computation proceeds.
 #' @param w.band waveband object or a list of such objects or NULL.
-#' @param length.out The number of steps to use to simulate a continuous
-#'   range of colours when w.band == NULL.
+#' @param length.out The number of steps to use to simulate a continuous range
+#'   of colours when w.band == NULL.
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
 #'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #'
@@ -65,12 +68,15 @@
 #' @examples
 #'
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
-#' ggplot(sun.spct) + geom_line() +
+#' ggplot(sun.spct) +
+#'   geom_line() +
 #'   stat_wl_strip(ymax = -0.02, ymin = -0.04) +
 #'   scale_fill_identity()
 #'
 #' # on some graphic devices the output may show spurious vertical lines
-#' ggplot(sun.spct) + wl_guide(alpha = 0.33, color = NA) + geom_line()
+#' ggplot(sun.spct) +
+#'   wl_guide(alpha = 0.33, color = NA) +
+#'   geom_line()
 #'
 #' @export
 #' @family stats functions
@@ -133,16 +139,16 @@ StatColorGuide <-
 #'
 wl_guide <- function(mapping = NULL,
                      data = NULL,
+                     position = "identity",
+                     ...,
                      chroma.type = "CMF",
                      w.band = NULL,
                      length.out = 150,
                      ymin = -Inf,
                      ymax = Inf,
-                     position = "identity",
                      na.rm = FALSE,
                      show.legend = FALSE,
-                     inherit.aes = TRUE,
-                     ...) {
+                     inherit.aes = TRUE) {
   list(stat_wl_strip(mapping = mapping,
                      data = data,
                      geom = "rect",

@@ -78,11 +78,14 @@ to \code{w.band}. Wavebeand outside the range of the spectral data are
 trimmed or discarded.
 }
 \description{
-\code{stat_wb_contribution} computes means under a curve. It first integrates the
-  area under a spectral curve and also the mean expressed per nanaometre of
-  wavelength for each waveband in the input. Sets suitable default aesthetics
-  for "rect", "hline", "vline", "text" and "label" geoms displaying "contributions"
-  per waveband to the total of the spectral integral.
+\code{stat_wb_contribution} integrates the area under a spectral curve. It
+first integrates the area under the curve for each waveband and for the whole
+curve and then expresses the integral for each band as a relative
+contribution to the area under the whole spectral curve. Sets suitable
+default aesthetics for "rect", "hline", "vline", "text" and "label" geoms
+displaying "contributions" per waveband to the total of the spectral
+integral. \strong{\code{x}-scale transformations and axis flipping are
+currently not supported}.
 }
 \section{Computed variables}{
 

@@ -67,9 +67,10 @@ to \code{w.band}. Wavebeand outside the range of the spectral data are
 trimmed or discarded.
 }
 \description{
-\code{stat_wb_label} computes computes the center of a waveband. Sets
-suitable default aesthetics for "text" and "label"
-geoms displaying "boundaries" and "names" of wavebands.
+\code{stat_wb_label} computes the center of a waveband. Sets suitable default
+aesthetics for "text" and "label" geoms displaying "boundaries" and "names"
+of wavebands. \strong{\code{x}-scale transformations and axis flipping are
+currently not supported}.
 }
 \note{
 This stat uses a panel function and ignores grouping as it is meant to

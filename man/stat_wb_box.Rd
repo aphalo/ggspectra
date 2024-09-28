@@ -15,6 +15,7 @@ stat_wb_box(
   ypos.mult = 1.07,
   ypos.fixed = NULL,
   box.height = 0.06,
+  w.band.transform = I,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -73,12 +74,13 @@ trimmed or discarded.
 \description{
 \code{stat_wb_box} plots boxes corresponding to wavebands, by default located
 slightly above the peak of the spectrum. Sets suitable default aesthetics for
-"rect" geom.
+\code{geom_rect()}. \strong{\code{x}-scale transformations and axis
+  flipping are currently not supported}.
 }
 \note{
 This stat uses a panel function and ignores grouping as it is meant to
-  be used for annotations.The value returned as default value for \code{y} is
-  based on the y-range of spectral values for the whole data set.
+  be used for annotations. The value returned as default value for \code{y}
+  is based on the y-range of spectral values for the whole data set.
 }
 \section{Computed variables}{
 

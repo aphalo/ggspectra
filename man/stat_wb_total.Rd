@@ -78,11 +78,10 @@ to \code{w.band}. Wavebeand outside the range of the spectral data are
 trimmed or discarded.
 }
 \description{
-\code{stat_wb_total} computes integral under a curve. It first integrates the
-  area under a spectral curve and also the mean expressed per nanaometre of
-  wavelength for each waveband in the input. Sets suitable default aesthetics
-  for "rect", "hline", "vline", "text" and "label" geoms displaying "totals"
-  per waveband.
+\code{stat_wb_total} computes integral under a curve. Sets suitable default
+aesthetics for "rect", "hline", "vline", "text" and "label" geoms displaying
+"totals" per waveband. \strong{\code{x}-scale transformations and axis
+flipping are currently not supported}.
 }
 \section{Computed variables}{
 

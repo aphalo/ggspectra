@@ -1,10 +1,11 @@
 #' Integrate ranges under spectral curve.
 #'
-#' \code{stat_wb_relative} computes means under a curve. It first integrates the
-#'   area under a spectral curve and also the mean expressed per nanaometre of
-#'   wavelength for each waveband in the input. Sets suitable default aesthetics
-#'   for "rect", "hline", "vline", "text" and "label" geoms displaying
-#'   values per waveband "relative" to the sum of the wavebands.
+#' \code{stat_wb_relative} computes relative-irradiances under a curve. It first
+#' integrates the area under the spectral curve for each waveband in the input,
+#' and expresses these irradianses relative to their sum. Sets suitable default
+#' aesthetics for "rect", "hline", "vline", "text" and "label" geoms.
+#' \strong{\code{x}-scale transformations and axis flipping are currently not
+#' supported}.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs

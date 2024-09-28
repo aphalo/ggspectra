@@ -1,8 +1,9 @@
 #' Label ranges under spectral curve.
 #'
-#' \code{stat_wb_label} computes computes the center of a waveband. Sets
-#' suitable default aesthetics for "text" and "label"
-#' geoms displaying "boundaries" and "names" of wavebands.
+#' \code{stat_wb_label} computes the center of a waveband. Sets suitable default
+#' aesthetics for "text" and "label" geoms displaying "boundaries" and "names"
+#' of wavebands. \strong{\code{x}-scale transformations and axis flipping are
+#' currently not supported}.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs
