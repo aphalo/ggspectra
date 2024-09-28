@@ -11,18 +11,27 @@
 Additional annotations, stats, geoms and scales for plotting "light" spectra with 'ggplot2', together with specializations of ggplot() and autoplot() methods for spectral data and waveband definitions stored in objects of classes defined in package 'photobiology'. Part of the 'r4photobiology' suite, Aphalo P. J. (2015) \doi{10.19232/uv4pb.2015.1.14}.
 }
 \details{
-Package `ggspectra` provides a set of stats, geoms and methods
-extending packages `ggplot2` and `photobiology`. They easy the task of
-plotting radiation-related spectra and of annotating the resulting plots with
-labels and summary quantities derived from the spectral data.
+Package `ggspectra` provides a set of layer functions and
+  \code{autoplot()} methods extending packages `ggplot2` and `photobiology`.
+  The \code{autoplot()} methods specialised for objects of classes defined in
+  package 'photobiology' facilitate in many respects the plotting of spectral
+  data. The \code{ggplot()} methods specialised for objects of classes
+  defined in package 'photobiology' combined with the new layer functions and
+  scales easy the task of flexibly plotting radiation-related spectra and of
+  annotating the resulting plots.
 
-Plot methods automate in many respects the plotting of spectral data.
-'ggplot2' compatible statistics make the addition of labels or plotting of
-subject-area specific summaries possible as well as the addition of labels
-and wvaelength-based colour to plots easy. Available summaries are most of
-those relevant to photobiology. However, many of the functions in the package
-are more generaly useful for plotting UV, VIS and NIR spectra of light
-emission, transmittance, reflectance, absorptance, and responses.
+  \strong{These methods, layer functions and scales are
+specialized and work only with certain types of data and ways of expressing
+physical quantities. Most importantly, all statistics expect the
+values mapped to the \code{x} aesthetic to be wavelengths expressed in
+nanometres (nm), which is ensured when the data are stored in data objects
+of classes defined in package 'photobiology'. The support for scale transforms
+is manual and only partial. Flipping is not supported.}
+
+Although originally aimed at plots relevant to photobiology, many
+of the functions in the package are also useful for plotting other UV, VIS
+and NIR spectra of light emission, transmittance, reflectance, absorptance,
+and responses.
 
 The available summary quantities are both simple statistical summaries and
 response-weighted summaries. Simple derived quantities represent summaries of a
@@ -31,15 +40,14 @@ based units. Derived biologically effective quantities are used to quantify
 the effect of radiation on different organisms or processes within organisms.
 These effects can range from damage to perception of informational light
 signals. Additional features of spectra may be important and worthwhile
-annotating in plots. Of these, local maxima (peaks) and minima (valleys)
-present in spectral data can also be annotated with statistics made available
-by the 'ggspectra' package.
+annotating in plots. Of these, local maxima (peaks), minima (valleys) and spikes
+present in spectral data can also be annotated with statistics from 'ggspectra'.
 
 Package 'ggspectra' is useful solely for plotting spectral data as most
-functions depend on the x aesthetic being mapped to a variable containing
+functions depend on the \code{x} aesthetic being mapped to a variable containing
 wavelength values expressed in nanometres. It works well together with
-some other extensions to package 'ggplot2' such as packages 'ggrepel' and
-'cowplot'.
+many other extensions to package 'ggplot2' such as packages 'ggrepel',
+'gganimate' and 'cowplot'.
 
 This package is part of a suite of R packages for photobiological
 calculations described at the
@@ -54,19 +62,24 @@ compatible with earlier versions of 'ggplot2'.
 
 library(photobiologyWavebands)
 
-ggplot(sun.spct) + geom_line() + stat_peaks(span = NULL)
+ggplot(sun.spct) +
+  geom_line() +
+  stat_peaks(span = NULL)
 
-ggplot(sun.spct, aes(w.length, s.e.irrad)) + geom_line() +
+ggplot(sun.spct, aes(w.length, s.e.irrad)) +
+  geom_line() +
   stat_peaks(span = 21, geom = "point", colour = "red") +
   stat_peaks(span = 51, geom = "text", colour = "red", vjust = -0.3,
              label.fmt = "\%3.0f nm")
 
 ggplot(polyester.spct, range = UV()) + geom_line()
 
-plot(sun.spct)
+autoplot(sun.spct)
 
-plot(polyester.spct, UV_bands(), range = UV(),
-     annotations = c("=", "segments", "labels"))
+autoplot(polyester.spct,
+         UV_bands(),
+         range = UV(),
+         annotations = c("=", "segments", "labels"))
 
 }
 \references{

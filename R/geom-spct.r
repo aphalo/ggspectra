@@ -41,9 +41,14 @@
 #' ggplot(sun.spct) + geom_spct()
 #'
 #' @export
-geom_spct <- function(mapping = NULL, data = NULL, stat = "identity",
-                      position = "identity", na.rm = FALSE, show.legend = NA,
-                      inherit.aes = TRUE, ...) {
+geom_spct <- function(mapping = NULL,
+                      data = NULL,
+                      stat = "identity",
+                      position = "identity",
+                      ...,
+                      na.rm = FALSE,
+                      show.legend = NA,
+                      inherit.aes = TRUE) {
   layer(
     data = data,
     mapping = mapping,

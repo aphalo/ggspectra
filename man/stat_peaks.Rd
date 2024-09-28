@@ -22,7 +22,7 @@ stat_peaks(
   y.label.fmt = label.fmt,
   x.label.transform = I,
   y.label.transform = I,
-  colour.transform = x.label.transform,
+  x.colour.transform = x.label.transform,
   na.rm = FALSE,
   show.legend = FALSE,
   inherit.aes = TRUE
@@ -45,7 +45,7 @@ stat_valleys(
   y.label.fmt = label.fmt,
   x.label.transform = I,
   y.label.transform = I,
-  colour.transform = x.label.transform,
+  x.colour.transform = x.label.transform,
   na.rm = FALSE,
   show.legend = FALSE,
   inherit.aes = TRUE
@@ -98,8 +98,9 @@ fitting. Currently only spline interpolation is implemented.}
 definition for construction of character strings labels with function
 \code{\link{sprintf}} from \code{x} and/or \code{y} values.}
 
-\item{x.label.transform, y.label.transform, colour.transform}{function Applied
-to \code{x} or \code{y} values when constructing the character labels.}
+\item{x.label.transform, y.label.transform, x.colour.transform}{function Applied
+to \code{x} or \code{y} values when constructing the character labels or
+computing matching colours.}
 
 \item{na.rm}{a logical value indicating whether NA values should be
 stripped before the computation proceeds.}

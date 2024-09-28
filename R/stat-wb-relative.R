@@ -111,16 +111,21 @@
 #' @export
 #' @family stats functions
 #'
-stat_wb_relative <- function(mapping = NULL, data = NULL, geom = "text",
-                       w.band = NULL,
-                       integral.fun = integrate_xy,
-                       label.mult = 1,
-                       chroma.type = "CMF",
-                       label.fmt = "%1.2f",
-                       ypos.mult = 1.07,
-                       ypos.fixed = NULL,
-                       position = "identity", na.rm = FALSE, show.legend = NA,
-                       inherit.aes = TRUE, ...) {
+stat_wb_relative <- function(mapping = NULL,
+                             data = NULL,
+                             geom = "text",
+                             position = "identity",
+                             ...,
+                             w.band = NULL,
+                             integral.fun = integrate_xy,
+                             label.mult = 1,
+                             chroma.type = "CMF",
+                             label.fmt = "%1.2f",
+                             ypos.mult = 1.07,
+                             ypos.fixed = NULL,
+                             na.rm = FALSE,
+                             show.legend = NA,
+                             inherit.aes = TRUE) {
   ggplot2::layer(
     stat = StatWbRelative, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,

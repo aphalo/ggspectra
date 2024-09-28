@@ -8,17 +8,20 @@ stat_find_wls(
   mapping = NULL,
   data = NULL,
   geom = "point",
+  position = "identity",
+  ...,
   target = "half.maximum",
   interpolate = TRUE,
   chroma.type = "CMF",
   label.fmt = "\%.3g",
   x.label.fmt = label.fmt,
   y.label.fmt = label.fmt,
-  position = "identity",
+  x.label.transform = I,
+  y.label.transform = I,
+  x.colour.transform = x.label.transform,
   na.rm = FALSE,
   show.legend = FALSE,
-  inherit.aes = TRUE,
-  ...
+  inherit.aes = TRUE
 )
 }
 \arguments{
@@ -30,6 +33,13 @@ set at the layer level if you are overriding the plot defaults.}
 the plot defaults.}
 
 \item{geom}{The geometric object to use display the data}
+
+\item{position}{The position adjustment to use for overlapping points on this
+layer}
+
+\item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This
+can include aesthetics whose values you want to set, not map. See
+\code{\link[ggplot2]{layer}} for more details.}
 
 \item{target}{numeric vector indicating the spectral quantity values for
 which wavelengths are to be searched and interpolated if need. The
@@ -44,19 +54,13 @@ between wavelength values stradling the target.}
 \item{chroma.type}{character one of "CMF" (color matching function) or "CC"
 (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.}
 
-\item{label.fmt}{character  string giving a format definition for converting
-values into character strings by means of function \code{\link{sprintf}}.}
+\item{label.fmt, x.label.fmt, y.label.fmt}{character  strings giving a format
+definition for construction of character strings labels with function
+\code{\link{sprintf}} from \code{x} and/or \code{y} values.}
 
-\item{x.label.fmt}{character  string giving a format definition for
-converting $x$-values into character strings by means of function
-\code{\link{sprintf}}.}
-
-\item{y.label.fmt}{character  string giving a format definition for
-converting $y$-values into character strings by means of function
-\code{\link{sprintf}}.}
-
-\item{position}{The position adjustment to use for overlapping points on this
-layer}
+\item{x.label.transform, y.label.transform, x.colour.transform}{function Applied
+to \code{x} or \code{y} values when constructing the character labels or
+computing matching colours.}
 
 \item{na.rm}{a logical value indicating whether NA values should be stripped
 before the computation proceeds.}
@@ -69,10 +73,6 @@ never includes, and \code{TRUE} always includes.}
 than combining with them. This is most useful for helper functions that
 define both data and aesthetics and shouldn't inherit behaviour from the
 default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
-
-\item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This
-can include aesthetics whose values you want to set, not map. See
-\code{\link[ggplot2]{layer}} for more details.}
 }
 \value{
 A data frame with one row for each match to \code{target} found in
@@ -124,9 +124,12 @@ These stats work nicely together with geoms \code{geom_text_repel} and
 \examples{
 
 # ggplot() methods for spectral objects set a default mapping for x and y.
-ggplot(yellow_gel.spct) + geom_line() +
+ggplot(yellow_gel.spct) +
+  geom_line() +
   stat_find_wls(target = c(0.25, 0.5, 0.75))
-ggplot(yellow_gel.spct) + geom_line() +
+
+ggplot(yellow_gel.spct) +
+  geom_line() +
   stat_find_wls(target = "half.maximum", geom = "point", colour = "red") +
   stat_find_wls(target = "half.maximum", geom = "text", colour = "red",
              hjust = 1.1, label.fmt = "\%3.0f nm")

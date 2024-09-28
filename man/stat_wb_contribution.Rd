@@ -8,6 +8,8 @@ stat_wb_contribution(
   mapping = NULL,
   data = NULL,
   geom = "text",
+  position = "identity",
+  ...,
   w.band = NULL,
   integral.fun = integrate_xy,
   label.mult = 1,
@@ -15,11 +17,9 @@ stat_wb_contribution(
   label.fmt = "\%1.2f",
   ypos.mult = 1.07,
   ypos.fixed = NULL,
-  position = "identity",
   na.rm = FALSE,
   show.legend = NA,
-  inherit.aes = TRUE,
-  ...
+  inherit.aes = TRUE
 )
 }
 \arguments{
@@ -31,6 +31,13 @@ to be set at the layer level if you are overriding the plot defaults.}
 the plot defaults.}
 
 \item{geom}{The geometric object to use display the data}
+
+\item{position}{The position adjustment to use for overlapping points on this
+layer}
+
+\item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This
+can include aesthetics whose values you want to set, not map. See
+\code{\link[ggplot2]{layer}} for more details.}
 
 \item{w.band}{a waveband object or a list of waveband objects or numeric
 vector of at least length two.}
@@ -53,9 +60,6 @@ y-integral values into character strings by means of function
 \item{ypos.fixed}{numeric If not \code{NULL} used a constant value returned
 in \code{y}.}
 
-\item{position}{The position adjustment to use for overlapping points on this
-layer}
-
 \item{na.rm}{a logical value indicating whether NA values should be stripped
 before the computation proceeds.}
 
@@ -67,10 +71,6 @@ never includes, and \code{TRUE} always includes.}
 than combining with them. This is most useful for helper functions that
 define both data and aesthetics and shouldn't inherit behaviour from the
 default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
-
-\item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This
-can include aesthetics whose values you want to set, not map. See
-\code{\link[ggplot2]{layer}} for more details.}
 }
 \value{
 A data frame with one row for each waveband object in the argument

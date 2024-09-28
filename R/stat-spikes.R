@@ -29,12 +29,12 @@
 #'   spikes.
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
 #'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
-#' @param label.fmt character  string giving a format definition for converting
-#'   values into character strings by means of function \code{\link{sprintf}}.
-#' @param x.label.fmt character  string giving a format definition for converting
-#'   $x$-values into character strings by means of function \code{\link{sprintf}}.
-#' @param y.label.fmt character  string giving a format definition for converting
-#'   $y$-values into character strings by means of function \code{\link{sprintf}}.
+#' @param label.fmt,x.label.fmt,y.label.fmt character  strings giving a format
+#'   definition for construction of character strings labels with function
+#'   \code{\link{sprintf}} from \code{x} and/or \code{y} values.
+#' @param x.label.transform,y.label.transform,x.colour.transform function Applied
+#'   to \code{x} or \code{y} values when constructing the character labels or
+#'   computing matching colours.
 #'
 #' @return A data frame with one row for each peak (or valley) found in the
 #'   data.
@@ -136,9 +136,18 @@ stat_spikes <- function(mapping = NULL,
                         label.fmt = "%.3g",
                         x.label.fmt = label.fmt,
                         y.label.fmt = label.fmt,
+                        x.label.transform = I,
+                        y.label.transform = I,
+                        x.colour.transform = x.label.transform,
                         na.rm = FALSE,
                         show.legend = FALSE,
                         inherit.aes = TRUE) {
+  if (!(is.function(x.label.transform) &&
+        is.function(y.label.transform) &&
+        is.function(x.colour.transform))) {
+    stop("'transform' arguments must be function defintions")
+  }
+
   ggplot2::layer(
     stat = StatSpikes, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -148,6 +157,9 @@ stat_spikes <- function(mapping = NULL,
                   label.fmt = label.fmt,
                   x.label.fmt = x.label.fmt,
                   y.label.fmt = y.label.fmt,
+                  x.label.transform = x.label.transform,
+                  y.label.transform = y.label.transform,
+                  x.colour.transform = x.colour.transform,
                   na.rm = na.rm,
                   ...)
   )
@@ -166,7 +178,10 @@ StatSpikes <-
                                             chroma.type,
                                             label.fmt,
                                             x.label.fmt,
-                                            y.label.fmt) {
+                                            y.label.fmt,
+                                            x.label.transform,
+                                            y.label.transform,
+                                            x.colour.transform) {
                      force(z.threshold)
                      force(max.spike.width)
                      spikes.df <-
@@ -175,11 +190,15 @@ StatSpikes <-
                                                       z.threshold = z.threshold,
                                                       max.spike.width = max.spike.width),
                             , drop = FALSE]
-                     spikes.df[["x.label"]] <- sprintf(x.label.fmt, spikes.df[["x"]])
-                     spikes.df[["y.label"]] <- sprintf(y.label.fmt, spikes.df[["y"]])
+                     spikes.df[["x.label"]] <-
+                       sprintf(x.label.fmt, x.label.transform(spikes.df[["x"]]))
+                     spikes.df[["y.label"]] <-
+                       sprintf(y.label.fmt, y.label.transform(spikes.df[["y"]]))
                      spikes.df[["wl.color"]] <-
-                       photobiology::fast_color_of_wl(spikes.df[["x"]], chroma.type = chroma.type)
-                     spikes.df[["BW.color"]] <-  black_or_white(spikes.df[["wl.color"]])
+                       photobiology::fast_color_of_wl(x.colour.transform(spikes.df[["x"]]),
+                                                      chroma.type = chroma.type)
+                     spikes.df[["BW.color"]] <-
+                       black_or_white(spikes.df[["wl.color"]])
                      spikes.df
                    },
                    default_aes = ggplot2::aes(label = after_stat(x.label),

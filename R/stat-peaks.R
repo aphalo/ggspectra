@@ -46,8 +46,9 @@
 #' @param label.fmt,x.label.fmt,y.label.fmt character  strings giving a format
 #'   definition for construction of character strings labels with function
 #'   \code{\link{sprintf}} from \code{x} and/or \code{y} values.
-#' @param x.label.transform,y.label.transform,colour.transform function Applied
-#'   to \code{x} or \code{y} values when constructing the character labels.
+#' @param x.label.transform,y.label.transform,x.colour.transform function Applied
+#'   to \code{x} or \code{y} values when constructing the character labels or
+#'   computing matching colours.
 #'
 #' @return A data frame with one row for each peak (or valley) found in the
 #'   data.
@@ -159,13 +160,13 @@ stat_peaks <- function(mapping = NULL,
                        y.label.fmt = label.fmt,
                        x.label.transform = I,
                        y.label.transform = I,
-                       colour.transform = x.label.transform,
+                       x.colour.transform = x.label.transform,
                        na.rm = FALSE,
                        show.legend = FALSE,
                        inherit.aes = TRUE) {
   if (!(is.function(x.label.transform) &&
         is.function(y.label.transform) &&
-        is.function(colour.transform))) {
+        is.function(x.colour.transform))) {
     stop("'transform' arguments must be function defintions")
   }
 
@@ -183,7 +184,7 @@ stat_peaks <- function(mapping = NULL,
                   y.label.fmt = y.label.fmt,
                   x.label.transform = x.label.transform,
                   y.label.transform = y.label.transform,
-                  colour.transform = colour.transform,
+                  x.colour.transform = x.colour.transform,
                   na.rm = na.rm,
                   ...)
   )
@@ -222,7 +223,7 @@ StatPeaks <-
                                             y.label.fmt,
                                             x.label.transform,
                                             y.label.transform,
-                                            colour.transform) {
+                                            x.colour.transform) {
                      peaks.df <-
                        photobiology::peaks(data,
                                            x.var.name = "x",
@@ -238,7 +239,7 @@ StatPeaks <-
                      peaks.df[["y.label"]] <-
                        sprintf(y.label.fmt, y.label.transform(peaks.df[["y"]]))
                      peaks.df[["wl.color"]] <-
-                       photobiology::fast_color_of_wl(colour.transform(peaks.df[["x"]]),
+                       photobiology::fast_color_of_wl(x.colour.transform(peaks.df[["x"]]),
                                                       chroma.type = chroma.type)
                      peaks.df[["BW.color"]] <-
                        black_or_white(peaks.df[["wl.color"]])
@@ -271,13 +272,13 @@ stat_valleys <- function(mapping = NULL,
                          y.label.fmt = label.fmt,
                          x.label.transform = I,
                          y.label.transform = I,
-                         colour.transform = x.label.transform,
+                         x.colour.transform = x.label.transform,
                          na.rm = FALSE,
                          show.legend = FALSE,
                          inherit.aes = TRUE) {
   if (!(is.function(x.label.transform) &&
         is.function(y.label.transform) &&
-        is.function(colour.transform))) {
+        is.function(x.colour.transform))) {
     stop("'transform' arguments must be function defintions")
   }
 
@@ -295,7 +296,7 @@ stat_valleys <- function(mapping = NULL,
                   y.label.fmt = y.label.fmt,
                   x.label.transform = x.label.transform,
                   y.label.transform = y.label.transform,
-                  colour.transform = colour.transform,
+                  x.colour.transform = x.colour.transform,
                   na.rm = na.rm,
                   ...)
   )
@@ -320,7 +321,7 @@ StatValleys <-
                                             y.label.fmt,
                                             x.label.transform,
                                             y.label.transform,
-                                            colour.transform) {
+                                            x.colour.transform) {
                      valleys.df <-
                        photobiology::valleys(data,
                                              x.var.name = "x",
@@ -336,7 +337,7 @@ StatValleys <-
                      valleys.df[["y.label"]] <-
                        sprintf(y.label.fmt, y.label.transform(valleys.df[["y"]]))
                      valleys.df[["wl.color"]] <-
-                       photobiology::fast_color_of_wl(colour.transform(valleys.df[["x"]]),
+                       photobiology::fast_color_of_wl(x.colour.transform(valleys.df[["x"]]),
                                                       chroma.type = chroma.type)
                      valleys.df[["BW.color"]] <-
                        black_or_white(valleys.df[["wl.color"]])

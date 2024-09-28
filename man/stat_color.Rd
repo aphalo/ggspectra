@@ -8,45 +8,49 @@ stat_color(
   mapping = NULL,
   data = NULL,
   geom = "point",
-  chroma.type = "CMF",
   position = "identity",
+  ...,
+  chroma.type = "CMF",
+  x.colour.transform = I,
   na.rm = FALSE,
   show.legend = FALSE,
-  inherit.aes = TRUE,
-  ...
+  inherit.aes = TRUE
 )
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
-\code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be set
-at the layer level if you are overriding the plot defaults.}
+\code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be
+set at the layer level if you are overriding the plot defaults.}
 
 \item{data}{A layer specific dataset - only needed if you want to override
 the plot defaults.}
 
 \item{geom}{The geometric object to use display the data}
 
+\item{position}{The position adjustment to use for overlapping points on this
+layer}
+
+\item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This
+can include aesthetics whose values you want to set, not map. See
+\code{\link[ggplot2]{layer}} for more details.}
+
 \item{chroma.type}{character one of "CMF" (color matching function) or "CC"
 (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.}
 
-\item{position}{The position adjustment to use for overlapping points
-on this layer}
+\item{x.colour.transform}{function Applied to \code{x} values before computing
+matching colours.}
 
-\item{na.rm}{a logical value indicating whether NA values should be
-stripped before the computation proceeds.}
+\item{na.rm}{a logical value indicating whether NA values should be stripped
+before the computation proceeds.}
 
 \item{show.legend}{logical. Should this layer be included in the legends?
-\code{NA}, the default, includes if any aesthetics are mapped.
-\code{FALSE} never includes, and \code{TRUE} always includes.}
+\code{NA}, the default, includes if any aesthetics are mapped. \code{FALSE}
+never includes, and \code{TRUE} always includes.}
 
-\item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
-rather than combining with them. This is most useful for helper functions
-that define both data and aesthetics and shouldn't inherit behaviour from
-the default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
-
-\item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This can
-include aesthetics whose values you want to set, not map. See
-\code{\link[ggplot2]{layer}} for more details.}
+\item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics, rather
+than combining with them. This is most useful for helper functions that
+define both data and aesthetics and shouldn't inherit behaviour from the
+default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 }
 \value{
 The original data frame with a variable with color definitions added.

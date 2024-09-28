@@ -20,7 +20,7 @@ stat_label_peaks(
   y.label.fmt = label.fmt,
   x.label.transform = I,
   y.label.transform = I,
-  colour.transform = x.label.transform,
+  x.colour.transform = x.label.transform,
   label.fill = "",
   na.rm = TRUE,
   show.legend = FALSE,
@@ -42,7 +42,7 @@ stat_label_valleys(
   y.label.fmt = label.fmt,
   x.label.transform = I,
   y.label.transform = I,
-  colour.transform = x.label.transform,
+  x.colour.transform = x.label.transform,
   label.fill = "",
   na.rm = TRUE,
   show.legend = FALSE,
@@ -84,8 +84,9 @@ all other values in its window to be considered a peak. Default: FALSE.}
 definition for construction of character strings labels with function
 \code{\link{sprintf}} from \code{x} and/or \code{y} values.}
 
-\item{x.label.transform, y.label.transform, colour.transform}{function Applied
-to \code{x} or \code{y} values when constructing the character labels.}
+\item{x.label.transform, y.label.transform, x.colour.transform}{function Applied
+to \code{x} or \code{y} values when constructing the character labels or
+computing matching colours.}
 
 \item{label.fill}{character string to use for labels not at peaks or valleys
 being highlighted.}

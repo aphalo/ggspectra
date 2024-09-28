@@ -39,8 +39,9 @@
 #' @param label.fmt,x.label.fmt,y.label.fmt character  strings giving a format
 #'   definition for construction of character strings labels with function
 #'   \code{\link{sprintf}} from \code{x} and/or \code{y} values.
-#' @param x.label.transform,y.label.transform,colour.transform function Applied
-#'   to \code{x} or \code{y} values when constructing the character labels.
+#' @param x.label.transform,y.label.transform,x.colour.transform function Applied
+#'   to \code{x} or \code{y} values when constructing the character labels or
+#'   computing matching colours.
 #' @param label.fill character string to use for labels not at peaks or valleys
 #'   being highlighted.
 #'
@@ -165,14 +166,14 @@ stat_label_peaks <-
            y.label.fmt = label.fmt,
            x.label.transform = I,
            y.label.transform = I,
-           colour.transform = x.label.transform,
+           x.colour.transform = x.label.transform,
            label.fill = "",
            na.rm = TRUE,
            show.legend = FALSE,
            inherit.aes = TRUE) {
     if (!(is.function(x.label.transform) &&
           is.function(y.label.transform) &&
-          is.function(colour.transform))) {
+          is.function(x.colour.transform))) {
       stop("'transform' arguments must be function defintions")
     }
 
@@ -193,7 +194,7 @@ stat_label_peaks <-
                     y.label.fmt = y.label.fmt,
                     x.label.transform = x.label.transform,
                     y.label.transform = y.label.transform,
-                    colour.transform = colour.transform,
+                    x.colour.transform = x.colour.transform,
                     label.fill = label.fill,
                     na.rm = na.rm,
                     ...)
@@ -231,7 +232,7 @@ StatLabelPeaks <-
                                             y.label.fmt,
                                             x.label.transform,
                                             y.label.transform,
-                                            colour.transform,
+                                            x.colour.transform,
                                             label.fill) {
                      if (!is.character(label.fill)) {
                        as.character(label.fill)
@@ -258,7 +259,7 @@ StatLabelPeaks <-
                               label.fill)
                      out.df[["wl.color"]] <-
                        ifelse(out.df[["is_peak"]],
-                              photobiology::fast_color_of_wl(colour.transform(out.df[["x"]]),
+                              photobiology::fast_color_of_wl(x.colour.transform(out.df[["x"]]),
                                                              chroma.type = chroma.type),
                               rgb(1, 1, 1, 0))
                      out.df[["BW.color"]] <-
@@ -299,14 +300,14 @@ stat_label_valleys <- function(mapping = NULL,
                                y.label.fmt = label.fmt,
                                x.label.transform = I,
                                y.label.transform = I,
-                               colour.transform = x.label.transform,
+                               x.colour.transform = x.label.transform,
                                label.fill = "",
                                na.rm = TRUE,
                                show.legend = FALSE,
                                inherit.aes = TRUE) {
   if (!(is.function(x.label.transform) &&
         is.function(y.label.transform) &&
-        is.function(colour.transform))) {
+        is.function(x.colour.transform))) {
     stop("'transform' arguments must be function defintions")
   }
 
@@ -327,7 +328,7 @@ stat_label_valleys <- function(mapping = NULL,
                   y.label.fmt = y.label.fmt,
                   x.label.transform = x.label.transform,
                   y.label.transform = y.label.transform,
-                  colour.transform = colour.transform,
+                  x.colour.transform = x.colour.transform,
                   label.fill = label.fill,
                   na.rm = na.rm,
                   ...)
@@ -351,7 +352,7 @@ StatLabelValleys <-
                                               y.label.fmt,
                                               x.label.transform,
                                               y.label.transform,
-                                              colour.transform,
+                                              x.colour.transform,
                                               label.fill) {
                      if (!is.character(label.fill)) {
                        as.character(label.fill)
@@ -378,7 +379,7 @@ StatLabelValleys <-
                               label.fill)
                      out.df[["wl.color"]] <-
                        ifelse(out.df[["is_valley"]],
-                              photobiology::fast_color_of_wl(colour.transform(out.df[["x"]]),
+                              photobiology::fast_color_of_wl(x.colour.transform(out.df[["x"]]),
                                                              chroma.type = chroma.type),
                               rgb(1, 1, 1, 0))
                      out.df[["BW.color"]] <- ifelse(out.df[["is_valley"]],

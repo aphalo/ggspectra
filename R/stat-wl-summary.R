@@ -76,14 +76,14 @@ stat_wl_summary <-
   function(mapping = NULL,
            data = NULL,
            geom = "text",
+           position = "identity",
+           ...,
            range = NULL,
            integral.fun = integrate_xy,
            label.fmt = "%.3g",
-           position = "identity",
            na.rm = FALSE,
            show.legend = NA,
-           inherit.aes = TRUE,
-           ...) {
+           inherit.aes = TRUE) {
     ggplot2::layer(
     stat = StatWlSummary, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,

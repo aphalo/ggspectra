@@ -97,16 +97,16 @@
 stat_wb_box <- function(mapping = NULL,
                         data = NULL,
                         geom = "rect",
+                        position = "identity",
+                        ...,
                         w.band = NULL,
                         chroma.type = "CMF",
                         ypos.mult = 1.07,
                         ypos.fixed = NULL,
                         box.height = 0.06,
-                        position = "identity",
                         na.rm = FALSE,
                         show.legend = NA,
-                        inherit.aes = TRUE,
-                        ...) {
+                        inherit.aes = TRUE) {
   ggplot2::layer(
     stat = StatWbBox, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,

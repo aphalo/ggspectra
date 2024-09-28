@@ -4,6 +4,13 @@ editor_options:
     wrap: 72
 ---
 
+# ggspectra 0.3.14
+
+- Make the order of parameters of layer functions consistent with those in
+'ggplot2'. This affects partial matching of argument names!
+- Add manual support for scale transformations, needed for label construction
+and matching colour calculations.
+
 # ggspectra 0.3.13
 
 - Revise function `autotitle()` to better support collections of spectra and 

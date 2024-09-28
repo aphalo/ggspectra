@@ -16,6 +16,9 @@ stat_spikes(
   label.fmt = "\%.3g",
   x.label.fmt = label.fmt,
   y.label.fmt = label.fmt,
+  x.label.transform = I,
+  y.label.transform = I,
+  x.colour.transform = x.label.transform,
   na.rm = FALSE,
   show.legend = FALSE,
   inherit.aes = TRUE
@@ -47,14 +50,13 @@ spikes.}
 \item{chroma.type}{character one of "CMF" (color matching function) or "CC"
 (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.}
 
-\item{label.fmt}{character  string giving a format definition for converting
-values into character strings by means of function \code{\link{sprintf}}.}
+\item{label.fmt, x.label.fmt, y.label.fmt}{character  strings giving a format
+definition for construction of character strings labels with function
+\code{\link{sprintf}} from \code{x} and/or \code{y} values.}
 
-\item{x.label.fmt}{character  string giving a format definition for converting
-$x$-values into character strings by means of function \code{\link{sprintf}}.}
-
-\item{y.label.fmt}{character  string giving a format definition for converting
-$y$-values into character strings by means of function \code{\link{sprintf}}.}
+\item{x.label.transform, y.label.transform, x.colour.transform}{function Applied
+to \code{x} or \code{y} values when constructing the character labels or
+computing matching colours.}
 
 \item{na.rm}{a logical value indicating whether NA values should be
 stripped before the computation proceeds.}

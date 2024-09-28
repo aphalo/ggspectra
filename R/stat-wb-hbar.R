@@ -98,14 +98,15 @@
 stat_wb_hbar <- function(mapping = NULL,
                          data = NULL,
                          geom = "errorbarh",
+                         position = "identity",
+                         ...,
                          w.band = NULL,
                          integral.fun = integrate_xy,
                          chroma.type = "CMF",
                          ypos.fixed = NULL,
-                         position = "identity",
                          na.rm = FALSE,
                          show.legend = NA,
-                         inherit.aes = TRUE, ...) {
+                         inherit.aes = TRUE) {
   ggplot2::layer(
     stat = StatWbHbar, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,

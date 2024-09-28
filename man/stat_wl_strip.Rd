@@ -9,14 +9,14 @@ stat_wl_strip(
   mapping = NULL,
   data = NULL,
   geom = "rect",
+  position = "identity",
+  ...,
   w.band = NULL,
   length.out = 150,
   chroma.type = "CMF",
-  position = "identity",
   na.rm = TRUE,
   show.legend = FALSE,
-  inherit.aes = TRUE,
-  ...
+  inherit.aes = TRUE
 )
 
 wl_guide(
@@ -44,6 +44,13 @@ the plot defaults.}
 
 \item{geom}{The geometric object to use display the data}
 
+\item{position}{The position adjustment to use for overlapping points
+on this layer}
+
+\item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This can
+include aesthetics whose values you want to set, not map. See
+\code{\link[ggplot2]{layer}} for more details.}
+
 \item{w.band}{waveband object or a list of such objects or NULL.}
 
 \item{length.out}{The number of steps to use to simulate a continuous
@@ -51,9 +58,6 @@ range of colours when w.band == NULL.}
 
 \item{chroma.type}{character one of "CMF" (color matching function) or "CC"
 (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.}
-
-\item{position}{The position adjustment to use for overlapping points
-on this layer}
 
 \item{na.rm}{a logical value indicating whether NA values should be
 stripped before the computation proceeds.}
@@ -66,10 +70,6 @@ stripped before the computation proceeds.}
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
-
-\item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This can
-include aesthetics whose values you want to set, not map. See
-\code{\link[ggplot2]{layer}} for more details.}
 
 \item{ymin, ymax}{numeric used as aesthetics for plotting the guide.}
 }

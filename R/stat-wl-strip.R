@@ -78,14 +78,14 @@
 stat_wl_strip <- function(mapping = NULL,
                           data = NULL,
                           geom = "rect",
+                          position = "identity",
+                          ...,
                           w.band = NULL,
                           length.out = 150,
                           chroma.type = "CMF",
-                          position = "identity",
                           na.rm = TRUE,
                           show.legend = FALSE,
-                          inherit.aes = TRUE,
-                          ...) {
+                          inherit.aes = TRUE) {
   ggplot2::layer(
     stat = StatColorGuide, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,

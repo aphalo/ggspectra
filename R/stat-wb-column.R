@@ -94,14 +94,14 @@
 stat_wb_column <- function(mapping = NULL,
                            data = NULL,
                            geom = "rect",
+                           position = "identity",
+                           ...,
                            w.band = NULL,
                            integral.fun = integrate_xy,
                            chroma.type = "CMF",
-                           position = "identity",
                            na.rm = FALSE,
                            show.legend = NA,
-                           inherit.aes = TRUE,
-                           ...) {
+                           inherit.aes = TRUE) {
   ggplot2::layer(
     stat = StatWbColumn, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,

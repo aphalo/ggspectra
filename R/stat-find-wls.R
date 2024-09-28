@@ -33,14 +33,12 @@
 #'   between wavelength values stradling the target.
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
 #'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
-#' @param label.fmt character  string giving a format definition for converting
-#'   values into character strings by means of function \code{\link{sprintf}}.
-#' @param x.label.fmt character  string giving a format definition for
-#'   converting $x$-values into character strings by means of function
-#'   \code{\link{sprintf}}.
-#' @param y.label.fmt character  string giving a format definition for
-#'   converting $y$-values into character strings by means of function
-#'   \code{\link{sprintf}}.
+#' @param label.fmt,x.label.fmt,y.label.fmt character  strings giving a format
+#'   definition for construction of character strings labels with function
+#'   \code{\link{sprintf}} from \code{x} and/or \code{y} values.
+#' @param x.label.transform,y.label.transform,x.colour.transform function Applied
+#'   to \code{x} or \code{y} values when constructing the character labels or
+#'   computing matching colours.
 #'
 #' @return A data frame with one row for each match to \code{target} found in
 #'   the data.
@@ -81,9 +79,12 @@
 #' @examples
 #'
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
-#' ggplot(yellow_gel.spct) + geom_line() +
+#' ggplot(yellow_gel.spct) +
+#'   geom_line() +
 #'   stat_find_wls(target = c(0.25, 0.5, 0.75))
-#' ggplot(yellow_gel.spct) + geom_line() +
+#'
+#' ggplot(yellow_gel.spct) +
+#'   geom_line() +
 #'   stat_find_wls(target = "half.maximum", geom = "point", colour = "red") +
 #'   stat_find_wls(target = "half.maximum", geom = "text", colour = "red",
 #'              hjust = 1.1, label.fmt = "%3.0f nm")
@@ -93,16 +94,26 @@
 stat_find_wls <- function(mapping = NULL,
                           data = NULL,
                           geom = "point",
+                          position = "identity",
+                          ...,
                           target = "half.maximum",
                           interpolate = TRUE,
                           chroma.type = "CMF",
                           label.fmt = "%.3g",
                           x.label.fmt = label.fmt,
                           y.label.fmt = label.fmt,
-                          position = "identity",
+                          x.label.transform = I,
+                          y.label.transform = I,
+                          x.colour.transform = x.label.transform,
                           na.rm = FALSE,
                           show.legend = FALSE,
-                          inherit.aes = TRUE, ...) {
+                          inherit.aes = TRUE) {
+  if (!(is.function(x.label.transform) &&
+        is.function(y.label.transform) &&
+        is.function(x.colour.transform))) {
+    stop("'transform' arguments must be function defintions")
+  }
+
   ggplot2::layer(
     stat = StatFindWls, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -112,6 +123,9 @@ stat_find_wls <- function(mapping = NULL,
                   label.fmt = label.fmt,
                   x.label.fmt = x.label.fmt,
                   y.label.fmt = y.label.fmt,
+                  x.label.transform = x.label.transform,
+                  y.label.transform = y.label.transform,
+                  x.colour.transform = x.colour.transform,
                   na.rm = na.rm,
                   ...)
   )
@@ -124,24 +138,31 @@ stat_find_wls <- function(mapping = NULL,
 StatFindWls <-
   ggplot2::ggproto("StatFindWls", ggplot2::Stat,
                    compute_group = function(data,
-                                              scales,
-                                              target,
-                                              interpolate,
-                                              chroma.type,
-                                              label.fmt,
-                                              x.label.fmt,
-                                              y.label.fmt) {
+                                            scales,
+                                            target,
+                                            interpolate,
+                                            chroma.type,
+                                            label.fmt,
+                                            x.label.fmt,
+                                            y.label.fmt,
+                                            x.label.transform,
+                                            y.label.transform,
+                                            x.colour.transform) {
                      wls.df <- photobiology::wls_at_target(data,
                                                            x.var.name = "x",
                                                            y.var.name = "y",
                                                            target = target,
                                                            interpolate = interpolate,
                                                            na.rm = FALSE)
-                     wls.df[["x.label"]] <- sprintf(x.label.fmt, wls.df[["x"]])
-                     wls.df[["y.label"]] <- sprintf(y.label.fmt, wls.df[["y"]])
+                     wls.df[["x.label"]] <-
+                       sprintf(x.label.fmt, x.label.transform(wls.df[["x"]]))
+                     wls.df[["y.label"]] <-
+                       sprintf(y.label.fmt, y.label.transform(wls.df[["y"]]))
                      wls.df[["wl.color"]] <-
-                       photobiology::fast_color_of_wl(wls.df[["x"]], chroma.type = chroma.type)
-                     wls.df[["BW.color"]] <-  black_or_white(wls.df[["wl.color"]])
+                       photobiology::fast_color_of_wl(x.colour.transform(wls.df[["x"]]),
+                                                      chroma.type = chroma.type)
+                     wls.df[["BW.color"]] <-
+                       black_or_white(wls.df[["wl.color"]])
                      wls.df
                    },
                    default_aes = ggplot2::aes(label = after_stat(x.label),
@@ -187,14 +208,12 @@ StatFindWls <-
 #'   interpolation between wavelength values straddling the target.
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
 #'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
-#' @param label.fmt character  string giving a format definition for converting
-#'   values into character strings by means of function \code{\link{sprintf}}.
-#' @param x.label.fmt character  string giving a format definition for
-#'   converting $x$-values into character strings by means of function
-#'   \code{\link{sprintf}}.
-#' @param y.label.fmt character  string giving a format definition for
-#'   converting $y$-values into character strings by means of function
-#'   \code{\link{sprintf}}.
+#' @param label.fmt,x.label.fmt,y.label.fmt character  strings giving a format
+#'   definition for construction of character strings labels with function
+#'   \code{\link{sprintf}} from \code{x} and/or \code{y} values.
+#' @param x.label.transform,y.label.transform,x.colour.transform function Applied
+#'   to \code{x} or \code{y} values when constructing the character labels or
+#'   computing matching colours.
 #'
 #' @return A data frame with one row for each match to the target subset from
 #'   the data or interpolated. As spectra are monotonic in wavelength, this
@@ -236,11 +255,16 @@ StatFindWls <-
 #' @examples
 #'
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
-#' ggplot(yellow_gel.spct) + geom_line() +
+#' ggplot(yellow_gel.spct) +
+#'   geom_line() +
 #'   stat_find_qtys(target = "half.range")
-#' ggplot(yellow_gel.spct) + geom_line() +
+#'
+#' ggplot(yellow_gel.spct) +
+#'   geom_line() +
 #'   stat_find_qtys(target = c(490, 500, 510))
-#' ggplot(yellow_gel.spct) + geom_line() +
+#'
+#' ggplot(yellow_gel.spct) +
+#'   geom_line() +
 #'   stat_find_qtys(target = 500, geom = "point", colour = "red") +
 #'   stat_find_qtys(target = 500, geom = "text", colour = "red",
 #'              hjust = 1.1, label.fmt = "Tfr = %1.2f")
@@ -250,16 +274,26 @@ StatFindWls <-
 stat_find_qtys <- function(mapping = NULL,
                            data = NULL,
                            geom = "point",
+                           position = "identity",
+                           ...,
                            target = "half.maximum",
                            interpolate = TRUE,
                            chroma.type = "CMF",
                            label.fmt = "%.3g",
                            x.label.fmt = label.fmt,
                            y.label.fmt = label.fmt,
-                           position = "identity",
+                           x.label.transform = I,
+                           y.label.transform = I,
+                           x.colour.transform = x.label.transform,
                            na.rm = FALSE,
                            show.legend = FALSE,
-                           inherit.aes = TRUE, ...) {
+                           inherit.aes = TRUE) {
+  if (!(is.function(x.label.transform) &&
+        is.function(y.label.transform) &&
+        is.function(x.colour.transform))) {
+    stop("'transform' arguments must be function defintions")
+  }
+
   ggplot2::layer(
     stat = StatFindQty, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
@@ -269,6 +303,9 @@ stat_find_qtys <- function(mapping = NULL,
                   label.fmt = label.fmt,
                   x.label.fmt = x.label.fmt,
                   y.label.fmt = y.label.fmt,
+                  x.label.transform = x.label.transform,
+                  y.label.transform = y.label.transform,
+                  x.colour.transform = x.colour.transform,
                   na.rm = na.rm,
                   ...)
   )
@@ -288,14 +325,17 @@ StatFindQty <-
                                               chroma.type,
                                               label.fmt,
                                               x.label.fmt,
-                                              y.label.fmt) {
+                                              y.label.fmt,
+                                              x.label.transform,
+                                              y.label.transform,
+                                              x.colour.transform) {
                      # By swapping the column names, we obtain qty values instead of wls
                      if (is.numeric(target)) {
                        target <- target[target >= min(data[["x"]], na.rm = TRUE) &
                                           target <= max(data[["x"]], na.rm = TRUE)]
                      }
                      if (length(target) == 0L) {
-                       # if target is NULL or an out-of-range then return an empty data frame
+                       # if target is NULL or out-of-range then return an empty data frame
                        rows.df <-
                          data.frame(x = numeric(),
                                     y = numeric(),
@@ -315,11 +355,15 @@ StatFindQty <-
                                                         col.name.x = "y",
                                                         col.name = "x"))
                        }
-                       rows.df[["x.label"]] <- sprintf(x.label.fmt, rows.df[["x"]])
-                       rows.df[["y.label"]] <- sprintf(y.label.fmt, rows.df[["y"]])
+                       rows.df[["x.label"]] <-
+                         sprintf(x.label.fmt, x.label.transform(rows.df[["x"]]))
+                       rows.df[["y.label"]] <-
+                         sprintf(y.label.fmt, y.label.transform(rows.df[["y"]]))
                        rows.df[["wl.color"]] <-
-                         photobiology::fast_color_of_wl(rows.df[["x"]], chroma.type = chroma.type)
-                       rows.df[["BW.color"]] <-  black_or_white(rows.df[["wl.color"]])
+                         photobiology::fast_color_of_wl(x.colour.transform(rows.df[["x"]]),
+                                                        chroma.type = chroma.type)
+                       rows.df[["BW.color"]] <-
+                         black_or_white(rows.df[["wl.color"]])
                      }
                      rows.df
                    },
