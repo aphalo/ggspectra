@@ -4,7 +4,7 @@
 #' and adds labels and colors to the data without subsetting. To find local
 #' minima, you can use \code{stat_labels_valleys} instead. The variable
 #' mapped to the \code{x} aesthetic is expected to contain wavelength values
-#' expressed in nanometres.
+#' expressed in nanometres. \strong{Axis flipping is currently not supported.}
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be

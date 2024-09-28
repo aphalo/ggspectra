@@ -1,6 +1,6 @@
 #' Calculate colours from wavelength.
 #'
-#' \code{stat_color} computes color definitions according to human vision.
+#' \code{stat_color} computes colour definitions according to human vision.
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be
@@ -27,7 +27,12 @@
 #' @param x.colour.transform function Applied to \code{x} values before computing
 #'   matching colours.
 #'
-#' @return The original data frame with a variable with color definitions added.
+#' @details For each row in \code{data} a colour definition is computed assuming
+#'   that after transformation with \code{x.colour.transform()} the values in
+#'   \code{x} are wavelengths expressed in nanometres.
+#'
+#' @return The original data frame with variable \code{wl.color} containing
+#'   colour definitions added.
 #'
 #' @section Computed variable:
 #' \describe{
@@ -53,8 +58,22 @@
 #'
 #' @examples
 #'
-#' ggplot(sun.spct) + geom_line() +
-#'   stat_color() + scale_color_identity()
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_color() +
+#'   scale_color_identity()
+#'
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_color(x.colour.transform = function(x) {-x}) +
+#'   scale_color_identity() +
+#'   scale_x_reverse()
+#'
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_color(x.colour.transform = function(x) {10^x}) +
+#'   scale_color_identity() +
+#'   scale_x_log10()
 #'
 #' @export
 #' @family stats functions
@@ -74,8 +93,13 @@ stat_color <- function(mapping = NULL,
   }
 
   ggplot2::layer(
-    stat = StatColor, data = data, mapping = mapping, geom = geom,
-    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    stat = StatColor,
+    data = data,
+    mapping = mapping,
+    geom = geom,
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
     params = list(chroma.type = chroma.type,
                   x.colour.transform = x.colour.transform,
                   na.rm = na.rm,
@@ -97,7 +121,7 @@ StatColor <-
                              chroma.type,
                              x.colour.transform) {
       data[["wl.color"]] <-
-        photobiology::fast_color_of_wl(colour-transform(data[["x"]]),
+        photobiology::fast_color_of_wl(x.colour.transform(data[["x"]]),
                                        chroma.type = chroma.type)
       data
     },

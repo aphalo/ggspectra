@@ -75,8 +75,9 @@ A data frame with one row for each peak (or valley) found in the
   data.
 }
 \description{
-\code{stat_spikes} finds at which x positions spikes are located. Spikes
-can be either upwards or downwards from the baseline.
+\code{stat_spikes} finds at which \code{x} positions spikes are located.
+Spikes can be either upwards or downwards from the baseline.
+\strong{Axis flipping is currently not supported.}
 }
 \details{
 This stat uses \code{geom_point} by default as it is the geom most

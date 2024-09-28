@@ -111,7 +111,7 @@ The original data with additional computed variables added.
 and adds labels and colors to the data without subsetting. To find local
 minima, you can use \code{stat_labels_valleys} instead. The variable
 mapped to the \code{x} aesthetic is expected to contain wavelength values
-expressed in nanometres.
+expressed in nanometres. \strong{Axis flipping is currently not supported.}
 }
 \details{
 These statistics assemble text labels for each peak or valley and

@@ -1,7 +1,7 @@
 #' Find wavelength for target quantity value.
 #'
 #' \code{stat_find_wls} finds at which x positions values equal to a target are
-#' located.
+#' located. \strong{Axis flipping is currently not supported.}
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be
@@ -40,9 +40,6 @@
 #'   to \code{x} or \code{y} values when constructing the character labels or
 #'   computing matching colours.
 #'
-#' @return A data frame with one row for each match to \code{target} found in
-#'   the data.
-#'
 #' @section Computed variables: \describe{ \item{x}{x-value at or nearest to the
 #'   match to the target as numeric} \item{y}{target value or y-value nearest to
 #'   the target as numeric} \item{x.label}{x-value at or nearest to the match
@@ -60,12 +57,26 @@
 #'
 #' @seealso \code{\link[photobiology]{find_peaks}}.
 #'
-#' @details These stats use \code{geom_point} by default as it is the geom most
-#'   likely to work well in almost any situation without need of tweaking. The
-#'   default aesthetics set by these stats allow their direct use with
+#' @details For each row in the subset of \code{data} matching  \code{target}
+#'   a colour definition is computed assuming that after transformation with
+#'   \code{x.colour.transform()} the values in \code{x} are wavelengths
+#'   expressed in nanometres. Labels are constructed from \code{x} and \code{y}
+#'   values after applying to them \code{x.label.transform} and
+#'   \code{y.label.transform}, respectively. In most cases the
+#'   \code{x.label.transform} is used to back-transform the values in \code{data}
+#'   to make them agree with those displayed on the axis guides.
+#'
+#'   These stats use \code{geom_point} by default as it is a geometry likely to
+#'   work well in almost any situation. The additional default aesthetic
+#'   mappings set by these statistics allow their direct use with
 #'   \code{geom_text}, \code{geom_label}, \code{geom_line}, \code{geom_rug},
-#'   \code{geom_hline} and \code{geom_vline}. The formatting of the labels
-#'   returned can be controlled by the user.
+#'   \code{geom_hline} and \code{geom_vline}. The format of the labels returned
+#'   can be controlled by the user.
+#'
+#' @return A data frame with one row for each match to the target subset from
+#'   the data or linearly interpolated between the two nearest values available.
+#'   As spectra are not monotonic in the spectral quantity, this statistic can
+#'   return more than one row in \code{data} per target value.
 #'
 #' @note These stats work nicely together with geoms \code{geom_text_repel} and
 #'   \code{geom_label_repel} from package \code{\link[ggrepel]{ggrepel}} to
@@ -178,7 +189,7 @@ StatFindWls <-
 #' Find quantity value for target wavelength value.
 #'
 #' \code{stat_find_qtys} finds at which y positions values equal to an x target
-#' are located.
+#' are located. \strong{Axis flipping is currently not supported.}
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be
@@ -215,10 +226,6 @@ StatFindWls <-
 #'   to \code{x} or \code{y} values when constructing the character labels or
 #'   computing matching colours.
 #'
-#' @return A data frame with one row for each match to the target subset from
-#'   the data or interpolated. As spectra are monotonic in wavelength, this
-#'   statistic will never return more than one row when used with spectra.
-#'
 #' @section Computed variables: \describe{ \item{x}{x-value at or nearest to the
 #'   match to the target as numeric} \item{y}{target value or y-value nearest to
 #'   the target as numeric} \item{x.label}{x-value at or nearest to the match
@@ -242,6 +249,11 @@ StatFindWls <-
 #'   \code{geom_text}, \code{geom_label}, \code{geom_line}, \code{geom_rug},
 #'   \code{geom_hline} and \code{geom_vline}. The formatting of the labels
 #'   returned can be controlled by the user.
+#'
+#' @return A data frame with one row for each match to the target subset from
+#'   the data or linearly interpolated between the two nearest values available.
+#'   As spectra are monotonic in wavelength, this statistic will never return
+#'   more than one row in \code{data} per target value.
 #'
 #' @note These stats work nicely together with geoms \code{geom_text_repel} and
 #'   \code{geom_label_repel} from package \code{\link[ggrepel]{ggrepel}} to

@@ -121,6 +121,7 @@ A data frame with one row for each peak (or valley) found in the
 \description{
 \code{stat_peaks} finds at which x positions local maxima are located. If
 you want find local minima, you can use \code{stat_valleys} instead.
+\strong{Axis flipping is currently not supported.}
 }
 \details{
 These stats use \code{geom_point} by default as it is the geom most

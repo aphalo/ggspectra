@@ -75,20 +75,31 @@ define both data and aesthetics and shouldn't inherit behaviour from the
 default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 }
 \value{
-A data frame with one row for each match to \code{target} found in
-  the data.
+A data frame with one row for each match to the target subset from
+  the data or linearly interpolated between the two nearest values available.
+  As spectra are not monotonic in the spectral quantity, this statistic can
+  return more than one row in \code{data} per target value.
 }
 \description{
 \code{stat_find_wls} finds at which x positions values equal to a target are
-located.
+located. \strong{Axis flipping is currently not supported.}
 }
 \details{
-These stats use \code{geom_point} by default as it is the geom most
-  likely to work well in almost any situation without need of tweaking. The
-  default aesthetics set by these stats allow their direct use with
+For each row in the subset of \code{data} matching  \code{target}
+  a colour definition is computed assuming that after transformation with
+  \code{x.colour.transform()} the values in \code{x} are wavelengths
+  expressed in nanometres. Labels are constructed from \code{x} and \code{y}
+  values after applying to them \code{x.label.transform} and
+  \code{y.label.transform}, respectively. In most cases the
+  \code{x.label.transform} is used to back-transform the values in \code{data}
+  to make them agree with those displayed on the axis guides.
+
+  These stats use \code{geom_point} by default as it is a geometry likely to
+  work well in almost any situation. The additional default aesthetic
+  mappings set by these statistics allow their direct use with
   \code{geom_text}, \code{geom_label}, \code{geom_line}, \code{geom_rug},
-  \code{geom_hline} and \code{geom_vline}. The formatting of the labels
-  returned can be controlled by the user.
+  \code{geom_hline} and \code{geom_vline}. The format of the labels returned
+  can be controlled by the user.
 }
 \note{
 These stats work nicely together with geoms \code{geom_text_repel} and

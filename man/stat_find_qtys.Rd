@@ -74,12 +74,13 @@ default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 }
 \value{
 A data frame with one row for each match to the target subset from
-  the data or interpolated. As spectra are monotonic in wavelength, this
-  statistic will never return more than one row when used with spectra.
+  the data or linearly interpolated between the two nearest values available.
+  As spectra are monotonic in wavelength, this statistic will never return
+  more than one row in \code{data} per target value.
 }
 \description{
 \code{stat_find_qtys} finds at which y positions values equal to an x target
-are located.
+are located. \strong{Axis flipping is currently not supported.}
 }
 \details{
 These stats use \code{geom_point} by default as it is the geom most

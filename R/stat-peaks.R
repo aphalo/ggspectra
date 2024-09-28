@@ -2,6 +2,7 @@
 #'
 #' \code{stat_peaks} finds at which x positions local maxima are located. If
 #' you want find local minima, you can use \code{stat_valleys} instead.
+#' \strong{Axis flipping is currently not supported.}
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'    \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be set

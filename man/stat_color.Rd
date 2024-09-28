@@ -53,10 +53,16 @@ define both data and aesthetics and shouldn't inherit behaviour from the
 default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 }
 \value{
-The original data frame with a variable with color definitions added.
+The original data frame with variable \code{wl.color} containing
+  colour definitions added.
 }
 \description{
-\code{stat_color} computes color definitions according to human vision.
+\code{stat_color} computes colour definitions according to human vision.
+}
+\details{
+For each row in \code{data} a colour definition is computed assuming
+  that after transformation with \code{x.colour.transform()} the values in
+  \code{x} are wavelengths expressed in nanometres.
 }
 \section{Computed variable}{
 
@@ -86,8 +92,22 @@ Required by the statistic and need to be set with \code{aes()}.
 
 \examples{
 
-ggplot(sun.spct) + geom_line() +
-  stat_color() + scale_color_identity()
+ggplot(sun.spct) +
+  geom_line() +
+  stat_color() +
+  scale_color_identity()
+
+ggplot(sun.spct) +
+  geom_line() +
+  stat_color(x.colour.transform = function(x) {-x}) +
+  scale_color_identity() +
+  scale_x_reverse()
+
+ggplot(sun.spct) +
+  geom_line() +
+  stat_color(x.colour.transform = function(x) {10^x}) +
+  scale_color_identity() +
+  scale_x_log10()
 
 }
 \seealso{
