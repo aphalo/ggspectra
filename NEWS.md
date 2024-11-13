@@ -6,6 +6,8 @@ editor_options:
 
 # ggspectra 0.3.14
 
+- Ensure compatibility with upcoming 'ggplot2' 3.5.2: Use `geom_linerange()`
+instead of `geom_errorbarh()` as default in `stat_wb_hbar()`.
 - Make the order of parameters of layer functions consistent with those in
 'ggplot2'. This affects partial matching of argument names!
 - Add manual support for scale transformations, needed for label construction

@@ -7,7 +7,7 @@
 stat_wb_hbar(
   mapping = NULL,
   data = NULL,
-  geom = "errorbarh",
+  geom = "linerange",
   position = "identity",
   ...,
   w.band = NULL,

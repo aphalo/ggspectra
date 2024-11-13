@@ -98,7 +98,7 @@
 #'
 stat_wb_hbar <- function(mapping = NULL,
                          data = NULL,
-                         geom = "errorbarh",
+                         geom = "linerange",
                          position = "identity",
                          ...,
                          w.band = NULL,
@@ -155,10 +155,10 @@ StatWbHbar <-
                        mydata <- trim_tails(data[["x"]], data[["y"]], use.hinges = TRUE,
                                             low.limit = range[1],
                                             high.limit = range[2])
-                       yint.tmp <- integral.fun(mydata[["x"]] , mydata[["y"]] )
+                       yint.tmp <- integral.fun(mydata[["x"]] , mydata[["y"]])
                        ymean.tmp <- yint.tmp / wl_expanse(wb)
                        integ.df <- rbind(integ.df,
-                                         data.frame(x = midpoint(mydata[["x"]] ),
+                                         data.frame(x = midpoint(mydata[["x"]]),
                                                     wb.xmin = min(wb),
                                                     wb.xmax = max(wb),
                                                     wb.ymin = min(data[["y"]]),
