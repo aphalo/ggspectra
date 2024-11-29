@@ -4,6 +4,12 @@ editor_options:
     wrap: 72
 ---
 
+# ggspectra 0.3.15
+
+- Fix a bug in `autotitle()` affecting only collections of spectra where all
+spectra have the same value for the `when.measured` attribute and this attribute
+is used in title annotations.
+
 # ggspectra 0.3.14
 
 - Ensure compatibility with upcoming 'ggplot2' 3.5.2: Use `geom_linerange()`
@@ -56,7 +62,7 @@ not be identical.
 of single waveband objects as argument to `w.band`.
 - Track bug fix in 'photobiologyWavebands', that updated the definition of
 `PAR()` (photosynthetically active radiation) as a BSWF (biological spectral
-weighting function). The labeling as PAR is now restored when plotting
+weighting function). The labelling as PAR is now restored when plotting
 spectral photon response using the `autoplot()` method.
 - Replace use of "mu" (\u03bc) character by "micro" (\u00b5) in UTF-8, as Greek
 UTF-8 characters are not supported in all Linux versions (at CRAN's request).
@@ -186,7 +192,7 @@ in 'photobiology' (\>= 0.10.10) and on 'ggrepel' (\>= 0.9.1).
 ------------------------------------------------------------------------
 
 -   Although this update should not break any code, the **plots created
-    will in some cases differ slighttly from those created with earlier
+    will in some cases differ slightly from those created with earlier
     versions**. These changes affect the formatting of axis labels, and
     are readily visible.
 -   Colors may differ very slightly while `stat_wl_strip()` draws fewer
@@ -238,9 +244,9 @@ only affect the text of labels.**
 -   Add support in `multiplot()` for adding a title to the composite
     figure.
 -   Add support for setting of the plot caption with autotitle() and as
-    annotations in `autoplot()` methods. Make autotitle() a synonim of
+    annotations in `autoplot()` methods. Make autotitle() a synonym of
     `ggtitle_spct()`, which is now deprecated.
--   Track changes in 'photobiology' (\>= 0.9.28) adding support fot
+-   Track changes in 'photobiology' (\>= 0.9.28) adding support for
     `"how.measured"` attribute in plot titles, subtitles and captions.
 -   Use a compute panel function instead of a compute group function in
     `stat_wb_label()`, `stat_wb_box()` and `stat_wl_strip()`, solving a
@@ -286,10 +292,10 @@ Revise to track changes in 'photobiology' version 0.9.24 and 'ggplot2'
 
 -   `stat_label_peaks()` and `stat_label_valleys()` now have a new
     parameter, `label.fill` which can be used to set the content of
-    `..x.label..` and `..y.label..` for labels not labeled as peaks or
+    `..x.label..` and `..y.label..` for labels not labelled as peaks or
     valleys. The earlier use of `""` is retained as default.
 -   Add `stat_find_wls()` and `stat_find_qtys()`, two new statistics
-    useful for highlighting and labeling features in spectra.
+    useful for highlighting and labelling features in spectra.
 -   Add parameter `ylim` to all `plot()` methods.
 -   Revise `plot()` methods to support objects with multiple spectra in
     long form.

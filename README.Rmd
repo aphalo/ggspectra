@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 [![Documentation](https://img.shields.io/badge/documentation-ggspectra-informational.svg)](https://docs.r4photobiology.info/ggspectra/)
 [![doi](https://img.shields.io/badge/doi-10.32614/CRAN.package.ggspectra-blue.svg)](https://doi.org/10.32614/CRAN.package.ggspectra)
 
-The goal of 'ggspectra' is to make it easy to plot radiation spectra and similar data, such and transmittance, absorbance and reflectance spectra, producing fully annotated publication- and presentation-ready plots. It is an extension to packages 'ggplot2' and 'photobiology', and part of the 'r4phototbiology' suite.
+The goal of 'ggspectra' is to make it easy to plot radiation spectra and similar data, such and transmittance, absorbance and reflectance spectra, producing fully annotated publication- and presentation-ready plots. It is an extension to packages 'ggplot2' and 'photobiology', and part of the 'r4photobiology' suite.
 
 Package 'ggspectra' provides stats, geoms, scales and functions to be used for plotting radiation-related spectra and annotating the plots with quantities derived from spectral data. All summary quantities implemented in 'photobiology' can be used for annotations including biologically effective irradiances and exposures.
 
@@ -43,7 +43,7 @@ Some degree of flexibility can be obtained by passing arguments.
 autoplot(sun.spct, annotations = c("+", "title:where:when"), unit.out = "photon")
 ```
 
-Maximum flexibilty is achieved when building a plot layer by layer using the grammar of graphics approach, as implemented in 'ggplot2', but taking advantage of the specialized `ggplot()` methods, _geometries_, _statistics_ and _scales_ specialized for the plotting of spectra, defined in this package .
+Maximum flexibility is achieved when building a plot layer by layer using the grammar of graphics approach, as implemented in 'ggplot2', but taking advantage of the specialized `ggplot()` methods, _geometries_, _statistics_ and _scales_ specialized for the plotting of spectra, defined in this package .
 
 ```{r example2, message=FALSE}
 ggplot(sun.spct, unit.out = "photon") +
@@ -77,7 +77,7 @@ News on updates to the different packages of the 'r4photobiology' suite are regu
 Two articles introduce the basic ideas behind the design of the suite and its use:
 Aphalo P. J. (2015) (https://doi.org/10.19232/uv4pb.2015.1.14) and Aphalo P. J. (2016)  (https://doi.org/10.19232/uv4pb.2016.1.15).
 
-A book is under preparation, and the draft is currently available at (https://leanpub.com/r4photobiology/). The book conatins many examples of plots created with 'ggspectra'.
+A book is under preparation, and the draft is currently available at (https://leanpub.com/r4photobiology/). The book contains many examples of plots created with 'ggspectra'.
 
 A handbook written before the suite was developed contains useful information on the quantification and manipulation of ultraviolet and visible radiation:
 Aphalo, P. J., Albert, A., Björn, L. O., McLeod, A. R., Robson, T. M., & Rosenqvist, E. (Eds.) (2012) Beyond the Visible: A handbook of best practice in plant UV photobiology (1st ed., p. xxx + 174). Helsinki: University of Helsinki, Department of Biosciences, Division of Plant Biology. ISBN 978-952-10-8363-1 (PDF), 978-952-10-8362-4 (paperback). PDF file available from (https://doi.org/10.31885/9789521083631).

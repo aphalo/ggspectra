@@ -17,7 +17,7 @@ The goal of ‘ggspectra’ is to make it easy to plot radiation spectra and
 similar data, such and transmittance, absorbance and reflectance
 spectra, producing fully annotated publication- and presentation-ready
 plots. It is an extension to packages ‘ggplot2’ and ‘photobiology’, and
-part of the ‘r4phototbiology’ suite.
+part of the ‘r4photobiology’ suite.
 
 Package ‘ggspectra’ provides stats, geoms, scales and functions to be
 used for plotting radiation-related spectra and annotating the plots
@@ -49,8 +49,8 @@ autoplot(sun.spct, annotations = c("+", "title:where:when"), unit.out = "photon"
 
 ![](man/figures/README-example1-1.png)<!-- -->
 
-Maximum flexibilty is achieved when building a plot layer by layer using
-the grammar of graphics approach, as implemented in ‘ggplot2’, but
+Maximum flexibility is achieved when building a plot layer by layer
+using the grammar of graphics approach, as implemented in ‘ggplot2’, but
 taking advantage of the specialized `ggplot()` methods, *geometries*,
 *statistics* and *scales* specialized for the plotting of spectra,
 defined in this package .
@@ -95,7 +95,7 @@ and its use: Aphalo P. J. (2015)
 (<https://doi.org/10.19232/uv4pb.2016.1.15>).
 
 A book is under preparation, and the draft is currently available at
-(<https://leanpub.com/r4photobiology/>). The book conatins many examples
+(<https://leanpub.com/r4photobiology/>). The book contains many examples
 of plots created with ‘ggspectra’.
 
 A handbook written before the suite was developed contains useful
