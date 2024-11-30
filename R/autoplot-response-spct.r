@@ -592,7 +592,7 @@ autoplot.response_spct <-
     if (is.character(norm) && norm == "update" && !is_normalized(object)) {
       norm <- "skip"
     }
-    # normalization needs to be redone if unit.out has changed
+    # normalization updated and base of expression changed in one go
     object <- photobiology::normalize(x = object,
                                       range = range,
                                       norm = norm,
