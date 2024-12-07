@@ -588,10 +588,6 @@ autoplot.response_spct <-
                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
     annotations <- decode_annotations(annotations,
                                       annotations.default)
-    # avoid warning in 'photobiology' (== 0.10.10)
-    if (is.character(norm) && norm == "update" && !is_normalized(object)) {
-      norm <- "skip"
-    }
     # normalization updated and base of expression changed in one go
     object <- photobiology::normalize(x = object,
                                       range = range,
