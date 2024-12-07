@@ -4,6 +4,10 @@ editor_options:
     wrap: 72
 ---
 
+# ggspectra 0.4.0
+
+- Update for compatibility with 'photobiology' (>= 0.12.0), which is required.
+
 # ggspectra 0.3.15
 
 - Fix a bug in `autotitle()` affecting only collections of spectra where all
