@@ -603,11 +603,8 @@ q_plot <- function(spct,
 #' @param w.band a single waveband object or a list of waveband objects.
 #' @param range an R object on which \code{range()} returns a vector of length
 #'   2, with minimum and maximum wavelengths (nm).
-#' @param norm numeric Normalization wavelength (nm) or character string
-#'   \code{"max"}, or \code{"min"} for normalization at the corresponding
-#'   wavelength, \code{"update"} to update the normalization after modifying
-#'   units of expression, quantity or range but respecting the previously used
-#'   criterion, or \code{"skip"} to force return of \code{object} unchanged.
+#' @param norm numeric No longer supported, normalization is always updated if
+#'   present and a unit conversion applied.
 #' @param unit.out character string indicating type of radiation units to use
 #'   for plotting: \code{"photon"} or its synonym \code{"quantum"}, or
 #'   \code{"energy"}.
@@ -715,8 +712,7 @@ autoplot.source_spct <-
                                              photobiologyWavebands::UVA(),
                                              photobiologyWavebands::PhR())),
            range = getOption("ggspectra.wlrange", default = NULL),
-           norm = getOption("ggspectra.norm",
-                            default = "update"),
+           norm = NA,
            unit.out = getOption("photobiology.radiation.unit",
                                 default = "energy"),
            pc.out = getOption("ggspectra.pc.out", default = FALSE),
@@ -736,6 +732,10 @@ autoplot.source_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
+    if (!is.na(norm)) {
+      warning("On-the-fly normalization no longer supported. Use 'normalize()' instead.")
+    }
+
     if (is.null(idfactor)) {
       idfactor <- photobiology::getIdFactor(object)
     }
@@ -748,7 +748,6 @@ autoplot.source_spct <-
         autoplot(object = photobiology::subset2mspct(object),
                  w.band = w.band,
                  range = range,
-                 norm = norm,
                  unit.out = unit.out,
                  pc.out = pc.out,
                  label.qty = label.qty,
@@ -781,15 +780,11 @@ autoplot.source_spct <-
                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
     annotations <- decode_annotations(annotations,
                                       annotations.default)
-    # we ensure the units are correct
+    # Change units if needed, and update normalization
     object <- switch(unit.out,
                      photon = photobiology::e2q(object, action = "replace"),
                      energy = photobiology::q2e(object, action = "replace"))
-    # normalization redone if needed
-    object <- photobiology::normalize(x = object,
-                                      range = range,
-                                      norm = norm,
-                                      na.rm = na.rm)
+
     if (is.null(label.qty)) {
       if (photobiology::is_normalized(object) ||
           photobiology::is_scaled(object)) {
@@ -872,8 +867,7 @@ autoplot.source_mspct <-
   function(object,
            ...,
            range = getOption("ggspectra.wlrange", default = NULL),
-           norm = getOption("ggspectra.normalize",
-                            default = "update"),
+           norm = NA,
            unit.out = getOption("photobiology.radiation.unit",
                                 default = "energy"),
            pc.out = getOption("ggspectra.pc.out", default = FALSE),
@@ -882,6 +876,10 @@ autoplot.source_mspct <-
            plot.data = "as.is",
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
+
+    if (!is.na(norm)) {
+      warning("On-the-fly normalization no longer supported. Use 'normalize()' instead.")
+    }
 
     force(object.label)
 
@@ -897,13 +895,6 @@ autoplot.source_mspct <-
     object <- switch(unit.out,
                      photon = photobiology::e2q(object, action = "replace"),
                      energy = photobiology::q2e(object, action = "replace"))
-    # if no summary is computed, we apply the normalization here
-    if (plot.data == "as.is") {
-      object <- photobiology::normalize(object,
-                                        norm = norm,
-                                        na.rm = na.rm)
-      norm <- "skip"
-    }
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
     z <- switch(plot.data,
@@ -924,7 +915,6 @@ autoplot.source_mspct <-
     if (photobiology::is.source_spct(z) && any(col.name %in% names(z))) {
       ggplot2::autoplot(object = z,
                         range = getOption("ggspectra.wlrange", default = NULL),
-                        norm = norm,
                         unit.out = unit.out,
                         pc.out = pc.out,
                         idfactor = idfactor,
@@ -937,7 +927,6 @@ autoplot.source_mspct <-
       ggplot2::autoplot(object = z,
                         y.name = paste(col.name[unit.out], plot.data, sep = "."),
                         range = getOption("ggspectra.wlrange", default = NULL),
-                        norm = norm,
                         pc.out = pc.out,
                         idfactor = idfactor,
                         facets = facets,

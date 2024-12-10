@@ -535,7 +535,6 @@ autoplot.response_spct <-
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PhR())),
            range = getOption("ggspectra.wlrange", default = NULL),
-           norm = getOption("ggspectra.norm", default = "update"),
            unit.out = getOption("photobiology.radiation.unit",
                                 default = "energy"),
            pc.out = getOption("ggspectra.pc.out", default = FALSE),
@@ -560,7 +559,6 @@ autoplot.response_spct <-
                  w.band = w.band,
                  range = range,
                  norm = norm,
-                 unit.out = unit.out,
                  pc.out = pc.out,
                  label.qty = label.qty,
                  span = span,
@@ -581,19 +579,16 @@ autoplot.response_spct <-
     }
 
     force(object.label)
-    force(norm)
 
     annotations.default <-
       getOption("photobiology.plot.annotations",
                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
     annotations <- decode_annotations(annotations,
                                       annotations.default)
-    # normalization updated and base of expression changed in one go
-    object <- photobiology::normalize(x = object,
-                                      range = range,
-                                      norm = norm,
-                                      unit.out = unit.out,
-                                      na.rm = na.rm)
+    # we ensure the units are correct
+    object <- switch(unit.out,
+                     photon = photobiology::e2q(object, action = "replace"),
+                     energy = photobiology::q2e(object, action = "replace"))
     if (is.null(label.qty)) {
       if (photobiology::is_normalized(object) ||
           photobiology::is_scaled(object)) {
@@ -674,8 +669,6 @@ autoplot.response_mspct <-
   function(object,
            ...,
            range = getOption("ggspectra.wlrange", default = NULL),
-           norm = getOption("ggspectra.norm",
-                            default = "update"),
            unit.out = getOption("photobiology.radiation.unit", default="energy"),
            pc.out = getOption("ggspectra.pc.out", default = FALSE),
            plot.data = "as.is",
