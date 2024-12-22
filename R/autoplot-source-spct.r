@@ -743,7 +743,7 @@ autoplot.source_spct <-
       idfactor <- photobiology::getMultipleWl(object) > 1L
     }
 
-    if (plot.data != "as.is") {
+    if (getMultipleWl(object) > 1L && plot.data != "as.is") {
       return(
         autoplot(object = photobiology::subset2mspct(object),
                  w.band = w.band,

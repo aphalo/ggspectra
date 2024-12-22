@@ -56,7 +56,7 @@ e_rsp_plot <- function(spct,
                        facets,
                        ylim,
                        na.rm) {
-  if (!is.response_spct(spct)) {
+  if (!photobiology::is.response_spct(spct)) {
     stop("e_Rsp_plot() can only plot response_spct objects.")
   }
   spct[["s.q.response"]] <- NULL
@@ -68,15 +68,15 @@ e_rsp_plot <- function(spct,
     ylim <- rep(NA_real_, 2L)
   }
   if (!is.null(range)) {
-    spct <- trim_wl(spct, range = range)
+    spct <- photobiology::trim_wl(spct, range = range)
   }
   if (!is.null(w.band)) {
-    w.band <- trim_wl(w.band, range = range(spct))
+    w.band <- photobiology::trim_wl(w.band, range = photobiology::wl_range(spct))
   }
 
   exposure.label <- NA
 
-  if (is_scaled(spct)) {
+  if (photobiology::is_scaled(spct)) {
     if (pc.out) {
       warning("Percent scale supported only for normalized cps_spct objects.")
       pc.out <- FALSE
@@ -84,7 +84,7 @@ e_rsp_plot <- function(spct,
     s.rsp.label <- expression(Spectral~~energy~~response~~k %*% R[E~lambda]~~("rel."))
     rsp.label.total <- "atop(k %*% R[E], (\"rel.\"))"
     rsp.label.avg <- "atop(bar(k %*% R[E~lambda]), (\"rel.\"))"
-  } else if (is_normalized(spct)) {
+  } else if (photobiology::is_normalized(spct)) {
     if (!pc.out) {
       multiplier.label <- "rel."
     } else {
@@ -101,31 +101,31 @@ e_rsp_plot <- function(spct,
       warning("Percent scale supported only for normalized cps_spct objects.")
       pc.out <- FALSE
     }
-    time.unit <- getTimeUnit(spct)
+    time.unit <- photobiology::getTimeUnit(spct)
     if (!length(time.unit)) {
       time.unit <- "unkonwn"
     }
     time.unit.char <- duration2character(time.unit)
-    if (time.unit.char=="second") {
+    if (time.unit.char == "second") {
       s.rsp.label <- expression(Spectral~~energy~~response~~R[E~lambda]~~(resp.~~unit~~s^{-1}~nm^{-1}))
       rsp.label.total  <- "atop(R[E], (resp.~~unit~~s^{-1}))"
       rsp.label.avg  <- "atop(bar(R[E~lambda]), (resp.~~unit~~s^{-1}~nm^{-1}))"
-    } else if (time.unit.char=="day") {
+    } else if (time.unit.char == "day") {
       s.rsp.label <- expression(Spectral~~energy~~response~~R[E~lambda]~~(resp.~~unit~~d^{-1}~nm^{-1}))
       rsp.label.total  <- "atop(R[E], (resp.~~unit~~d^{-1}))"
       rsp.label.avg  <- "atop(bar(R[E~lambda]), (resp.~~unit~~d^{-1}~nm^{-1}))"
-    } else if (time.unit.char=="hour") {
+    } else if (time.unit.char == "hour") {
       s.rsp.label <- expression(Spectral~~energy~~response~~R[E~lambda]~~(resp.~~unit~~h^{-1}~nm^{-1}))
       rsp.label.total  <- "atop(R[E], (resp.~~unit~~h^{-1}))"
       rsp.label.avg  <- "atop(bar(R[E~lambda]), (resp.~~unit~~h^{-1}~nm^{-1}))"
-    } else if (time.unit.char=="duration") {
+    } else if (time.unit.char == "duration") {
       s.rsp.label <- expression(Spectral~~energy~~response~~R[E~lambda]~~(resp.~~unit~nm^{-1}))
       rsp.label.total  <- "atop(R[E], (resp.~~unit))"
       rsp.label.avg  <- "atop(bar(R[E~lambda]), (resp.~~unit~nm^{-1}))"
       exposure.label <- paste("Length of time:",
                               ifelse(lubridate::is.duration(time.unit),
                                      as.character(time.unit), "unknown"))
-    } else if (time.unit.char=="exposure") {
+    } else if (time.unit.char == "exposure") {
       s.rsp.label <- expression(Spectral~~energy~~response~~R[E~lambda]~~(resp.~~unit~nm^{-1}))
       rsp.label.total  <- "atop(R[E], (resp.~~unit))"
       rsp.label.avg  <- "atop(bar(R[E~lambda]), (resp.~~unit~nm^{-1}))"
@@ -139,8 +139,8 @@ e_rsp_plot <- function(spct,
   if (!is.na(ylim[1])) {
     y.min <- ylim[1]
     spct[["s.e.response"]] <- ifelse(spct[["s.e.response"]] < y.min,
-                                  NA_real_,
-                                  spct[["s.e.response"]])
+                                     NA_real_,
+                                     spct[["s.e.response"]])
   } else {
     y.min <- min(spct[["s.e.response"]], 0, na.rm = TRUE)
   }
@@ -148,8 +148,8 @@ e_rsp_plot <- function(spct,
   if (!is.na(ylim[2])) {
     y.max <- ylim[2]
     spct[["s.e.response"]] <- ifelse(spct[["s.e.response"]] > y.max,
-                                  NA_real_,
-                                  spct[["s.e.response"]])
+                                     NA_real_,
+                                     spct[["s.e.response"]])
   } else {
     y.max <- max(spct[["s.e.response"]], y.min, 0, na.rm = TRUE)
   }
@@ -170,7 +170,8 @@ e_rsp_plot <- function(spct,
     rsp.label <- ""
   }
 
-  plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["s.e.response"]]))
+  plot <- ggplot2::ggplot(spct, aes(x = .data[["w.length"]],
+                                    y = .data[["s.e.response"]]))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
                         facets = facets,
@@ -181,26 +182,28 @@ e_rsp_plot <- function(spct,
   # We want data plotted on top of the boundary lines
   # Negative response is valid!
   if ("boundaries" %in% annotations) {
-    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+    plot <- plot +
+      ggplot2::geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
   }
 
   if (!is.null(geom) && geom %in% c("area", "spct")) {
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
-  plot <- plot + geom_line(na.rm = na.rm)
+  plot <- plot + ggplot2::geom_line(na.rm = na.rm)
   plot <- plot + labs(x = expression("Wavelength, "*lambda~(nm)), y = s.rsp.label)
 
   if (length(annotations) == 1 && annotations == "") {
     return(plot)
   }
 
-  plot <- plot + scale_fill_identity() + scale_color_identity()
+  plot <- plot +
+    ggplot2::scale_fill_identity() + ggplot2::scale_color_identity()
 
   plot <- plot + decoration(w.band = w.band,
                             y.max = y.max,
                             y.min = y.min,
-                            x.max = max(spct),
-                            x.min = min(spct),
+                            x.max = photobiology::wl_max(spct),
+                            x.min = photobiology::wl_min(spct),
                             annotations = annotations,
                             label.qty = label.qty,
                             span = span,
@@ -210,33 +213,37 @@ e_rsp_plot <- function(spct,
                             na.rm = TRUE)
 
   if (!is.na(exposure.label)) {
-    plot <- plot +  annotate("text",
-                             x = min(spct),
-                             y = y.max,
-                             label = exposure.label,
-                             vjust = -0.5,
-                             hjust = 0,
-                             size = rel(3),
-                             na.rm = TRUE )
+    plot <- plot +  ggplot2::annotate("text",
+                                      x = photobiology::wl_min(spct),
+                                      y = y.max,
+                                      label = exposure.label,
+                                      vjust = -0.5,
+                                      hjust = 0,
+                                      size = rel(3),
+                                      na.rm = TRUE )
   }
 
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "summaries",
                          "colour.guide", "reserve.space"), annotations)) > 0L) {
     y.limits <- c(y.min, y.min + (y.max - y.min) * 1.25)
-    x.limits <- c(min(spct) - wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
+    x.limits <-
+      c(min(spct) - photobiology::wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
     y.limits <- c(y.min, y.max)
-    x.limits <- range(spct)
+    x.limits <- photobiology::wl_range(spct)
   }
 
   if (abs(y.min) < 5e-2 && (abs(y.max - 1) < 5.e-2)) {
     plot <- plot +
-      scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1), limits = y.limits)
+      ggplot2::scale_y_continuous(breaks = c(0, 0.25, 0.5, 0.75, 1),
+                                  limits = y.limits)
   } else {
-    plot <- plot + scale_y_continuous(limits = y.limits)
+    plot <- plot + ggplot2::scale_y_continuous(limits = y.limits)
   }
-  plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
+  plot +
+    ggplot2::scale_x_continuous(limits = x.limits,
+                                breaks = scales::pretty_breaks(n = 7))
 }
 
 #' Create a complete ggplot for response spectra.
@@ -297,7 +304,7 @@ q_rsp_plot <- function(spct,
                        facets,
                        ylim,
                        na.rm) {
-  if (!is.response_spct(spct)) {
+  if (!photobiology::is.response_spct(spct)) {
     stop("q_Rsp_plot() can only plot response_spct objects.")
   }
   spct[["s.e.response"]] <- NULL
@@ -309,15 +316,16 @@ q_rsp_plot <- function(spct,
     ylim <- rep(NA_real_, 2L)
   }
   if (!is.null(range)) {
-    spct <- trim_wl(spct, range = range)
+    spct <- photobiology::trim_wl(spct, range = range)
   }
   if (!is.null(w.band)) {
-    w.band <- trim_wl(w.band, range = range(spct))
+    w.band <- photobiology::trim_wl(w.band,
+                                    range = photobiology::wl_range(spct))
   }
 
   exposure.label <- NA
 
-  if (is_scaled(spct)) {
+  if (photobiology::is_scaled(spct)) {
     if (pc.out) {
       warning("Percent scale supported only for normalized response_spct objects.")
       pc.out <- FALSE
@@ -325,7 +333,7 @@ q_rsp_plot <- function(spct,
     s.rsp.label <- expression(Spectral~~photon~~response~~k %*% R[Q~lambda]~~("rel."))
     rsp.label.total <- "atop(k %*% R[Q], (\"rel.\"))"
     rsp.label.avg <- "atop(bar(k %*% R[Q~lambda]), (\"rel.\"))"
-  } else if (is_normalized(spct)) {
+  } else if (photobiology::is_normalized(spct)) {
     if (!pc.out) {
       multiplier.label <- "rel."
      } else {
@@ -342,31 +350,31 @@ q_rsp_plot <- function(spct,
       warning("Percent scale supported only for normalized cps_spct objects.")
       pc.out <- FALSE
     }
-    time.unit <- getTimeUnit(spct)
+    time.unit <- photobiology::getTimeUnit(spct)
     if (!length(time.unit)) {
       time.unit <- "unkonwn"
     }
     time.unit.char <- duration2character(time.unit)
-    if (time.unit.char=="second") {
+    if (time.unit.char == "second") {
       s.rsp.label <- expression(Spectral~~photon~~response~~R[Q~lambda]~~(resp.~~unit~~s^{-1}~nm^{-1}))
       rsp.label.total  <- "atop(R[Q], (resp.~~unit~~s^{-1}))"
       rsp.label.avg  <- "atop(bar(R[Q~lambda]), (resp.~~unit~~s^{-1}~nm^{-1}))"
-    } else if (time.unit.char=="day") {
+    } else if (time.unit.char == "day") {
       s.rsp.label <- expression(Spectral~~photon~~response~~R[Q~lambda]~~(resp.~~unit~~d^{-1}~nm^{-1}))
       rsp.label.total  <- "atop(R[Q], (resp.~~unit~~d^{-1}))"
       rsp.label.avg  <- "atop(bar(R[Q~lambda]), (resp.~~unit~~d^{-1}~nm^{-1}))"
-    } else if (time.unit.char=="hour") {
+    } else if (time.unit.char == "hour") {
       s.rsp.label <- expression(Spectral~~photon~~response~~R[Q~lambda]~~(resp.~~unit~~h^{-1}~nm^{-1}))
       rsp.label.total  <- "atop(R[Q], (resp.~~unit~~h^{-1}))"
       rsp.label.avg  <- "atop(bar(R[Q~lambda]), (resp.~~unit~~h^{-1}~nm^{-1}))"
-    } else if (time.unit.char=="duration") {
+    } else if (time.unit.char == "duration") {
       s.rsp.label <- expression(Spectral~~photon~~response~~R[Q~lambda]~~(resp.~~unit~nm^{-1}))
       rsp.label.total  <- "atop(R[Q], (resp.~~unit))"
       rsp.label.avg  <- "atop(bar(R[Q~lambda]), (resp.~~unit~nm^{-1}))"
       exposure.label <- paste("Length of time:",
                               ifelse(lubridate::is.duration(time.unit),
                                      as.character(time.unit), "unknown"))
-    } else if (time.unit.char=="exposure") {
+    } else if (time.unit.char == "exposure") {
       s.rsp.label <- expression(Spectral~~photon~~response~~R[Q~lambda]~~(resp.~~unit~nm^{-1}))
       rsp.label.total  <- "atop(R[Q], (resp.~~unit))"
       rsp.label.avg  <- "atop(bar(R[Q~lambda]), (resp.~~unit~nm^{-1}))"
@@ -411,7 +419,8 @@ q_rsp_plot <- function(spct,
     rsp.label <- ""
   }
 
-  plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["s.q.response"]]))
+  plot <- ggplot2::ggplot(spct, aes(x = .data[["w.length"]],
+                                    y = .data[["s.q.response"]]))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
                         facets = facets,
@@ -422,26 +431,29 @@ q_rsp_plot <- function(spct,
   # We want data plotted on top of the boundary lines
   # Negative response is valid!
   if ("boundaries" %in% annotations) {
-    plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+    plot <- plot +
+      ggplot2::geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
   }
 
   if (!is.null(geom) && geom %in% c("area", "spct")) {
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
-  plot <- plot + geom_line(na.rm = na.rm)
-  plot <- plot + labs(x = expression("Wavelength, "*lambda~(nm)), y = s.rsp.label)
+  plot <- plot + ggplot2::geom_line(na.rm = na.rm)
+  plot <- plot + ggplot2::labs(x = expression("Wavelength, "*lambda~(nm)),
+                               y = s.rsp.label)
 
   if (length(annotations) == 1 && annotations == "") {
     return(plot)
   }
 
-  plot <- plot + scale_fill_identity() + scale_color_identity()
+  plot <- plot +
+    ggplot2::scale_fill_identity() + ggplot2::scale_color_identity()
 
   plot <- plot + decoration(w.band = w.band,
                             y.max = y.max,
                             y.min = y.min,
-                            x.max = max(spct),
-                            x.min = min(spct),
+                            x.max = photobiology::wl_max(spct),
+                            x.min = photobiology::wl_min(spct),
                             annotations = annotations,
                             label.qty = label.qty,
                             span = span,
@@ -452,12 +464,12 @@ q_rsp_plot <- function(spct,
 
   if (!is.na(exposure.label)) {
     plot <- plot +  annotate("text",
-                             x = min(spct),
+                             x = photobiology::wl_min(spct),
                              y = y.max,
                              label = exposure.label,
                              vjust = -0.5,
                              hjust = 0,
-                             size = rel(3),
+                             size = ggplot2::rel(3),
                              na.rm = TRUE )
   }
 
@@ -471,23 +483,26 @@ q_rsp_plot <- function(spct,
       length(intersect(c("boxes", "segments", "labels", "summaries",
                          "colour.guide", "reserve.space"), annotations)) > 0L) {
     y.limits <- c(y.min, y.min + (y.max - y.min) * 1.25)
-    x.limits <- c(min(spct) - wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
+    x.limits <-
+      c(photobiology::wl_min(spct) - photobiology::wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
     y.limits <- c(y.min, y.max)
-    x.limits <- range(spct)
+    x.limits <- photobiology::wl_range(spct)
   }
 
   if (pc.out) {
     plot <- plot +
-      scale_y_continuous(labels = scales::percent,
+      ggplot2::scale_y_continuous(labels = scales::percent,
                          breaks = y.breaks,
                          limits = y.limits)
   } else {
     plot <-
-      plot + scale_y_continuous(breaks = y.breaks,
+      plot + ggplot2::scale_y_continuous(breaks = y.breaks,
                                 limits = y.limits)
   }
-  plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
+  plot +
+    ggplot2::scale_x_continuous(limits = x.limits,
+                                breaks = scales::pretty_breaks(n = 7))
 }
 
 #' Plot one or more response spectra.
@@ -533,8 +548,12 @@ q_rsp_plot <- function(spct,
 autoplot.response_spct <-
   function(object, ...,
            w.band = getOption("photobiology.plot.bands",
-                              default = list(UVC(), UVB(), UVA(), PhR())),
+                              default = list(photobiologyWavebands::UVC(),
+                                             photobiologyWavebands::UVB(),
+                                             photobiologyWavebands::UVA(),
+                                             photobiologyWavebands::PhR())),
            range = getOption("ggspectra.wlrange", default = NULL),
+           norm = NA,
            unit.out = getOption("photobiology.radiation.unit",
                                 default = "energy"),
            pc.out = getOption("ggspectra.pc.out", default = FALSE),
@@ -553,9 +572,14 @@ autoplot.response_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
-    if (getMultipleWl(object) > 1L && plot.data != "as.is") {
+    if (!is.na(norm)) {
+      warning("On-the-fly normalization no longer supported. Use 'normalize()' instead.")
+    }
+
+    if (photobiology::getMultipleWl(object) > 1L
+        && plot.data != "as.is") {
       return(
-        autoplot(object = subset2mspct(object),
+        autoplot(object = photobiology::subset2mspct(object),
                  w.band = w.band,
                  range = range,
                  norm = norm,
@@ -578,6 +602,11 @@ autoplot.response_spct <-
       )
     }
 
+    # support renaming of the idfactor
+    if (photobiology::getMultipleWl(object) > 1L &&
+        is.character(idfactor) && length(idfactor)) {
+      photobiology::setIdFactor(object, idfactor)
+    }
     force(object.label)
 
     annotations.default <-
@@ -585,10 +614,12 @@ autoplot.response_spct <-
                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
     annotations <- decode_annotations(annotations,
                                       annotations.default)
-    # we ensure the units are correct
+
+    # Change units if needed, and update normalization
     object <- switch(unit.out,
                      photon = photobiology::e2q(object, action = "replace"),
                      energy = photobiology::q2e(object, action = "replace"))
+
     if (is.null(label.qty)) {
       if (photobiology::is_normalized(object) ||
           photobiology::is_scaled(object)) {
@@ -607,7 +638,7 @@ autoplot.response_spct <-
         w.band <- photobiology::waveband(range, wb.name = "Total")
       }
     }
-    if (is.waveband(w.band)) {
+    if (photobiology::is.waveband(w.band)) {
       w.band <- list(w.band)
     }
     labels <- sapply(w.band, labels)[1, ]
@@ -669,6 +700,7 @@ autoplot.response_mspct <-
   function(object,
            ...,
            range = getOption("ggspectra.wlrange", default = NULL),
+           norm = NA,
            unit.out = getOption("photobiology.radiation.unit", default="energy"),
            pc.out = getOption("ggspectra.pc.out", default = FALSE),
            plot.data = "as.is",
@@ -676,6 +708,10 @@ autoplot.response_mspct <-
            idfactor = TRUE,
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
+
+    if (!is.na(norm)) {
+      warning("On-the-fly normalization no longer supported. Use 'normalize()' instead.")
+    }
 
     force(object.label)
 
@@ -687,23 +723,17 @@ autoplot.response_mspct <-
                                       use.hinges = TRUE,
                                       fill = NULL)
     }
-    # We apply the normalization to the collection if it is to be bound
-    # otherwise normalization is applied to the "parallel-summary" spectrum
-    if (plot.data == "as.is") {
-      object <- photobiology::normalize(object,
-                                        norm = norm,
-                                        unit.out = unit.out,
-                                        na.rm = na.rm)
-      norm <- "skip"
-    }
+
     # we ensure the units are correct
     object <- switch(unit.out,
-                     photon = e2q(object, action = "replace"),
-                     energy = q2e(object, action = "replace"))
+                     photon = photobiology::e2q(object, action = "replace"),
+                     energy = photobiology::q2e(object, action = "replace"))
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
     z <- switch(plot.data,
-                as.is = photobiology::rbindspct(object, idfactor = idfactor),
+                as.is = photobiology::rbindspct(object, ifelse(is.na(idfactor),
+                                                               "spct.idx",
+                                                               idfactor)),
                 mean = photobiology::s_mean(object),
                 median = photobiology::s_median(object),
                 sum = photobiology::s_sum(object),
@@ -713,7 +743,7 @@ autoplot.response_mspct <-
                 se = photobiology::s_se(object)
     )
     col.name <- c(photon = "s.q.response", energy = "s.e.response")
-    if (is.response_spct(z) && any(col.name %in% names(z))) {
+    if (photobiology::is.response_spct(z) && any(col.name %in% names(z))) {
       autoplot(object = z,
                range = NULL,
                norm = norm,
@@ -725,7 +755,7 @@ autoplot.response_mspct <-
                na.rm = na.rm,
                ...)
     } else {
-      z <- as.generic_spct(z)
+      z <- photobiology::as.generic_spct(z)
       autoplot(object = z,
                y.name = paste(col.name[unit.out], plot.data, sep = "."),
                range = NULL,
