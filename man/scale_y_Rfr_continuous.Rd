@@ -9,8 +9,9 @@
 scale_y_Rfr_continuous(
   unit.exponent = ifelse(pc.out, -2, 0),
   name = Rfr_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), axis.symbols =
-    axis.symbols, Rfr.type = Rfr.type),
+    label.text, scaled = scaled, normalized = ifelse(is.numeric(normalized),
+    round(normalized, 1), unique(normalized)), axis.symbols = axis.symbols, Rfr.type =
+    Rfr.type),
   labels = SI_pl_format(exponent = unit.exponent),
   limits = c(0, 1),
   format = getOption("photobiology.math", default = "R.expression"),
@@ -26,8 +27,9 @@ scale_y_Rfr_continuous(
 scale_y_Rfr_specular_continuous(
   unit.exponent = ifelse(pc.out, -2, 0),
   name = Rfr_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), axis.symbols =
-    axis.symbols, Rfr.type = "specular"),
+    label.text, scaled = scaled, normalized = ifelse(is.numeric(normalized),
+    round(normalized, 1), unique(normalized)), axis.symbols = axis.symbols, Rfr.type =
+    "specular"),
   labels = SI_pl_format(exponent = unit.exponent),
   limits = c(0, 1),
   format = getOption("photobiology.math", default = "R.expression"),
@@ -42,8 +44,9 @@ scale_y_Rfr_specular_continuous(
 scale_y_Rfr_total_continuous(
   unit.exponent = ifelse(pc.out, -2, 0),
   name = Rfr_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), axis.symbols =
-    axis.symbols, Rfr.type = "total"),
+    label.text, scaled = scaled, normalized = ifelse(is.numeric(normalized),
+    round(normalized, 1), unique(normalized)), axis.symbols = axis.symbols, Rfr.type =
+    "total"),
   labels = SI_pl_format(exponent = unit.exponent),
   limits = c(0, 1),
   format = getOption("photobiology.math", default = "R.expression"),
@@ -121,5 +124,11 @@ ggplot(Ler_leaf_rflt.spct) +
   geom_line() +
   scale_y_Rfr_specular_continuous(axis.symbols = FALSE) +
   scale_x_wl_continuous(axis.symbols = FALSE)
+
+ggplot(normalize(Ler_leaf_rflt.spct)) +
+  geom_line() +
+  scale_y_Rfr_continuous(Rfr.type = getRfrType(Ler_leaf_rflt.spct),
+     normalized = "max") +
+  scale_x_wl_continuous()
 
 }

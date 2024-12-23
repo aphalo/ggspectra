@@ -7,6 +7,10 @@ editor_options:
 # ggspectra 0.4.0
 
 - Update for compatibility with 'photobiology' (>= 0.12.0), which is required.
+- `autoplot()` methods no longer support normalization on-the-fly, but existing
+normalization is updated when the unit or quantity is modified.
+- The argument passed to `idfactor` when plotting multiple spectra stored in
+long form, can be used to rename the existing idfactor of the spectral object.
 
 # ggspectra 0.3.15
 

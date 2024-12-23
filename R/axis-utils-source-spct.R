@@ -54,7 +54,10 @@ s.e.irrad_label <- function(unit.exponent = 0,
     } else if (format == "R.character") {
       paste(label.text, "E(lambda) (rel. units)")
     }
-  } else if (normalized) {
+  } else if (is.character(normalized) || normalized) {
+    if (is.logical(normalized)) {
+      normalized <- "norm"
+    }
     if (tolower(format) == "latex") {
       paste(label.text, " $E_{\\lambda} / E_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
@@ -131,7 +134,10 @@ s.q.irrad_label <- function(unit.exponent = ifelse(normalized, 0, -6),
     } else if (format == "R.character") {
       paste(label.text, "Q(lambda) (rel. units)")
     }
-  } else if (normalized) {
+  } else if (is.character(normalized) || normalized) {
+    if (is.logical(normalized)) {
+      normalized <- "norm"
+    }
     if (tolower(format) == "latex") {
       paste(label.text, " $Q_{\\lambda} / Q_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
@@ -238,11 +244,17 @@ s.q.irrad_label <- function(unit.exponent = ifelse(normalized, 0, -6),
 #'   scale_x_wl_continuous()
 #'
 #' photon_as_default()
-#' normalized_sun.spct <- normalize(sun.spct)
+#' normalized_sun.spct <- normalize(e2q(sun.spct, action = "replace"))
 #' ggplot(normalized_sun.spct) +
 #'   geom_line(na.rm = TRUE) +
 #'   scale_y_s.q.irrad_continuous(normalized =
-#'                             getNormalized(normalized_sun.spct)) +
+#'                             normalization(normalized_sun.spct)$norm.wl) +
+#'   scale_x_wl_continuous()
+#'
+#' ggplot(normalized_sun.spct) +
+#'   geom_line(na.rm = TRUE) +
+#'   scale_y_s.q.irrad_continuous(normalized =
+#'                             normalization(normalized_sun.spct)$norm.type) +
 #'   scale_x_wl_continuous()
 #'
 #' unset_radiation_unit_default()
@@ -253,7 +265,9 @@ scale_y_s.e.irrad_continuous <-
                                   format = format,
                                   label.text = label.text,
                                   scaled = scaled,
-                                  normalized = round(normalized, 1),
+                                  normalized = ifelse(is.numeric(normalized),
+                                                      round(normalized, 1),
+                                                      unique(normalized)),
                                   axis.symbols = axis.symbols),
            labels = SI_pl_format(exponent = unit.exponent),
            format = getOption("photobiology.math",
@@ -279,7 +293,9 @@ scale_y_s.q.irrad_continuous <-
                                   format = format,
                                   label.text = label.text,
                                   scaled = scaled,
-                                  normalized = round(normalized, 1),
+                                  normalized = ifelse(is.numeric(normalized),
+                                                      round(normalized, 1),
+                                                      unique(normalized)),
                                   axis.symbols = axis.symbols),
            labels = SI_pl_format(exponent = unit.exponent),
            format = getOption("photobiology.math",
@@ -305,7 +321,9 @@ scale_y_s.e.irrad_log10 <-
                                   format = format,
                                   label.text = label.text,
                                   scaled = scaled,
-                                  normalized = round(normalized, 1),
+                                  normalized = ifelse(is.numeric(normalized),
+                                                      round(normalized, 1),
+                                                      unique(normalized)),
                                   axis.symbols = axis.symbols),
            labels = SI_pl_format(exponent = unit.exponent),
            format = getOption("photobiology.math",
@@ -331,7 +349,9 @@ scale_y_s.q.irrad_log10 <-
                                   format = format,
                                   label.text = label.text,
                                   scaled = scaled,
-                                  normalized = round(normalized, 1),
+                                  normalized = ifelse(is.numeric(normalized),
+                                                      round(normalized, 1),
+                                                      unique(normalized)),
                                   axis.symbols = axis.symbols),
            labels = SI_pl_format(exponent = unit.exponent),
            format = getOption("photobiology.math",
@@ -346,21 +366,4 @@ scale_y_s.q.irrad_log10 <-
                        labels = labels,
                        ...)
   }
-
-## internal
-
-#' Convert lubridate duration objects to a string if possible
-#'
-#' @param time.unit lubridate::duration object or character
-#'
-#' @keywords internal
-#'
-duration2character <- function(time.unit) {
-  if (is.character(time.unit)) return(time.unit)
-  if (!lubridate::is.duration(time.unit)) return("unknown")
-  if (time.unit == lubridate::duration(1, "seconds")) return("second")
-  if (time.unit == lubridate::duration(1, "hours")) return("hour")
-  if (time.unit == lubridate::duration(1, "days")) return("day")
-  "duration"
-}
 

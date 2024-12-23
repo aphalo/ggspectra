@@ -10,8 +10,8 @@
 scale_y_s.e.response_continuous(
   unit.exponent = 0,
   name = s.e.response_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), axis.symbols =
-    axis.symbols),
+    label.text, scaled = scaled, normalized = ifelse(is.numeric(normalized),
+    round(normalized, 1), unique(normalized)), axis.symbols = axis.symbols),
   labels = SI_pl_format(exponent = -unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.e.response"]],
@@ -24,8 +24,8 @@ scale_y_s.e.response_continuous(
 scale_y_s.q.response_continuous(
   unit.exponent = 0,
   name = s.q.response_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), axis.symbols =
-    axis.symbols),
+    label.text, scaled = scaled, normalized = ifelse(is.numeric(normalized),
+    round(normalized, 1), unique(normalized)), axis.symbols = axis.symbols),
   labels = SI_pl_format(exponent = -unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.q.response"]],
@@ -38,8 +38,8 @@ scale_y_s.q.response_continuous(
 scale_y_s.e.action_continuous(
   unit.exponent = 0,
   name = s.e.action_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), axis.symbols =
-    axis.symbols),
+    label.text, scaled = scaled, normalized = ifelse(is.numeric(normalized),
+    round(normalized, 1), unique(normalized)), axis.symbols = axis.symbols),
   labels = SI_pl_format(exponent = -unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.e.action"]],
@@ -52,8 +52,8 @@ scale_y_s.e.action_continuous(
 scale_y_s.q.action_continuous(
   unit.exponent = 0,
   name = s.q.action_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), axis.symbols =
-    axis.symbols),
+    label.text, scaled = scaled, normalized = ifelse(is.numeric(normalized),
+    round(normalized, 1), unique(normalized)), axis.symbols = axis.symbols),
   labels = SI_pl_format(exponent = -unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.q.action"]],
@@ -123,6 +123,12 @@ norm_ccd.spct <- normalize(ccd.spct, norm = "max")
 ggplot(norm_ccd.spct) +
   geom_line() +
   scale_y_s.e.response_continuous(normalized = getNormalized(norm_ccd.spct)) +
+  scale_x_wl_continuous()
+
+ggplot(norm_ccd.spct) +
+  geom_line() +
+  scale_y_s.e.response_continuous(normalized =
+     normalization(norm_ccd.spct)$norm.type) +
   scale_x_wl_continuous()
 
 photon_as_default()

@@ -64,7 +64,10 @@ s.e.response_label <- function(unit.exponent = 0,
     } else if (format == "R.character") {
       paste(label.text, "R(lambda) (rel. units)")
     }
-  } else if (normalized) {
+  } else if (is.character(normalized) || normalized) {
+    if (is.logical(normalized)) {
+      normalized <- "norm"
+    }
     if (tolower(format) == "latex") {
       paste(label.text, " $R(E)_{\\lambda} / R(E)_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
@@ -141,7 +144,10 @@ s.q.response_label <- function(unit.exponent = 0,
     } else if (format == "R.character") {
       paste(label.text, " (rel. units)")
     }
-  } else if (normalized) {
+  } else if (is.character(normalized) || normalized) {
+    if (is.logical(normalized)) {
+      normalized <- "norm"
+    }
     if (tolower(format) == "latex") {
       paste(label.text, " $R(Q)_{\\lambda} / R(Q)_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
@@ -218,7 +224,10 @@ s.e.action_label <- function(unit.exponent = 0,
     } else if (format == "R.character") {
       paste(label.text, "A(E)(lambda) (rel. units)")
     }
-  } else if (normalized) {
+  } else if (is.character(normalized) || normalized) {
+    if (is.logical(normalized)) {
+      normalized <- "norm"
+    }
     if (tolower(format) == "latex") {
       paste(label.text, " $A(E)_{\\lambda} / A(E)_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
@@ -295,7 +304,10 @@ s.q.action_label <- function(unit.exponent = 0,
     } else if (format == "R.character") {
       paste(label.text, "A(Q)(lambda) (rel. units)")
     }
-  } else if (normalized) {
+  } else if (is.character(normalized) || normalized) {
+    if (is.logical(normalized)) {
+      normalized <- "norm"
+    }
     if (tolower(format) == "latex") {
       paste(label.text, " $A(Q)_{\\lambda} / A(Q)_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
@@ -400,6 +412,12 @@ s.q.action_label <- function(unit.exponent = 0,
 #'   scale_y_s.e.response_continuous(normalized = getNormalized(norm_ccd.spct)) +
 #'   scale_x_wl_continuous()
 #'
+#' ggplot(norm_ccd.spct) +
+#'   geom_line() +
+#'   scale_y_s.e.response_continuous(normalized =
+#'      normalization(norm_ccd.spct)$norm.type) +
+#'   scale_x_wl_continuous()
+#'
 #' photon_as_default()
 #'
 #' norm_ccd.spct <- normalize(ccd.spct, norm = "max")
@@ -422,7 +440,9 @@ scale_y_s.e.response_continuous <-
                                      format = format,
                                      label.text = label.text,
                                      scaled = scaled,
-                                     normalized = round(normalized, 1),
+                                     normalized = ifelse(is.numeric(normalized),
+                                                         round(normalized, 1),
+                                                         unique(normalized)),
                                      axis.symbols = axis.symbols),
            labels = SI_pl_format(exponent = -unit.exponent), # per unit
            format = getOption("photobiology.math",
@@ -448,7 +468,9 @@ scale_y_s.q.response_continuous <-
                                      format = format,
                                      label.text = label.text,
                                      scaled = scaled,
-                                     normalized = round(normalized, 1),
+                                     normalized = ifelse(is.numeric(normalized),
+                                                         round(normalized, 1),
+                                                         unique(normalized)),
                                      axis.symbols = axis.symbols),
            labels = SI_pl_format(exponent = -unit.exponent),  # per unit
            format = getOption("photobiology.math",
@@ -474,7 +496,9 @@ scale_y_s.e.action_continuous <-
                                    format = format,
                                    label.text = label.text,
                                    scaled = scaled,
-                                   normalized = round(normalized, 1),
+                                   normalized = ifelse(is.numeric(normalized),
+                                                       round(normalized, 1),
+                                                       unique(normalized)),
                                    axis.symbols = axis.symbols),
            labels = SI_pl_format(exponent = -unit.exponent), # per unit
            format = getOption("photobiology.math",
@@ -500,7 +524,9 @@ scale_y_s.q.action_continuous <-
                                    format = format,
                                    label.text = label.text,
                                    scaled = scaled,
-                                   normalized = round(normalized, 1),
+                                   normalized = ifelse(is.numeric(normalized),
+                                                       round(normalized, 1),
+                                                       unique(normalized)),
                                    axis.symbols = axis.symbols),
            labels = SI_pl_format(exponent = -unit.exponent),  # per unit
            format = getOption("photobiology.math",

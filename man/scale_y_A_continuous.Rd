@@ -9,8 +9,8 @@
 scale_y_A_continuous(
   unit.exponent = 0,
   name = A_label(unit.exponent = unit.exponent, format = format, label.text = label.text,
-    scaled = scaled, normalized = round(normalized, 1), axis.symbols = axis.symbols,
-    Tfr.type = Tfr.type),
+    scaled = scaled, normalized = ifelse(is.numeric(normalized), round(normalized, 1),
+    unique(normalized)), axis.symbols = axis.symbols, Tfr.type = Tfr.type),
   labels = SI_pl_format(exponent = unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = NULL,
@@ -24,8 +24,8 @@ scale_y_A_continuous(
 scale_y_A_internal_continuous(
   unit.exponent = 0,
   name = A_label(unit.exponent = unit.exponent, format = format, label.text = label.text,
-    scaled = scaled, normalized = round(normalized, 1), axis.symbols = axis.symbols,
-    Tfr.type = "internal"),
+    scaled = scaled, normalized = ifelse(is.numeric(normalized), round(normalized, 1),
+    unique(normalized)), axis.symbols = axis.symbols, Tfr.type = "internal"),
   labels = SI_pl_format(exponent = unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = NULL,
@@ -38,8 +38,8 @@ scale_y_A_internal_continuous(
 scale_y_A_total_continuous(
   unit.exponent = 0,
   name = A_label(unit.exponent = unit.exponent, format = format, label.text = label.text,
-    scaled = scaled, normalized = round(normalized, 1), axis.symbols = axis.symbols,
-    Tfr.type = "total"),
+    scaled = scaled, normalized = ifelse(is.numeric(normalized), round(normalized, 1),
+    unique(normalized)), axis.symbols = axis.symbols, Tfr.type = "total"),
   labels = SI_pl_format(exponent = unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = NULL,
@@ -101,5 +101,10 @@ ggplot(yellow_gel.spct, plot.qty = "absorbance") +
   geom_line() +
   scale_y_A_total_continuous(axis.symbols = FALSE) +
   scale_x_wl_continuous(axis.symbols = FALSE)
+
+ggplot(yellow_gel.spct, plot.qty = "absorbance") +
+  geom_line() +
+  scale_y_A_internal_continuous(normalized = "none") +
+  scale_x_wl_continuous()
 
 }

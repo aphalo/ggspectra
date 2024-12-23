@@ -62,7 +62,10 @@ A_label <- function(unit.exponent = 0,
     } else if (format == "R.character") {
       paste(label.text, " A(lambda) (rel. units)")
     }
-  } else if (normalized) {
+  } else if (is.character(normalized) || normalized) {
+    if (is.logical(normalized)) {
+      normalized <- "norm"
+    }
     if (tolower(format) == "latex") {
       paste(label.text, " $A_{\\lambda}/A_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
@@ -217,13 +220,20 @@ A_total_label <- function(unit.exponent = 0,
 #'   scale_y_A_total_continuous(axis.symbols = FALSE) +
 #'   scale_x_wl_continuous(axis.symbols = FALSE)
 #'
+#' ggplot(yellow_gel.spct, plot.qty = "absorbance") +
+#'   geom_line() +
+#'   scale_y_A_internal_continuous(normalized = "none") +
+#'   scale_x_wl_continuous()
+#'
 scale_y_A_continuous <-
   function(unit.exponent = 0,
            name = A_label(unit.exponent = unit.exponent,
                           format = format,
                           label.text = label.text,
                           scaled = scaled,
-                          normalized = round(normalized, 1),
+                          normalized = ifelse(is.numeric(normalized),
+                                              round(normalized, 1),
+                                              unique(normalized)),
                           axis.symbols = axis.symbols,
                           Tfr.type = Tfr.type),
            labels = SI_pl_format(exponent = unit.exponent),
@@ -251,7 +261,9 @@ scale_y_A_internal_continuous <-
                           format = format,
                           label.text = label.text,
                           scaled = scaled,
-                          normalized = round(normalized, 1),
+                          normalized = ifelse(is.numeric(normalized),
+                                              round(normalized, 1),
+                                              unique(normalized)),
                           axis.symbols = axis.symbols,
                           Tfr.type = "internal"),
            labels = SI_pl_format(exponent = unit.exponent),
@@ -278,7 +290,9 @@ scale_y_A_total_continuous <-
                           format = format,
                           label.text = label.text,
                           scaled = scaled,
-                          normalized = round(normalized, 1),
+                          normalized = ifelse(is.numeric(normalized),
+                                              round(normalized, 1),
+                                              unique(normalized)),
                           axis.symbols = axis.symbols,
                           Tfr.type = "total"),
            labels = SI_pl_format(exponent = unit.exponent),
@@ -378,7 +392,10 @@ Tfr_label <- function(unit.exponent = ifelse(pc.out, -2, 0),
     } else if (format == "R.character") {
       paste(label.text, " t(lambda) (rel. units)")
     }
-  } else if (normalized) {
+  } else if (is.character(normalized) || normalized) {
+    if (is.logical(normalized)) {
+      normalized <- "norm"
+    }
     if (tolower(format) == "latex") {
       paste(label.text, " $\\tau_{\\lambda}/\\tau_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
@@ -530,29 +547,37 @@ Tfr_total_label <- function(unit.exponent = 0,
 #'   scale_y_Tfr_total_continuous(axis.symbols = FALSE) +
 #'   scale_x_wl_continuous(axis.symbols = FALSE)
 #'
+#' ggplot(normalize(yellow_gel.spct)) +
+#'   geom_line() +
+#'   scale_y_Tfr_total_continuous(normalized = "max") +
+#'   scale_x_wl_continuous()
+#'
 #' unset_filter_qty_default()
 #'
-scale_y_Tfr_continuous <- function(unit.exponent = ifelse(pc.out, -2, 0),
-                                   name = Tfr_label(unit.exponent = unit.exponent,
-                                                    format = format,
-                                                    label.text = label.text,
-                                                    scaled = scaled,
-                                                    normalized = round(normalized, 1),
-                                                    axis.symbols = axis.symbols,
-                                                    Tfr.type = Tfr.type),
-                                   labels = SI_pl_format(exponent = unit.exponent),
-                                   limits = c(0, 1),
-                                   format = getOption("photobiology.math",
-                                                      default = "R.expression"),
-                                   label.text = NULL,
-                                   scaled = FALSE,
-                                   normalized = FALSE,
-                                   axis.symbols = getOption("ggspectra.axis.symbols",
-                                                           default = TRUE),
-                                   pc.out = getOption("ggspectra.pc.out",
-                                                      default = FALSE),
-                                   Tfr.type,
-                                   ...) {
+scale_y_Tfr_continuous <-
+  function(unit.exponent = ifelse(pc.out, -2, 0),
+           name = Tfr_label(unit.exponent = unit.exponent,
+                            format = format,
+                            label.text = label.text,
+                            scaled = scaled,
+                            normalized = ifelse(is.numeric(normalized),
+                                                round(normalized, 1),
+                                                unique(normalized)),
+                            axis.symbols = axis.symbols,
+                            Tfr.type = Tfr.type),
+           labels = SI_pl_format(exponent = unit.exponent),
+           limits = c(0, 1),
+           format = getOption("photobiology.math",
+                              default = "R.expression"),
+           label.text = NULL,
+           scaled = FALSE,
+           normalized = FALSE,
+           axis.symbols = getOption("ggspectra.axis.symbols",
+                                    default = TRUE),
+           pc.out = getOption("ggspectra.pc.out",
+                              default = FALSE),
+           Tfr.type,
+           ...) {
   scale_y_continuous(name = name,
                      labels = labels,
                      limits = limits,
@@ -569,7 +594,9 @@ scale_y_Tfr_internal_continuous <-
                             format = format,
                             label.text = label.text,
                             scaled = scaled,
-                            normalized = round(normalized, 1),
+                            normalized = ifelse(is.numeric(normalized),
+                                                round(normalized, 1),
+                                                unique(normalized)),
                             axis.symbols = axis.symbols,
                             Tfr.type = "internal"),
            labels = SI_pl_format(exponent = unit.exponent),
@@ -600,7 +627,9 @@ scale_y_Tfr_total_continuous <-
                             format = format,
                             label.text = label.text,
                             scaled = scaled,
-                            normalized = round(normalized, 1),
+                            normalized = ifelse(is.numeric(normalized),
+                                                round(normalized, 1),
+                                                unique(normalized)),
                             axis.symbols = axis.symbols,
                             Tfr.type = "total"),
            labels = SI_pl_format(exponent = unit.exponent),
@@ -888,7 +917,10 @@ Rfr_label <- function(unit.exponent = ifelse(pc.out, -2, 0),
     } else if (format == "R.character") {
       paste(label.text, " r (lambda) (rel. units)")
     }
-  } else if (normalized) {
+  } else if (is.character(normalized) || normalized) {
+    if (is.logical(normalized)) {
+      normalized <- "norm"
+    }
     if (tolower(format) == "latex") {
       paste(label.text, " $\\rho_{\\lambda}/\\rho_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
@@ -1042,13 +1074,21 @@ Rfr_total_label <- function(unit.exponent = ifelse(pc.out, -2, 0),
 #'   scale_y_Rfr_specular_continuous(axis.symbols = FALSE) +
 #'   scale_x_wl_continuous(axis.symbols = FALSE)
 #'
+#' ggplot(normalize(Ler_leaf_rflt.spct)) +
+#'   geom_line() +
+#'   scale_y_Rfr_continuous(Rfr.type = getRfrType(Ler_leaf_rflt.spct),
+#'      normalized = "max") +
+#'   scale_x_wl_continuous()
+#'
 scale_y_Rfr_continuous <-
   function(unit.exponent = ifelse(pc.out, -2, 0),
            name = Rfr_label(unit.exponent = unit.exponent,
                             format = format,
                             label.text = label.text,
                             scaled = scaled,
-                            normalized = round(normalized, 1),
+                            normalized = ifelse(is.numeric(normalized),
+                                                round(normalized, 1),
+                                                unique(normalized)),
                             axis.symbols = axis.symbols,
                             Rfr.type = Rfr.type),
            labels = SI_pl_format(exponent = unit.exponent),
@@ -1080,7 +1120,9 @@ scale_y_Rfr_specular_continuous <-
                             format = format,
                             label.text = label.text,
                             scaled = scaled,
-                            normalized = round(normalized, 1),
+                            normalized = ifelse(is.numeric(normalized),
+                                                round(normalized, 1),
+                                                unique(normalized)),
                             axis.symbols = axis.symbols,
                             Rfr.type = "specular"),
            labels = SI_pl_format(exponent = unit.exponent),
@@ -1111,7 +1153,9 @@ scale_y_Rfr_total_continuous <-
                             format = format,
                             label.text = label.text,
                             scaled = scaled,
-                            normalized = round(normalized, 1),
+                            normalized = ifelse(is.numeric(normalized),
+                                                round(normalized, 1),
+                                                unique(normalized)),
                             axis.symbols = axis.symbols,
                             Rfr.type = "total"),
            labels = SI_pl_format(exponent = unit.exponent),

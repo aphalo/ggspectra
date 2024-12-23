@@ -8,8 +8,8 @@
 scale_y_counts_continuous(
   unit.exponent = ifelse(normalized, 0, 3),
   name = counts_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), axis.symbols =
-    axis.symbols),
+    label.text, scaled = scaled, normalized = ifelse(is.numeric(normalized),
+    round(normalized, 1), unique(normalized)), axis.symbols = axis.symbols),
   labels = SI_pl_format(exponent = unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["counts"]],
@@ -22,7 +22,8 @@ scale_y_counts_continuous(
 scale_y_counts_tg_continuous(
   unit.exponent = ifelse(normalized, 0, 3),
   name = counts_label(unit.exponent = 0, format = format, label.text = label.text, scaled
-    = scaled, normalized = round(normalized, 1), axis.symbols = axis.symbols),
+    = scaled, normalized = ifelse(is.numeric(normalized), round(normalized, 1),
+    unique(normalized)), axis.symbols = axis.symbols),
   labels = SI_tg_format(exponent = unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["counts"]],
@@ -84,16 +85,11 @@ ggplot(white_led.raw_spct) +
   scale_y_counts_tg_continuous(unit.exponent = 0) +
   scale_x_wl_continuous()
 
-norm_led.raw_spct <- normalize(white_led.raw_spct[ , 1:2], norm = "max")
+norm_led.raw_spct <- normalize(white_led.raw_spct, norm = "max")
 
 ggplot(norm_led.raw_spct) +
   geom_line() +
-  scale_y_counts_continuous(normalized = getNormalized(norm_led.raw_spct)) +
-  scale_x_wl_continuous()
-
-ggplot(norm_led.raw_spct) +
-  geom_line() +
-  scale_y_counts_tg_continuous(normalized = getNormalized(norm_led.raw_spct)) +
+  scale_y_counts_continuous(unit.exponent = 0, normalized = "max") +
   scale_x_wl_continuous()
 
 }

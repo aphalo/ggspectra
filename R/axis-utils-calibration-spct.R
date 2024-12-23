@@ -49,7 +49,10 @@ multipliers_label <- function(unit.exponent = 0,
     } else if (format == "R.character") {
       paste(label.text, "k(lambda) (rel. units)")
     }
-  } else if (normalized) {
+  } else if (is.character(normalized) || normalized) {
+    if (is.logical(normalized)) {
+      normalized <- "norm"
+    }
     if (tolower(format) == "latex") {
       paste(label.text, " $k_{\\lambda} / k_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
@@ -125,7 +128,9 @@ scale_y_multipliers_continuous <-
                                     format = format,
                                     label.text = label.text,
                                     scaled = scaled,
-                                    normalized = round(normalized, 1),
+                                    normalized = ifelse(is.numeric(normalized),
+                                                        round(normalized, 1),
+                                                        unique(normalized)),
                                     axis.symbols = axis.symbols),
            labels = SI_pl_format(exponent = unit.exponent),
            format = getOption("photobiology.math",
@@ -136,7 +141,7 @@ scale_y_multipliers_continuous <-
            axis.symbols = getOption("ggspectra.axis.symbols",
                                    default = TRUE),
            ...) {
-    scale_y_continuous(name = name,
-                       labels = labels,
-                       ...)
+    ggplot2::scale_y_continuous(name = name,
+                                labels = labels,
+                                ...)
   }
