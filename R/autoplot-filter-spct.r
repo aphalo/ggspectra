@@ -1287,6 +1287,7 @@ autoplot.filter_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
+    force(object.label)
     warn_norm_arg(norm)
     idfactor <- check_idfactor_arg(object, idfactor)
     object <- rename_idfactor(object, idfactor)
@@ -1417,9 +1418,8 @@ autoplot.filter_mspct <-
            na.rm = TRUE) {
 
     force(object.label)
-
     warn_norm_arg(norm)
-    idfactor <- validate_idfactor(idfactor = idfactor)
+    idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
     # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
@@ -1451,7 +1451,7 @@ autoplot.filter_mspct <-
                range = getOption("ggspectra.wlrange", default = NULL),
                plot.qty = plot.qty,
                pc.out = pc.out,
-               idfactor = idfactor,
+               idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,
                na.rm = na.rm,
@@ -1463,7 +1463,7 @@ autoplot.filter_mspct <-
                y.name = paste(col.name[plot.qty], plot.data, sep = "."),
                range = getOption("ggspectra.wlrange", default = NULL),
                pc.out = pc.out,
-               idfactor = idfactor,
+               idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,
                na.rm = na.rm,
@@ -1532,6 +1532,7 @@ autoplot.reflector_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
+    force(object.label)
     warn_norm_arg(norm)
     idfactor <- check_idfactor_arg(object, idfactor)
     object <- rename_idfactor(object, idfactor)
@@ -1560,8 +1561,6 @@ autoplot.reflector_spct <-
                  na.rm = na.rm)
       )
     }
-
-    force(object.label)
 
     annotations.default <-
       getOption("photobiology.plot.annotations",
@@ -1634,9 +1633,8 @@ autoplot.reflector_mspct <-
            na.rm = TRUE) {
 
     force(object.label)
-
     warn_norm_arg(norm)
-    idfactor <- validate_idfactor(idfactor = idfactor)
+    idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
     # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
@@ -1663,7 +1661,7 @@ autoplot.reflector_mspct <-
                range = getOption("ggspectra.wlrange", default = NULL),
                plot.qty = plot.qty,
                pc.out = pc.out,
-               idfactor = idfactor,
+               idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,
                na.rm = na.rm,
@@ -1674,7 +1672,7 @@ autoplot.reflector_mspct <-
                y.name = paste("Rfr", plot.data, sep = "."),
                range = getOption("ggspectra.wlrange", default = NULL),
                pc.out = pc.out,
-               idfactor = idfactor,
+               idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,
                na.rm = na.rm,
@@ -1765,6 +1763,7 @@ autoplot.object_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
+    force(object.label)
     warn_norm_arg(norm)
     idfactor <- check_idfactor_arg(object, idfactor)
     object <- rename_idfactor(object, idfactor)
@@ -1794,8 +1793,6 @@ autoplot.object_spct <-
                  na.rm = na.rm)
       )
     }
-
-    force(object.label)
 
     if (is.null(plot.qty)) {
       plot.qty <- "all"
@@ -1900,10 +1897,10 @@ autoplot.object_mspct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
-    warn_norm_arg(norm)
     force(object.label)
+    warn_norm_arg(norm)
+    idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
-    idfactor <- validate_idfactor(idfactor = idfactor)
     # facets will be forced later for "all" with a warning
     if (plot.qty == "reflectance") {
       object <- photobiology::as.reflector_mspct(object)
@@ -1938,7 +1935,7 @@ autoplot.object_mspct <-
                range = getOption("ggspectra.wlrange", default = NULL),
                plot.qty = plot.qty,
                pc.out = pc.out,
-               idfactor = idfactor,
+               idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,
                na.rm = na.rm,
@@ -1949,7 +1946,7 @@ autoplot.object_mspct <-
                y.name = paste(col.name[plot.qty], plot.data, sep = "."),
                range = getOption("ggspectra.wlrange", default = NULL),
                pc.out = pc.out,
-               idfactor = idfactor,
+               idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,
                na.rm = na.rm,
@@ -1960,7 +1957,7 @@ autoplot.object_mspct <-
                y.name = paste("Rfr", plot.data, sep = "."),
                range = getOption("ggspectra.wlrange", default = NULL),
                pc.out = pc.out,
-               idfactor = idfactor,
+               idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,
                na.rm = na.rm,

@@ -73,7 +73,7 @@ autoplot(sun.spct, w.band = waveband(c(380, 760)))
 autoplot(sun.spct, w.band = NULL)
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  set_w.band_default(w.band = Plant_bands())
+# set_w.band_default(w.band = Plant_bands())
 
 ## -----------------------------------------------------------------------------
 autoplot(sun_evening.mspct, plot.data = "mean")
@@ -164,8 +164,8 @@ autoplot(yellow_gel.spct, plot.qty = "absorbance", wls.target = 2,
          annotations = list(c("-", "peaks"), c("+", "wls")))
 
 ## ----eval=FALSE, echo=FALSE---------------------------------------------------
-#  yellow_gel.spct$Rfr <- 1 - max(yellow_gel.spct$Tfr)
-#  autoplot(yellow_gel.spct, plot.qty = "absorptance", annotations = c("-", "peaks"))
+# yellow_gel.spct$Rfr <- 1 - max(yellow_gel.spct$Tfr)
+# autoplot(yellow_gel.spct, plot.qty = "absorptance", annotations = c("-", "peaks"))
 
 ## -----------------------------------------------------------------------------
 autoplot(sun.spct) + geom_spct(fill = color_of(sun.spct)) + 
@@ -179,16 +179,16 @@ autoplot(yellow_gel.spct, annotations = c("+", "boundaries"))
 autoplot(white_led.raw_spct, annotations = c("+", "boundaries"))
 
 ## ----eval=FALSE, message = FALSE----------------------------------------------
-#  autoplot(white_led.raw_spct[ , c("w.length", "counts_1")],
-#           annotations = c("+", "boundaries"))
+# autoplot(white_led.raw_spct[ , c("w.length", "counts_1")],
+#          annotations = c("+", "boundaries"))
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  autoplot(white_led.raw_spct[ , c("w.length", "counts_1", "counts_3")],
-#       annotations = c("+", "boundaries"))
+# autoplot(white_led.raw_spct[ , c("w.length", "counts_1", "counts_3")],
+#      annotations = c("+", "boundaries"))
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  # Not run so as to pass CRAN checks!!
-#  autoplot(yellow_gel.spct - 0.01, annotations = c("+", "boundaries"))
+# # Not run so as to pass CRAN checks!!
+# autoplot(yellow_gel.spct - 0.01, annotations = c("+", "boundaries"))
 
 ## -----------------------------------------------------------------------------
 autoplot(sun_evening.mspct, annotations = c("-", "peaks")) +

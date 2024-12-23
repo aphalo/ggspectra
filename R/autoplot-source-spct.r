@@ -684,15 +684,14 @@ q_plot <- function(spct,
 #' autoplot(sun.spct)
 #' autoplot(sun.spct, geom = "spct")
 #' autoplot(sun.spct, unit.out = "photon")
-#' autoplot(sun.spct, norm = "max")
-#' autoplot(sun.spct, norm = "max", pc.out = TRUE)
+#' autoplot(normalize(sun.spct))
+#' autoplot(normalize(sun.spct), pc.out = TRUE)
 #'
 #' # multiple spectra in long form
 #' autoplot(sun_evening.spct)
 #' autoplot(sun_evening.spct, facets = 1) # one column
 #' autoplot(sun_evening.spct, facets = 2) # two columns
 #' autoplot(sun_evening.spct, plot.data = "mean")
-#' # needs 'photobiology' (> 0.11.2)
 #' autoplot(sun_evening.spct, idfactor = "Sequence")
 #'
 #' # multiple spectra as a collection
@@ -732,6 +731,7 @@ autoplot.source_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
+    force(object.label)
     warn_norm_arg(norm)
     idfactor <- check_idfactor_arg(object, idfactor)
     object <- rename_idfactor(object, idfactor)
@@ -760,8 +760,6 @@ autoplot.source_spct <-
                           na.rm = na.rm)
       )
     }
-
-    force(object.label)
 
     annotations.default <-
       getOption("photobiology.plot.annotations",
@@ -865,13 +863,10 @@ autoplot.source_mspct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
-    if (!is.na(norm)) {
-      warning("On-the-fly normalization no longer supported. Use 'normalize()' instead.")
-    }
-
     force(object.label)
+    warn_norm_arg(norm)
+    idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
-    idfactor <- validate_idfactor(idfactor = idfactor)
     # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
       object <- photobiology::trim_wl(object,
@@ -886,10 +881,7 @@ autoplot.source_mspct <-
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
     z <- switch(plot.data,
-                as.is = photobiology::rbindspct(object,
-                                                idfactor = ifelse(is.na(idfactor),
-                                                                  "spct.idx",
-                                                                  idfactor)),
+                as.is = photobiology::rbindspct(object, idfactor = idfactor),
                 mean = photobiology::s_mean(object),
                 median = photobiology::s_median(object),
                 sum = photobiology::s_sum(object),
@@ -905,7 +897,7 @@ autoplot.source_mspct <-
                         range = getOption("ggspectra.wlrange", default = NULL),
                         unit.out = unit.out,
                         pc.out = pc.out,
-                        idfactor = idfactor,
+                        idfactor = NULL, # use idfactor already set in z
                         facets = facets,
                         object.label = object.label,
                         na.rm = na.rm,
@@ -916,7 +908,7 @@ autoplot.source_mspct <-
                         y.name = paste(col.name[unit.out], plot.data, sep = "."),
                         range = getOption("ggspectra.wlrange", default = NULL),
                         pc.out = pc.out,
-                        idfactor = idfactor,
+                        idfactor = NULL, # use idfactor already set in z
                         facets = facets,
                         object.label = object.label,
                         na.rm = na.rm,

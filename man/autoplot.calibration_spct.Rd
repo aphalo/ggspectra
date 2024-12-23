@@ -35,7 +35,7 @@
   ...,
   range = getOption("ggspectra.wlrange", default = NULL),
   unit.out = "ignored",
-  norm = getOption("ggspectra.normalize", default = "skip"),
+  norm = NA,
   pc.out = getOption("ggspectra.pc.out", default = FALSE),
   plot.data = "as.is",
   idfactor = TRUE,

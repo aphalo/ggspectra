@@ -61,6 +61,7 @@ autotitle <- function(object,
                       tz = "",
                       default.title  = "title:objt") {
 
+  force(object.label)
   if (!is.character(object.label)) {
     if (is.name(object.label)) {
       object.label <- as.character(object.label)

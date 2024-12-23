@@ -11,7 +11,7 @@
   w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
     PhR())),
   range = getOption("ggspectra.wlrange", default = NULL),
-  norm = "skip",
+  norm = NA,
   unit.out = NULL,
   pc.out = getOption("ggspectra.pc.out", default = FALSE),
   label.qty = "mean",

@@ -23,8 +23,8 @@
 #'   \code{character} strings "half.maximum" and "half.range" are also accepted
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
-#' @param unit.in the type of unit we assume as reference "energy" or "photon"
-#'   based.
+#' @param unit.in,unit.out the type of unit we assume as reference "energy" or
+#'   "photon" based.
 #' @param annotations a character vector. For details please see section Plot
 #'   Annotations.
 #' @param geom character The name of a ggplot geometry, currently only
@@ -76,26 +76,25 @@ autoplot.waveband <-
            span = NULL,
            wls.target = "HM",
            unit.in = getOption("photobiology.radiation.unit", default = "energy"),
+           unit.out = unit.in,
            annotations = NULL,
            geom = "line",
            wb.trim = TRUE,
-           norm = NULL,
+           norm = NA,
            text.size = 2.5,
            ylim = c(NA, NA),
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
     force(object.label)
+    warn_norm_arg(norm)
+    w.band <- object
 
     annotations.default <-
       getOption("photobiology.plot.annotations",
                 default = c("boxes", "labels", "colour.guide"))
     annotations <- c("=", decode_annotations(annotations,
                                              annotations.default))
-    w.band <- object
-    if (!is.waveband(w.band)) {
-      return(ggplot())
-    }
     if (!is.null(w.length)) {
       w.length <- unique(sort(w.length, na.last = NA))
     }
@@ -123,13 +122,6 @@ autoplot.waveband <-
                        unit.out = unit.in, unit.in = unit.in,
                        use.cached.mult = getOption("photobiology.use.cached.mult",
                                                  default = FALSE), fill = fill)
-    if (is.null(norm)) {
-      if (!is.null(w.band$norm)) {
-        norm <- w.band$norm
-      } else {
-        norm <- "max"
-      }
-    }
     if (unit.in == "energy") {
       spct <- response_spct(w.length = w.length, s.e.response = s.response)
     } else if (unit.in %in% c("photon", "quantum")) {
@@ -149,10 +141,10 @@ autoplot.waveband <-
              wb.trim = wb.trim,
              span = span,
              wls.target = wls.target,
-             norm = norm,
              text.size = text.size,
              ylim = ylim,
              na.rm = na.rm,
+             unit.out = unit.out,
              ...) +
       autotitle(object = object,
                 object.label = object.label,

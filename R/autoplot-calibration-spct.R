@@ -270,7 +270,7 @@ autoplot.calibration_spct <-
            geom = "line",
            time.format = "",
            tz = "UTC",
-           norm = NULL,
+           norm = NA,
            text.size = 2.5,
            idfactor = NULL,
            facets = FALSE,
@@ -279,12 +279,9 @@ autoplot.calibration_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
-    if (is.null(idfactor)) {
-      idfactor <- getIdFactor(object)
-    }
-    if (is.na(idfactor) || !is.character(idfactor)) {
-      idfactor <- getMultipleWl(object) > 1L
-    }
+    force(object.label)
+    warn_norm_arg(norm)
+    idfactor <- check_idfactor_arg(object, idfactor = idfactor)
 
     if (plot.data != "as.is") {
       return(
@@ -311,8 +308,6 @@ autoplot.calibration_spct <-
                  na.rm = na.rm)
       )
     }
-
-    force(object.label)
 
     annotations.default <-
       getOption("photobiology.plot.annotations",
@@ -361,8 +356,7 @@ autoplot.calibration_mspct <-
            ...,
            range = getOption("ggspectra.wlrange", default = NULL),
            unit.out = "ignored",
-           norm = getOption("ggspectra.normalize",
-                            default = "skip"),
+           norm = NA,
            pc.out = getOption("ggspectra.pc.out", default = FALSE),
            plot.data = "as.is",
            idfactor = TRUE,
@@ -371,8 +365,9 @@ autoplot.calibration_mspct <-
            na.rm = TRUE) {
 
     force(object.label)
+    warn_norm_arg(norm)
+    idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
-    idfactor <- validate_idfactor(idfactor = idfactor)
     # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
       object <- trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
@@ -395,7 +390,7 @@ autoplot.calibration_mspct <-
                unit.out = unit.out,
                norm = norm,
                pc.out = pc.out,
-               idfactor = idfactor,
+               idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,
                na.rm = na.rm,
@@ -408,7 +403,7 @@ autoplot.calibration_mspct <-
                unit.out = unit.out,
                norm = norm,
                pc.out = pc.out,
-               idfactor = idfactor,
+               idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,
                na.rm = na.rm,

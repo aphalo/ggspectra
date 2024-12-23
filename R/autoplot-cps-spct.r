@@ -271,6 +271,7 @@ autoplot.cps_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
+    force(object.label)
     warn_norm_arg(norm)
     idfactor <- check_idfactor_arg(object, idfactor)
     object <- rename_idfactor(object, idfactor)
@@ -300,8 +301,6 @@ autoplot.cps_spct <-
                  na.rm = na.rm)
       )
     }
-
-    force(object.label)
 
     annotations.default <-
       getOption("photobiology.plot.annotations",
@@ -359,23 +358,15 @@ autoplot.cps_mspct <-
            na.rm = TRUE) {
 
     force(object.label)
+    warn_norm_arg(norm)
+    idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
-    idfactor <- validate_idfactor(idfactor = idfactor)
     # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
       object <- photobiology::trim_wl(object,
                                       range = range,
                                       use.hinges = TRUE,
                                       fill = NULL)
-    }
-    # We apply the normalization to the collection if it is to be bound
-    # otherwise normalization is applied to the "parallel-summary" spectrum
-    if (plot.data == "as.is") {
-      object <- photobiology::normalize(object,
-                                        range = getOption("ggspectra.wlrange", default = NULL),
-                                        norm = norm,
-                                        na.rm = na.rm)
-      norm <- "skip"
     }
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
@@ -394,7 +385,7 @@ autoplot.cps_mspct <-
                range = getOption("ggspectra.wlrange", default = NULL),
                norm = norm,
                pc.out = pc.out,
-               idfactor = idfactor,
+               idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,
                na.rm = na.rm,
@@ -406,7 +397,7 @@ autoplot.cps_mspct <-
                range = getOption("ggspectra.wlrange", default = NULL),
                norm = norm,
                pc.out = pc.out,
-               idfactor = idfactor,
+               idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,
                na.rm = na.rm,

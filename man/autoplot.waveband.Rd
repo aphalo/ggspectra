@@ -13,10 +13,11 @@
   span = NULL,
   wls.target = "HM",
   unit.in = getOption("photobiology.radiation.unit", default = "energy"),
+  unit.out = unit.in,
   annotations = NULL,
   geom = "line",
   wb.trim = TRUE,
-  norm = NULL,
+  norm = NA,
   text.size = 2.5,
   ylim = c(NA, NA),
   object.label = deparse(substitute(object)),
@@ -46,8 +47,8 @@ which wavelengths are to be searched and interpolated if need. The
 as arguments. A list with \code{numeric} and/or \code{character} values is
 also accepted.}
 
-\item{unit.in}{the type of unit we assume as reference "energy" or "photon"
-based.}
+\item{unit.in, unit.out}{the type of unit we assume as reference "energy" or
+"photon" based.}
 
 \item{annotations}{a character vector. For details please see section Plot
 Annotations.}

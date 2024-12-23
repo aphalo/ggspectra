@@ -1,4 +1,4 @@
-context("plot")
+context("autoplot-filter")
 library(ggplot2)
 library(photobiology)
 library(photobiologyWavebands)

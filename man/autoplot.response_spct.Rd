@@ -186,16 +186,16 @@ autoplot(photodiode.spct)
 autoplot(photodiode.spct, geom = "spct")
 autoplot(photodiode.spct, unit.out = "photon")
 autoplot(photodiode.spct, annotations = "")
-autoplot(photodiode.spct, norm = "skip")
-autoplot(photodiode.spct, norm = 400)
 
 two_sensors.mspct <-
  response_mspct(list("Photodiode" = photodiode.spct,
-                     "Coupled charge device" = ccd.spct))
-autoplot(two_sensors.mspct, normalize = TRUE, unit.out = "photon")
-autoplot(two_sensors.mspct, normalize = TRUE, idfactor = "Spectra")
-autoplot(two_sensors.mspct, normalize = TRUE, facets = 2)
-autoplot(two_sensors.mspct, normalize = TRUE, geom = "spct")
+                     "Coupled charge device" = ccd.spct)) |>
+ normalize()
+
+autoplot(two_sensors.mspct, unit.out = "photon")
+autoplot(two_sensors.mspct, idfactor = "Spectra")
+autoplot(two_sensors.mspct, facets = 2)
+autoplot(two_sensors.mspct, geom = "spct")
 
 }
 \seealso{

@@ -532,16 +532,16 @@ q_rsp_plot <- function(spct,
 #' autoplot(photodiode.spct, geom = "spct")
 #' autoplot(photodiode.spct, unit.out = "photon")
 #' autoplot(photodiode.spct, annotations = "")
-#' autoplot(photodiode.spct, norm = "skip")
-#' autoplot(photodiode.spct, norm = 400)
 #'
 #' two_sensors.mspct <-
 #'  response_mspct(list("Photodiode" = photodiode.spct,
-#'                      "Coupled charge device" = ccd.spct))
-#' autoplot(two_sensors.mspct, normalize = TRUE, unit.out = "photon")
-#' autoplot(two_sensors.mspct, normalize = TRUE, idfactor = "Spectra")
-#' autoplot(two_sensors.mspct, normalize = TRUE, facets = 2)
-#' autoplot(two_sensors.mspct, normalize = TRUE, geom = "spct")
+#'                      "Coupled charge device" = ccd.spct)) |>
+#'  normalize()
+#'
+#' autoplot(two_sensors.mspct, unit.out = "photon")
+#' autoplot(two_sensors.mspct, idfactor = "Spectra")
+#' autoplot(two_sensors.mspct, facets = 2)
+#' autoplot(two_sensors.mspct, geom = "spct")
 #'
 #' @family autoplot methods
 #'
@@ -572,9 +572,10 @@ autoplot.response_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
-    if (!is.na(norm)) {
-      warning("On-the-fly normalization no longer supported. Use 'normalize()' instead.")
-    }
+    force(object.label)
+    warn_norm_arg(norm)
+    idfactor <- check_idfactor_arg(object, idfactor)
+    object <- rename_idfactor(object, idfactor)
 
     if (photobiology::getMultipleWl(object) > 1L
         && plot.data != "as.is") {
@@ -601,13 +602,6 @@ autoplot.response_spct <-
                  na.rm = na.rm)
       )
     }
-
-    # support renaming of the idfactor
-    if (photobiology::getMultipleWl(object) > 1L &&
-        is.character(idfactor) && length(idfactor)) {
-      photobiology::setIdFactor(object, idfactor)
-    }
-    force(object.label)
 
     annotations.default <-
       getOption("photobiology.plot.annotations",
@@ -709,13 +703,10 @@ autoplot.response_mspct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
-    if (!is.na(norm)) {
-      warning("On-the-fly normalization no longer supported. Use 'normalize()' instead.")
-    }
-
     force(object.label)
+    warn_norm_arg(norm)
+    idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
-    idfactor <- validate_idfactor(idfactor = idfactor)
     # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
       object <- photobiology::trim_wl(object,
@@ -731,9 +722,7 @@ autoplot.response_mspct <-
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
     z <- switch(plot.data,
-                as.is = photobiology::rbindspct(object, ifelse(is.na(idfactor),
-                                                               "spct.idx",
-                                                               idfactor)),
+                as.is = photobiology::rbindspct(object, idfactor = idfactor),
                 mean = photobiology::s_mean(object),
                 median = photobiology::s_median(object),
                 sum = photobiology::s_sum(object),
@@ -750,7 +739,7 @@ autoplot.response_mspct <-
                unit.out = unit.out,
                pc.out = pc.out,
                facets = facets,
-               idfactor = idfactor,
+               idfactor = NULL, # use idfactor already set in z
                object.label = object.label,
                na.rm = na.rm,
                ...)
@@ -762,7 +751,7 @@ autoplot.response_mspct <-
                norm = norm,
                pc.out = pc.out,
                facets = facets,
-               idfactor = idfactor,
+               idfactor = NULL, # use idfactor already set in z
                object.label = object.label,
                na.rm = na.rm,
                ...)

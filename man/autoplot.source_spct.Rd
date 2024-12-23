@@ -188,15 +188,14 @@ If \code{idfactor = NULL}, the default for single spectra, the name of
 autoplot(sun.spct)
 autoplot(sun.spct, geom = "spct")
 autoplot(sun.spct, unit.out = "photon")
-autoplot(sun.spct, norm = "max")
-autoplot(sun.spct, norm = "max", pc.out = TRUE)
+autoplot(normalize(sun.spct))
+autoplot(normalize(sun.spct), pc.out = TRUE)
 
 # multiple spectra in long form
 autoplot(sun_evening.spct)
 autoplot(sun_evening.spct, facets = 1) # one column
 autoplot(sun_evening.spct, facets = 2) # two columns
 autoplot(sun_evening.spct, plot.data = "mean")
-# needs 'photobiology' (> 0.11.2)
 autoplot(sun_evening.spct, idfactor = "Sequence")
 
 # multiple spectra as a collection
