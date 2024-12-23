@@ -13,6 +13,11 @@ rename_idfactor(object, idfactor)
 stored in long form.}
 }
 \description{
-Update idfactor name in object
+Conditionally call \code{\link[photobiology]{setIdFactor}}.
+}
+\note{
+There is no check for \code{NA} or \code{NULL} as we assume that
+  \code{\link{check_idfactor_arg}} has already been called on \code{idfactor}
+  to check its sanity.
 }
 \keyword{internal}

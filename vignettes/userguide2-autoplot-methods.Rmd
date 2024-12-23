@@ -158,11 +158,10 @@ Contrary to `"gg"` objects created with package 'ggplot2', the data embedded in 
 
 ```{r}
 p1 <- autoplot(sun.spct)
-summary(p1)
 summary(p1$data)
 ```
 
-This makes it possible to trace the origin of the data, and also to apply especialised methods to them.
+This makes it possible to trace the origin of the data, and also to apply specialised methods to them.
 
 ---
 
@@ -202,7 +201,7 @@ The effect of `range` is slightly different to the effect of `ggplot2::xlim()` a
 
 ---
 
-The default argument to `parameter `w.band` can be changed by setting 
+The default argument to parameter `w.band` can be changed by setting 
 the R option `"photobiology.plot.bands"` to a single waveband object or to a list waveband
 objects.
 
@@ -407,7 +406,7 @@ It is possible to construct and bind the spectra on-the-fly, and to use arbitrar
 ```{r}
 filter_no_yes.spct <- 
   rbindspct(list(sun = sun.spct, filtered = yellow_gel.spct * sun.spct), 
-            idfactor = "Source")
+            idfactor = "Light source")
 autoplot(filter_no_yes.spct)
 ```
 

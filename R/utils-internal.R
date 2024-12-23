@@ -14,7 +14,7 @@ check_idfactor_arg <- function(object, idfactor = NULL, default = FALSE) {
     idfactor <- idfactor[1]
   }
   if (is.null(idfactor) || is.na(idfactor)) {
-    idfactor <- photobiology::getIdFactor(object)
+    idfactor <- photobiology::getIdFactor(object) # may return NA!
   }
   if (is.na(idfactor) || !is.character(idfactor)) {
     idfactor <- default || photobiology::getMultipleWl(object) > 1L
@@ -24,20 +24,25 @@ check_idfactor_arg <- function(object, idfactor = NULL, default = FALSE) {
 
 #' Update idfactor name in object
 #'
+#' Conditionally call \code{\link[photobiology]{setIdFactor}}.
+#'
 #' @param object generic_spct object.
 #' @param idfactor character The name of the factor identifying spectra when
 #'   stored in long form.
 #'
+#' @note There is no check for \code{NA} or \code{NULL} as we assume that
+#'   \code{\link{check_idfactor_arg}} has already been called on \code{idfactor}
+#'   to check its sanity.
+#'
 #' @keywords internal
 #'
 rename_idfactor <- function(object, idfactor) {
-  if (is.character(idfactor) &&
+  if (is.character(idfactor) && nzchar(idfactor) &&
       photobiology::getIdFactor(object) != idfactor) {
     object <- photobiology::setIdFactor(object, idfactor = idfactor)
   }
   object
 }
-
 
 #' Convert lubridate duration objects to a string if possible
 #'
@@ -62,7 +67,7 @@ duration2character <- function(time.unit) {
 #' @keywords internal
 #'
 warn_norm_arg <- function(norm) {
-  if (!is.na(norm)) {
+  if (is.null(norm) || !is.na(norm)) {
     warning("On-the-fly normalization no longer supported. Use 'normalize()' instead.")
   }
 }

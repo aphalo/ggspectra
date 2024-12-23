@@ -57,7 +57,6 @@ autoplot(sun_evening.mspct, facets = 2)
 
 ## -----------------------------------------------------------------------------
 p1 <- autoplot(sun.spct)
-summary(p1)
 summary(p1$data)
 
 ## -----------------------------------------------------------------------------
@@ -152,7 +151,7 @@ autoplot(sun_evening.spct, facets = 3) +
 ## -----------------------------------------------------------------------------
 filter_no_yes.spct <- 
   rbindspct(list(sun = sun.spct, filtered = yellow_gel.spct * sun.spct), 
-            idfactor = "Source")
+            idfactor = "Light source")
 autoplot(filter_no_yes.spct)
 
 ## -----------------------------------------------------------------------------

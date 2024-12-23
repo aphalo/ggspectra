@@ -633,9 +633,10 @@ q_plot <- function(spct,
 #' @param chroma.type character one of \code{"CMF"} (color matching function) or
 #'   \code{"CC"} (color coordinates) or a
 #'   \code{\link[photobiology]{chroma_spct}} object.
-#' @param idfactor character Name of an index column in data holding a
-#'   \code{factor} with each spectrum in a long-form multispectrum object
-#'   corresponding to a distinct level of the factor.
+#' @param idfactor character Name of an index \code{factor} used to identify
+#'   each spectrum when multiple spectra are included in a plot. If different
+#'   from an existing one, renaming takes place. It is used as title for the
+#'   plot guide and may include embedded spaces and new lines.
 #' @param facets logical or integer Indicating if facets are to be created for
 #'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
 #'   long form.
@@ -662,11 +663,11 @@ q_plot <- function(spct,
 #'   different classes for storage of spectral data defined in package
 #'   \code{\link[photobiology]{photobiology}}.
 #'
-#' @note  If \code{idfactor = NULL}, the default for single spectra, the name of
-#'   the factor is retrieved from metadata or if no metadata found, the default
-#'   \code{"spct.idx"} is tried. The default for multiple spectra is to create a
-#'   factor named \code{"spct.idx"}, but if a different name is passed, it will
-#'   be used instead, possibly renaming a pre-existing one.
+#' @note If \code{idfactor = NULL}, the default, the name of the factor is
+#'   retrieved from metadata or if no metadata found, the default
+#'   \code{"spct.idx"} is tried. The default for collections of spectra is to
+#'   create a factor named \code{"spct.idx"}, but if a different name is passed,
+#'   it will be used instead, possibly renaming a pre-existing one.
 #'
 #' @return A \code{ggplot} object with a number of layers that depends on the
 #'   data and annotations.
