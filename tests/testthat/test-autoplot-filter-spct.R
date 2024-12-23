@@ -58,8 +58,6 @@ test_that("filter_spct default", {
                                               range = c(400,700), set.scaled = TRUE)))
   vdiffr::expect_doppelganger("filter-default-normalized",
                               autoplot(normalize(Ler_leaf_trns_i.spct, norm = "max")))
-  vdiffr::expect_doppelganger("filter-default-norm-max",
-                              autoplot(Ler_leaf_trns_i.spct, norm = "max"))
 
   vdiffr::expect_doppelganger("filter-default",
                               autoplot(Ler_leaf_trns_i.spct))
@@ -134,6 +132,7 @@ test_that("filter_spct absorptance", {
 
 test_that("filter_spct A", {
   set_annotations_default()
+  A_as_default()
 
   Ler_leaf_A_i_spct <- T2A(Ler_leaf_trns_i.spct, action = "replace")
 
@@ -175,6 +174,7 @@ test_that("filter_spct A", {
 
 test_that("filter_spct Tfr", {
   set_annotations_default()
+  Tfr_as_default()
 
   Ler_leaf_t_i_spct <- any2T(Ler_leaf_trns_i.spct, action = "replace")
 
@@ -211,7 +211,9 @@ test_that("filter_spct Tfr", {
 })
 
 test_that("filter_mspct", {
+  unset_filter_qty_default()
   set_annotations_default()
+
   two_leaves.mspct <- filter_mspct(list(one = Ler_leaf_trns_i.spct,
                                       half = Ler_leaf_trns_i.spct / 2))
   vdiffr::expect_doppelganger("filter-mspct-default",
@@ -222,13 +224,13 @@ test_that("filter_mspct", {
                               autoplot(two_leaves.mspct, range = c(500, 700)))
   # use range to avoid Tfr == 0 values.
   vdiffr::expect_doppelganger("filter-mspct-default-A",
-                              autoplot(T2A(two_leaves.mspct, action = replace),
+                              autoplot(T2A(two_leaves.mspct, action = "replace"),
                                    range = c(400,750)))
   vdiffr::expect_doppelganger("filter-mspct-default-Afr",
-                              autoplot(T2Afr(two_leaves.mspct, action = replace),
+                              autoplot(T2Afr(two_leaves.mspct, action = "replace"),
                                    range = c(400,750)))
   vdiffr::expect_doppelganger("filter-mspct-default-Tfr",
-                              autoplot(any2T(two_leaves.mspct, action = replace),
+                              autoplot(any2T(two_leaves.mspct, action = "replace"),
                                    range = c(400,750)))
   vdiffr::expect_doppelganger("filter-mspct-no-annotations",
                               autoplot(two_leaves.mspct, annotations = ""))
@@ -255,7 +257,7 @@ test_that("filter_mspct", {
   vdiffr::expect_doppelganger("filter-mspct-mean-Tfr",
                               autoplot(any2T(two_leaves.mspct, action = "replace"), plot.data = "mean"))
   vdiffr::expect_doppelganger("filter-mspct-median-Tfr",
-                              autoplot(any2T(wo_leaves.mspct, action = "replace"), plot.data = "median"))
+                              autoplot(any2T(two_leaves.mspct, action = "replace"), plot.data = "median"))
   # Bug in photobiology::rowwise_filter() (fixed in photobiology >= 0.10.11) affected next two staements
   vdiffr::expect_doppelganger("filter-mspct-mean-Afr",
                               autoplot(T2Afr(two_leaves.mspct, action = "replace"), plot.data = "mean"))
@@ -274,12 +276,6 @@ test_that("reflector_spct", {
                                               range = c(400,700), set.scaled = TRUE)))
   vdiffr::expect_doppelganger("reflector-default-tot-normalized",
                               autoplot(normalize(Ler_leaf_rflt.spct, norm = "max")))
-  vdiffr::expect_doppelganger("reflector-default-tot-norm-max",
-                              autoplot(Ler_leaf_rflt.spct, norm = "max"))
-  vdiffr::expect_doppelganger("reflector-default-tot-norm-update",
-                              autoplot(Ler_leaf_rflt.spct, norm = "update"))
-  vdiffr::expect_doppelganger("reflector-default-tot-norm-skip",
-                              autoplot(Ler_leaf_rflt.spct, norm = "skip"))
 
   vdiffr::expect_doppelganger("reflector-default-tot",
                               autoplot(Ler_leaf_rflt.spct))

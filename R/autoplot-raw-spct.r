@@ -61,7 +61,7 @@ raw_plot <- function(spct,
                      ylim,
                      na.rm) {
   if (!is.raw_spct(spct)) {
-    stop("raw_plot() can only plot response_spct objects.")
+    stop("raw_plot() can only plot 'raw_spct' objects.")
   }
   if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
     warning("'geom = ", geom, "' not supported, using default instead.")

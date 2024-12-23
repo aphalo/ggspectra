@@ -12,7 +12,7 @@
     list(photobiologyWavebands::UVC(), photobiologyWavebands::UVB(),
     photobiologyWavebands::UVA(), photobiologyWavebands::PhR())),
   range = getOption("ggspectra.wlrange", default = NULL),
-  norm = getOption("ggspectra.norm", default = "update"),
+  norm = NA,
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
   pc.out = getOption("ggspectra.pc.out", default = FALSE),
   label.qty = NULL,
@@ -36,7 +36,7 @@
   object,
   ...,
   range = getOption("ggspectra.wlrange", default = NULL),
-  norm = getOption("ggspectra.normalize", default = "update"),
+  norm = NA,
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
   pc.out = getOption("ggspectra.pc.out", default = FALSE),
   idfactor = TRUE,
@@ -57,11 +57,8 @@ to the plot methods for individual spectra, otherwise currently ignored.}
 \item{range}{an R object on which \code{range()} returns a vector of length
 2, with minimum and maximum wavelengths (nm).}
 
-\item{norm}{numeric Normalization wavelength (nm) or character string
-\code{"max"}, or \code{"min"} for normalization at the corresponding
-wavelength, \code{"update"} to update the normalization after modifying
-units of expression, quantity or range but respecting the previously used
-criterion, or \code{"skip"} to force return of \code{object} unchanged.}
+\item{norm}{numeric No longer supported, normalization is always updated if
+present and a unit conversion applied.}
 
 \item{unit.out}{character string indicating type of radiation units to use
 for plotting: \code{"photon"} or its synonym \code{"quantum"}, or
@@ -200,7 +197,7 @@ autoplot(sun_evening.spct, facets = 1) # one column
 autoplot(sun_evening.spct, facets = 2) # two columns
 autoplot(sun_evening.spct, plot.data = "mean")
 # needs 'photobiology' (> 0.11.2)
-# autoplot(sun_evening.spct, idfactor = "Sequence")
+autoplot(sun_evening.spct, idfactor = "Sequence")
 
 # multiple spectra as a collection
 autoplot(sun_evening.mspct)
