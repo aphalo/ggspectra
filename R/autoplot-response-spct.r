@@ -583,7 +583,6 @@ autoplot.response_spct <-
         autoplot(object = photobiology::subset2mspct(object),
                  w.band = w.band,
                  range = range,
-                 norm = norm,
                  pc.out = pc.out,
                  label.qty = label.qty,
                  span = span,
@@ -735,7 +734,6 @@ autoplot.response_mspct <-
     if (photobiology::is.response_spct(z) && any(col.name %in% names(z))) {
       autoplot(object = z,
                range = NULL,
-               norm = norm,
                unit.out = unit.out,
                pc.out = pc.out,
                facets = facets,
@@ -748,7 +746,6 @@ autoplot.response_mspct <-
       autoplot(object = z,
                y.name = paste(col.name[unit.out], plot.data, sep = "."),
                range = NULL,
-               norm = norm,
                pc.out = pc.out,
                facets = facets,
                idfactor = NULL, # use idfactor already set in z

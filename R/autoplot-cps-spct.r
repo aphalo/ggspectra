@@ -236,7 +236,7 @@ cps_plot <- function(spct,
 #'
 #' autoplot(white_led.cps_spct)
 #' autoplot(white_led.cps_spct, geom = "spct")
-#' autoplot(white_led.cps_spct, norm = "max")
+#' autoplot(normalize(white_led.cps_spct, norm = "max"))
 #'
 #' two_leds.mspct <-
 #'   cps_mspct(list("LED 1" = white_led.cps_spct,
@@ -281,7 +281,6 @@ autoplot.cps_spct <-
         autoplot(object = subset2mspct(object),
                  w.band = w.band,
                  range = range,
-                 norm = norm,
                  unit.out = unit.out,
                  pc.out = pc.out,
                  label.qty = label.qty,
@@ -348,7 +347,7 @@ autoplot.cps_mspct <-
   function(object,
            ...,
            range = getOption("ggspectra.wlrange", default = NULL),
-           norm = "skip",
+           norm = NA,
            unit.out = NULL,
            pc.out = getOption("ggspectra.pc.out", default = FALSE),
            idfactor = TRUE,
@@ -383,7 +382,6 @@ autoplot.cps_mspct <-
     if (is.cps_spct(z) && any(c("cps", "cps_1") %in% names(z))) {
       autoplot(object = z,
                range = getOption("ggspectra.wlrange", default = NULL),
-               norm = norm,
                pc.out = pc.out,
                idfactor = NULL, # use idfactor already set in z
                facets = facets,
@@ -395,7 +393,6 @@ autoplot.cps_mspct <-
       autoplot(object = z,
                y.name = paste("cps", plot.data, sep = "."),
                range = getOption("ggspectra.wlrange", default = NULL),
-               norm = norm,
                pc.out = pc.out,
                idfactor = NULL, # use idfactor already set in z
                facets = facets,

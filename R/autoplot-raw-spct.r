@@ -414,7 +414,6 @@ autoplot.raw_mspct <-
     if (is.raw_spct(z) && any(c("counts", "counts_1") %in% names(z))) {
       autoplot(object = z,
                range = getOption("ggspectra.wlrange", default = NULL),
-               norm = norm,
                unit.out = unit.out,
                pc.out = pc.out,
                idfactor = NULL, # use idfactor already set in z
@@ -427,7 +426,6 @@ autoplot.raw_mspct <-
       autoplot(object = z,
                y.name = paste("counts", plot.data, sep = "."),
                range = getOption("ggspectra.wlrange", default = NULL),
-               norm = norm,
                pc.out = pc.out,
                idfactor = NULL, # use idfactor already set in z
                facets = facets,

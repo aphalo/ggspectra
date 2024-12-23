@@ -34,7 +34,7 @@
   object,
   ...,
   range = getOption("ggspectra.wlrange", default = NULL),
-  norm = "skip",
+  norm = NA,
   unit.out = NULL,
   pc.out = getOption("ggspectra.pc.out", default = FALSE),
   idfactor = TRUE,
@@ -179,7 +179,7 @@ If \code{idfactor = NULL}, the default for single spectra, the name of
 
 autoplot(white_led.cps_spct)
 autoplot(white_led.cps_spct, geom = "spct")
-autoplot(white_led.cps_spct, norm = "max")
+autoplot(normalize(white_led.cps_spct, norm = "max"))
 
 two_leds.mspct <-
   cps_mspct(list("LED 1" = white_led.cps_spct,

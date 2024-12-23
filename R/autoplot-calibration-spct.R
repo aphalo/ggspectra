@@ -288,7 +288,6 @@ autoplot.calibration_spct <-
         autoplot(object = subset2mspct(object),
                  w.band = w.band,
                  range = range,
-                 norm = norm,
                  unit.out = unit.out,
                  pc.out = pc.out,
                  label.qty = label.qty,
@@ -333,7 +332,7 @@ autoplot.calibration_spct <-
              pc.out = pc.out,
              annotations = annotations,
              geom = geom,
-             norm = norm,
+             norm = FALSE, # cal_plot needs to be updated
              text.size = text.size,
              idfactor = idfactor,
              facets = facets,
@@ -388,7 +387,6 @@ autoplot.calibration_mspct <-
       autoplot(object = z,
                range = getOption("ggspectra.wlrange", default = NULL),
                unit.out = unit.out,
-               norm = norm,
                pc.out = pc.out,
                idfactor = NULL, # use idfactor already set in z
                facets = facets,
@@ -401,7 +399,6 @@ autoplot.calibration_mspct <-
                y.name = paste("irrad.mult", plot.data, sep = "."),
                range = getOption("ggspectra.wlrange", default = NULL),
                unit.out = unit.out,
-               norm = norm,
                pc.out = pc.out,
                idfactor = NULL, # use idfactor already set in z
                facets = facets,
