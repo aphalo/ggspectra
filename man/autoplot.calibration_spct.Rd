@@ -20,7 +20,7 @@
   geom = "line",
   time.format = "",
   tz = "UTC",
-  norm = NULL,
+  norm = NA,
   text.size = 2.5,
   idfactor = NULL,
   facets = FALSE,
@@ -35,7 +35,7 @@
   ...,
   range = getOption("ggspectra.wlrange", default = NULL),
   unit.out = "ignored",
-  norm = getOption("ggspectra.normalize", default = "skip"),
+  norm = NA,
   pc.out = getOption("ggspectra.pc.out", default = FALSE),
   plot.data = "as.is",
   idfactor = TRUE,
@@ -86,11 +86,8 @@ selects between them based on \code{stacked}.}
 
 \item{tz}{character Time zone to use for title and/or subtitle.}
 
-\item{norm}{numeric Normalization wavelength (nm) or character string
-\code{"max"}, or \code{"min"} for normalization at the corresponding
-wavelength, \code{"update"} to update the normalization after modifying
-units of expression, quantity or range but respecting the previously used
-criterion, or \code{"skip"} to force return of \code{object} unchanged.}
+\item{norm}{numeric No longer supported, normalization is always updated if
+present and a unit conversion applied.}
 
 \item{text.size}{numeric size of text in the plot decorations.}
 

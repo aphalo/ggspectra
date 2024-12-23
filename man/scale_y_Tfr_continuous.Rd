@@ -9,8 +9,9 @@
 scale_y_Tfr_continuous(
   unit.exponent = ifelse(pc.out, -2, 0),
   name = Tfr_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), axis.symbols =
-    axis.symbols, Tfr.type = Tfr.type),
+    label.text, scaled = scaled, normalized = ifelse(is.numeric(normalized),
+    round(normalized, 1), unique(normalized)), axis.symbols = axis.symbols, Tfr.type =
+    Tfr.type),
   labels = SI_pl_format(exponent = unit.exponent),
   limits = c(0, 1),
   format = getOption("photobiology.math", default = "R.expression"),
@@ -26,8 +27,9 @@ scale_y_Tfr_continuous(
 scale_y_Tfr_internal_continuous(
   unit.exponent = ifelse(pc.out, -2, 0),
   name = Tfr_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), axis.symbols =
-    axis.symbols, Tfr.type = "internal"),
+    label.text, scaled = scaled, normalized = ifelse(is.numeric(normalized),
+    round(normalized, 1), unique(normalized)), axis.symbols = axis.symbols, Tfr.type =
+    "internal"),
   labels = SI_pl_format(exponent = unit.exponent),
   limits = c(0, 1),
   format = getOption("photobiology.math", default = "R.expression"),
@@ -42,8 +44,9 @@ scale_y_Tfr_internal_continuous(
 scale_y_Tfr_total_continuous(
   unit.exponent = ifelse(pc.out, -2, 0),
   name = Tfr_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), axis.symbols =
-    axis.symbols, Tfr.type = "total"),
+    label.text, scaled = scaled, normalized = ifelse(is.numeric(normalized),
+    round(normalized, 1), unique(normalized)), axis.symbols = axis.symbols, Tfr.type =
+    "total"),
   labels = SI_pl_format(exponent = unit.exponent),
   limits = c(0, 1),
   format = getOption("photobiology.math", default = "R.expression"),
@@ -123,6 +126,11 @@ ggplot(yellow_gel.spct) +
   geom_line() +
   scale_y_Tfr_total_continuous(axis.symbols = FALSE) +
   scale_x_wl_continuous(axis.symbols = FALSE)
+
+ggplot(normalize(yellow_gel.spct)) +
+  geom_line() +
+  scale_y_Tfr_total_continuous(normalized = "max") +
+  scale_x_wl_continuous()
 
 unset_filter_qty_default()
 

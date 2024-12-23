@@ -11,6 +11,7 @@
   w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
     PhR())),
   range = getOption("ggspectra.wlrange", default = NULL),
+  norm = NA,
   unit.out = "counts",
   pc.out = getOption("ggspectra.pc.out", default = FALSE),
   label.qty = "mean",
@@ -20,7 +21,6 @@
   geom = "line",
   time.format = "",
   tz = "UTC",
-  norm = "skip",
   text.size = 2.5,
   idfactor = NULL,
   facets = FALSE,
@@ -34,7 +34,7 @@
   object,
   ...,
   range = getOption("ggspectra.wlrange", default = NULL),
-  norm = getOption("ggspectra.norm", default = "skip"),
+  norm = NA,
   unit.out = "counts",
   pc.out = getOption("ggspectra.pc.out", default = FALSE),
   idfactor = TRUE,
@@ -54,6 +54,9 @@ to the plot methods for individual spectra, otherwise currently ignored.}
 
 \item{range}{an R object on which \code{range()} returns a vector of length
 2, with minimum and maximum wavelengths (nm).}
+
+\item{norm}{numeric No longer supported, normalization is always updated if
+present and a unit conversion applied.}
 
 \item{unit.out}{character IGNORED.}
 
@@ -85,12 +88,6 @@ selects between them based on \code{stacked}.}
 \code{\link[base]{strptime}}.}
 
 \item{tz}{character Time zone to use for title and/or subtitle.}
-
-\item{norm}{numeric Normalization wavelength (nm) or character string
-\code{"max"}, or \code{"min"} for normalization at the corresponding
-wavelength, \code{"update"} to update the normalization after modifying
-units of expression, quantity or range but respecting the previously used
-criterion, or \code{"skip"} to force return of \code{object} unchanged.}
 
 \item{text.size}{numeric size of text in the plot decorations.}
 

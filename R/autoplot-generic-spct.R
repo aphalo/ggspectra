@@ -203,6 +203,7 @@ generic_plot <- function(spct,
 #'
 #' sun.generic_spct <- as.generic_spct(sun.spct)
 #' autoplot(sun.generic_spct, y.name = "s.q.irrad")
+#' autoplot(sun.generic_spct, y.name = "s.e.irrad")
 #' autoplot(sun.generic_spct, y.name = "s.q.irrad",
 #'          annotations = "")
 #' autoplot(sun.generic_spct, y.name = "s.q.irrad",
@@ -227,6 +228,7 @@ autoplot.generic_spct <-
              w.band = getOption("photobiology.plot.bands",
                                 default = list(UVC(), UVB(), UVA(), PhR())),
              range = getOption("ggspectra.wlrange", default = NULL),
+             norm = NA,
              label.qty = "none",
              span = NULL,
              wls.target = "HM",
@@ -241,6 +243,8 @@ autoplot.generic_spct <-
              na.rm = TRUE) {
 
       force(object.label)
+      warn_norm_arg(norm)
+      check_idfactor_arg(object, idfactor = idfactor)
 
       annotations.default <-
         getOption("photobiology.plot.annotations",
@@ -285,6 +289,6 @@ autoplot.generic_spct <-
 #' @export
 #'
 autoplot.generic_mspct <- function(object, ...) {
-  warning("No specialized 'autoplot()' method exist for objects of class generic_mspct.")
+  warning("No specialized 'autoplot()' method exists for objects of class generic_mspct.")
   ggplot()
 }

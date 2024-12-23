@@ -504,6 +504,7 @@ A `autoplot()` method for `waveband` objects is also provided.
 ```{r}
 autoplot(VIS())
 ```
+
 ```{r}
 autoplot(PAR(), range = c(200, 1000), geom = "spct", 
          unit.in = "photon", unit.out = "energy")

@@ -57,7 +57,7 @@ Afr_plot <- function(spct,
                      ylim,
                      na.rm,
                      ...) {
-  if (!is.filter_spct(spct)) {
+  if (!photobiology::is.filter_spct(spct)) {
     stop("Afr_plot() can only plot filter_spct objects.")
   }
 
@@ -65,15 +65,16 @@ Afr_plot <- function(spct,
     ylim <- rep(NA_real_, 2L)
   }
   force(spct)
-  spct <- any2Afr(spct, action = "add")
+  spct <- photobiology::any2Afr(spct, action = "add")
   if (!is.null(range)) {
-    spct <- trim_wl(spct, range = range)
+    spct <- photobiology::trim_wl(spct, range = range)
   }
   if (!is.null(w.band)) {
-    w.band <- trim_wl(w.band, range = range(spct))
+    w.band <-
+      photobiology::trim_wl(w.band, range = photobiology::wl_range(spct))
   }
 
-  if (is_scaled(spct)) {
+  if (photobiology::is_scaled(spct)) {
     if (pc.out) {
       warning("Percent not supported for scaled spectral data.")
       pc.out <- FALSE
@@ -82,9 +83,9 @@ Afr_plot <- function(spct,
     s.Afr.label <- expression(Spectral~~absorptance~~italic(A)[lambda]~~("rel."))
     Afr.label.total  <- "atop(italic(A), (rel))"
     Afr.label.avg  <- "atop(bar(italic(A)[lambda]), (rel))"
-  } else if (is_normalized(spct)) {
+  } else if (photobiology::is_normalized(spct)) {
     warning("Plotting of normalized absorptance not supported")
-    return(ggplot())
+    return(ggplot2::ggplot())
   } else if (pc.out) {
     scale.factor <- 100
     s.Afr.label <- expression(Spectral~~absorptance~~italic(A)[lambda]~~("%"))
@@ -136,7 +137,9 @@ Afr_plot <- function(spct,
     y.max <- max(spct[["Afr"]], 1, y.min, na.rm = TRUE)
   }
 
-  plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["Afr"]]))
+  plot <-
+    ggplot2::ggplot(spct,
+                    ggplot2::aes(x = .data[["w.length"]], y = .data[["Afr"]]))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
                         facets = facets,
@@ -147,37 +150,48 @@ Afr_plot <- function(spct,
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
     if (y.max > 1.005) {
-      plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "red")
+      plot <-
+        plot + ggplot2::geom_hline(yintercept = 1,
+                                   linetype = "dashed", colour = "red")
     } else {
-      plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "black")
+      plot <-
+        plot + ggplot2::geom_hline(yintercept = 1,
+                                   linetype = "dashed", colour = "black")
     }
     if (y.min < -0.005) {
-      plot <- plot + geom_hline(yintercept = 0,
-                                linetype = "dashed", colour = "red")
+      plot <-
+        plot + ggplot2::geom_hline(yintercept = 0,
+                                   linetype = "dashed", colour = "red")
     } else {
-      plot <- plot + geom_hline(yintercept = 0,
-                                linetype = "dashed", colour = "black")
+      plot <-
+        plot + ggplot2::geom_hline(yintercept = 0,
+                                   linetype = "dashed", colour = "black")
     }
   }
 
   if (!is.null(geom) && geom %in% c("area", "spct")) {
-    plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
+    plot <-
+      plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
-  plot <- plot + geom_line(na.rm = na.rm)
-  plot <- plot + labs(x = expression("Wavelength, "*lambda~(nm)), y = s.Afr.label)
+  plot <-
+    plot + ggplot2::geom_line(na.rm = na.rm)
+  plot <-
+    plot + ggplot2::labs(x = expression("Wavelength, "*lambda~(nm)),
+                         y = s.Afr.label)
 
   if (length(annotations) == 1 && annotations == "") {
     return(plot)
   }
 
-  plot <- plot + scale_fill_identity() + scale_color_identity()
+  plot <-
+    plot + ggplot2::scale_fill_identity() + ggplot2::scale_color_identity()
 
   plot <- plot + decoration(w.band = w.band,
                             label.mult = scale.factor,
                             y.max = y.max,
                             y.min = y.min,
-                            x.max = max(spct),
-                            x.min = min(spct),
+                            x.max = photobiology::wl_max(spct),
+                            x.min = photobiology::wl_min(spct),
                             annotations = annotations,
                             label.qty = label.qty,
                             span = span,
@@ -188,23 +202,29 @@ Afr_plot <- function(spct,
                             na.rm = TRUE)
 
   if (!is.null(annotations) &&
-      length(intersect(c("labels", "summaries", "colour.guide", "reserve.space"), annotations)) > 0L) {
+      length(intersect(c("labels", "summaries", "colour.guide", "reserve.space"),
+                       annotations)) > 0L) {
     y.limits <- c(y.min, y.min + (y.max - y.min) * 1.25)
-    x.limits <- c(min(spct) - wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
+    x.limits <- c(photobiology::wl_min(spct) -
+                    photobiology::wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
     y.limits <- c(y.min, y.max)
-    x.limits <- range(spct)
+    x.limits <- photobiology::wl_range(spct)
   }
 
   if (pc.out) {
-    plot <- plot + scale_y_continuous(labels = scales::percent, breaks = y.breaks,
-                                      limits = y.limits)
+    plot <-
+      plot + ggplot2::scale_y_continuous(labels = scales::percent,
+                                         breaks = y.breaks,
+                                         limits = y.limits)
   } else {
-    plot <- plot + scale_y_continuous(breaks = y.breaks,
-                                      limits = y.limits)
+    plot <-
+      plot + ggplot2::scale_y_continuous(breaks = y.breaks,
+                                         limits = y.limits)
   }
 
-  plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
+  plot + ggplot2::scale_x_continuous(limits = x.limits,
+                                     breaks = scales::pretty_breaks(n = 7))
 
 }
 
@@ -270,7 +290,7 @@ T_plot <- function(spct,
                    na.rm,
                    ylim,
                    ...) {
-  if (!is.filter_spct(spct)) {
+  if (!photobiology::is.filter_spct(spct)) {
     stop("T_plot() can only plot filter_spct objects.")
   }
   if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
@@ -281,29 +301,29 @@ T_plot <- function(spct,
     ylim <- rep(NA_real_, 2L)
   }
   force(spct)
-  spct <- any2T(spct, action = "replace")
+  spct <- photobiology::any2T(spct, action = "replace")
   if (!is.null(range)) {
-    spct <- trim_wl(spct, range = range)
+    spct <- photobiology::trim_wl(spct, range = range)
   }
-  Tfr.type <- getTfrType(spct)
+  Tfr.type <- photobiology::getTfrType(spct)
   if (!is.null(w.band)) {
-    w.band <- trim_wl(w.band, range = range(spct))
+    w.band <- trim_wl(w.band, range = photobiology::wl_range(spct))
   }
   if (!length(Tfr.type)) {
     Tfr.type <- "unknown"
   }
   Tfr.tag <- switch(Tfr.type,
-                     internal = "int",
-                     total = "tot",
+                    internal = "int",
+                    total = "tot",
                     unknown = "",
-                     NA_character_)
-  Tfr.name <- switch(Tfr.type,
-                    internal = "Internal",
-                    total = "Total",
-                    unknown = "Unknown-type",
                     NA_character_)
+  Tfr.name <- switch(Tfr.type,
+                     internal = "Internal",
+                     total = "Total",
+                     unknown = "Unknown-type",
+                     NA_character_)
 
-  if (is_scaled(spct)) {
+  if (photobiology::is_scaled(spct)) {
     if (pc.out) {
       warning("Percent not supported for scaled spectral data.")
       pc.out <- FALSE
@@ -312,13 +332,13 @@ T_plot <- function(spct,
     s.Tfr.label <- bquote(.(Tfr.name)~~spectral~~transmittance~~k %*% T[lambda]^{.(Tfr.tag)}~~("rel."))
     Tfr.label.total  <- paste("k %*% T^{", Tfr.tag,"}", sep = "")
     Tfr.label.avg  <- paste("bar(k %*% T[lambda]^{", Tfr.tag, "})", sep = "")
-  } else if (is_normalized(spct)) {
+  } else if (photobiology::is_normalized(spct)) {
     if (pc.out) {
       warning("Percent not supported for normalized spectral data.")
       pc.out <- FALSE
     }
     scale.factor <- 1
-    norm <- round(getNormalization(spct)[["norm.wl"]], 1)
+    norm <- round(photobiology::getNormalization(spct)[["norm.wl"]], 1)
     s.Tfr.label <- bquote(.(Tfr.name)~~spectral~~transmittance~~T[lambda]^{.(Tfr.tag)}/T[lambda==.(norm)]^{.(Tfr.tag)}~~("rel."))
     Tfr.label.total  <- paste("atop(T^{", Tfr.tag,
                               "}, T[lambda == ", norm, "]^{", Tfr.tag, "}",
@@ -377,7 +397,9 @@ T_plot <- function(spct,
     y.max <- max(c(spct[["Tfr"]], 1), na.rm = TRUE)
   }
 
-  plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["Tfr"]]))
+  plot <-
+    ggplot2::ggplot(spct,
+                    ggplot2::aes(x = .data[["w.length"]], y = .data[["Tfr"]]))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
                         facets = facets,
@@ -388,39 +410,44 @@ T_plot <- function(spct,
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
     if (y.max > 1.005) {
-      plot <- plot + geom_hline(yintercept = 1,
-                                linetype = "dashed", colour = "red")
+      plot <-
+        plot + ggplot2::geom_hline(yintercept = 1,
+                                   linetype = "dashed", colour = "red")
     } else {
-      plot <- plot + geom_hline(yintercept = 1,
-                                linetype = "dashed", colour = "black")
+      plot <-
+        plot + ggplot2::geom_hline(yintercept = 1,
+                                   linetype = "dashed", colour = "black")
     }
     if (y.min < -0.005) {
-      plot <- plot + geom_hline(yintercept = 0,
-                                linetype = "dashed", colour = "red")
+      plot <-
+        plot + ggplot2::geom_hline(yintercept = 0,
+                                   linetype = "dashed", colour = "red")
     } else {
-      plot <- plot + geom_hline(yintercept = 0,
-                                linetype = "dashed", colour = "black")
+      plot <-
+        plot + ggplot2::geom_hline(yintercept = 0,
+                                   linetype = "dashed", colour = "black")
     }
   }
 
   if (!is.null(geom) && geom %in% c("area", "spct")) {
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
-  plot <- plot + geom_line(na.rm = na.rm)
+  plot <- plot + ggplot2::geom_line(na.rm = na.rm)
   plot <- plot + labs(x = expression("Wavelength, "*lambda~(nm)), y = s.Tfr.label)
 
   if (length(annotations) == 1 && annotations == "") {
     return(plot)
   }
 
-  plot <- plot + scale_fill_identity() + scale_color_identity()
+  plot <-
+    plot + ggplot2::scale_fill_identity() + ggplot2::scale_color_identity()
 
   plot <- plot + decoration(w.band = w.band,
                             label.mult = scale.factor,
                             y.max = y.max,
                             y.min = y.min,
-                            x.max = max(spct),
-                            x.min = min(spct),
+                            x.max = photobiology::wl_max(spct),
+                            x.min = photobiology::wl_min(spct),
                             annotations = annotations,
                             label.qty = label.qty,
                             span = span,
@@ -439,14 +466,18 @@ T_plot <- function(spct,
     x.limits <- range(spct)
   }
   if (pc.out) {
-    plot <- plot + scale_y_continuous(labels = scales::percent, breaks = y.breaks,
-                                      limits = y.limits)
+    plot <-
+      plot + ggplot2::scale_y_continuous(labels = scales::percent, breaks = y.breaks,
+                                         limits = y.limits)
   } else {
-    plot <- plot + scale_y_continuous(breaks = y.breaks,
-                                      limits = y.limits)
+    plot <-
+      plot + ggplot2::scale_y_continuous(breaks = y.breaks,
+                                               limits = y.limits)
   }
 
-  plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
+  plot +
+    ggplot2::scale_x_continuous(limits = x.limits,
+                                breaks = scales::pretty_breaks(n = 7))
 
 }
 
@@ -510,7 +541,7 @@ A_plot <- function(spct,
                    na.rm,
                    ylim,
                    ...) {
-  if (!is.filter_spct(spct)) {
+  if (!photobiology::is.filter_spct(spct)) {
     stop("A_plot() can only plot filter_spct objects.")
   }
   if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
@@ -520,14 +551,14 @@ A_plot <- function(spct,
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
   }
-  spct <- any2A(spct, action = "replace")
+  spct <- photobiology::any2A(spct, action = "replace")
   if (!is.null(range)) {
-    spct <- trim_wl(spct, range = range)
+    spct <- photobiology::trim_wl(spct, range = range)
   }
   if (!is.null(w.band)) {
-    w.band <- trim_wl(w.band, range = range(spct))
+    w.band <- photobiology::trim_wl(w.band, range = photobiology::wl_range(spct))
   }
-  Tfr.type <- getTfrType(spct)
+  Tfr.type <- photobiology::getTfrType(spct)
   if (!length(Tfr.type)) {
     Tfr.type <- "unknown"
   }
@@ -541,11 +572,11 @@ A_plot <- function(spct,
                      total = "Total",
                      unknown = "Unknown-type",
                      NA_character_)
-  if (is_scaled(spct)) {
+  if (photobiology::is_scaled(spct)) {
     s.A.label <- bquote(.(Tfr.name)~~spectral~~absorbance~~k %*% A[lambda]^{.(Tfr.tag)}~~("rel."))
     A.label.total  <- paste("k %*% A^{", Tfr.tag, "}", sep = "")
     A.label.avg  <- paste("bar(k %*% A[lambda]^{", Tfr.tag, "})", sep = "")
-  } else if (is_normalized(spct)) {
+  } else if (photobiology::is_normalized(spct)) {
     norm <- round(getNormalization(spct)[["norm.wl"]], 1)
     s.A.label <- bquote(.(Tfr.name)~~spectral~~absorbance~~A[lambda]^{.(Tfr.tag)}/A[lambda==.(norm)]^{.(Tfr.tag)}~~("rel."))
     A.label.total  <- paste("atop(A^{", Tfr.tag,
@@ -581,8 +612,8 @@ A_plot <- function(spct,
   if (!is.na(ylim[1])) {
     y.min <- ylim[1]
     spct[["A"]] <- ifelse(spct[["A"]] < y.min,
-                            NA_real_,
-                            spct[["A"]])
+                          NA_real_,
+                          spct[["A"]])
   } else {
     y.min <- min(c(spct[["A"]], 0), na.rm = TRUE)
   }
@@ -590,13 +621,15 @@ A_plot <- function(spct,
   if (!is.na(ylim[2])) {
     y.max <- ylim[2]
     spct[["A"]] <- ifelse(spct[["A"]] > y.max,
-                            NA_real_,
-                            spct[["A"]])
+                          NA_real_,
+                          spct[["A"]])
   } else {
     y.max <- max(spct[["A"]], na.rm = TRUE)
   }
 
-  plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["A"]]))
+  plot <-
+    ggplot2::ggplot(spct,
+                    ggplot2::aes(x = .data[["w.length"]], y = .data[["A"]]))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
                         facets = facets,
@@ -607,12 +640,18 @@ A_plot <- function(spct,
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
     if (y.max > 6) {
-      plot <- plot + geom_hline(yintercept = 6, linetype = "dashed", colour = "red")
+      plot <-
+        plot + ggplot2::geom_hline(yintercept = 6,
+                                   linetype = "dashed", colour = "red")
     }
     if (y.min < -0.01) {
-      plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
+      plot <-
+        plot + ggplot2::geom_hline(yintercept = 0,
+                                   linetype = "dashed", colour = "red")
     } else {
-      plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+      plot <-
+        plot + ggplot2::geom_hline(yintercept = 0,
+                                   linetype = "dashed", colour = "black")
     }
   }
 
@@ -626,13 +665,14 @@ A_plot <- function(spct,
     return(plot)
   }
 
-  plot <- plot + scale_fill_identity() + scale_color_identity()
+  plot <-
+    plot + ggplot2::scale_fill_identity() + ggplot2::scale_color_identity()
 
   plot <- plot + decoration(w.band = w.band,
                             y.max = min(y.max, 6),
                             y.min = y.min,
-                            x.max = max(spct),
-                            x.min = min(spct),
+                            x.max = photobiology::wl_max(spct),
+                            x.min = photobiology::wl_min(spct),
                             annotations = annotations,
                             label.qty = label.qty,
                             span = span,
@@ -643,15 +683,17 @@ A_plot <- function(spct,
                             na.rm = TRUE)
 
   if (!is.null(annotations) &&
-      length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide", "reserve.space"), annotations)) > 0L) {
+      length(intersect(c("boxes", "segments", "labels", "summaries",
+                         "colour.guide", "reserve.space"), annotations)) > 0L) {
     y.limits <- c(y.min, min(y.max, 6) * 1.25)
-    x.limits <- c(min(spct) - wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
+    x.limits <- c(min(spct) - photobiology::wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
     y.limits <- c(y.min, min(y.max, 6))
     x.limits <- range(spct)
   }
-  plot <- plot + scale_y_continuous(limits = y.limits)
-  plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
+  plot <- plot + ggplot2::scale_y_continuous(limits = y.limits)
+  plot + ggplot2::scale_x_continuous(limits = x.limits,
+                                     breaks = scales::pretty_breaks(n = 7))
 
 }
 
@@ -754,13 +796,13 @@ R_plot <- function(spct,
                      unknown = "Unknown-type",
                      NA_character_)
 
-  if (is_scaled(spct)) {
+  if (photobiology::is_scaled(spct)) {
     scale.factor <- 1
     s.Rfr.label <- bquote(.(Rfr.name)~~spectral~~reflectance~~k %*% R[lambda]^{.(Rfr.tag)}~~("rel."))
     Rfr.label.total  <- paste("k %*% R^{", Rfr.tag, "}", sep = "")
     Rfr.label.avg  <- paste("bar(k %*% R[lambda]^{", Rfr.tag, "})", sep = "")
-  } else if (is_normalized(spct)) {
-    norm <- round(getNormalization(spct)[["norm.wl"]], 1)
+  } else if (photobiology::is_normalized(spct)) {
+    norm <- round(photobiology::getNormalization(spct)[["norm.wl"]], 1)
     s.Rfr.label <- bquote(.(Rfr.name)~~spectral~~reflectance~~R[lambda]^{.(Rfr.tag)}/R[lambda==.(norm)]^{.(Rfr.tag)}~~("rel."))
     Rfr.label.total  <- paste("atop(R^{", Rfr.tag,
                             "}, R[lambda == ", norm, "]^{", Rfr.tag, "})",
@@ -819,7 +861,7 @@ R_plot <- function(spct,
     y.max <- max(c(spct[["Rfr"]], 1), na.rm = TRUE)
   }
 
-  plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["Rfr"]]))
+  plot <- ggplot2::ggplot(spct, aes(x = .data[["w.length"]], y = .data[["Rfr"]]))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
                         facets = facets,
@@ -830,34 +872,44 @@ R_plot <- function(spct,
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
     if (y.max > 1.005) {
-      plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "red")
+      plot <-
+        plot + ggplot2::geom_hline(yintercept = 1,
+                                   linetype = "dashed", colour = "red")
     } else {
-      plot <- plot + geom_hline(yintercept = 1, linetype = "dashed", colour = "black")
+      plot <-
+        plot + ggplot2::geom_hline(yintercept = 1,
+                                   linetype = "dashed", colour = "black")
     }
     if (y.min < -0.005) {
-      plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
+      plot <-
+        plot + ggplot2::geom_hline(yintercept = 0,
+                                   linetype = "dashed", colour = "red")
     } else {
-      plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+      plot <-
+        plot + ggplot2::geom_hline(yintercept = 0,
+                                   linetype = "dashed", colour = "black")
     }
   }
 
   if (!is.null(geom) && geom %in% c("area", "spct")) {
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
-  plot <- plot + geom_line(na.rm = na.rm)
-  plot <- plot + labs(x = expression("Wavelength, "*lambda~(nm)), y = s.Rfr.label)
+  plot <- plot + ggplot2::geom_line(na.rm = na.rm)
+  plot <- plot + labs(x = expression("Wavelength, "*lambda~(nm)),
+                      y = s.Rfr.label)
 
   if (length(annotations) == 1 && annotations == "") {
     return(plot)
   }
 
-  plot <- plot + scale_fill_identity() + scale_color_identity()
+  plot <-
+    plot + ggplot2::scale_fill_identity() + ggplot2::scale_color_identity()
 
   plot <- plot + decoration(w.band = w.band,
                             y.max = y.max,
                             y.min = y.min,
-                            x.max = max(spct),
-                            x.min = min(spct),
+                            x.max = photobiology::wl_max(spct),
+                            x.min = photobiology::wl_min(spct),
                             annotations = annotations,
                             label.qty = label.qty,
                             span = span,
@@ -870,20 +922,24 @@ R_plot <- function(spct,
   if (!is.null(annotations) &&
       length(intersect(c("labels", "summaries", "colour.guide", "reserve.space"), annotations)) > 0L) {
     y.limits <- c(y.min, y.min + (y.max - y.min) * 1.25)
-    x.limits <- c(min(spct) - wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
+    x.limits <- c(min(spct) - photobiology::wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
     y.limits <- c(y.min, y.max)
-    x.limits <- range(spct)
+    x.limits <- photobiology::wl_range(spct)
   }
   if (pc.out) {
-    plot <- plot + scale_y_continuous(labels = scales::percent, breaks = y.breaks,
-                                      limits = y.limits)
+    plot <-
+      plot + ggplot2::scale_y_continuous(labels = scales::percent,
+                                         breaks = y.breaks,
+                                         limits = y.limits)
   } else {
-    plot <- plot + scale_y_continuous(breaks = y.breaks,
-                                      limits = y.limits)
+    plot <-
+      plot + ggplot2::scale_y_continuous(breaks = y.breaks,
+                                         limits = y.limits)
   }
 
-  plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
+  plot + ggplot2::scale_x_continuous(limits = x.limits,
+                                     breaks = scales::pretty_breaks(n = 7))
 }
 
 #' Create a complete ggplot for a object spectrum.
@@ -937,10 +993,10 @@ O_plot <- function(spct,
                    facets,
                    na.rm,
                    ylim) {
-  if (!is.object_spct(spct)) {
+  if (!photobiology::is.object_spct(spct)) {
     stop("O_plot() can only plot object_spct objects.")
   }
-  if (getMultipleWl(spct) > 1L && (is.null(facets) || !facets)) {
+  if (photobiology::getMultipleWl(spct) > 1L && (is.null(facets) || !facets)) {
     warning("Only one object spectrum per panel supported")
     facets <- TRUE
   } else if (is.null(facets)) {
@@ -961,10 +1017,11 @@ O_plot <- function(spct,
     warning("'ylim' not supported for stacked plots!")
   }
   if (!is.null(range)) {
-    spct <- trim_wl(spct, range = range)
+    spct <- photobiology::trim_wl(spct, range = range)
   }
   if (!is.null(w.band)) {
-    w.band <- trim_wl(w.band, range = range(spct))
+    w.band <- photobiology::trim_wl(w.band,
+                                    range = photobiology::wl_range(spct))
   }
   Rfr.type <- getRfrType(spct)
   if (length(Rfr.type) == 0) {
@@ -979,7 +1036,7 @@ O_plot <- function(spct,
   }
   if (Tfr.type == "internal") {
 #    warning("Internal transmittance converted to total transmittance")
-    spct <- convertTfrType(spct, Tfr.type = "total")
+    spct <- photobiology::convertTfrType(spct, Tfr.type = "total")
   }
   s.Rfr.label <- expression(atop(Spectral~~reflectance~R[lambda]~~absorptance~~A[lambda], and~~transmittance~T[lambda]))
   spct[["Afr"]] <- 1.0 - spct[["Tfr"]] - spct[["Rfr"]]
@@ -1033,55 +1090,73 @@ O_plot <- function(spct,
     }
   }
 
-  idfactor <- getIdFactor(spct) # needed as we will get a tibble back
-  molten.tb <- photobiology::spct_wide2long(spct, idfactor = "variable", rm.spct.class = TRUE)
+  idfactor <-
+    photobiology::getIdFactor(spct) # needed as we will get a tibble back
+  molten.tb <-
+    photobiology::spct_wide2long(spct, idfactor = "variable", rm.spct.class = TRUE)
 
-  plot <- ggplot(molten.tb, aes(x = .data[["w.length"]], y = .data[["value"]]))
-  attributes(plot[["data"]]) <- c(attributes(plot[["data"]]), get_attributes(spct))
+  plot <-
+    ggplot2::ggplot(molten.tb, aes(x = .data[["w.length"]], y = .data[["value"]]))
+  attributes(plot[["data"]]) <- c(attributes(plot[["data"]]),
+                                  photobiology::get_attributes(spct))
   if (stacked) {
     if (is.null(geom) || geom %in% c("spct", "area")) {
-      plot <- plot + geom_area(aes(alpha = .data[["variable"]]), fill = "black", colour = NA)
-      plot <- plot + scale_alpha_manual(values = c(Tfr = 0.4,
-                                                   Rfr = 0.25,
-                                                   Afr = 0.55),
-                                        breaks = c("Rfr", "Afr", "Tfr"),
-                                        labels = c(Tfr = expression(T[lambda]),
-                                                   Afr = expression(A[lambda]),
-                                                   Rfr = expression(R[lambda])),
-                                        guide = guide_legend(title = NULL))
-    } else {
-      plot <- plot + geom_line(aes(linetype = .data[["variable"]]),
-                               position = position_stack())
-      plot <- plot + scale_linetype(labels = c(Tfr = expression(T[lambda]),
+      plot <-
+        plot + geom_area(aes(alpha = .data[["variable"]]),
+                         fill = "black", colour = NA)
+      plot <-
+        plot +
+        ggplot2::scale_alpha_manual(values = c(Tfr = 0.4,
+                                               Rfr = 0.25,
+                                               Afr = 0.55),
+                                    breaks = c("Rfr", "Afr", "Tfr"),
+                                    labels = c(Tfr = expression(T[lambda]),
                                                Afr = expression(A[lambda]),
                                                Rfr = expression(R[lambda])),
                                     guide = guide_legend(title = NULL))
+    } else {
+      plot <-
+        plot + ggplot2::geom_line(aes(linetype = .data[["variable"]]),
+                                  position = ggplot2::position_stack())
+      plot <-
+        plot +
+        ggplot2::scale_linetype(labels = c(Tfr = expression(T[lambda]),
+                                           Afr = expression(A[lambda]),
+                                           Rfr = expression(R[lambda])),
+                                guide = guide_legend(title = NULL))
     }
   } else {
     if (!is.null(geom) && geom %in% c("spct", "area")) {
       plot <- plot + geom_spct(aes(group = .data[["variable"]]),
                                fill = "black", colour = NA, alpha = 0.2)
     }
-    plot <- plot + geom_line(aes(linetype = .data[["variable"]]))
-    plot <- plot + scale_linetype(labels = c(Tfr = expression(T[lambda]),
-                                             Afr = expression(A[lambda]),
-                                             Rfr = expression(R[lambda])),
-                                  guide = guide_legend(title = NULL))
+    plot <-
+      plot +
+      ggplot2::geom_line(aes(linetype = .data[["variable"]]))
+    plot <-
+      plot +
+      ggplot2::scale_linetype(labels = c(Tfr = expression(T[lambda]),
+                                         Afr = expression(A[lambda]),
+                                         Rfr = expression(R[lambda])),
+                              guide = ggplot2::guide_legend(title = NULL))
   }
   if (is.numeric(facets)) {
     plot <- plot +
-      facet_wrap(facets = vars(.data[[idfactor]]), ncol = as.integer(facets))
+      ggplot2::facet_wrap(facets = vars(.data[[idfactor]]),
+                          ncol = as.integer(facets))
   } else if (facets) {
     plot <- plot +
-      facet_wrap(facets = vars(.data[[idfactor]]))
+      ggplot2::facet_wrap(facets = vars(.data[[idfactor]]))
   }
-  plot <- plot + labs(x = expression("Wavelength, "*lambda~(nm)), y = s.Rfr.label)
+  plot <-
+    plot + ggplot2::labs(x = expression("Wavelength, "*lambda~(nm)), y = s.Rfr.label)
 
   if (length(annotations) == 1 && annotations == "") {
     return(plot)
   }
 
-  plot <- plot + scale_fill_identity() + scale_color_identity()
+  plot <-
+    plot + ggplot2::scale_fill_identity() + ggplot2::scale_color_identity()
 
   valid.annotations <- c("labels", "boxes", "segments", "colour.guide", "reserve.space")
   if (!stacked) {
@@ -1092,8 +1167,8 @@ O_plot <- function(spct,
   plot <- plot + decoration(w.band = w.band,
                             y.max = y.max,
                             y.min = y.min,
-                            x.max = max(spct),
-                            x.min = min(spct),
+                            x.max = photobiology::wl_max(spct),
+                            x.min = photobiology::wl_min(spct),
                             annotations = annotations,
                             label.qty = label.qty,
                             span = span,
@@ -1105,10 +1180,11 @@ O_plot <- function(spct,
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "colour.guide", "reserve.space"), annotations)) > 0L) {
     y.limits <- c(y.min, y.min + (y.max - y.min) * 1.25)
-    x.limits <- c(min(spct) - wl_expanse(spct) * 0.025, NA)
+    x.limits <-
+      c(photobiology::wl_min(spct) - photobiology::wl_expanse(spct) * 0.025, NA)
   } else {
     y.limits <- c(y.min, y.max)
-    x.limits <- range(spct)
+    x.limits <- photobiology::wl_range(spct)
   }
   if (pc.out) {
     plot <- plot +
@@ -1117,12 +1193,12 @@ O_plot <- function(spct,
                          limits = y.limits)
   } else {
     plot <-
-      plot + scale_y_continuous(breaks = y.breaks,
-                                limits = y.limits)
+      plot + ggplot2::scale_y_continuous(breaks = y.breaks,
+                                         limits = y.limits)
   }
 
- plot + scale_x_continuous(limits = x.limits,
-                           breaks = scales::pretty_breaks(n = 7))
+  plot + ggplot2::scale_x_continuous(limits = x.limits,
+                                     breaks = scales::pretty_breaks(n = 7))
 
 }
 
@@ -1168,13 +1244,13 @@ O_plot <- function(spct,
 #' autoplot(yellow_gel.spct)
 #' autoplot(yellow_gel.spct, geom = "spct")
 #' autoplot(yellow_gel.spct, plot.qty = "transmittance")
-#' autoplot(yellow_gel.spct, plot.qty = "absorptance")
 #' autoplot(yellow_gel.spct, plot.qty = "absorbance")
 #' autoplot(yellow_gel.spct, pc.out = TRUE)
 #' autoplot(yellow_gel.spct, annotations = c("+", "wls"))
 #'
 #' # spectra for two filters in long form
 #' autoplot(two_filters.spct)
+#' autoplot(two_filters.spct, idfactor = TRUE)
 #' autoplot(two_filters.spct, idfactor = "Spectra")
 #' autoplot(two_filters.spct, facets = TRUE)
 #'
@@ -1190,8 +1266,7 @@ autoplot.filter_spct <-
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PhR())),
            range = getOption("ggspectra.wlrange", default = NULL),
-           norm = getOption("ggspectra.norm",
-                            default = "update"),
+           norm = NA,
            plot.qty = getOption("photobiology.filter.qty",
                                 default = "transmittance"),
            pc.out = getOption("ggspectra.pc.out",
@@ -1212,19 +1287,16 @@ autoplot.filter_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
-    if (is.null(idfactor)) {
-      idfactor <- getIdFactor(object)
-    }
-    if (is.na(idfactor) || !is.character(idfactor)) {
-      idfactor <- getMultipleWl(object) > 1L
-    }
+    force(object.label)
+    warn_norm_arg(norm)
+    idfactor <- check_idfactor_arg(object, idfactor)
+    object <- rename_idfactor(object, idfactor)
 
     if (plot.data != "as.is") {
       return(
-        autoplot(object = subset2mspct(object),
+        autoplot(object = photobiology::subset2mspct(object),
                  w.band = w.band,
                  range = range,
-                 norm = norm,
                  plot.qty = plot.qty,
                  pc.out = pc.out,
                  label.qty = label.qty,
@@ -1245,19 +1317,11 @@ autoplot.filter_spct <-
       )
     }
 
-    force(object.label)
-
     annotations.default <-
       getOption("photobiology.plot.annotations",
                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
     annotations <- decode_annotations(annotations,
                                       annotations.default)
-    # normalization updated and quantity changed in one go
-    object <- photobiology::normalize(x = object,
-                                      range = range,
-                                      norm = norm,
-                                      qty.out = plot.qty,
-                                      na.rm = na.rm)
     if (is.null(label.qty)) {
       if (photobiology::is_normalized(object) ||
           photobiology::is_scaled(object)) {
@@ -1328,10 +1392,10 @@ autoplot.filter_spct <-
     }
     out.ggplot +
       autotitle(object = object,
-                   time.format = time.format,
-                   tz = tz,
-                   object.label = object.label,
-                   annotations = annotations)
+                time.format = time.format,
+                tz = tz,
+                object.label = object.label,
+                annotations = annotations)
   }
 
 #' @rdname autoplot.filter_spct
@@ -1342,8 +1406,7 @@ autoplot.filter_mspct <-
   function(object,
            ...,
            range = getOption("ggspectra.wlrange", default = NULL),
-           norm = getOption("ggspectra.norm",
-                            default = "update"),
+           norm = NA,
            plot.qty = getOption("photobiology.filter.qty",
                                 default = "transmittance"),
            pc.out = getOption("ggspectra.pc.out",
@@ -1355,27 +1418,20 @@ autoplot.filter_mspct <-
            na.rm = TRUE) {
 
     force(object.label)
+    warn_norm_arg(norm)
+    idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
-    idfactor <- validate_idfactor(idfactor = idfactor)
-    # We trim the spectra to avoid unnecesary computaions later
+    # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
       object <- photobiology::trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
-    }
-    # We apply the normalization to the collection if it is to be bound
-    # otherwise normalization is applied to the "parallel-summary" spectrum
-    if (plot.data == "as.is") {
-      object <- photobiology::normalize(object,
-                                        norm = norm,
-                                        qty.out = plot.qty,
-                                        na.rm = na.rm)
-      norm <- "skip"
     }
     # we convert spectra to the quantity to be plotted
     object <- switch(plot.qty,
                      transmittance = any2T(object, action = "replace"),
                      absorbance = any2A(object, action = "replace"),
                      # we need to discard T´Rfr if present
-                     absorptance = msmsply(any2Afr(object, action = "replace"), `[`, i = TRUE, j =  c("w.length", "Afr")))
+                     absorptance = msmsply(any2Afr(object, action = "replace"),
+                                           `[`, i = TRUE, j =  c("w.length", "Afr")))
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
     z <- switch(plot.data,
@@ -1390,13 +1446,12 @@ autoplot.filter_mspct <-
                 se = photobiology::s_se(object)
     )
     col.name <- c(transmittance = "Tfr", absorptance = "Afr", absorbance = "A")
-    if (is.filter_spct(z) && col.name[plot.qty] %in% names(z)) {
+    if (photobiology::is.filter_spct(z) && col.name[plot.qty] %in% names(z)) {
       autoplot(object = z,
                range = getOption("ggspectra.wlrange", default = NULL),
-               norm = norm,
                plot.qty = plot.qty,
                pc.out = pc.out,
-               idfactor = idfactor,
+               idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,
                na.rm = na.rm,
@@ -1407,9 +1462,8 @@ autoplot.filter_mspct <-
       autoplot(object = z,
                y.name = paste(col.name[plot.qty], plot.data, sep = "."),
                range = getOption("ggspectra.wlrange", default = NULL),
-               norm = norm,
                pc.out = pc.out,
-               idfactor = idfactor,
+               idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,
                na.rm = na.rm,
@@ -1457,8 +1511,7 @@ autoplot.reflector_spct <-
            w.band=getOption("photobiology.plot.bands",
                             default = list(UVC(), UVB(), UVA(), PhR())),
            range = getOption("ggspectra.wlrange", default = NULL),
-           norm = getOption("ggspectra.norm",
-                            default = "update"),
+           norm = NA,
            plot.qty = getOption("photobiology.reflector.qty",
                                 default = "reflectance"),
            pc.out = getOption("ggspectra.pc.out",
@@ -1479,19 +1532,16 @@ autoplot.reflector_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
-    if (is.null(idfactor)) {
-      idfactor <- getIdFactor(object)
-    }
-    if (is.na(idfactor) || !is.character(idfactor)) {
-      idfactor <- getMultipleWl(object) > 1L
-    }
+    force(object.label)
+    warn_norm_arg(norm)
+    idfactor <- check_idfactor_arg(object, idfactor)
+    object <- rename_idfactor(object, idfactor)
 
     if (plot.data != "as.is") {
       return(
-        autoplot(object = subset2mspct(object),
+        autoplot(object = photobiology::subset2mspct(object),
                  w.band = w.band,
                  range = range,
-                 norm = norm,
                  plot.qty = plot.qty,
                  pc.out = pc.out,
                  label.qty = label.qty,
@@ -1512,19 +1562,12 @@ autoplot.reflector_spct <-
       )
     }
 
-    force(object.label)
-
     annotations.default <-
       getOption("photobiology.plot.annotations",
                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
     annotations <- decode_annotations(annotations,
                                       annotations.default)
-    # normalization needs to be redone if unit.out has changed
-    object <- photobiology::normalize(x = object,
-                                      range = range,
-                                      norm = norm,
-                                      qty.out = plot.qty,
-                                      na.rm = na.rm)
+
     if (is.null(label.qty)) {
       if (photobiology::is_normalized(object) ||
           photobiology::is_scaled(object)) {
@@ -1578,7 +1621,7 @@ autoplot.reflector_mspct <-
   function(object,
            ...,
            range = getOption("ggspectra.wlrange", default = NULL),
-           norm = getOption("ggspectra.normalize", default = "update"),
+           norm = NA,
            plot.qty = getOption("photobiology.reflector.qty",
                                 default = "reflectance"),
            pc.out = getOption("ggspectra.pc.out",
@@ -1590,8 +1633,9 @@ autoplot.reflector_mspct <-
            na.rm = TRUE) {
 
     force(object.label)
+    warn_norm_arg(norm)
+    idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
-    idfactor <- validate_idfactor(idfactor = idfactor)
     # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
       object <- photobiology::trim_wl(object,
@@ -1599,15 +1643,7 @@ autoplot.reflector_mspct <-
                                       use.hinges = TRUE,
                                       fill = NULL)
     }
-    # We apply the normalization to the collection if it is to be bound
-    # otherwise normalization is applied to the "parallel-summary" spectrum
-    if (plot.data == "as.is") {
-      object <- photobiology::normalize(object,
-                                        norm = norm,
-                                        qty.out = plot.qty,
-                                        na.rm = na.rm)
-      norm <- "skip"
-    }
+
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
     z <- switch(plot.data,
@@ -1620,13 +1656,12 @@ autoplot.reflector_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
-    if (is.reflector_spct(z) && "Rfr" %in% names(z)) {
+    if (photobiology::is.reflector_spct(z) && "Rfr" %in% names(z)) {
       autoplot(object = z,
                range = getOption("ggspectra.wlrange", default = NULL),
-               norm = norm,
                plot.qty = plot.qty,
                pc.out = pc.out,
-               idfactor = idfactor,
+               idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,
                na.rm = na.rm,
@@ -1636,9 +1671,8 @@ autoplot.reflector_mspct <-
       autoplot(object = z,
                y.name = paste("Rfr", plot.data, sep = "."),
                range = getOption("ggspectra.wlrange", default = NULL),
-               norm = norm,
                pc.out = pc.out,
-               idfactor = idfactor,
+               idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,
                na.rm = na.rm,
@@ -1708,7 +1742,7 @@ autoplot.object_spct <-
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PhR())),
            range = getOption("ggspectra.wlrange", default = NULL),
-           norm = "skip",
+           norm = NA,
            plot.qty = "all",
            pc.out = getOption("ggspectra.pc.out",
                               default = FALSE),
@@ -1729,19 +1763,16 @@ autoplot.object_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
-    if (is.null(idfactor)) {
-      idfactor <- getIdFactor(object)
-    }
-    if (is.na(idfactor) || !is.character(idfactor)) {
-      idfactor <- getMultipleWl(object) > 1L
-    }
+    force(object.label)
+    warn_norm_arg(norm)
+    idfactor <- check_idfactor_arg(object, idfactor)
+    object <- rename_idfactor(object, idfactor)
 
     if (plot.data != "as.is") {
       return(
-        autoplot(object = subset2mspct(object),
+        autoplot(object = photobiology::subset2mspct(object, idfactor = idfactor),
                  w.band = w.band,
                  range = range,
-                 norm = norm,
                  plot.qty = plot.qty,
                  pc.out = pc.out,
                  label.qty = label.qty,
@@ -1763,12 +1794,11 @@ autoplot.object_spct <-
       )
     }
 
-    force(object.label)
     if (is.null(plot.qty)) {
       plot.qty <- "all"
     }
     if (is.null(facets)) {
-      facets <- plot.qty == "all" && getMultipleWl(object) > 1L
+      facets <- plot.qty == "all" && photobiology::getMultipleWl(object) > 1L
     }
 
     if (plot.qty == "all") {
@@ -1829,7 +1859,6 @@ autoplot.object_spct <-
       autoplot(object = object,
                w.band = w.band,
                range = range,
-               norm = norm,
                plot.qty = plot.qty,
                pc.out = pc.out,
                label.qty = label.qty,
@@ -1857,7 +1886,7 @@ autoplot.object_mspct <-
   function(object,
            ...,
            range = getOption("ggspectra.wlrange", default = NULL),
-           norm = "skip",
+           norm = NA,
            plot.qty = getOption("photobiology.filter.qty",
                                 default = "all"),
            pc.out = getOption("ggspectra.pc.out",
@@ -1869,8 +1898,9 @@ autoplot.object_mspct <-
            na.rm = TRUE) {
 
     force(object.label)
+    warn_norm_arg(norm)
+    idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
-    idfactor <- validate_idfactor(idfactor = idfactor)
     # facets will be forced later for "all" with a warning
     if (plot.qty == "reflectance") {
       object <- photobiology::as.reflector_mspct(object)
@@ -1884,15 +1914,7 @@ autoplot.object_mspct <-
                                       use.hinges = TRUE,
                                       fill = NULL)
     }
-    # We apply the normalization to the collection if it is to be bound
-    # otherwise normalization is applied to the "parallel-summary" spectrum
-    if (plot.data == "as.is" && plot.qty != "all") {
-      object <- photobiology::normalize(object,
-                                        norm = norm,
-                                        qty.out = plot.qty,
-                                        na.rm = na.rm)
-      norm <- "skip"
-    }
+
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
     z <- switch(plot.data,
@@ -1906,39 +1928,36 @@ autoplot.object_mspct <-
                 se = photobiology::s_se(object)
     )
     col.name <- c(transmittance = "Tfr", absorptance = "Afr", reflectance = "Rfr")
-    if ((is.object_spct(z) && sum(col.name %in% names(z)) >= 2) ||
-        (is.filter_spct(z) && any(c("Tfr", "Afr", "A")) %in% names(z)) ||
-        (is.reflector_spct(z) && "Rfr" %in% names(z)))  {
+    if ((photobiology::is.object_spct(z) && sum(col.name %in% names(z)) >= 2) ||
+        (photobiology::is.filter_spct(z) && any(c("Tfr", "Afr", "A")) %in% names(z)) ||
+        (photobiology::is.reflector_spct(z) && "Rfr" %in% names(z)))  {
       autoplot(object = z,
                range = getOption("ggspectra.wlrange", default = NULL),
-               norm = norm,
                plot.qty = plot.qty,
                pc.out = pc.out,
-               idfactor = idfactor,
+               idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,
                na.rm = na.rm,
                ...)
-    } else if (is.filter_spct(z) && !any(col.name %in% names(z))) {
-      z <- as.generic_spct(z)
+    } else if (photobiology::is.filter_spct(z) && !any(col.name %in% names(z))) {
+      z <- photobiology::as.generic_spct(z)
       autoplot(object = z,
                y.name = paste(col.name[plot.qty], plot.data, sep = "."),
                range = getOption("ggspectra.wlrange", default = NULL),
-               norm = norm,
                pc.out = pc.out,
-               idfactor = idfactor,
+               idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,
                na.rm = na.rm,
                ...)
-    } else if (is.reflector_spct(z) && !"Rfr" %in% names(z)) {
-      z <- as.generic_spct(z)
+    } else if (photobiology::is.reflector_spct(z) && !"Rfr" %in% names(z)) {
+      z <- photobiology::as.generic_spct(z)
       autoplot(object = z,
                y.name = paste("Rfr", plot.data, sep = "."),
                range = getOption("ggspectra.wlrange", default = NULL),
-               norm = norm,
                pc.out = pc.out,
-               idfactor = idfactor,
+               idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,
                na.rm = na.rm,

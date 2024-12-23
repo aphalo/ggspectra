@@ -14,7 +14,6 @@ raw_plot(
   wls.target,
   annotations,
   geom,
-  relative,
   text.size,
   idfactor,
   facets,

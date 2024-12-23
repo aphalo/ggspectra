@@ -11,7 +11,7 @@
   w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
     PhR())),
   range = getOption("ggspectra.wlrange", default = NULL),
-  norm = getOption("ggspectra.norm", default = "update"),
+  norm = NA,
   plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
   pc.out = getOption("ggspectra.pc.out", default = FALSE),
   label.qty = NULL,
@@ -35,7 +35,7 @@
   object,
   ...,
   range = getOption("ggspectra.wlrange", default = NULL),
-  norm = getOption("ggspectra.norm", default = "update"),
+  norm = NA,
   plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
   pc.out = getOption("ggspectra.pc.out", default = FALSE),
   plot.data = "as.is",
@@ -56,11 +56,8 @@ to the plot methods for individual spectra, otherwise currently ignored.}
 \item{range}{an R object on which \code{range()} returns a vector of length
 2, with minimum and maximum wavelengths (nm).}
 
-\item{norm}{numeric Normalization wavelength (nm) or character string
-\code{"max"}, or \code{"min"} for normalization at the corresponding
-wavelength, \code{"update"} to update the normalization after modifying
-units of expression, quantity or range but respecting the previously used
-criterion, or \code{"skip"} to force return of \code{object} unchanged.}
+\item{norm}{numeric No longer supported, normalization is always updated if
+present and a unit conversion applied.}
 
 \item{plot.qty}{character string one of "transmittance" or "absorbance".}
 
@@ -197,13 +194,13 @@ The plotting of absorbance is an exception to scale limits as the
 autoplot(yellow_gel.spct)
 autoplot(yellow_gel.spct, geom = "spct")
 autoplot(yellow_gel.spct, plot.qty = "transmittance")
-autoplot(yellow_gel.spct, plot.qty = "absorptance")
 autoplot(yellow_gel.spct, plot.qty = "absorbance")
 autoplot(yellow_gel.spct, pc.out = TRUE)
 autoplot(yellow_gel.spct, annotations = c("+", "wls"))
 
 # spectra for two filters in long form
 autoplot(two_filters.spct)
+autoplot(two_filters.spct, idfactor = TRUE)
 autoplot(two_filters.spct, idfactor = "Spectra")
 autoplot(two_filters.spct, facets = TRUE)
 

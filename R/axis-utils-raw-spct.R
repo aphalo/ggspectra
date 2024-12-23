@@ -47,7 +47,10 @@ counts_label <- function(unit.exponent = 3,
     } else if (format == "R.character") {
       "Pixel response N(lambda) (rel. units)"
     }
-  } else if (normalized) {
+  } else if (is.character(normalized) || normalized) {
+    if (is.logical(normalized)) {
+      normalized <- "norm"
+    }
     if (tolower(format) == "latex") {
       paste(label.text, " $N_{\\lambda} / N_{", normalized, "}$ (/1)", sep = "")
     } else if (format == "R.expression") {
@@ -137,16 +140,11 @@ counts_label <- function(unit.exponent = 3,
 #'   scale_y_counts_tg_continuous(unit.exponent = 0) +
 #'   scale_x_wl_continuous()
 #'
-#' norm_led.raw_spct <- normalize(white_led.raw_spct[ , 1:2], norm = "max")
+#' norm_led.raw_spct <- normalize(white_led.raw_spct, norm = "max")
 #'
 #' ggplot(norm_led.raw_spct) +
 #'   geom_line() +
-#'   scale_y_counts_continuous(normalized = getNormalized(norm_led.raw_spct)) +
-#'   scale_x_wl_continuous()
-#'
-#' ggplot(norm_led.raw_spct) +
-#'   geom_line() +
-#'   scale_y_counts_tg_continuous(normalized = getNormalized(norm_led.raw_spct)) +
+#'   scale_y_counts_continuous(unit.exponent = 0, normalized = "max") +
 #'   scale_x_wl_continuous()
 #'
 scale_y_counts_continuous <-
@@ -155,7 +153,9 @@ scale_y_counts_continuous <-
                                format = format,
                                label.text = label.text,
                                scaled = scaled,
-                               normalized = round(normalized, 1),
+                               normalized = ifelse(is.numeric(normalized),
+                                                   round(normalized, 1),
+                                                   unique(normalized)),
                                axis.symbols = axis.symbols),
            labels = SI_pl_format(exponent = unit.exponent),
            format = getOption("photobiology.math",
@@ -181,7 +181,9 @@ scale_y_counts_tg_continuous <-
                                format = format,
                                label.text = label.text,
                                scaled = scaled,
-                               normalized = round(normalized, 1),
+                               normalized = ifelse(is.numeric(normalized),
+                                                   round(normalized, 1),
+                                                   unique(normalized)),
                                axis.symbols = axis.symbols),
            labels = SI_tg_format(exponent = unit.exponent),
            format = getOption("photobiology.math",
@@ -192,7 +194,7 @@ scale_y_counts_tg_continuous <-
            axis.symbols = getOption("ggspectra.axis.symbols",
                                    default = TRUE),
            ...) {
-    scale_y_continuous(name = name,
-                       labels = labels,
-                       ...)
+    ggplot2::scale_y_continuous(name = name,
+                                labels = labels,
+                                ...)
   }

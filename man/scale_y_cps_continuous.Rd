@@ -7,8 +7,8 @@
 scale_y_cps_continuous(
   unit.exponent = 0,
   name = cps_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), axis.symbols =
-    axis.symbols),
+    label.text, scaled = scaled, normalized = ifelse(is.numeric(normalized),
+    round(normalized, 1), unique(normalized)), axis.symbols = axis.symbols),
   labels = SI_pl_format(exponent = unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["cps"]],
@@ -68,7 +68,18 @@ norm_led.cps_spct <- normalize(white_led.cps_spct, norm = "max")
 
 ggplot(norm_led.cps_spct) +
   geom_line() +
+  scale_y_cps_continuous(normalized = is_normalized(norm_led.cps_spct)) +
+  scale_x_wl_continuous()
+
+ggplot(norm_led.cps_spct) +
+  geom_line() +
   scale_y_cps_continuous(normalized = getNormalized(norm_led.cps_spct)) +
+  scale_x_wl_continuous()
+
+ggplot(norm_led.cps_spct) +
+  geom_line() +
+  scale_y_cps_continuous(normalized =
+     normalization(norm_led.cps_spct)$norm.type) +
   scale_x_wl_continuous()
 
 }

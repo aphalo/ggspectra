@@ -54,14 +54,13 @@ raw_plot <- function(spct,
                      wls.target,
                      annotations,
                      geom,
-                     relative,
                      text.size,
                      idfactor,
                      facets,
                      ylim,
                      na.rm) {
   if (!is.raw_spct(spct)) {
-    stop("raw_plot() can only plot response_spct objects.")
+    stop("raw_plot() can only plot 'raw_spct' objects.")
   }
   if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
     warning("'geom = ", geom, "' not supported, using default instead.")
@@ -281,10 +280,12 @@ raw_plot <- function(spct,
 #' @family autoplot methods
 #'
 autoplot.raw_spct <-
-  function(object, ...,
+  function(object,
+           ...,
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PhR())),
            range = getOption("ggspectra.wlrange", default = NULL),
+           norm = NA,
            unit.out = "counts",
            pc.out = getOption("ggspectra.pc.out", default = FALSE),
            label.qty = "mean",
@@ -294,7 +295,6 @@ autoplot.raw_spct <-
            geom = "line",
            time.format = "",
            tz = "UTC",
-           norm = "skip",
            text.size = 2.5,
            idfactor = NULL,
            facets = FALSE,
@@ -303,19 +303,16 @@ autoplot.raw_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
-    if (is.null(idfactor)) {
-      idfactor <- getIdFactor(object)
-    }
-    if (is.na(idfactor) || !is.character(idfactor)) {
-      idfactor <- getMultipleWl(object) > 1L
-    }
+    force(object.label)
+    warn_norm_arg(norm)
+    idfactor <- check_idfactor_arg(object, idfactor)
+    object <- rename_idfactor(object, idfactor)
 
-    if (plot.data != "as.is") {
+    if (photobiology::getMultipleWl(object) > 1L && plot.data != "as.is") {
       return(
         autoplot(object = subset2mspct(object),
                  w.band = w.band,
                  range = range,
-                 norm = norm,
                  unit.out = unit.out,
                  pc.out = pc.out,
                  label.qty = label.qty,
@@ -336,23 +333,13 @@ autoplot.raw_spct <-
       )
     }
 
-    force(object.label)
-
     annotations.default <-
       getOption("photobiology.plot.annotations",
                 default = c("boxes", "labels", "colour.guide",
                             "peaks", "boundaries"))
     annotations <- decode_annotations(annotations,
                                       annotations.default)
-    # avoid warning in 'photobiology' (== 0.10.10)
-    if (is.character(norm) && norm == "update" && !is_normalized(object)) {
-      norm <- "skip"
-    }
-    # normalization skipping is handled by normalize()
-    object <- photobiology::normalize(x = object,
-                                      range = range,
-                                      norm = norm,
-                                      na.rm = na.rm)
+
     if (length(w.band) == 0) {
       if (is.null(range)) {
         w.band <- waveband(object)
@@ -392,8 +379,7 @@ autoplot.raw_mspct <-
   function(object,
            ...,
            range = getOption("ggspectra.wlrange", default = NULL),
-           norm = getOption("ggspectra.norm",
-                            default = "skip"),
+           norm = NA,
            unit.out = "counts",
            pc.out = getOption("ggspectra.pc.out", default = FALSE),
            idfactor = TRUE,
@@ -403,23 +389,15 @@ autoplot.raw_mspct <-
            na.rm = TRUE) {
 
     force(object.label)
+    warn_norm_arg(norm)
+    idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
-    idfactor <- validate_idfactor(idfactor = idfactor)
     # We trim the spectra to avoid unnecesary computaions later
     if (!is.null(range)) {
       object <- photobiology::trim_wl(object,
                                       range = range,
                                       use.hinges = TRUE,
                                       fill = NULL)
-    }
-    # We apply the normalization to the collection if it is to be bound
-    # otherwise normalization is applied to the "parallel-summary" spectrum
-    if (plot.data == "as.is") {
-      object <- photobiology::normalize(object,
-                                        range = getOption("ggspectra.wlrange", default = NULL),
-                                        norm = norm,
-                                        na.rm = na.rm)
-      norm <- "skip"
     }
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
@@ -439,7 +417,7 @@ autoplot.raw_mspct <-
                norm = norm,
                unit.out = unit.out,
                pc.out = pc.out,
-               idfactor = idfactor,
+               idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,
                na.rm = na.rm,
@@ -451,7 +429,7 @@ autoplot.raw_mspct <-
                range = getOption("ggspectra.wlrange", default = NULL),
                norm = norm,
                pc.out = pc.out,
-               idfactor = idfactor,
+               idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,
                na.rm = na.rm,

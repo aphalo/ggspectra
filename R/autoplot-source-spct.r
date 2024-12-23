@@ -61,7 +61,7 @@ e_plot <- function(spct,
                    facets,
                    ylim,
                    na.rm) {
-  if (!is.source_spct(spct)) {
+  if (!photobiology::is.source_spct(spct)) {
     stop("e_plot() can only plot source_spct objects.")
   }
   spct[["s.q.irrad"]] <- NULL
@@ -73,13 +73,13 @@ e_plot <- function(spct,
     ylim <- rep(NA_real_, 2L)
   }
   if (!is.null(range)) {
-    spct <- trim_wl(spct, range = range)
+    spct <- photobiology::trim_wl(spct, range = range)
   }
   if (!is.null(w.band)) {
-    w.band <- trim_wl(w.band, range = range(spct))
+    w.band <- photobiology::trim_wl(w.band, range = range(spct))
   }
   duration.label <- NA
-  if (is_scaled(spct)) {
+  if (photobiology::is_scaled(spct)) {
     if (pc.out) {
       warning("Percent scale supported only for normalized source_spct objects.")
       pc.out <- FALSE
@@ -88,13 +88,13 @@ e_plot <- function(spct,
     irrad.label.total <- "atop(k %*% E, (\"rel.\"))"
     irrad.label.avg <- "atop(bar(E[lambda]), (\"rel.\"))"
     scale.factor <- 1
-  } else if (is_normalized(spct)) {
+  } else if (photobiology::is_normalized(spct)) {
     if (!pc.out) {
       multiplier.label <- "rel."
     } else {
       multiplier.label <- "%"
     }
-    norm <- round(getNormalization(spct)[["norm.wl"]], digits = 1)
+    norm <- round(photobiology::getNormalization(spct)[["norm.wl"]], digits = 1)
     s.irrad.label <- bquote(Spectral~~energy~~irradiance~~E[lambda]/E[lambda==.(norm)]~~(.(multiplier.label)))
     irrad.label.total <- "atop(E, (\"rel.\"))"
     irrad.label.avg <- bquote(atop(bar(E[lambda]), E[lambda==.(norm)]))
@@ -104,7 +104,7 @@ e_plot <- function(spct,
       warning("Percent scale supported only for normalized source_spct objects.")
       pc.out <- FALSE
     }
-    time.unit <- getTimeUnit(spct)
+    time.unit <- photobiology::getTimeUnit(spct)
     if (!length(time.unit)) {
       time.unit <- "unkonwn"
     }
@@ -159,7 +159,7 @@ e_plot <- function(spct,
   } else {
     irrad.label <- ""
   }
-  if (is_effective(spct)) {
+  if (photobiology::is_effective(spct)) {
     s.irrad.label <- sub("E[lambda]", "E[lambda]^{eff}", s.irrad.label, fixed = TRUE)
     irrad.label <- sub("E", "E^{eff}", irrad.label, fixed = TRUE)
     irrad.label.total <- sub("E", "E^{eff}", irrad.label.total, fixed = TRUE)
@@ -186,7 +186,9 @@ e_plot <- function(spct,
     y.max <- max(spct[["s.e.irrad"]], y.min, 0, na.rm = TRUE)
   }
 
-  plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["s.e.irrad"]]))
+  plot <- ggplot2::ggplot(spct,
+                          ggplot2::aes(x = .data[["w.length"]],
+                                       y = .data[["s.e.irrad"]]))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
                         facets = facets,
@@ -197,23 +199,25 @@ e_plot <- function(spct,
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
     if (y.min < (-0.01 * y.max)) {
-      plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
+      plot <- plot +
+        ggplot2::geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
     } else {
-      plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+      plot <- plot +
+        ggplot2::geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
     }
   }
 
   if (!is.null(geom) && geom %in% c("area", "spct")) {
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
-  plot <- plot + geom_line(na.rm = na.rm)
-  plot <- plot + labs(x = expression("Wavelength, "*lambda~(nm)), y = s.irrad.label)
+  plot <- plot + ggplot2::geom_line(na.rm = na.rm)
+  plot <- plot + ggplot2::labs(x = expression("Wavelength, "*lambda~(nm)), y = s.irrad.label)
 
   if (length(annotations) == 1 && annotations == "") {
     return(plot)
   }
 
-  plot <- plot + scale_fill_identity() + scale_color_identity()
+  plot <- plot + ggplot2::scale_fill_identity() + ggplot2::scale_color_identity()
 
   if (label.qty == "total") {
     label.qty <- "irrad"
@@ -223,7 +227,7 @@ e_plot <- function(spct,
 
   plot <- plot + decoration(w.band = w.band,
                             unit.out = "energy",
-                            time.unit = getTimeUnit(spct),
+                            time.unit = photobiology::getTimeUnit(spct),
                             y.max = y.max,
                             y.min = y.min,
                             x.max = max(spct),
@@ -237,24 +241,26 @@ e_plot <- function(spct,
                             chroma.type = chroma.type,
                             na.rm = TRUE)
 
-  if (is_effective(spct)) {
-    plot <- plot +  annotate("text",
-                             x = midpoint(spct),
-                             y = y.max,
-                             label = paste("BSWF:", getBSWFUsed(spct)),
-                             vjust = -0.5, size = rel(3),
-                             na.rm = TRUE)
+  if (photobiology::is_effective(spct)) {
+    plot <- plot +
+      ggplot2::annotate("text",
+                        x = photobiology::midpoint(spct),
+                        y = y.max,
+                        label = paste("BSWF:", photobiology::getBSWFUsed(spct)),
+                        vjust = -0.5, size = ggplot2::rel(3),
+                        na.rm = TRUE)
   }
 
   if (!is.na(duration.label)) {
-    plot <- plot +  annotate("text",
-                             x = min(spct),
-                             y = y.max,
-                             label = duration.label,
-                             vjust = -0.5,
-                             hjust = 0,
-                             size = rel(3),
-                             na.rm = TRUE)
+    plot <- plot +
+      ggplot2::annotate("text",
+                        x = min(spct),
+                        y = y.max,
+                        label = duration.label,
+                        vjust = -0.5,
+                        hjust = 0,
+                        size = ggplot2::rel(3),
+                        na.rm = TRUE)
   }
 
   if (abs(y.max - 1) < 0.02 && abs(y.min) < 0.02) {
@@ -267,7 +273,7 @@ e_plot <- function(spct,
       length(intersect(c("boxes", "segments", "labels", "summaries",
                          "colour.guide", "reserve.space"), annotations)) > 0L) {
     y.limits <- c(y.min, y.min + (y.max - y.min) * 1.25)
-    x.limits <- c(min(spct) - wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
+    x.limits <- c(min(spct) - photobiology::wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
     y.limits <- c(y.min, y.max * 1.05)
     x.limits <- range(spct)
@@ -275,15 +281,15 @@ e_plot <- function(spct,
 
   if (pc.out) {
     plot <- plot +
-      scale_y_continuous(labels = scales::percent,
+      ggplot2::scale_y_continuous(labels = scales::percent,
                          breaks = y.breaks,
                          limits = y.limits)
   } else {
     plot <-
-      plot + scale_y_continuous(breaks = y.breaks,
+      plot + ggplot2::scale_y_continuous(breaks = y.breaks,
                                 limits = y.limits)
   }
-  plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
+  plot + ggplot2::scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
 }
 
 #' Create a complete ggplot for light-source spectra.
@@ -349,7 +355,7 @@ q_plot <- function(spct,
                    facets,
                    ylim,
                    na.rm) {
-  if (!is.source_spct(spct)) {
+  if (!photobiology::is.source_spct(spct)) {
     stop("q_plot() can only plot source_spct objects.")
   }
   spct[["s.e.irrad"]] <- NULL
@@ -361,14 +367,14 @@ q_plot <- function(spct,
     ylim <- rep(NA_real_, 2L)
   }
   if (!is.null(range)) {
-    spct <- trim_wl(spct, range = range)
+    spct <- photobiology::trim_wl(spct, range = range)
   }
   if (!is.null(w.band)) {
-    w.band <- trim_wl(w.band, range = range(spct))
+    w.band <- photobiology::trim_wl(w.band, range = range(spct))
   }
 
   duration.label <- NA
-  if (is_scaled(spct)) {
+  if (photobiology::is_scaled(spct)) {
     if (pc.out) {
       warning("Percent scale supported only for normalized source_spct objects.")
       pc.out <- FALSE
@@ -377,13 +383,13 @@ q_plot <- function(spct,
     irrad.label.total <- "atop(k %*% Q, (\"rel.\"))"
     irrad.label.avg <- "atop(bar(Q[lambda]), (\"rel.\"))"
     scale.factor <- 1
-  } else  if (is_normalized(spct)) {
+  } else  if (photobiology::is_normalized(spct)) {
     if (!pc.out) {
       multiplier.label <- "rel."
     } else {
       multiplier.label <- "%"
     }
-    norm <- round(getNormalization(spct)[["norm.wl"]], digits = 1)
+    norm <- round(photobiology::getNormalization(spct)[["norm.wl"]], digits = 1)
     s.irrad.label <- bquote(Spectral~~photon~~exposure~~Q[lambda]/Q[lambda==.(norm)]~~(.(multiplier.label)))
     irrad.label.total <- "atop(Q, (\"rel.\"))"
     irrad.label.avg <- bquote(atop(bar(Q[lambda]), Q[lambda==.(norm)]))
@@ -393,7 +399,7 @@ q_plot <- function(spct,
       warning("Percent scale supported only for normalized source_spct objects.")
       pc.out <- FALSE
     }
-    time.unit <- getTimeUnit(spct)
+    time.unit <- photobiology::getTimeUnit(spct)
     if (!length(time.unit)) {
       time.unit <- "unkonwn"
     }
@@ -448,7 +454,7 @@ q_plot <- function(spct,
   } else {
     irrad.label <- ""
   }
-  if (is_effective(spct)) {
+  if (photobiology::is_effective(spct)) {
     s.irrad.label <- sub("Q[lambda]", "Q[lambda]^{eff}", s.irrad.label, fixed = TRUE)
     irrad.label <- sub("Q", "Q^{eff}", irrad.label, fixed = TRUE)
     irrad.label.total <- sub("Q", "Q^{eff}", irrad.label.total, fixed = TRUE)
@@ -475,7 +481,10 @@ q_plot <- function(spct,
     y.max <- max(spct[["s.q.irrad"]], y.min, 0, na.rm = TRUE)
   }
 
-  plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["s.q.irrad"]]))
+  plot <-
+    ggplot2::ggplot(spct,
+                    ggplot2::aes(x = .data[["w.length"]],
+                                 y = .data[["s.q.irrad"]]))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
                         facets = facets,
@@ -486,23 +495,27 @@ q_plot <- function(spct,
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
     if (y.min < (-0.01 * y.max)) {
-      plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
+      plot <- plot +
+        ggplot2::geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
     } else {
-      plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+      plot <- plot +
+        ggplot2::geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
     }
   }
 
   if (!is.null(geom) && geom %in% c("area", "spct")) {
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
-  plot <- plot + geom_line(na.rm = na.rm)
-  plot <- plot + labs(x = expression("Wavelength, "*lambda~(nm)), y = s.irrad.label)
+  plot <- plot + ggplot2::geom_line(na.rm = na.rm)
+  plot <- plot +
+    ggplot2::labs(x = expression("Wavelength, "*lambda~(nm)), y = s.irrad.label)
 
   if (length(annotations) == 1 && annotations == "") {
     return(plot)
   }
 
-  plot <- plot + scale_fill_identity() + scale_color_identity()
+  plot <-
+    plot + ggplot2::scale_fill_identity() + ggplot2::scale_color_identity()
 
   if (label.qty == "total") {
     label.qty <- "irrad"
@@ -512,7 +525,7 @@ q_plot <- function(spct,
 
   plot <- plot + decoration(w.band = w.band,
                             unit.out = "photon",
-                            time.unit = getTimeUnit(spct),
+                            time.unit = photobiology::getTimeUnit(spct),
                             y.max = y.max,
                             y.min = y.min,
                             x.max = max(spct),
@@ -526,24 +539,24 @@ q_plot <- function(spct,
                             chroma.type = chroma.type,
                             na.rm = TRUE)
 
-  if (is_effective(spct)) {
-    plot <- plot +  annotate("text",
-                             x = midpoint(spct),
-                             y = y.max,
-                             label = paste("BSWF:", getBSWFUsed(spct)),
-                             vjust = -0.5, size = rel(3),
-                             na.rm = TRUE)
+  if (photobiology::is_effective(spct)) {
+    plot <- plot +  ggplot2::annotate("text",
+                                      x = photobiology::midpoint(spct),
+                                      y = y.max,
+                                      label = paste("BSWF:", photobiology::getBSWFUsed(spct)),
+                                      vjust = -0.5, size = ggplot2::rel(3),
+                                      na.rm = TRUE)
   }
 
   if (!is.na(duration.label)) {
-    plot <- plot +  annotate("text",
-                             x = min(spct),
-                             y = y.max,
-                             label = duration.label,
-                             vjust = -0.5,
-                             hjust = 0,
-                             size = rel(3),
-                             na.rm = TRUE)
+    plot <- plot + ggplot2::annotate("text",
+                                     x = min(spct),
+                                     y = y.max,
+                                     label = duration.label,
+                                     vjust = -0.5,
+                                     hjust = 0,
+                                     size = ggplot2::rel(3),
+                                     na.rm = TRUE)
   }
 
   if (abs(y.max - 1) < 0.02 && abs(y.min) < 0.02) {
@@ -556,7 +569,7 @@ q_plot <- function(spct,
       length(intersect(c("boxes", "segments", "labels", "summaries",
                          "colour.guide", "reserve.space"), annotations)) > 0L) {
     y.limits <- c(y.min, y.min + (y.max - y.min) * 1.25)
-    x.limits <- c(min(spct) - wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
+    x.limits <- c(min(spct) - photobiology::wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
     y.limits <- c(y.min, y.max * 1.05)
     x.limits <- range(spct)
@@ -564,15 +577,16 @@ q_plot <- function(spct,
 
   if (pc.out) {
     plot <- plot +
-      scale_y_continuous(labels = scales::percent,
-                         breaks = y.breaks,
-                         limits = y.limits)
+      ggplot2::scale_y_continuous(labels = scales::percent,
+                                  breaks = y.breaks,
+                                  limits = y.limits)
   } else {
     plot <-
-      plot + scale_y_continuous(breaks = y.breaks,
-                                limits = y.limits)
+      plot + ggplot2::scale_y_continuous(breaks = y.breaks,
+                                         limits = y.limits)
   }
-  plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
+  plot + ggplot2::scale_x_continuous(limits = x.limits,
+                                     breaks = scales::pretty_breaks(n = 7))
 }
 
 #' Plot one or more light-source spectra.
@@ -589,11 +603,8 @@ q_plot <- function(spct,
 #' @param w.band a single waveband object or a list of waveband objects.
 #' @param range an R object on which \code{range()} returns a vector of length
 #'   2, with minimum and maximum wavelengths (nm).
-#' @param norm numeric Normalization wavelength (nm) or character string
-#'   \code{"max"}, or \code{"min"} for normalization at the corresponding
-#'   wavelength, \code{"update"} to update the normalization after modifying
-#'   units of expression, quantity or range but respecting the previously used
-#'   criterion, or \code{"skip"} to force return of \code{object} unchanged.
+#' @param norm numeric No longer supported, normalization is always updated if
+#'   present and a unit conversion applied.
 #' @param unit.out character string indicating type of radiation units to use
 #'   for plotting: \code{"photon"} or its synonym \code{"quantum"}, or
 #'   \code{"energy"}.
@@ -673,16 +684,15 @@ q_plot <- function(spct,
 #' autoplot(sun.spct)
 #' autoplot(sun.spct, geom = "spct")
 #' autoplot(sun.spct, unit.out = "photon")
-#' autoplot(sun.spct, norm = "max")
-#' autoplot(sun.spct, norm = "max", pc.out = TRUE)
+#' autoplot(normalize(sun.spct))
+#' autoplot(normalize(sun.spct), pc.out = TRUE)
 #'
 #' # multiple spectra in long form
 #' autoplot(sun_evening.spct)
 #' autoplot(sun_evening.spct, facets = 1) # one column
 #' autoplot(sun_evening.spct, facets = 2) # two columns
 #' autoplot(sun_evening.spct, plot.data = "mean")
-#' # needs 'photobiology' (> 0.11.2)
-#' # autoplot(sun_evening.spct, idfactor = "Sequence")
+#' autoplot(sun_evening.spct, idfactor = "Sequence")
 #'
 #' # multiple spectra as a collection
 #' autoplot(sun_evening.mspct)
@@ -701,8 +711,7 @@ autoplot.source_spct <-
                                              photobiologyWavebands::UVA(),
                                              photobiologyWavebands::PhR())),
            range = getOption("ggspectra.wlrange", default = NULL),
-           norm = getOption("ggspectra.norm",
-                            default = "update"),
+           norm = NA,
            unit.out = getOption("photobiology.radiation.unit",
                                 default = "energy"),
            pc.out = getOption("ggspectra.pc.out", default = FALSE),
@@ -722,58 +731,49 @@ autoplot.source_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
-    if (is.null(idfactor)) {
-      idfactor <- getIdFactor(object)
-    }
-    if (is.na(idfactor) || !is.character(idfactor)) {
-      idfactor <- getMultipleWl(object) > 1L
-    }
+    force(object.label)
+    warn_norm_arg(norm)
+    idfactor <- check_idfactor_arg(object, idfactor)
+    object <- rename_idfactor(object, idfactor)
 
-    if (plot.data != "as.is") {
+    if (photobiology::getMultipleWl(object) > 1L && plot.data != "as.is") {
       return(
-        autoplot(object = subset2mspct(object),
-                 w.band = w.band,
-                 range = range,
-                 norm = norm,
-                 unit.out = unit.out,
-                 pc.out = pc.out,
-                 label.qty = label.qty,
-                 span = span,
-                 wls.target = wls.target,
-                 annotations = annotations,
-                 geom = geom,
-                 time.format = time.format,
-                 tz = tz,
-                 text.size = text.size,
-                 chroma.type = chroma.type,
-                 idfactor = idfactor,
-                 facets = facets,
-                 plot.data = plot.data,
-                 ylim = ylim,
-                 object.label = object.label,
-                 na.rm = na.rm)
+        ggplot2::autoplot(object = photobiology::subset2mspct(object),
+                          w.band = w.band,
+                          range = range,
+                          unit.out = unit.out,
+                          pc.out = pc.out,
+                          label.qty = label.qty,
+                          span = span,
+                          wls.target = wls.target,
+                          annotations = annotations,
+                          geom = geom,
+                          time.format = time.format,
+                          tz = tz,
+                          text.size = text.size,
+                          chroma.type = chroma.type,
+                          idfactor = idfactor,
+                          facets = facets,
+                          plot.data = plot.data,
+                          ylim = ylim,
+                          object.label = object.label,
+                          na.rm = na.rm)
       )
     }
-
-    # support renaming of the idfactor
-    if (getMultipleWl(object) > 1L && is.character(idfactor) && length(idfactor)) {
-      setIdFactor(object, idfactor)
-    }
-    force(object.label)
 
     annotations.default <-
       getOption("photobiology.plot.annotations",
                 default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
     annotations <- decode_annotations(annotations,
                                       annotations.default)
-    # normalization updated and base of expression changed in one go
-    object <- normalize(x = object,
-                        range = range,
-                        norm = norm,
-                        unit.out = unit.out,
-                        na.rm = na.rm)
+    # Change units if needed, and update normalization
+    object <- switch(unit.out,
+                     photon = photobiology::e2q(object, action = "replace"),
+                     energy = photobiology::q2e(object, action = "replace"))
+
     if (is.null(label.qty)) {
-      if (is_normalized(object) || is_scaled(object)) {
+      if (photobiology::is_normalized(object) ||
+          photobiology::is_scaled(object)) {
         label.qty = "contribution"
       } else {
         label.qty = "total"
@@ -782,14 +782,14 @@ autoplot.source_spct <-
 
     if (length(w.band) == 0) {
       if (is.null(range)) {
-        w.band <- waveband(object)
-      } else if (is.waveband(range)) {
+        w.band <- photobiology::waveband(object)
+      } else if (photobiology::is.waveband(range)) {
         w.band <- range
       } else {
-        w.band <- waveband(range, wb.name = "Total")
+        w.band <- photobiology::waveband(range, wb.name = "Total")
       }
     }
-    if (is.waveband(w.band)) {
+    if (photobiology::is.waveband(w.band)) {
       w.band <- list(w.band)
     }
     labels <- sapply(w.band, labels)[1, ]
@@ -853,8 +853,7 @@ autoplot.source_mspct <-
   function(object,
            ...,
            range = getOption("ggspectra.wlrange", default = NULL),
-           norm = getOption("ggspectra.normalize",
-                            default = "update"),
+           norm = NA,
            unit.out = getOption("photobiology.radiation.unit",
                                 default = "energy"),
            pc.out = getOption("ggspectra.pc.out", default = FALSE),
@@ -865,23 +864,15 @@ autoplot.source_mspct <-
            na.rm = TRUE) {
 
     force(object.label)
+    warn_norm_arg(norm)
+    idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
-    idfactor <- validate_idfactor(idfactor = idfactor)
     # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
       object <- photobiology::trim_wl(object,
                                       range = range,
                                       use.hinges = TRUE,
                                       fill = NULL)
-    }
-    # We apply the normalization and change of unit to the collection if it is to be bound
-    # otherwise normalization is applied to the "parallel-summary" spectrum
-    if (plot.data == "as.is") {
-      object <- photobiology::normalize(object,
-                                        norm = norm,
-                                        unit.out = unit.out,
-                                        na.rm = na.rm)
-      norm <- "skip"
     }
     # we ensure the units are correct
     object <- switch(unit.out,
@@ -890,10 +881,7 @@ autoplot.source_mspct <-
     # we convert the collection of spectra into a single spectrum object
     # containing a summary spectrum or multiple spectra in long form.
     z <- switch(plot.data,
-                as.is = photobiology::rbindspct(object,
-                                                idfactor = ifelse(is.na(idfactor),
-                                                                  "spct.idx",
-                                                                  idfactor)),
+                as.is = photobiology::rbindspct(object, idfactor = idfactor),
                 mean = photobiology::s_mean(object),
                 median = photobiology::s_median(object),
                 sum = photobiology::s_sum(object),
@@ -904,13 +892,12 @@ autoplot.source_mspct <-
     )
 
     col.name <- c(photon = "s.q.irrad", energy = "s.e.irrad")
-    if (is.source_spct(z) && any(col.name %in% names(z))) {
+    if (photobiology::is.source_spct(z) && any(col.name %in% names(z))) {
       ggplot2::autoplot(object = z,
                         range = getOption("ggspectra.wlrange", default = NULL),
-                        norm = norm,
                         unit.out = unit.out,
                         pc.out = pc.out,
-                        idfactor = idfactor,
+                        idfactor = NULL, # use idfactor already set in z
                         facets = facets,
                         object.label = object.label,
                         na.rm = na.rm,
@@ -920,9 +907,8 @@ autoplot.source_mspct <-
       ggplot2::autoplot(object = z,
                         y.name = paste(col.name[unit.out], plot.data, sep = "."),
                         range = getOption("ggspectra.wlrange", default = NULL),
-                        norm = norm,
                         pc.out = pc.out,
-                        idfactor = idfactor,
+                        idfactor = NULL, # use idfactor already set in z
                         facets = facets,
                         object.label = object.label,
                         na.rm = na.rm,
@@ -930,19 +916,3 @@ autoplot.source_mspct <-
     }
   }
 
-## internal
-
-#' Convert lubridate duration objects to a string if possible
-#'
-#' @param time.unit lubridate::duration object or character
-#'
-#' @keywords internal
-#'
-duration2character <- function(time.unit) {
-  if (is.character(time.unit)) return(time.unit)
-  if (!lubridate::is.duration(time.unit)) return("unknown")
-  if (time.unit == lubridate::duration(1, "seconds")) return("second")
-  if (time.unit == lubridate::duration(1, "hours")) return("hour")
-  if (time.unit == lubridate::duration(1, "days")) return("day")
-  "duration"
-}

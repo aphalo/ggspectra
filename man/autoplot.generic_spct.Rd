@@ -15,6 +15,7 @@
   w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
     PhR())),
   range = getOption("ggspectra.wlrange", default = NULL),
+  norm = NA,
   label.qty = "none",
   span = NULL,
   wls.target = "HM",
@@ -46,6 +47,9 @@ to the y aesthetic.}
 
 \item{range}{an R object on which \code{range()} returns a vector of length
 2, with minimum and maximum wavelengths (nm).}
+
+\item{norm}{numeric No longer supported, normalization is always updated if
+present and a unit conversion applied.}
 
 \item{label.qty}{character string giving the type of summary quantity to use
 for labels, one of \code{"mean"}, \code{"total"}, \code{"contribution"},
@@ -155,6 +159,7 @@ If \code{idfactor = NULL}, the default for single spectra, the name of
 
 sun.generic_spct <- as.generic_spct(sun.spct)
 autoplot(sun.generic_spct, y.name = "s.q.irrad")
+autoplot(sun.generic_spct, y.name = "s.e.irrad")
 autoplot(sun.generic_spct, y.name = "s.q.irrad",
          annotations = "")
 autoplot(sun.generic_spct, y.name = "s.q.irrad",

@@ -10,8 +10,8 @@
 scale_y_s.e.irrad_continuous(
   unit.exponent = 0,
   name = s.e.irrad_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), axis.symbols =
-    axis.symbols),
+    label.text, scaled = scaled, normalized = ifelse(is.numeric(normalized),
+    round(normalized, 1), unique(normalized)), axis.symbols = axis.symbols),
   labels = SI_pl_format(exponent = unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.e.irrad"]],
@@ -24,8 +24,8 @@ scale_y_s.e.irrad_continuous(
 scale_y_s.q.irrad_continuous(
   unit.exponent = ifelse(normalized, 0, -6),
   name = s.q.irrad_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), axis.symbols =
-    axis.symbols),
+    label.text, scaled = scaled, normalized = ifelse(is.numeric(normalized),
+    round(normalized, 1), unique(normalized)), axis.symbols = axis.symbols),
   labels = SI_pl_format(exponent = unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.q.irrad"]],
@@ -38,8 +38,8 @@ scale_y_s.q.irrad_continuous(
 scale_y_s.e.irrad_log10(
   unit.exponent = 0,
   name = s.e.irrad_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), axis.symbols =
-    axis.symbols),
+    label.text, scaled = scaled, normalized = ifelse(is.numeric(normalized),
+    round(normalized, 1), unique(normalized)), axis.symbols = axis.symbols),
   labels = SI_pl_format(exponent = unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.e.irrad"]],
@@ -52,8 +52,8 @@ scale_y_s.e.irrad_log10(
 scale_y_s.q.irrad_log10(
   unit.exponent = ifelse(normalized, 0, -6),
   name = s.q.irrad_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = round(normalized, 1), axis.symbols =
-    axis.symbols),
+    label.text, scaled = scaled, normalized = ifelse(is.numeric(normalized),
+    round(normalized, 1), unique(normalized)), axis.symbols = axis.symbols),
   labels = SI_pl_format(exponent = unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.q.irrad"]],
@@ -131,11 +131,17 @@ ggplot(clip_wl(sun.spct, c(295, NA)),
   scale_x_wl_continuous()
 
 photon_as_default()
-normalized_sun.spct <- normalize(sun.spct)
+normalized_sun.spct <- normalize(e2q(sun.spct, action = "replace"))
 ggplot(normalized_sun.spct) +
   geom_line(na.rm = TRUE) +
   scale_y_s.q.irrad_continuous(normalized =
-                            getNormalized(normalized_sun.spct)) +
+                            normalization(normalized_sun.spct)$norm.wl) +
+  scale_x_wl_continuous()
+
+ggplot(normalized_sun.spct) +
+  geom_line(na.rm = TRUE) +
+  scale_y_s.q.irrad_continuous(normalized =
+                            normalization(normalized_sun.spct)$norm.type) +
   scale_x_wl_continuous()
 
 unset_radiation_unit_default()

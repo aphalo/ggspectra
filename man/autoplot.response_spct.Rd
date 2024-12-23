@@ -8,10 +8,11 @@
 \method{autoplot}{response_spct}(
   object,
   ...,
-  w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
-    PhR())),
+  w.band = getOption("photobiology.plot.bands", default =
+    list(photobiologyWavebands::UVC(), photobiologyWavebands::UVB(),
+    photobiologyWavebands::UVA(), photobiologyWavebands::PhR())),
   range = getOption("ggspectra.wlrange", default = NULL),
-  norm = getOption("ggspectra.norm", default = "update"),
+  norm = NA,
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
   pc.out = getOption("ggspectra.pc.out", default = FALSE),
   label.qty = NULL,
@@ -34,7 +35,7 @@
   object,
   ...,
   range = getOption("ggspectra.wlrange", default = NULL),
-  norm = getOption("ggspectra.norm", default = "update"),
+  norm = NA,
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
   pc.out = getOption("ggspectra.pc.out", default = FALSE),
   plot.data = "as.is",
@@ -55,11 +56,8 @@ to the plot methods for individual spectra, otherwise currently ignored.}
 \item{range}{an R object on which \code{range()} returns a vector of length
 2, with minimum and maximum wavelengths (nm).}
 
-\item{norm}{numeric Normalization wavelength (nm) or character string
-\code{"max"}, or \code{"min"} for normalization at the corresponding
-wavelength, \code{"update"} to update the normalization after modifying
-units of expression, quantity or range but respecting the previously used
-criterion, or \code{"skip"} to force return of \code{object} unchanged.}
+\item{norm}{numeric No longer supported, normalization is always updated if
+present and a unit conversion applied.}
 
 \item{unit.out}{character string indicating type of radiation units to use
 for plotting: \code{"photon"} or its synonym \code{"quantum"}, or
@@ -188,16 +186,16 @@ autoplot(photodiode.spct)
 autoplot(photodiode.spct, geom = "spct")
 autoplot(photodiode.spct, unit.out = "photon")
 autoplot(photodiode.spct, annotations = "")
-autoplot(photodiode.spct, norm = "skip")
-autoplot(photodiode.spct, norm = 400)
 
 two_sensors.mspct <-
  response_mspct(list("Photodiode" = photodiode.spct,
-                     "Coupled charge device" = ccd.spct))
-autoplot(two_sensors.mspct, normalize = TRUE, unit.out = "photon")
-autoplot(two_sensors.mspct, normalize = TRUE, idfactor = "Spectra")
-autoplot(two_sensors.mspct, normalize = TRUE, facets = 2)
-autoplot(two_sensors.mspct, normalize = TRUE, geom = "spct")
+                     "Coupled charge device" = ccd.spct)) |>
+ normalize()
+
+autoplot(two_sensors.mspct, unit.out = "photon")
+autoplot(two_sensors.mspct, idfactor = "Spectra")
+autoplot(two_sensors.mspct, facets = 2)
+autoplot(two_sensors.mspct, geom = "spct")
 
 }
 \seealso{

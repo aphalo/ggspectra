@@ -11,7 +11,7 @@
   w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
     PhR())),
   range = getOption("ggspectra.wlrange", default = NULL),
-  norm = "skip",
+  norm = NA,
   unit.out = NULL,
   pc.out = getOption("ggspectra.pc.out", default = FALSE),
   label.qty = "mean",
@@ -55,11 +55,8 @@ to the plot methods for individual spectra, otherwise currently ignored.}
 \item{range}{an R object on which \code{range()} returns a vector of length
 2, with minimum and maximum wavelengths (nm).}
 
-\item{norm}{numeric Normalization wavelength (nm) or character string
-\code{"max"}, or \code{"min"} for normalization at the corresponding
-wavelength, \code{"update"} to update the normalization after modifying
-units of expression, quantity or range but respecting the previously used
-criterion, or \code{"skip"} to force return of \code{object} unchanged.}
+\item{norm}{numeric No longer supported, normalization is always updated if
+present and a unit conversion applied.}
 
 \item{unit.out}{character IGNORED.}
 
