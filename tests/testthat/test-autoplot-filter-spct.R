@@ -20,6 +20,8 @@ Ler_leaf.spct <- clean(Ler_leaf.spct, min.Afr = 1e-5, range.s.data = c(1e-5, 1 -
 
 test_that("filter_spct default", {
   set_annotations_default()
+  Tfr_as_default()
+
   vdiffr::expect_doppelganger("filter-default-tot-scaled",
                               autoplot(fscale(Ler_leaf_trns.spct, target = 0.06,
                                               range = c(400,700), set.scaled = TRUE)))
@@ -28,6 +30,10 @@ test_that("filter_spct default", {
 
   vdiffr::expect_doppelganger("filter-default-tot",
                               autoplot(Ler_leaf_trns.spct))
+  vdiffr::expect_doppelganger("filter-default-tot2a",
+                              autoplot(Ler_leaf_trns.spct, plot.qty = "absorbance"))
+  # vdiffr::expect_doppelganger("filter-default-tot2afr",
+  #                             autoplot(Ler_leaf_trns.spct, plot.qty = "absorptance"))
   vdiffr::expect_doppelganger("filter-default-tot-ylim",
                               autoplot(Ler_leaf_trns.spct, ylim = c(-0.05, 0.5)))
   vdiffr::expect_doppelganger("filter-default-pc-out-tot",
@@ -95,11 +101,18 @@ test_that("filter_spct default", {
 
 test_that("filter_spct absorptance", {
   set_annotations_default()
+  Afr_as_default()
 
   Ler_leaf_Afr_i_spct <- T2Afr(Ler_leaf_trns_i.spct)
 
   vdiffr::expect_doppelganger("filter-default-apt",
                               autoplot(Ler_leaf_Afr_i_spct))
+  vdiffr::expect_doppelganger("filter-default-apt2t",
+                              autoplot(Ler_leaf_Afr_i_spct,
+                                       plot.qty = "transmittance"))
+  vdiffr::expect_doppelganger("filter-default-apt2a",
+                              autoplot(Ler_leaf_Afr_i_spct,
+                                       plot.qty = "absorbance"))
   vdiffr::expect_doppelganger("filter-default-apt-ylim",
                               autoplot(Ler_leaf_Afr_i_spct, ylim = c(-0.1, 1.2)))
   vdiffr::expect_doppelganger("filter-default-pc-out-apt",
@@ -136,6 +149,12 @@ test_that("filter_spct A", {
 
   Ler_leaf_A_i_spct <- T2A(Ler_leaf_trns_i.spct, action = "replace")
 
+  vdiffr::expect_doppelganger("filter-default-a2t",
+                              autoplot(Ler_leaf_A_i_spct, range = c(300, NA),
+                                       plot.qty = "transmittance"))
+  # vdiffr::expect_doppelganger("filter-default-a2afr",
+  #                             autoplot(Ler_leaf_A_i_spct, range = c(300, NA),
+  #                                      plot.qty = "absorptance"))
   vdiffr::expect_doppelganger("filter-default-a-scaled",
                               autoplot(fscale(Ler_leaf_A_i_spct, target = 2,
                                               range = c(400,700), set.scaled = TRUE),
@@ -151,7 +170,7 @@ test_that("filter_spct A", {
   vdiffr::expect_doppelganger("filter-text-size-a",
                               autoplot(Ler_leaf_A_i_spct, range = c(300, NA), text.size = 3.5))
   vdiffr::expect_doppelganger("filter-span-31-a",
-                              autoplot(Ler_leaf_A_i_spct, range = c(300, NA), span = 31))
+                              autoplot(Ler_leaf_A_i_spct, range = c(300, NA), span = 11))
   vdiffr::expect_doppelganger("filter-wb-vis-a",
                               autoplot(Ler_leaf_A_i_spct, range = c(300, NA), w.band = VIS_bands()))
   vdiffr::expect_doppelganger("filter-label-average-a",
@@ -276,6 +295,8 @@ test_that("reflector_spct", {
                                               range = c(400,700), set.scaled = TRUE)))
   vdiffr::expect_doppelganger("reflector-default-tot-normalized",
                               autoplot(normalize(Ler_leaf_rflt.spct, norm = "max")))
+  vdiffr::expect_doppelganger("reflector-default-tot-normalized-759",
+                              autoplot(normalize(Ler_leaf_rflt.spct, norm = 759.1)))
 
   vdiffr::expect_doppelganger("reflector-default-tot",
                               autoplot(Ler_leaf_rflt.spct))

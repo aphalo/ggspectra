@@ -1287,9 +1287,9 @@ autoplot.filter_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
-    if (!is.na(norm)) {
-      warning("On-the-fly normalization no longer supported. Use 'normalize()' instead.")
-    }
+    warn_norm_arg(norm)
+    idfactor <- check_idfactor_arg(object, idfactor)
+    object <- rename_idfactor(object, idfactor)
 
     if (plot.data != "as.is") {
       return(
@@ -1315,18 +1315,6 @@ autoplot.filter_spct <-
                  na.rm = na.rm)
       )
     }
-
-    if (photobiology::getMultipleWl(object) > 1L) {
-      if (is.null(idfactor) || is.na(idfactor) ||
-          (is.logical(idfactor) && idfactor)) {
-        idfactor <- photobiology::getIdFactor(object)
-      } else if (is.character(idfactor) &&
-                 photobiology::getIdFactor(object) != idfactor) {
-        object <- photobiology::setIdFactor(object, idfactor = idfactor)
-      }
-    }
-
-    force(object.label)
 
     annotations.default <-
       getOption("photobiology.plot.annotations",
@@ -1417,6 +1405,7 @@ autoplot.filter_mspct <-
   function(object,
            ...,
            range = getOption("ggspectra.wlrange", default = NULL),
+           norm = NA,
            plot.qty = getOption("photobiology.filter.qty",
                                 default = "transmittance"),
            pc.out = getOption("ggspectra.pc.out",
@@ -1429,7 +1418,9 @@ autoplot.filter_mspct <-
 
     force(object.label)
 
+    warn_norm_arg(norm)
     idfactor <- validate_idfactor(idfactor = idfactor)
+
     # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
       object <- photobiology::trim_wl(object, range = range, use.hinges = TRUE, fill = NULL)
@@ -1541,16 +1532,15 @@ autoplot.reflector_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
-    if (!is.na(norm)) {
-      warning("On-the-fly normalization no longer supported. Use 'normalize()' instead.")
-    }
+    warn_norm_arg(norm)
+    idfactor <- check_idfactor_arg(object, idfactor)
+    object <- rename_idfactor(object, idfactor)
 
     if (plot.data != "as.is") {
       return(
         autoplot(object = photobiology::subset2mspct(object),
                  w.band = w.band,
                  range = range,
-                 norm = norm,
                  plot.qty = plot.qty,
                  pc.out = pc.out,
                  label.qty = label.qty,
@@ -1569,16 +1559,6 @@ autoplot.reflector_spct <-
                  object.label = object.label,
                  na.rm = na.rm)
       )
-    }
-
-    if (photobiology::getMultipleWl(object) > 1L) {
-      if (is.null(idfactor) || is.na(idfactor) ||
-          (is.logical(idfactor) && idfactor)) {
-        idfactor <- photobiology::getIdFactor(object)
-      } else if (is.character(idfactor) &&
-                 photobiology::getIdFactor(object) != idfactor) {
-        object <- photobiology::setIdFactor(object, idfactor = idfactor)
-      }
     }
 
     force(object.label)
@@ -1642,6 +1622,7 @@ autoplot.reflector_mspct <-
   function(object,
            ...,
            range = getOption("ggspectra.wlrange", default = NULL),
+           norm = NA,
            plot.qty = getOption("photobiology.reflector.qty",
                                 default = "reflectance"),
            pc.out = getOption("ggspectra.pc.out",
@@ -1654,7 +1635,9 @@ autoplot.reflector_mspct <-
 
     force(object.label)
 
+    warn_norm_arg(norm)
     idfactor <- validate_idfactor(idfactor = idfactor)
+
     # We trim the spectra to avoid unnecessary computations later
     if (!is.null(range)) {
       object <- photobiology::trim_wl(object,
@@ -1782,9 +1765,9 @@ autoplot.object_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
-    if (!is.na(norm)) {
-      warning("On-the-fly normalization no longer supported. Use 'normalize()' instead.")
-    }
+    warn_norm_arg(norm)
+    idfactor <- check_idfactor_arg(object, idfactor)
+    object <- rename_idfactor(object, idfactor)
 
     if (plot.data != "as.is") {
       return(
@@ -1810,16 +1793,6 @@ autoplot.object_spct <-
                  object.label = object.label,
                  na.rm = na.rm)
       )
-    }
-
-    if (photobiology::getMultipleWl(object) > 1L) {
-      if (is.null(idfactor) || is.na(idfactor) ||
-          (is.logical(idfactor) && idfactor)) {
-        idfactor <- photobiology::getIdFactor(object)
-      } else if (is.character(idfactor) &&
-                 photobiology::getIdFactor(object) != idfactor) {
-        object <- photobiology::setIdFactor(object, idfactor = idfactor)
-      }
     }
 
     force(object.label)
@@ -1927,10 +1900,7 @@ autoplot.object_mspct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
-    if (!is.na(norm)) {
-      warning("On-the-fly normalization no longer supported. Use 'normalize()' instead.")
-    }
-
+    warn_norm_arg(norm)
     force(object.label)
 
     idfactor <- validate_idfactor(idfactor = idfactor)

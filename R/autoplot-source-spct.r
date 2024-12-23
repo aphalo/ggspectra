@@ -732,47 +732,35 @@ autoplot.source_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
-    if (!is.na(norm)) {
-      warning("On-the-fly normalization no longer supported. Use 'normalize()' instead.")
-    }
+    warn_norm_arg(norm)
+    idfactor <- check_idfactor_arg(object, idfactor)
+    object <- rename_idfactor(object, idfactor)
 
-    if (is.null(idfactor)) {
-      idfactor <- photobiology::getIdFactor(object)
-    }
-    if (is.na(idfactor) || !is.character(idfactor)) {
-      idfactor <- photobiology::getMultipleWl(object) > 1L
-    }
-
-    if (getMultipleWl(object) > 1L && plot.data != "as.is") {
+    if (photobiology::getMultipleWl(object) > 1L && plot.data != "as.is") {
       return(
-        autoplot(object = photobiology::subset2mspct(object),
-                 w.band = w.band,
-                 range = range,
-                 unit.out = unit.out,
-                 pc.out = pc.out,
-                 label.qty = label.qty,
-                 span = span,
-                 wls.target = wls.target,
-                 annotations = annotations,
-                 geom = geom,
-                 time.format = time.format,
-                 tz = tz,
-                 text.size = text.size,
-                 chroma.type = chroma.type,
-                 idfactor = idfactor,
-                 facets = facets,
-                 plot.data = plot.data,
-                 ylim = ylim,
-                 object.label = object.label,
-                 na.rm = na.rm)
+        ggplot2::autoplot(object = photobiology::subset2mspct(object),
+                          w.band = w.band,
+                          range = range,
+                          unit.out = unit.out,
+                          pc.out = pc.out,
+                          label.qty = label.qty,
+                          span = span,
+                          wls.target = wls.target,
+                          annotations = annotations,
+                          geom = geom,
+                          time.format = time.format,
+                          tz = tz,
+                          text.size = text.size,
+                          chroma.type = chroma.type,
+                          idfactor = idfactor,
+                          facets = facets,
+                          plot.data = plot.data,
+                          ylim = ylim,
+                          object.label = object.label,
+                          na.rm = na.rm)
       )
     }
 
-    # support renaming of the idfactor
-    if (photobiology::getMultipleWl(object) > 1L &&
-        is.character(idfactor) && length(idfactor)) {
-      photobiology::setIdFactor(object, idfactor)
-    }
     force(object.label)
 
     annotations.default <-
@@ -936,19 +924,3 @@ autoplot.source_mspct <-
     }
   }
 
-## internal
-
-#' Convert lubridate duration objects to a string if possible
-#'
-#' @param time.unit lubridate::duration object or character
-#'
-#' @keywords internal
-#'
-duration2character <- function(time.unit) {
-  if (is.character(time.unit)) return(time.unit)
-  if (!lubridate::is.duration(time.unit)) return("unknown")
-  if (time.unit == lubridate::duration(1, "seconds")) return("second")
-  if (time.unit == lubridate::duration(1, "hours")) return("hour")
-  if (time.unit == lubridate::duration(1, "days")) return("day")
-  "duration"
-}

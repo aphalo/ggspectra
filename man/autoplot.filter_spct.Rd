@@ -35,6 +35,7 @@
   object,
   ...,
   range = getOption("ggspectra.wlrange", default = NULL),
+  norm = NA,
   plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
   pc.out = getOption("ggspectra.pc.out", default = FALSE),
   plot.data = "as.is",
@@ -193,13 +194,13 @@ The plotting of absorbance is an exception to scale limits as the
 autoplot(yellow_gel.spct)
 autoplot(yellow_gel.spct, geom = "spct")
 autoplot(yellow_gel.spct, plot.qty = "transmittance")
-autoplot(yellow_gel.spct, plot.qty = "absorptance")
 autoplot(yellow_gel.spct, plot.qty = "absorbance")
 autoplot(yellow_gel.spct, pc.out = TRUE)
 autoplot(yellow_gel.spct, annotations = c("+", "wls"))
 
 # spectra for two filters in long form
 autoplot(two_filters.spct)
+autoplot(two_filters.spct, idfactor = TRUE)
 autoplot(two_filters.spct, idfactor = "Spectra")
 autoplot(two_filters.spct, facets = TRUE)
 

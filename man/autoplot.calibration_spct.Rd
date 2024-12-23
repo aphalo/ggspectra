@@ -20,7 +20,7 @@
   geom = "line",
   time.format = "",
   tz = "UTC",
-  norm = NULL,
+  norm = NA,
   text.size = 2.5,
   idfactor = NULL,
   facets = FALSE,

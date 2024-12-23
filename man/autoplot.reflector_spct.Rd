@@ -35,6 +35,7 @@
   object,
   ...,
   range = getOption("ggspectra.wlrange", default = NULL),
+  norm = NA,
   plot.qty = getOption("photobiology.reflector.qty", default = "reflectance"),
   pc.out = getOption("ggspectra.pc.out", default = FALSE),
   plot.data = "as.is",

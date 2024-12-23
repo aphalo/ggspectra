@@ -253,7 +253,7 @@ autoplot.cps_spct <-
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PhR())),
            range = getOption("ggspectra.wlrange", default = NULL),
-           norm = "skip",
+           norm = NA,
            unit.out = NULL,
            pc.out = getOption("ggspectra.pc.out", default = FALSE),
            label.qty = "mean",
@@ -271,12 +271,9 @@ autoplot.cps_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
-    if (is.null(idfactor)) {
-      idfactor <- getIdFactor(object)
-    }
-    if (is.na(idfactor) || !is.character(idfactor)) {
-      idfactor <- getMultipleWl(object) > 1L
-    }
+    warn_norm_arg(norm)
+    idfactor <- check_idfactor_arg(object, idfactor)
+    object <- rename_idfactor(object, idfactor)
 
     if (plot.data != "as.is") {
       return(
@@ -311,15 +308,7 @@ autoplot.cps_spct <-
                 default = c("boxes", "labels", "colour.guide", "peaks"))
     annotations <- decode_annotations(annotations,
                                       annotations.default)
-    # avoid warning in 'photobiology' (== 0.10.10)
-    if (is.character(norm) && norm == "update" && !is_normalized(object)) {
-      norm <- "skip"
-    }
-    # normalization skipping is handled by normalize()
-    object <- photobiology::normalize(x = object,
-                                      range = range,
-                                      norm = norm,
-                                      na.rm = na.rm)
+
     if (length(w.band) == 0) {
       if (is.null(range)) {
         w.band <- waveband(object)
