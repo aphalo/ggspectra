@@ -4,12 +4,12 @@ editor_options:
     wrap: 72
 ---
 
-# ggspectra 0.4.0
+# ggspectra 0.3.16
 
-- Update, mostly of internal code, for compatibility with 'photobiology'
-(>= 0.12.0), which is required.
+- Update, mostly of internal code, to make available features from 
+'photobiology' (>= 0.12.0), which is recommended but not required.
 - The argument passed to `idfactor` when plotting multiple spectra stored in
-long form can now be used to rename the existing `idfactor` and, thus, changing
+long form can now be used to rename the existing `idfactor` and, thus, change
 the plot guide title.
 - The _y_-scale functions now accept other than numeric values as arguments to
 parameter `normalized`, character values are used as subscript to the symbol for

@@ -64,22 +64,24 @@ ggplot(white_led.cps_spct * 1e-4) +
   scale_y_cps_continuous(scaled = TRUE) +
   scale_x_wl_continuous()
 
-norm_led.cps_spct <- normalize(white_led.cps_spct, norm = "max")
+if (packageVersion("photobiology") > "0.11.4") {
+  norm_led.cps_spct <- normalize(white_led.cps_spct, norm = "max")
 
-ggplot(norm_led.cps_spct) +
-  geom_line() +
-  scale_y_cps_continuous(normalized = is_normalized(norm_led.cps_spct)) +
-  scale_x_wl_continuous()
+  ggplot(norm_led.cps_spct) +
+    geom_line() +
+    scale_y_cps_continuous(normalized = is_normalized(norm_led.cps_spct)) +
+    scale_x_wl_continuous()
 
-ggplot(norm_led.cps_spct) +
-  geom_line() +
-  scale_y_cps_continuous(normalized = getNormalized(norm_led.cps_spct)) +
-  scale_x_wl_continuous()
+  ggplot(norm_led.cps_spct) +
+    geom_line() +
+    scale_y_cps_continuous(normalized = getNormalized(norm_led.cps_spct)) +
+    scale_x_wl_continuous()
 
-ggplot(norm_led.cps_spct) +
-  geom_line() +
-  scale_y_cps_continuous(normalized =
-     normalization(norm_led.cps_spct)$norm.type) +
-  scale_x_wl_continuous()
+  ggplot(norm_led.cps_spct) +
+    geom_line() +
+    scale_y_cps_continuous(normalized =
+       normalization(norm_led.cps_spct)$norm.type) +
+    scale_x_wl_continuous()
+}
 
 }

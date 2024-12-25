@@ -412,12 +412,13 @@ s.q.action_label <- function(unit.exponent = 0,
 #'   scale_y_s.e.response_continuous(normalized = getNormalized(norm_ccd.spct)) +
 #'   scale_x_wl_continuous()
 #'
-#' ggplot(norm_ccd.spct) +
-#'   geom_line() +
-#'   scale_y_s.e.response_continuous(normalized =
-#'      normalization(norm_ccd.spct)$norm.type) +
-#'   scale_x_wl_continuous()
-#'
+#' if (packageVersion("photobiology") > "0.11.4") {
+#'   ggplot(norm_ccd.spct) +
+#'     geom_line() +
+#'     scale_y_s.e.response_continuous(normalized =
+#'       normalization(norm_ccd.spct)$norm.type) +
+#'     scale_x_wl_continuous()
+#' }
 #' photon_as_default()
 #'
 #' norm_ccd.spct <- normalize(ccd.spct, norm = "max")

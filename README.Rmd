@@ -30,7 +30,7 @@ Please, see the web site [r4photobiology](https://www.r4photobiology.info) for d
 
 ## Examples
 
-Plotting spectra with an specialization of the `autoplot()` method provides the most automatic approach.
+Plotting spectra with an specialization of the `autoplot()` method provides the most automatic approach. The specializations provided support the classes defined in package 'photobiology', both for individual spectra and for collections of spectra.
 
 ```{r example0, message=FALSE}
 library(ggspectra)
@@ -43,7 +43,7 @@ Some degree of flexibility can be obtained by passing arguments.
 autoplot(sun.spct, annotations = c("+", "title:where:when"), unit.out = "photon")
 ```
 
-Maximum flexibility is achieved when building a plot layer by layer using the grammar of graphics approach, as implemented in 'ggplot2', but taking advantage of the specialized `ggplot()` methods, _geometries_, _statistics_ and _scales_ specialized for the plotting of spectra, defined in this package .
+Maximum flexibility is achieved when building a plot layer by layer using the grammar of graphics approach, as implemented in 'ggplot2', but taking advantage of the specialized `ggplot()` methods, _geometries_, _statistics_ and _scales_ specialized for the plotting of spectra, defined in this package. Although designed with the classes defined from package 'photobiology' in mind, geometries, statistics and scales can also be used with data stored in other formats, as long as the user pays attention to the expected units and bases of expression expected.
 
 ```{r example2, message=FALSE}
 ggplot(sun.spct, unit.out = "photon") +

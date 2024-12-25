@@ -243,21 +243,23 @@ s.q.irrad_label <- function(unit.exponent = ifelse(normalized, 0, -6),
 #'   scale_y_s.q.irrad_log10() +
 #'   scale_x_wl_continuous()
 #'
-#' photon_as_default()
-#' normalized_sun.spct <- normalize(e2q(sun.spct, action = "replace"))
-#' ggplot(normalized_sun.spct) +
-#'   geom_line(na.rm = TRUE) +
-#'   scale_y_s.q.irrad_continuous(normalized =
-#'                             normalization(normalized_sun.spct)$norm.wl) +
-#'   scale_x_wl_continuous()
+#' if (packageVersion("photobiology") < "0.11.4") {
+#'   photon_as_default()
+#'   normalized_sun.spct <- normalize(e2q(sun.spct, action = "replace"))
+#'   ggplot(normalized_sun.spct) +
+#'     geom_line(na.rm = TRUE) +
+#'     scale_y_s.q.irrad_continuous(normalized =
+#'                                  normalization(normalized_sun.spct)$norm.wl) +
+#'     scale_x_wl_continuous()
 #'
-#' ggplot(normalized_sun.spct) +
-#'   geom_line(na.rm = TRUE) +
-#'   scale_y_s.q.irrad_continuous(normalized =
-#'                             normalization(normalized_sun.spct)$norm.type) +
-#'   scale_x_wl_continuous()
+#'   ggplot(normalized_sun.spct) +
+#'     geom_line(na.rm = TRUE) +
+#'     scale_y_s.q.irrad_continuous(normalized =
+#'                                  normalization(normalized_sun.spct)$norm.type) +
+#'     scale_x_wl_continuous()
 #'
-#' unset_radiation_unit_default()
+#'   unset_radiation_unit_default()
+#' }
 #'
 scale_y_s.e.irrad_continuous <-
   function(unit.exponent = 0,

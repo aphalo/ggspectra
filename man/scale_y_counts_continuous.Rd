@@ -85,11 +85,13 @@ ggplot(white_led.raw_spct) +
   scale_y_counts_tg_continuous(unit.exponent = 0) +
   scale_x_wl_continuous()
 
-norm_led.raw_spct <- normalize(white_led.raw_spct, norm = "max")
+if (packageVersion("photobiology") > "0.11.4") {
+  norm_led.raw_spct <- normalize(white_led.raw_spct, norm = "max")
 
-ggplot(norm_led.raw_spct) +
-  geom_line() +
-  scale_y_counts_continuous(unit.exponent = 0, normalized = "max") +
-  scale_x_wl_continuous()
+  ggplot(norm_led.raw_spct) +
+    geom_line() +
+    scale_y_counts_continuous(unit.exponent = 0, normalized = "max") +
+    scale_x_wl_continuous()
+}
 
 }

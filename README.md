@@ -32,7 +32,9 @@ packages available as part of the suite, and on how to install them.
 ## Examples
 
 Plotting spectra with an specialization of the `autoplot()` method
-provides the most automatic approach.
+provides the most automatic approach. The specializations provided
+support the classes defined in package ‘photobiology’, both for
+individual spectra and for collections of spectra.
 
 ``` r
 library(ggspectra)
@@ -53,7 +55,10 @@ Maximum flexibility is achieved when building a plot layer by layer
 using the grammar of graphics approach, as implemented in ‘ggplot2’, but
 taking advantage of the specialized `ggplot()` methods, *geometries*,
 *statistics* and *scales* specialized for the plotting of spectra,
-defined in this package .
+defined in this package. Although designed with the classes defined from
+package ‘photobiology’ in mind, geometries, statistics and scales can
+also be used with data stored in other formats, as long as the user pays
+attention to the expected units and bases of expression expected.
 
 ``` r
 ggplot(sun.spct, unit.out = "photon") +
