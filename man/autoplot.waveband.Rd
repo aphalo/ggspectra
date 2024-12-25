@@ -27,9 +27,9 @@
 \arguments{
 \item{object}{a waveband object.}
 
-\item{...}{currently ignored.}
+\item{...}{arguments passed along by name to \code{autoplot.response_spct()}.}
 
-\item{w.length}{numeric vector of wavelengths (nm)}
+\item{w.length}{numeric vector of wavelengths (nm).}
 
 \item{range}{an R object on which range() returns a vector of length 2, with
 min annd max wavelengths (nm).}
@@ -47,20 +47,21 @@ which wavelengths are to be searched and interpolated if need. The
 as arguments. A list with \code{numeric} and/or \code{character} values is
 also accepted.}
 
-\item{unit.in, unit.out}{the type of unit we assume as reference "energy" or
-"photon" based.}
+\item{unit.in, unit.out}{the type of unit we assume as reference: "energy" or
+"photon" based for the waveband definition and the implicit matching
+response plotted.}
 
 \item{annotations}{a character vector. For details please see section Plot
 Annotations.}
 
 \item{geom}{character The name of a ggplot geometry, currently only
-\code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
-selects between them based on \code{stacked}.}
+\code{"area"}, \code{"spct"} and \code{"line"}.}
 
-\item{wb.trim}{logical.}
+\item{wb.trim}{logical. Passed to \code{\link[photobiology]{trim_wl}}.
+Relevant only when the \code{waveband} extends partly outside \code{range}.}
 
-\item{norm}{numeric normalization wavelength (nm) or character string "max"
-for normalization at the wavelength of highest peak.}
+\item{norm}{numeric or character Normalization wavelength (nm) or character
+string \code{"max"} or other criterion for normalization.}
 
 \item{text.size}{numeric size of text in the plot decorations.}
 
@@ -74,26 +75,27 @@ for normalization at the wavelength of highest peak.}
 a \code{ggplot} object.
 }
 \description{
-This function returns a ggplot object with an annotated plot of a
-\code{waveband} object.
+Construct a ggplot object with an annotated plot of a \code{waveband} object.
 }
 \details{
-Note that scales are expanded so as to make space for the annotations. The
-object returned is a ggplot object, and can be further manipulated.
-}
-\note{
-Effectiveness spectra are plotted expressing the spectral effectiveness
-either as \eqn{1 mol^{-1} nm} photons of \eqn{1 J^{-1} nm} which can selected through
-formal argument \code{unit.out}. The value of \code{unit.in} has no effect on
-the result when uisng BSWFs, as BSWFs are defined based on a certain base of
-expression, which is enforced. In contrast, for wavebands which only define a
-wavelength range, changing the assumed reference irradiance, changes the
-responsivity according to Plank's law.
+A \code{response_spct} object is created based on the
+  \code{waveband} object. A \code{waveband} object can describe either a
+  simple wavelength range or a (biological) spectral weighting function
+  (BSWF). See
+  \code{\link{autoplot.response_spct}} for additional details.
 
-This function creates a \code{response_spct} object from the \code{waveband}
-object and plots it. Unused arguments are passed along, which means that
-other plot aspects can be controlled by providing arguments for the plot
-method of the \code{response_spct} class.
+  Effectiveness spectra are plotted expressing the spectral effectiveness
+  either as \eqn{1 mol^{-1} nm} photons of \eqn{1 J^{-1} nm} which can be
+  selected through formal argument \code{unit.out}. The value of
+  \code{unit.in} has no effect on the result when uisng BSWFs, as BSWFs are
+  defined based on a certain base of expression, which is enforced. In
+  contrast, for wavebands which only define a wavelength range, changing the
+  assumed reference irradiance units, changes the responsivity according to
+  Plank's law.
+
+  Unused arguments are passed along,
+  which means that other plot aspects can be controlled by providing
+  arguments for the plot method of the \code{response_spct} class.
 }
 \section{Plot Annotations}{
  The recognized annotation names are: \code{"summaries"}, \code{"peaks"},
@@ -136,4 +138,3 @@ Other autoplot methods:
 \code{\link{set_annotations_default}()}
 }
 \concept{autoplot methods}
-\keyword{hplot}

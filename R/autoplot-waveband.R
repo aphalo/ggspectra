@@ -1,16 +1,31 @@
 #' Create a complete ggplot for a waveband descriptor.
 #'
-#' This function returns a ggplot object with an annotated plot of a
-#' \code{waveband} object.
+#' Construct a ggplot object with an annotated plot of a \code{waveband} object.
 #'
-#' Note that scales are expanded so as to make space for the annotations. The
-#' object returned is a ggplot object, and can be further manipulated.
+#' @details A \code{response_spct} object is created based on the
+#'   \code{waveband} object. A \code{waveband} object can describe either a
+#'   simple wavelength range or a (biological) spectral weighting function
+#'   (BSWF). See
+#'   \code{\link{autoplot.response_spct}} for additional details.
+#'
+#'   Effectiveness spectra are plotted expressing the spectral effectiveness
+#'   either as \eqn{1 mol^{-1} nm} photons of \eqn{1 J^{-1} nm} which can be
+#'   selected through formal argument \code{unit.out}. The value of
+#'   \code{unit.in} has no effect on the result when uisng BSWFs, as BSWFs are
+#'   defined based on a certain base of expression, which is enforced. In
+#'   contrast, for wavebands which only define a wavelength range, changing the
+#'   assumed reference irradiance units, changes the responsivity according to
+#'   Plank's law.
+#'
+#'   Unused arguments are passed along,
+#'   which means that other plot aspects can be controlled by providing
+#'   arguments for the plot method of the \code{response_spct} class.
 #'
 #' @inheritSection decoration Plot Annotations
 #'
 #' @param object a waveband object.
-#' @param ... currently ignored.
-#' @param w.length numeric vector of wavelengths (nm)
+#' @param ... arguments passed along by name to \code{autoplot.response_spct()}.
+#' @param w.length numeric vector of wavelengths (nm).
 #' @param range an R object on which range() returns a vector of length 2, with
 #'   min annd max wavelengths (nm).
 #' @param fill value to use as response for wavelngths outside the waveband
@@ -23,16 +38,17 @@
 #'   \code{character} strings "half.maximum" and "half.range" are also accepted
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
-#' @param unit.in,unit.out the type of unit we assume as reference "energy" or
-#'   "photon" based.
+#' @param unit.in,unit.out the type of unit we assume as reference: "energy" or
+#'   "photon" based for the waveband definition and the implicit matching
+#'   response plotted.
 #' @param annotations a character vector. For details please see section Plot
 #'   Annotations.
 #' @param geom character The name of a ggplot geometry, currently only
-#'   \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
-#'   selects between them based on \code{stacked}.
-#' @param wb.trim logical.
-#' @param norm numeric normalization wavelength (nm) or character string "max"
-#'   for normalization at the wavelength of highest peak.
+#'   \code{"area"}, \code{"spct"} and \code{"line"}.
+#' @param wb.trim logical. Passed to \code{\link[photobiology]{trim_wl}}.
+#'   Relevant only when the \code{waveband} extends partly outside \code{range}.
+#' @param norm numeric or character Normalization wavelength (nm) or character
+#'   string \code{"max"} or other criterion for normalization.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param ylim numeric y axis limits,
 #' @param object.label character The name of the object being plotted.
@@ -40,23 +56,8 @@
 #'
 #' @return a \code{ggplot} object.
 #'
-#' @note Effectiveness spectra are plotted expressing the spectral effectiveness
-#' either as \eqn{1 mol^{-1} nm} photons of \eqn{1 J^{-1} nm} which can selected through
-#' formal argument \code{unit.out}. The value of \code{unit.in} has no effect on
-#' the result when uisng BSWFs, as BSWFs are defined based on a certain base of
-#' expression, which is enforced. In contrast, for wavebands which only define a
-#' wavelength range, changing the assumed reference irradiance, changes the
-#' responsivity according to Plank's law.
-#'
-#' This function creates a \code{response_spct} object from the \code{waveband}
-#' object and plots it. Unused arguments are passed along, which means that
-#' other plot aspects can be controlled by providing arguments for the plot
-#' method of the \code{response_spct} class.
-#'
 #' @seealso \code{\link{autoplot.response_spct}},
 #'   \code{\link[photobiology]{waveband}}.
-#'
-#' @keywords hplot
 #'
 #' @export
 #'
@@ -75,7 +76,8 @@ autoplot.waveband <-
            fill = 0,
            span = NULL,
            wls.target = "HM",
-           unit.in = getOption("photobiology.radiation.unit", default = "energy"),
+           unit.in = getOption("photobiology.radiation.unit",
+                               default = "energy"),
            unit.out = unit.in,
            annotations = NULL,
            geom = "line",
@@ -87,7 +89,6 @@ autoplot.waveband <-
            na.rm = TRUE) {
 
     force(object.label)
-    warn_norm_arg(norm)
     w.band <- object
 
     annotations.default <-
@@ -118,25 +119,26 @@ autoplot.waveband <-
     }
     w.length <- unique(sort(w.length))
     s.response <-
-      calc_multipliers(w.length, w.band,
-                       unit.out = unit.in, unit.in = unit.in,
-                       use.cached.mult = getOption("photobiology.use.cached.mult",
-                                                 default = FALSE), fill = fill)
+      photobiology::calc_multipliers(w.length, w.band,
+                                     unit.out = unit.in, unit.in = unit.in,
+                                     use.cached.mult = getOption("photobiology.use.cached.mult",
+                                                                 default = FALSE), fill = fill)
     if (unit.in == "energy") {
-      spct <- response_spct(w.length = w.length, s.e.response = s.response)
+      spct <- photobiology::response_spct(w.length = w.length, s.e.response = s.response)
     } else if (unit.in %in% c("photon", "quantum")) {
-      spct <- response_spct(w.length = w.length, s.q.response = s.response)
+      spct <- photobiology::response_spct(w.length = w.length, s.q.response = s.response)
     }
-    if (is_effective(w.band)) {
+    if (photobiology::is_effective(w.band)) {
       w.band.range <-
-        waveband(w.band,
-                 wb.name = paste("Range of", labels(w.band)[["label"]]))
+        photobiology::waveband(w.band,
+                               wb.name = paste("Range of", labels(w.band)[["label"]]))
     } else {
       w.band.range <- w.band
     }
     autoplot(spct,
              w.band = w.band.range,
              annotations = annotations,
+             norm = norm,
              geom = geom,
              wb.trim = wb.trim,
              span = span,

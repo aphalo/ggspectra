@@ -59,16 +59,23 @@ duration2character <- function(time.unit) {
   "duration"
 }
 
-#' Warn if norm argument passed in call
+#' Apply normalization argument
 #'
+#' Apply the normalization issuing a message.
+#'
+#' @param x An R object.
 #' @param norm numeric or character No longer supported, normalization is always
 #'   updated in \code{autoplot()} if present and a unit conversion applied.
 #'
 #' @keywords internal
 #'
-warn_norm_arg <- function(norm) {
+apply_normalization <- function(x,
+                                norm) {
   if (is.null(norm) || !is.na(norm)) {
-    warning("On-the-fly normalization no longer supported. Use 'normalize()' instead.")
+    message("Normalization 'norm =", norm, "'applied before plotting.")
+    photobiology::normalize(x)
+  } else {
+    x
   }
 }
 

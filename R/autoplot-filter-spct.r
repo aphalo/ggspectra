@@ -1288,7 +1288,7 @@ autoplot.filter_spct <-
            na.rm = TRUE) {
 
     force(object.label)
-    warn_norm_arg(norm)
+    object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor)
     object <- rename_idfactor(object, idfactor)
 
@@ -1418,7 +1418,7 @@ autoplot.filter_mspct <-
            na.rm = TRUE) {
 
     force(object.label)
-    warn_norm_arg(norm)
+    object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
     # We trim the spectra to avoid unnecessary computations later
@@ -1533,7 +1533,7 @@ autoplot.reflector_spct <-
            na.rm = TRUE) {
 
     force(object.label)
-    warn_norm_arg(norm)
+    object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor)
     object <- rename_idfactor(object, idfactor)
 
@@ -1633,7 +1633,7 @@ autoplot.reflector_mspct <-
            na.rm = TRUE) {
 
     force(object.label)
-    warn_norm_arg(norm)
+    object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
     # We trim the spectra to avoid unnecessary computations later
@@ -1764,7 +1764,7 @@ autoplot.object_spct <-
            na.rm = TRUE) {
 
     force(object.label)
-    warn_norm_arg(norm)
+    object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor)
     object <- rename_idfactor(object, idfactor)
 
@@ -1898,7 +1898,7 @@ autoplot.object_mspct <-
            na.rm = TRUE) {
 
     force(object.label)
-    warn_norm_arg(norm)
+    object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
     # facets will be forced later for "all" with a warning

@@ -272,7 +272,7 @@ autoplot.cps_spct <-
            na.rm = TRUE) {
 
     force(object.label)
-    warn_norm_arg(norm)
+    object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor)
     object <- rename_idfactor(object, idfactor)
 
@@ -357,7 +357,7 @@ autoplot.cps_mspct <-
            na.rm = TRUE) {
 
     force(object.label)
-    warn_norm_arg(norm)
+    object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
     # We trim the spectra to avoid unnecessary computations later

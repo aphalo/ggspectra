@@ -243,7 +243,7 @@ autoplot.generic_spct <-
              na.rm = TRUE) {
 
       force(object.label)
-      warn_norm_arg(norm)
+      object <- apply_normalization(object, norm)
       check_idfactor_arg(object, idfactor = idfactor)
 
       annotations.default <-

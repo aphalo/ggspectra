@@ -57,8 +57,9 @@ to the plot methods for individual spectra, otherwise currently ignored.}
 \item{range}{an R object on which \code{range()} returns a vector of length
 2, with minimum and maximum wavelengths (nm).}
 
-\item{norm}{numeric No longer supported, normalization is always updated if
-present and a unit conversion applied.}
+\item{norm}{numeric or character. Normalization to apply before plotting, If
+\code{object} is already normalized, the normalization is updated when a
+unit conversion applied.}
 
 \item{plot.qty}{character string, one of "all", "transmittance",
 "absorbance", "absorptance", or "reflectance".}
@@ -102,9 +103,9 @@ selects between them based on \code{stacked}.}
 \code{\link[photobiology]{chroma_spct}} object.}
 
 \item{idfactor}{character Name of an index \code{factor} used to identify
-each spectrum when multiple spectra are included in a plot. If different
-from an existing one, renaming takes place. It is used as title for the
-plot guide and may include embedded spaces and new lines.}
+each spectrum when multiple spectra are included in a plot. It is used as
+title to the guide in the plot and can include embedded spaces and new
+lines.}
 
 \item{facets}{logical or integer Indicating if facets are to be created for
 the levels of \code{idfactor} when \code{spct} contain multiple spectra in
@@ -123,7 +124,8 @@ argument all the spectra must contain data at the same wavelength values.}
 }
 \value{
 A \code{ggplot} object with a number of layers that depends on the
-  data and annotations.
+  data and annotations. The \code{data} member retains its original class
+  and metadata attributes.
 }
 \description{
 These methods return a ggplot object with an annotated plot of an
@@ -146,6 +148,23 @@ The plot object returned is a ggplot (an object of class
   package 'ggplot2'. Package 'ggspectra' defines specializations for the
   different classes for storage of spectral data defined in package
   \code{\link[photobiology]{photobiology}}.
+
+  For details about normalization and arguments to parameter \code{norm},
+  please, see \code{\link[photobiology]{normalize}}. If \code{norm = NA},
+  the default, \code{normalize()} is not called. All other values passed
+  as argument to \code{norm} result in a call to \code{normalize()} with
+  this value as its argument. In the case of objects
+  created with 'photobiology' (<= 0.10.9) \code{norm = "undo"} is not
+  supported. Be aware that calls to \code{normalize()} remove any scaling
+  previously applied with \code{\link[photobiology]{fscale}} methods.
+
+  For multiple spectra in long form spectral objects, with \code{idfactor
+  = NULL}, the default, the name of the factor is retrieved from metadata. If
+  the character string passed as argument to \code{idfactor} does not match
+  the one retrieved from the object, results in renaming of the pre-existing
+  factor. The default for collections of spectra is to create a factor named
+  \code{"spct.idx"}, but if a different name is passed, it will be used
+  instead.
 }
 \note{
 In the case of multiple spectra contained in the argument to

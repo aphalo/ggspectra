@@ -48,8 +48,9 @@ to the y aesthetic.}
 \item{range}{an R object on which \code{range()} returns a vector of length
 2, with minimum and maximum wavelengths (nm).}
 
-\item{norm}{numeric No longer supported, normalization is always updated if
-present and a unit conversion applied.}
+\item{norm}{numeric or character. Normalization to apply before plotting, If
+\code{object} is already normalized, the normalization is updated when a
+unit conversion applied.}
 
 \item{label.qty}{character string giving the type of summary quantity to use
 for labels, one of \code{"mean"}, \code{"total"}, \code{"contribution"},
@@ -76,9 +77,9 @@ also accepted as arguments. A list with \code{numeric} and/or
 \item{text.size}{numeric size of text in the plot decorations.}
 
 \item{idfactor}{character Name of an index \code{factor} used to identify
-each spectrum when multiple spectra are included in a plot. If different
-from an existing one, renaming takes place. It is used as title for the
-plot guide and may include embedded spaces and new lines.}
+each spectrum when multiple spectra are included in a plot. It is used as
+title to the guide in the plot and can include embedded spaces and new
+lines.}
 
 \item{facets}{logical or integer Indicating if facets are to be created for
 the levels of \code{idfactor} when \code{spct} contain multiple spectra in
@@ -114,13 +115,6 @@ No automatic plot method is possible for objects of class
   No method is implemented for \code{generic_mspct} objects as they can
   contain an heterogeneous collection of objects of class \code{generic_spct}
   or any other class derived from it.
-}
-\note{
-If \code{idfactor = NULL}, the default, the name of the factor is
-  retrieved from metadata or if no metadata found, the default
-  \code{"spct.idx"} is tried. The default for collections of spectra is to
-  create a factor named \code{"spct.idx"}, but if a different name is passed,
-  it will be used instead, possibly renaming a pre-existing one.
 }
 \section{Plot Annotations}{
  The recognized annotation names are: \code{"summaries"}, \code{"peaks"},

@@ -603,8 +603,9 @@ q_plot <- function(spct,
 #' @param w.band a single waveband object or a list of waveband objects.
 #' @param range an R object on which \code{range()} returns a vector of length
 #'   2, with minimum and maximum wavelengths (nm).
-#' @param norm numeric No longer supported, normalization is always updated if
-#'   present and a unit conversion applied.
+#' @param norm numeric or character. Normalization to apply before plotting, If
+#'   \code{object} is already normalized, the normalization is updated when a
+#'   unit conversion applied.
 #' @param unit.out character string indicating type of radiation units to use
 #'   for plotting: \code{"photon"} or its synonym \code{"quantum"}, or
 #'   \code{"energy"}.
@@ -634,9 +635,9 @@ q_plot <- function(spct,
 #'   \code{"CC"} (color coordinates) or a
 #'   \code{\link[photobiology]{chroma_spct}} object.
 #' @param idfactor character Name of an index \code{factor} used to identify
-#'   each spectrum when multiple spectra are included in a plot. If different
-#'   from an existing one, renaming takes place. It is used as title for the
-#'   plot guide and may include embedded spaces and new lines.
+#'   each spectrum when multiple spectra are included in a plot. It is used as
+#'   title to the guide in the plot and can include embedded spaces and new
+#'   lines.
 #' @param facets logical or integer Indicating if facets are to be created for
 #'   the levels of \code{idfactor} when \code{spct} contain multiple spectra in
 #'   long form.
@@ -663,14 +664,26 @@ q_plot <- function(spct,
 #'   different classes for storage of spectral data defined in package
 #'   \code{\link[photobiology]{photobiology}}.
 #'
-#' @note If \code{idfactor = NULL}, the default, the name of the factor is
-#'   retrieved from metadata or if no metadata found, the default
-#'   \code{"spct.idx"} is tried. The default for collections of spectra is to
-#'   create a factor named \code{"spct.idx"}, but if a different name is passed,
-#'   it will be used instead, possibly renaming a pre-existing one.
+#'   For details about normalization and arguments to parameter \code{norm},
+#'   please, see \code{\link[photobiology]{normalize}}. If \code{norm = NA},
+#'   the default, \code{normalize()} is not called. All other values passed
+#'   as argument to \code{norm} result in a call to \code{normalize()} with
+#'   this value as its argument. In the case of objects
+#'   created with 'photobiology' (<= 0.10.9) \code{norm = "undo"} is not
+#'   supported. Be aware that calls to \code{normalize()} remove any scaling
+#'   previously applied with \code{\link[photobiology]{fscale}} methods.
+#'
+#'   For multiple spectra in long form spectral objects, with \code{idfactor
+#'   = NULL}, the default, the name of the factor is retrieved from metadata. If
+#'   the character string passed as argument to \code{idfactor} does not match
+#'   the one retrieved from the object, results in renaming of the pre-existing
+#'   factor. The default for collections of spectra is to create a factor named
+#'   \code{"spct.idx"}, but if a different name is passed, it will be used
+#'   instead.
 #'
 #' @return A \code{ggplot} object with a number of layers that depends on the
-#'   data and annotations.
+#'   data and annotations. The \code{data} member retains its original class
+#'   and metadata attributes.
 #'
 #' @seealso \code{\link[photobiology]{normalize}},
 #'   \code{\link[photobiology]{source_spct}},
@@ -733,7 +746,7 @@ autoplot.source_spct <-
            na.rm = TRUE) {
 
     force(object.label)
-    warn_norm_arg(norm)
+    object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor)
     object <- rename_idfactor(object, idfactor)
 
@@ -865,7 +878,7 @@ autoplot.source_mspct <-
            na.rm = TRUE) {
 
     force(object.label)
-    warn_norm_arg(norm)
+    object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
     # We trim the spectra to avoid unnecessary computations later

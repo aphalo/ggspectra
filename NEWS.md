@@ -6,16 +6,15 @@ editor_options:
 
 # ggspectra 0.4.0
 
-- Update for compatibility with 'photobiology' (>= 0.12.0), which is required.
-- `autoplot()` methods no longer support normalization on-the-fly, but existing
-normalization is updated when the unit or quantity is modified for plotting.
+- Update, mostly of internal code, for compatibility with 'photobiology'
+(>= 0.12.0), which is required.
 - The argument passed to `idfactor` when plotting multiple spectra stored in
-long form can now be used to rename the existing `idfactor` of the spectral
-object for plotted.
-- The y-scale functions now accept other than numeric values as arguments to
-parameter `normalized`, character values are used as is as subscript, typically
-for the type normalization. In case of logical `TRUE`, `"norm"` is used as
-subindex.
+long form can now be used to rename the existing `idfactor` and, thus, changing
+the plot guide title.
+- The _y_-scale functions now accept other than numeric values as arguments to
+parameter `normalized`, character values are used as subscript to the symbol for
+the denominator, typically indicating type of normalization, such as `"max"`. In
+the case of logical `TRUE`, `"norm"` is used as subscript.
 
 # ggspectra 0.3.15
 
