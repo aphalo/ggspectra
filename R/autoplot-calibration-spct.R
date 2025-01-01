@@ -385,7 +385,7 @@ autoplot.calibration_mspct <-
     )
     if (is.calibration_spct(z) && "irrad.mult" %in% names(z)) {
       autoplot(object = z,
-               range = getOption("ggspectra.wlrange", default = NULL),
+               range = NULL, # trimmed above
                unit.out = unit.out,
                pc.out = pc.out,
                idfactor = NULL, # use idfactor already set in z
@@ -397,7 +397,7 @@ autoplot.calibration_mspct <-
       z <- as.generic_spct(z)
       autoplot(object = z,
                y.name = paste("irrad.mult", plot.data, sep = "."),
-               range = getOption("ggspectra.wlrange", default = NULL),
+               range = NULL, # trimmed above
                unit.out = unit.out,
                pc.out = pc.out,
                idfactor = NULL, # use idfactor already set in z

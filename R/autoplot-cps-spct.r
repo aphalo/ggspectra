@@ -381,7 +381,7 @@ autoplot.cps_mspct <-
     )
     if (is.cps_spct(z) && any(c("cps", "cps_1") %in% names(z))) {
       autoplot(object = z,
-               range = getOption("ggspectra.wlrange", default = NULL),
+               range = NULL, # trimmed above
                pc.out = pc.out,
                idfactor = NULL, # use idfactor already set in z
                facets = facets,
@@ -392,7 +392,7 @@ autoplot.cps_mspct <-
       z <- as.generic_spct(z)
       autoplot(object = z,
                y.name = paste("cps", plot.data, sep = "."),
-               range = getOption("ggspectra.wlrange", default = NULL),
+               range = NULL, # trimmed above
                pc.out = pc.out,
                idfactor = NULL, # use idfactor already set in z
                facets = facets,

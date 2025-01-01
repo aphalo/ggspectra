@@ -908,7 +908,7 @@ autoplot.source_mspct <-
     col.name <- c(photon = "s.q.irrad", energy = "s.e.irrad")
     if (photobiology::is.source_spct(z) && any(col.name %in% names(z))) {
       ggplot2::autoplot(object = z,
-                        range = getOption("ggspectra.wlrange", default = NULL),
+                        range = NULL, # trimmed above
                         unit.out = unit.out,
                         pc.out = pc.out,
                         idfactor = NULL, # use idfactor already set in z
@@ -920,7 +920,7 @@ autoplot.source_mspct <-
       z <- photobiology::as.generic_spct(z)
       ggplot2::autoplot(object = z,
                         y.name = paste(col.name[unit.out], plot.data, sep = "."),
-                        range = getOption("ggspectra.wlrange", default = NULL),
+                        range = NULL, # trimmed above
                         pc.out = pc.out,
                         idfactor = NULL, # use idfactor already set in z
                         facets = facets,

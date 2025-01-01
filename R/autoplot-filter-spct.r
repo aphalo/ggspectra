@@ -1448,7 +1448,7 @@ autoplot.filter_mspct <-
     col.name <- c(transmittance = "Tfr", absorptance = "Afr", absorbance = "A")
     if (photobiology::is.filter_spct(z) && col.name[plot.qty] %in% names(z)) {
       autoplot(object = z,
-               range = getOption("ggspectra.wlrange", default = NULL),
+               range = NULL, # trimmed above
                plot.qty = plot.qty,
                pc.out = pc.out,
                idfactor = NULL, # use idfactor already set in z
@@ -1461,7 +1461,7 @@ autoplot.filter_mspct <-
       z <- as.generic_spct(z)
       autoplot(object = z,
                y.name = paste(col.name[plot.qty], plot.data, sep = "."),
-               range = getOption("ggspectra.wlrange", default = NULL),
+               range = NULL, # trimmed above
                pc.out = pc.out,
                idfactor = NULL, # use idfactor already set in z
                facets = facets,
@@ -1658,7 +1658,7 @@ autoplot.reflector_mspct <-
     )
     if (photobiology::is.reflector_spct(z) && "Rfr" %in% names(z)) {
       autoplot(object = z,
-               range = getOption("ggspectra.wlrange", default = NULL),
+               range = NULL, # trimmed above
                plot.qty = plot.qty,
                pc.out = pc.out,
                idfactor = NULL, # use idfactor already set in z
@@ -1670,7 +1670,7 @@ autoplot.reflector_mspct <-
       z <- as.generic_spct(z)
       autoplot(object = z,
                y.name = paste("Rfr", plot.data, sep = "."),
-               range = getOption("ggspectra.wlrange", default = NULL),
+               range = NULL, # trimmed above
                pc.out = pc.out,
                idfactor = NULL, # use idfactor already set in z
                facets = facets,
@@ -1932,7 +1932,7 @@ autoplot.object_mspct <-
         (photobiology::is.filter_spct(z) && any(c("Tfr", "Afr", "A")) %in% names(z)) ||
         (photobiology::is.reflector_spct(z) && "Rfr" %in% names(z)))  {
       autoplot(object = z,
-               range = getOption("ggspectra.wlrange", default = NULL),
+               range = NULL, # trimmed above
                plot.qty = plot.qty,
                pc.out = pc.out,
                idfactor = NULL, # use idfactor already set in z
@@ -1944,7 +1944,7 @@ autoplot.object_mspct <-
       z <- photobiology::as.generic_spct(z)
       autoplot(object = z,
                y.name = paste(col.name[plot.qty], plot.data, sep = "."),
-               range = getOption("ggspectra.wlrange", default = NULL),
+               range = NULL, # trimmed above
                pc.out = pc.out,
                idfactor = NULL, # use idfactor already set in z
                facets = facets,
@@ -1955,7 +1955,7 @@ autoplot.object_mspct <-
       z <- photobiology::as.generic_spct(z)
       autoplot(object = z,
                y.name = paste("Rfr", plot.data, sep = "."),
-               range = getOption("ggspectra.wlrange", default = NULL),
+               range = NULL, # trimmed above
                pc.out = pc.out,
                idfactor = NULL, # use idfactor already set in z
                facets = facets,
