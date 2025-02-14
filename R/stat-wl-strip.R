@@ -129,23 +129,30 @@ StatColorGuide <-
                                             chroma.type,
                                             states.var) {
                      if (length(w.band) == 0) {
-                       w.band <- split_bands(range(data[["x"]]), length.out = length.out)
+                       w.band <- split_bands(range(data[["x"]]),
+                                             length.out = length.out)
                      } else {
-                       w.band <- trim_waveband(w.band = w.band, range = data[["x"]], trim = TRUE)
+                       w.band <- trim_waveband(w.band = w.band,
+                                               range = data[["x"]],
+                                               trim = TRUE)
                      }
 
-                     z <- fast_wb2rect_spct(w.band = w.band, chroma.type = chroma.type)
-                     names(z)[1] <- "x"
-                     if (length(states.var)) {
-                       z <- z[rep(1L, length(states.var))]
-                       z[names(states.var)[[1]]] <- states.var[[1]]
-                     }
+                     z <- fast_wb2rect_spct(w.band = w.band,
+                                            chroma.type = chroma.type)
+                     z <- as.data.frame(z)[ , c("w.length", "wb.color", "wl.high", "wl.low")]
+                     z[["x"]] <- z[["w.length"]]
+                     print(names(z))
+                     # if (length(states.var)) {
+                     #   z <- z[rep(1L, length(states.var))]
+                     #   z[names(states.var)[[1]]] <- states.var[[1]]
+                     # }
                      z
-                    },
-                   default_aes = ggplot2::aes(xmin = after_stat(wl.low),
-                                              xmax = after_stat(wl.high),
-                                              label = as.character(after_stat(wb.f)),
-                                              fill = after_stat(wb.color)),
+                   },
+                   default_aes =
+                     ggplot2::aes(xmin = after_stat(wl.low),
+                                  xmax = after_stat(wl.high),
+#                                  label = as.character(after_stat(wb.f)),
+                                  fill = after_stat(wb.color)),
                    required_aes = c("x")
   )
 
