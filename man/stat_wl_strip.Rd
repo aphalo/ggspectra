@@ -14,7 +14,6 @@ stat_wl_strip(
   w.band = NULL,
   length.out = 150,
   chroma.type = "CMF",
-  states.var = list(),
   na.rm = TRUE,
   show.legend = FALSE,
   inherit.aes = TRUE
@@ -59,8 +58,6 @@ of colours when w.band == NULL.}
 
 \item{chroma.type}{character one of "CMF" (color matching function) or "CC"
 (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.}
-
-\item{states.var}{A named list of length one.}
 
 \item{na.rm}{a logical value indicating whether NA values should be stripped
 before the computation proceeds.}

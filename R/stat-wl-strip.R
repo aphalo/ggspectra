@@ -30,7 +30,6 @@
 #'   of colours when w.band == NULL.
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
 #'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
-#' @param states.var A named list of length one.
 #'
 #' @return generic_spect object with new \code{x} values plus other computed
 #'   variables described below.
@@ -90,26 +89,15 @@ stat_wl_strip <- function(mapping = NULL,
                           w.band = NULL,
                           length.out = 150,
                           chroma.type = "CMF",
-                          states.var = list(),
                           na.rm = TRUE,
                           show.legend = FALSE,
                           inherit.aes = TRUE) {
-  if (length(states.var)) {
-    if (is.list(states.var)) {
-      states.var <- unique(states.var)
-    } else {
-      stop("'states.var' should be a named list, but is a \"",
-           class(states.var), "\" object instead")
-    }
-  }
-
   ggplot2::layer(
     stat = StatColorGuide, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(chroma.type = chroma.type,
                   w.band = w.band,
                   length.out = length.out,
-                  states.var = states.var,
                   na.rm = na.rm,
                   ...)
   )
@@ -126,8 +114,7 @@ StatColorGuide <-
                                             scales,
                                             w.band,
                                             length.out,
-                                            chroma.type,
-                                            states.var) {
+                                            chroma.type) {
                      if (length(w.band) == 0) {
                        w.band <- split_bands(range(data[["x"]]),
                                              length.out = length.out)
@@ -137,21 +124,11 @@ StatColorGuide <-
                                                trim = TRUE)
                      }
 
-                     z <- fast_wb2rect_spct(w.band = w.band,
-                                            chroma.type = chroma.type)
-                     z <- as.data.frame(z)[ , c("w.length", "wb.color", "wl.high", "wl.low")]
-                     z[["x"]] <- z[["w.length"]]
-                     print(names(z))
-                     # if (length(states.var)) {
-                     #   z <- z[rep(1L, length(states.var))]
-                     #   z[names(states.var)[[1]]] <- states.var[[1]]
-                     # }
-                     z
+                     fast_wb2rect_df(w.band = w.band, chroma.type = chroma.type)
                    },
                    default_aes =
                      ggplot2::aes(xmin = after_stat(wl.low),
                                   xmax = after_stat(wl.high),
-#                                  label = as.character(after_stat(wb.f)),
                                   fill = after_stat(wb.color)),
                    required_aes = c("x")
   )
@@ -168,7 +145,6 @@ wl_guide <- function(mapping = NULL,
                      chroma.type = "CMF",
                      w.band = NULL,
                      length.out = 150,
-                     states.var = list(),
                      ymin = -Inf,
                      ymax = Inf,
                      na.rm = FALSE,
@@ -179,7 +155,6 @@ wl_guide <- function(mapping = NULL,
                      geom = "rect",
                      w.band = w.band,
                      chroma.type = chroma.type,
-                     states.var = states.var,
                      length.out = length.out,
                      show.legend = show.legend,
                      inherit.aes = inherit.aes,
@@ -188,4 +163,81 @@ wl_guide <- function(mapping = NULL,
                      ...),
        scale_fill_identity()
   )
+}
+
+#' Colours from wavebands
+#'
+#' Compute colours for a list of narrow wavebands or a range of wavelengths.
+#'
+#' @param w.band waveband or list of waveband objects. The waveband(s) determine
+#'   the wavelengths in variable \code{w.length} of the returned spectrum.
+#' @param chroma.type character telling whether "CMF", "CC", or "both" should be
+#'   returned for human vision, or an object of class \code{chroma_spct} for any
+#'   other trichromic visual system.
+#' @param simplify logical Flag indicating whether to merge neighbouring
+#'   rectangles of equal color.
+#'
+#' @return A data frame with columns "x", "y", "w.length", "wb.color",
+#' "wl.high", "wl.low".
+#'
+#' @details Function \code{fast_wb2rect_df()} computes colours for
+#'   wavebands based on the midpoint wavelength and uses vectorization when
+#'   possible. It always returns color definitions with short names. The purpose
+#'   of merging of rectangles is to speed up rendering and to reduce the size of
+#'   vector graphics output. This function should be used with care as the color
+#'   definitions returned are only approximate and original waveband names can
+#'   be lost.
+#'
+#'   Function \code{fast_wb2rect_df()} intended use is when colour definitions
+#'   are needed in a simple data frame as in the compute functions of
+#'   statistics that return colours.
+#'
+#' @keywords internal
+#'
+fast_wb2rect_df <- function(w.band,
+                            chroma.type = "CMF",
+                            simplify = TRUE) {
+  if (photobiology::is.waveband(w.band)) {
+    w.band <- list(w.band)
+  }
+  wbs.number <- length(w.band) # number of wavebands in list
+  wbs.wds <- sapply(w.band, photobiology::expanse)
+  if (any(wbs.wds >= 10)) { # waveband wider than 10 nm
+    # we compute colours based on the whole waveband
+    wbs.wl.mid <- wbs.wl.high <- wbs.wl.low <- numeric(wbs.number)
+    wbs.rgb <- character(wbs.number)
+    i <- 0L
+    for (wb in w.band) {
+      i <- i + 1L
+      wbs.wl.low[i] <- photobilogy::wl_min(wb)
+      wbs.wl.mid[i] <- photobilogy::wl_midpoint(wb)
+      wbs.wl.high[i] <- photobilogy::wl_max(wb)
+      wbs.rgb[i] <- photobilogy::color_of(wb, type = chroma.type)[1]
+    }
+  } else { # waveband 10 nm wide or narrower
+    # we only compute the colour at the center wavelength of each waveband
+    wbs.wl.mid <- sapply(w.band, photobiology::wl_midpoint)
+    wbs.wl.high <- sapply(w.band, photobiology::wl_max)
+    wbs.wl.low <- sapply(w.band, photobiology::wl_min)
+    wbs.rgb <- photobiology::fast_color_of_wl(wbs.wl.mid)
+    if (simplify) {
+      # merge neighbouring rectangles that share the same colour definition
+      # and recompute wl at midpoint
+      rgb.rle <- rle(wbs.rgb)
+      new.nrow <- length(rgb.rle[["lengths"]])
+      runs.ends <- cumsum(rgb.rle[["lengths"]])
+      runs.start <- c(1L, runs.ends[-new.nrow] + 1L)
+      wbs.wl.low <- wbs.wl.low[runs.start]
+      wbs.wl.high <- wbs.wl.high[runs.ends]
+      wbs.wl.mid <- wbs.wl.low + (wbs.wl.high - wbs.wl.low) / 2
+      wbs.rgb <- wbs.rgb[runs.ends]
+    }
+  }
+  data.frame(x = wbs.wl.mid,
+             y = 0,
+             w.length = wbs.wl.mid,
+             wl.color = wbs.rgb,
+             wb.color = wbs.rgb,
+             wl.high = wbs.wl.high,
+             wl.low = wbs.wl.low)
 }
