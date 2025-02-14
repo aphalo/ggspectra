@@ -30,6 +30,7 @@
 #'   of colours when w.band == NULL.
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
 #'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
+#' @param states.var A named list of length one.
 #'
 #' @return generic_spect object with new \code{x} values plus other computed
 #'   variables described below.
@@ -89,15 +90,26 @@ stat_wl_strip <- function(mapping = NULL,
                           w.band = NULL,
                           length.out = 150,
                           chroma.type = "CMF",
+                          states.var = list(),
                           na.rm = TRUE,
                           show.legend = FALSE,
                           inherit.aes = TRUE) {
+  if (length(states.var)) {
+    if (is.list(states.var)) {
+      states.var <- unique(states.var)
+    } else {
+      stop("'states.var' should be a named list, but is a \"",
+           class(states.var), "\" object instead")
+    }
+  }
+
   ggplot2::layer(
     stat = StatColorGuide, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(chroma.type = chroma.type,
                   w.band = w.band,
                   length.out = length.out,
+                  states.var = states.var,
                   na.rm = na.rm,
                   ...)
   )
@@ -114,7 +126,8 @@ StatColorGuide <-
                                             scales,
                                             w.band,
                                             length.out,
-                                            chroma.type) {
+                                            chroma.type,
+                                            states.var) {
                      if (length(w.band) == 0) {
                        w.band <- split_bands(range(data[["x"]]), length.out = length.out)
                      } else {
@@ -123,6 +136,10 @@ StatColorGuide <-
 
                      z <- fast_wb2rect_spct(w.band = w.band, chroma.type = chroma.type)
                      names(z)[1] <- "x"
+                     if (length(states.var)) {
+                       z <- z[rep(1L, length(states.var))]
+                       z[names(states.var)[[1]]] <- states.var[[1]]
+                     }
                      z
                     },
                    default_aes = ggplot2::aes(xmin = after_stat(wl.low),
@@ -144,6 +161,7 @@ wl_guide <- function(mapping = NULL,
                      chroma.type = "CMF",
                      w.band = NULL,
                      length.out = 150,
+                     states.var = list(),
                      ymin = -Inf,
                      ymax = Inf,
                      na.rm = FALSE,
@@ -154,6 +172,7 @@ wl_guide <- function(mapping = NULL,
                      geom = "rect",
                      w.band = w.band,
                      chroma.type = chroma.type,
+                     states.var = states.var,
                      length.out = length.out,
                      show.legend = show.legend,
                      inherit.aes = inherit.aes,
