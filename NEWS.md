@@ -15,6 +15,12 @@ the plot guide title.
 parameter `normalized`, character values are used as subscript to the symbol for
 the denominator, typically indicating type of normalization, such as `"max"`. In
 the case of logical `TRUE`, `"norm"` is used as subscript.
+- Statistics that are defined using `compute_panel` functions do not work with 
+'gganimate' as they add a single layer per plot panel. The statistics affected 
+are `stat_wb_box()`, `stat_wb_label()` and `stat_wl_strip()`. Using 
+`compute_group` solves the problem so these stats gain a parameter `by.group` 
+used to force the addition of a plot layer for each group. The default behaviour
+remains the same as in previous versions of the package.
 
 # ggspectra 0.3.15
 

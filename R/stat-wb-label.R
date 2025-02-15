@@ -25,6 +25,9 @@
 #'   \code{\link[ggplot2]{layer}} for more details.
 #' @param na.rm	a logical value indicating whether NA values should be stripped
 #'   before the computation proceeds.
+#' @param by.group logical flag If TRUE repeated identical layers are added
+#'   for each group within a plot panel as needed for animation. If
+#'   \code{FALSE}, the default, a single layer is added per panel.
 #' @param w.band a waveband object or a list of waveband objects or numeric
 #'   vector of at least length two.
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
@@ -66,8 +69,23 @@
 #'   \item{x}{numeric, wavelength in nanometres}
 #' }
 #'
-#' @note This stat uses a panel function and ignores grouping as it is meant to
-#'   be used for annotations.
+#' @details By default \code{stat_wb_label()} uses a panel function and ignores
+#'   grouping as needed for annotation of layers supporting free axis scales.
+#'   Passing \code{by.group = TRUE} as argument changes this behaviour adding
+#'   the same layer repeatedly for each group as needed for constructing
+#'   animated plots with functions from package 'gganimate'.
+#'
+#'   As colours are returned as RGB colour definitions, depending on the
+#'   geometry used the use of \code{\link[ggplot2]{scale_fill_identity}}
+#'   and/or \code{\link[ggplot2]{scale_colour_identity}} will be necessary for
+#'   the correct colours to be displayed in the plot.
+#'
+#' @note As only one colour scale can exist within a \code{"gg"} object, using
+#'   this scale prevents the mapping to the colour aesthetic of
+#'   factors in \code{data} to create a grouping.
+#'
+#' @seealso \code{\link[photobiology]{fast_color_of_wb}}, which is used in the
+#'   implementation.
 #'
 #' @examples
 #'
@@ -81,8 +99,8 @@
 #'
 #' ggplot(sun.spct) +
 #'   geom_line() +
-#'   stat_wb_hbar(w.band = PAR(), ypos.fixed = 0, size = 1) +
-#'   stat_wb_label(aes(color = ..wb.color..),
+#'   stat_wb_hbar(w.band = PAR(), ypos.fixed = 0, linewidth = 1) +
+#'   stat_wb_label(aes(color = after_stat(wb.color)),
 #'                 w.band = PAR(), ypos.fixed = +0.025) +
 #'   scale_color_identity()
 #'
@@ -94,6 +112,7 @@ stat_wb_label <- function(mapping = NULL,
                           geom = "text",
                           position = "identity",
                           ...,
+                          by.group = FALSE,
                           w.band = NULL,
                           chroma.type = "CMF",
                           label.fmt = "%s",
@@ -101,16 +120,77 @@ stat_wb_label <- function(mapping = NULL,
                           na.rm = TRUE,
                           show.legend = NA,
                           inherit.aes = TRUE) {
-  ggplot2::layer(
-    stat = StatWbLabel, data = data, mapping = mapping, geom = geom,
-    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(w.band = w.band,
-                  chroma.type = chroma.type,
-                  label.fmt = label.fmt,
-                  ypos.fixed = ypos.fixed,
-                  na.rm = na.rm,
-                  ...)
-  )
+  if (by.group) {
+    ggplot2::layer(
+      stat = StatWbLabelG, data = data, mapping = mapping, geom = geom,
+      position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+      params = list(w.band = w.band,
+                    chroma.type = chroma.type,
+                    label.fmt = label.fmt,
+                    ypos.fixed = ypos.fixed,
+                    na.rm = na.rm,
+                    ...)
+    )
+  } else {
+    ggplot2::layer(
+      stat = StatWbLabel, data = data, mapping = mapping, geom = geom,
+      position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+      params = list(w.band = w.band,
+                    chroma.type = chroma.type,
+                    label.fmt = label.fmt,
+                    ypos.fixed = ypos.fixed,
+                    na.rm = na.rm,
+                    ...)
+    )
+  }
+}
+
+#' @rdname gg2spectra-ggproto
+#' @format NULL
+#' @usage NULL
+compute_wb_label <- function(data,
+                             scales,
+                             w.band,
+                             chroma.type,
+                             label.fmt,
+                             ypos.fixed) {
+  x.range <- range(data[["x"]])
+  if (length(w.band) == 0) {
+    w.band <- waveband(x.range)
+  }
+  if (is.any_spct(w.band) ||
+      (is.numeric(w.band) && length(stats::na.omit(w.band)) >= 2)) {
+    w.band <- waveband(range(w.band, na.rm = TRUE))
+  }
+  if (!is.list(w.band) || is.waveband(w.band)) {
+    w.band <- list(w.band)
+  }
+  w.band <- trim_wl(w.band, x.range)
+  integ.df <- data.frame()
+  for (wb in w.band) {
+    if (is.numeric(wb)) { # user supplied a list of numeric vectors
+      wb <- waveband(wb)
+    }
+    range <- range(wb)
+    colors <- fast_color_of_wb(wb, chroma.type = chroma.type)
+    integ.df <-
+      rbind(integ.df,
+            tibble::tibble(x = midpoint(wb),
+                           wb.xmin = min(wb),
+                           wb.xmax = max(wb),
+                           wb.name = labels(wb)$label,
+                           wb.color = colors,
+                           BW.color = black_or_white(colors))
+      )
+  }
+  if (is.null(ypos.fixed)) {
+    integ.df[["y"]] <- 0
+  } else {
+    integ.df[["y"]] <- ypos.fixed
+  }
+  integ.df$wb.label <- sprintf(label.fmt, integ.df$wb.name)
+  #                     print(integ.df)
+  integ.df
 }
 
 #' @rdname gg2spectra-ggproto
@@ -119,49 +199,23 @@ stat_wb_label <- function(mapping = NULL,
 #' @export
 StatWbLabel <-
   ggplot2::ggproto("StatWbLabel", ggplot2::Stat,
-                   compute_panel = function(data,
-                                            scales,
-                                            w.band,
-                                            chroma.type,
-                                            label.fmt,
-                                            ypos.fixed) {
-                     x.range <- range(data[["x"]])
-                     if (length(w.band) == 0) {
-                       w.band <- waveband(x.range)
-                     }
-                     if (is.any_spct(w.band) ||
-                         (is.numeric(w.band) && length(stats::na.omit(w.band)) >= 2)) {
-                       w.band <- waveband(range(w.band, na.rm = TRUE))
-                     }
-                     if (!is.list(w.band) || is.waveband(w.band)) {
-                       w.band <- list(w.band)
-                     }
-                     w.band <- trim_wl(w.band, x.range)
-                     integ.df <- data.frame()
-                     for (wb in w.band) {
-                       if (is.numeric(wb)) { # user supplied a list of numeric vectors
-                         wb <- waveband(wb)
-                       }
-                       range <- range(wb)
-                       integ.df <-
-                         rbind(integ.df,
-                               tibble::tibble(x = midpoint(wb),
-                                              wb.xmin = min(wb),
-                                              wb.xmax = max(wb),
-                                              wb.name = labels(wb)$label,
-                                              wb.color = fast_color_of_wb(wb, chroma.type = chroma.type),
-                                              BW.color = black_or_white(wb.color))
-                         )
-                     }
-                     if (is.null(ypos.fixed)) {
-                       integ.df[["y"]] <- 0
-                     } else {
-                       integ.df[["y"]] <- ypos.fixed
-                     }
-                     integ.df$wb.label <- sprintf(label.fmt, integ.df$wb.name)
-#                     print(integ.df)
-                     integ.df
-                   },
+                   compute_panel = compute_wb_label,
+                   default_aes = ggplot2::aes(label = after_stat(wb.label),
+                                              y = after_stat(y),
+                                              xmin = after_stat(wb.xmin),
+                                              xmax = after_stat(wb.xmax),
+                                              fill = after_stat(wb.color),
+                                              color = after_stat(BW.color)),
+                   required_aes = c("x")
+  )
+
+#' @rdname gg2spectra-ggproto
+#' @format NULL
+#' @usage NULL
+#' @export
+StatWbLabelG <-
+  ggplot2::ggproto("StatWbLabelG", ggplot2::Stat,
+                   compute_group = compute_wb_label,
                    default_aes = ggplot2::aes(label = after_stat(wb.label),
                                               y = after_stat(y),
                                               xmin = after_stat(wb.xmin),

@@ -11,6 +11,7 @@ stat_wl_strip(
   geom = "rect",
   position = "identity",
   ...,
+  by.group = FALSE,
   w.band = NULL,
   length.out = 150,
   chroma.type = "CMF",
@@ -24,6 +25,7 @@ wl_guide(
   data = NULL,
   position = "identity",
   ...,
+  by.group = FALSE,
   chroma.type = "CMF",
   w.band = NULL,
   length.out = 150,
@@ -50,6 +52,10 @@ layer.}
 \item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This
 can include aesthetics whose values you want to set, not map. See
 \code{\link[ggplot2]{layer}} for more details.}
+
+\item{by.group}{logical flag If TRUE repeated identical layers are added
+for each group within a plot panel as needed for animation. If
+\code{FALSE}, the default, a single layer is added per panel.}
 
 \item{w.band}{waveband object or a list of such objects or NULL.}
 
@@ -83,9 +89,26 @@ by default plots a narrow, guide-like colour gradient strip based on
 wavelength. \strong{\code{x}-scale transformations and axis flipping are
 currently not supported}.
 }
+\details{
+By default \code{stat_wl_strip()} uses a panel function and ignores
+  grouping as needed for annotation of layers supporting free axis scales.
+  Passing \code{by.group = TRUE} as argument changes this behaviour adding
+  the same layer repeatedly for each group as needed for constructing
+  animated plots with functions from package 'gganimate'.
+
+  Function \code{wl_guide()} is a conveneince wrapper on
+  \code{stat_wl_strip()} that also adds the required
+  \code{scale_fill_identity()}.
+
+  As colours are returned as RGB colour definitions, depending on the
+  geometry used the use of \code{\link[ggplot2]{scale_fill_identity}}
+  and/or \code{\link[ggplot2]{scale_colour_identity}} will be necessary for
+  the correct colours to be displayed in the plot.
+}
 \note{
-This stat uses a panel function and ignores grouping as it is meant to
-  be used for annotations.
+As only one colour scale can exist within a \code{"gg"} object, using
+  this scale prevents the mapping to the colour aesthetic of
+  factors in \code{data} to create a grouping.
 }
 \section{Computed variables}{
 
@@ -134,7 +157,9 @@ ggplot(sun.spct) +
 
 }
 \seealso{
-\code{\link[photobiology]{color_of}}, which is used internally.
+\code{\link[photobiology]{color_of}} and
+  \code{\link[photobiology]{fast_color_of_wl}}, which are used in the
+  implementation.
 
 Other stats functions: 
 \code{\link{stat_color}()},

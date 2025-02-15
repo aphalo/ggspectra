@@ -25,6 +25,9 @@
 #'   \code{\link[ggplot2]{layer}} for more details.
 #' @param na.rm	a logical value indicating whether NA values should be stripped
 #'   before the computation proceeds.
+#' @param by.group logical flag If TRUE repeated identical layers are added
+#'   for each group within a plot panel as needed for animation. If
+#'   \code{FALSE}, the default, a single layer is added per panel.
 #' @param w.band waveband object or a list of such objects or NULL.
 #' @param length.out The number of steps to use to simulate a continuous range
 #'   of colours when w.band == NULL.
@@ -60,10 +63,28 @@
 #'   \item{x}{numeric, wavelength in nanometres}
 #' }
 #'
-#' @note This stat uses a panel function and ignores grouping as it is meant to
-#'   be used for annotations.
+#' @details By default \code{stat_wl_strip()} uses a panel function and ignores
+#'   grouping as needed for annotation of layers supporting free axis scales.
+#'   Passing \code{by.group = TRUE} as argument changes this behaviour adding
+#'   the same layer repeatedly for each group as needed for constructing
+#'   animated plots with functions from package 'gganimate'.
 #'
-#' @seealso \code{\link[photobiology]{color_of}}, which is used internally.
+#'   Function \code{wl_guide()} is a conveneince wrapper on
+#'   \code{stat_wl_strip()} that also adds the required
+#'   \code{scale_fill_identity()}.
+#'
+#'   As colours are returned as RGB colour definitions, depending on the
+#'   geometry used the use of \code{\link[ggplot2]{scale_fill_identity}}
+#'   and/or \code{\link[ggplot2]{scale_colour_identity}} will be necessary for
+#'   the correct colours to be displayed in the plot.
+#'
+#' @note As only one colour scale can exist within a \code{"gg"} object, using
+#'   this scale prevents the mapping to the colour aesthetic of
+#'   factors in \code{data} to create a grouping.
+#'
+#' @seealso \code{\link[photobiology]{color_of}} and
+#'   \code{\link[photobiology]{fast_color_of_wl}}, which are used in the
+#'   implementation.
 #'
 #' @examples
 #'
@@ -86,21 +107,53 @@ stat_wl_strip <- function(mapping = NULL,
                           geom = "rect",
                           position = "identity",
                           ...,
+                          by.group = FALSE,
                           w.band = NULL,
                           length.out = 150,
                           chroma.type = "CMF",
                           na.rm = TRUE,
                           show.legend = FALSE,
                           inherit.aes = TRUE) {
-  ggplot2::layer(
-    stat = StatColorGuide, data = data, mapping = mapping, geom = geom,
-    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(chroma.type = chroma.type,
-                  w.band = w.band,
-                  length.out = length.out,
-                  na.rm = na.rm,
-                  ...)
-  )
+  if (by.group) {
+    ggplot2::layer(
+      stat = StatColorGuideG, data = data, mapping = mapping, geom = geom,
+      position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+      params = list(chroma.type = chroma.type,
+                    w.band = w.band,
+                    length.out = length.out,
+                    na.rm = na.rm,
+                    ...)
+    )
+  } else {
+    ggplot2::layer(
+      stat = StatColorGuide, data = data, mapping = mapping, geom = geom,
+      position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+      params = list(chroma.type = chroma.type,
+                    w.band = w.band,
+                    length.out = length.out,
+                    na.rm = na.rm,
+                    ...)
+    )
+  }
+}
+
+#' @rdname gg2spectra-ggproto
+#' @format NULL
+#' @usage NULL
+colour_guide_function <- function(data,
+                                  scales,
+                                  w.band,
+                                  length.out,
+                                  chroma.type) {
+  if (length(w.band) == 0) {
+    w.band <- split_bands(range(data[["x"]]),
+                          length.out = length.out)
+  } else {
+    w.band <- trim_waveband(w.band = w.band,
+                            range = data[["x"]],
+                            trim = TRUE)
+  }
+  fast_wb2rect_df(w.band = w.band, chroma.type = chroma.type)
 }
 
 #' @rdname gg2spectra-ggproto
@@ -110,22 +163,22 @@ stat_wl_strip <- function(mapping = NULL,
 #' @seealso \code{\link[ggplot2]{ggplot2-ggproto}}
 StatColorGuide <-
   ggplot2::ggproto("StatColorGuide", ggplot2::Stat,
-                   compute_panel = function(data,
-                                            scales,
-                                            w.band,
-                                            length.out,
-                                            chroma.type) {
-                     if (length(w.band) == 0) {
-                       w.band <- split_bands(range(data[["x"]]),
-                                             length.out = length.out)
-                     } else {
-                       w.band <- trim_waveband(w.band = w.band,
-                                               range = data[["x"]],
-                                               trim = TRUE)
-                     }
+                   compute_panel = colour_guide_function,
+                   default_aes =
+                     ggplot2::aes(xmin = after_stat(wl.low),
+                                  xmax = after_stat(wl.high),
+                                  fill = after_stat(wb.color)),
+                   required_aes = c("x")
+  )
 
-                     fast_wb2rect_df(w.band = w.band, chroma.type = chroma.type)
-                   },
+#' @rdname gg2spectra-ggproto
+#' @format NULL
+#' @usage NULL
+#' @export
+#' @seealso \code{\link[ggplot2]{ggplot2-ggproto}}
+StatColorGuideG <-
+  ggplot2::ggproto("StatColorGuideG", ggplot2::Stat,
+                   compute_group = colour_guide_function,
                    default_aes =
                      ggplot2::aes(xmin = after_stat(wl.low),
                                   xmax = after_stat(wl.high),
@@ -142,6 +195,7 @@ wl_guide <- function(mapping = NULL,
                      data = NULL,
                      position = "identity",
                      ...,
+                     by.group = FALSE,
                      chroma.type = "CMF",
                      w.band = NULL,
                      length.out = 150,
@@ -156,6 +210,7 @@ wl_guide <- function(mapping = NULL,
                      w.band = w.band,
                      chroma.type = chroma.type,
                      length.out = length.out,
+                     by.group = by.group,
                      show.legend = show.legend,
                      inherit.aes = inherit.aes,
                      ymin = ymin,
@@ -209,10 +264,10 @@ fast_wb2rect_df <- function(w.band,
     i <- 0L
     for (wb in w.band) {
       i <- i + 1L
-      wbs.wl.low[i] <- photobilogy::wl_min(wb)
-      wbs.wl.mid[i] <- photobilogy::wl_midpoint(wb)
-      wbs.wl.high[i] <- photobilogy::wl_max(wb)
-      wbs.rgb[i] <- photobilogy::color_of(wb, type = chroma.type)[1]
+      wbs.wl.low[i] <- photobiology::wl_min(wb)
+      wbs.wl.mid[i] <- photobiology::wl_midpoint(wb)
+      wbs.wl.high[i] <- photobiology::wl_max(wb)
+      wbs.rgb[i] <- photobiology::color_of(wb, type = chroma.type)[1]
     }
   } else { # waveband 10 nm wide or narrower
     # we only compute the colour at the center wavelength of each waveband
