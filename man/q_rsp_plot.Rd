@@ -13,6 +13,7 @@ q_rsp_plot(
   span,
   wls.target,
   annotations,
+  by.group,
   geom,
   text.size,
   idfactor,

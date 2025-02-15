@@ -8,7 +8,8 @@ find_idfactor(
   spct,
   idfactor,
   annotations,
-  facets = FALSE,
+  facets,
+  map.linetype,
   num.columns = 1L,
   ...
 )
@@ -29,6 +30,9 @@ aesthetic or use facets for the spectra.}
 \item{facets}{logical or numeric Flag indicating if facets are to be created
 when the data contains multiple spectra, if numeric the number of columns.}
 
+\item{map.linetype}{logical flag indicating that the id is to be mapped to
+the linetype aesthetic.}
+
 \item{num.columns}{numeric Number of data columns from multiple scans. Relevant
 only to \code{raw_spct} and \code{cps_spct} objects.}
 
@@ -39,7 +43,11 @@ A list object containing a list of ggplot components and a vector of
   annotations names as members.
 }
 \description{
-Find if an 'idfactor' is present and needed in the plot and assemble a
-suitable plot layer to handle it.
+Find if an 'idfactor' is present and build a suitable plot chuck.
+}
+\details{
+Implement facets and/or a mapping to linetype. The mapping to
+  linetype is done only if the number of spectra is <= 13 because of the
+  number of values available in the scale.
 }
 \keyword{internal}

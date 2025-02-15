@@ -55,9 +55,9 @@ decoration(
 
 \item{pos.shift}{numeric}
 
-\item{by.group}{logical flag If TRUE repeated identical layers are added
-for each group within a plot panel as needed for animation. If
-\code{FALSE}, the default, a single layer is added per panel.}
+\item{by.group}{logical flag If TRUE repeated identical annotation layers are
+added for each group within a plot panel as needed for animation. If
+\code{FALSE}, the default, single layers are added per panel.}
 
 \item{na.rm}{logical}
 }

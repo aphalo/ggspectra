@@ -18,9 +18,9 @@
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
 #'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param pos.shift numeric
-#' @param by.group logical flag If TRUE repeated identical layers are added
-#'   for each group within a plot panel as needed for animation. If
-#'   \code{FALSE}, the default, a single layer is added per panel.
+#' @param by.group logical flag If TRUE repeated identical annotation layers are
+#'   added for each group within a plot panel as needed for animation. If
+#'   \code{FALSE}, the default, single layers are added per panel.
 #' @param na.rm logical
 #'
 #' @return A list of ggplot "components" that can be added to a ggplot object

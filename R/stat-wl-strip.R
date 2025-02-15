@@ -252,6 +252,10 @@ wl_guide <- function(mapping = NULL,
 fast_wb2rect_df <- function(w.band,
                             chroma.type = "CMF",
                             simplify = TRUE) {
+  if (!length(w.band)) {
+    warning("Misssing/empty 'w.band' definition.")
+    return(data.frame())
+  }
   if (photobiology::is.waveband(w.band)) {
     w.band <- list(w.band)
   }
