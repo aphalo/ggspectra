@@ -8,8 +8,9 @@
 \method{autoplot}{cps_spct}(
   object,
   ...,
-  w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
-    PhR())),
+  w.band = getOption("photobiology.plot.bands", default =
+    list(photobiologyWavebands::UVC(), photobiologyWavebands::UVB(),
+    photobiologyWavebands::UVA(), photobiologyWavebands::PhR())),
   range = getOption("ggspectra.wlrange", default = NULL),
   norm = NA,
   unit.out = NULL,
@@ -18,6 +19,7 @@
   span = NULL,
   wls.target = "HM",
   annotations = NULL,
+  by.group = FALSE,
   geom = "line",
   time.format = "",
   tz = "UTC",
@@ -37,6 +39,7 @@
   norm = NA,
   unit.out = NULL,
   pc.out = getOption("ggspectra.pc.out", default = FALSE),
+  by.group = FALSE,
   idfactor = TRUE,
   facets = FALSE,
   plot.data = "as.is",
@@ -80,6 +83,10 @@ also accepted as arguments. A list with \code{numeric} and/or
 
 \item{annotations}{a character vector. For details please see sections Plot
 \strong{Annotations} and \strong{Title Annotations}.}
+
+\item{by.group}{logical flag If TRUE repeated identical annotation layers are
+added for each group within a plot panel as needed for animation. If
+\code{FALSE}, the default, single layers are added per panel.}
 
 \item{geom}{character The name of a ggplot geometry, currently only
 \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}

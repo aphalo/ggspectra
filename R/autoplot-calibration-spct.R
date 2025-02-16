@@ -24,6 +24,9 @@
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
 #' @param annotations a character vector
+#' @param by.group logical flag If TRUE repeated identical annotation layers are
+#'   added for each group within a plot panel as needed for animation. If
+#'   \code{FALSE}, the default, single layers are added per panel.
 #' @param geom character The name of a ggplot geometry, currently only
 #'   \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
 #'   selects between them based on \code{stacked}.
@@ -60,6 +63,7 @@ cal_plot <- function(spct,
                      span,
                      wls.target,
                      annotations,
+                     by.group,
                      geom,
                      norm,
                      text.size,
@@ -164,6 +168,7 @@ cal_plot <- function(spct,
     temp <- find_idfactor(spct = spct,
                           idfactor = idfactor,
                           facets = facets,
+                          map.linetype = !facets && !by.group,
                           annotations = annotations,
                           num.columns = num.mult.cols)
     plot <- plot + temp$ggplot_comp
@@ -173,6 +178,7 @@ cal_plot <- function(spct,
     temp <- find_idfactor(spct = spct,
                           idfactor = idfactor,
                           facets = facets,
+                          map.linetype = !facets && !by.group,
                           annotations = annotations)
     plot <- plot + temp$ggplot_comp
     annotations <- temp$annotations
@@ -207,6 +213,7 @@ cal_plot <- function(spct,
                             x.max = max(spct),
                             x.min = min(spct),
                             annotations = annotations,
+                            by.group = by.group,
                             label.qty = label.qty,
                             span = span,
                             wls.target = wls.target,
@@ -267,6 +274,7 @@ autoplot.calibration_spct <-
            span = NULL,
            wls.target = "HM",
            annotations = NULL,
+           by.group = FALSE,
            geom = "line",
            time.format = "",
            tz = "UTC",
@@ -294,6 +302,7 @@ autoplot.calibration_spct <-
                  span = span,
                  wls.target = wls.target,
                  annotations = annotations,
+                 by.group = by.group,
                  geom = geom,
                  time.format = time.format,
                  tz = tz,
@@ -331,6 +340,7 @@ autoplot.calibration_spct <-
              wls.target = wls.target,
              pc.out = pc.out,
              annotations = annotations,
+             by.group = by.group,
              geom = geom,
              norm = FALSE, # cal_plot needs to be updated
              text.size = text.size,
@@ -357,6 +367,7 @@ autoplot.calibration_mspct <-
            unit.out = "ignored",
            norm = NA,
            pc.out = getOption("ggspectra.pc.out", default = FALSE),
+           by.group = FALSE,
            plot.data = "as.is",
            idfactor = TRUE,
            facets = FALSE,
@@ -388,6 +399,7 @@ autoplot.calibration_mspct <-
                range = NULL, # trimmed above
                unit.out = unit.out,
                pc.out = pc.out,
+               by.group = by.group,
                idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,
@@ -400,6 +412,7 @@ autoplot.calibration_mspct <-
                range = NULL, # trimmed above
                unit.out = unit.out,
                pc.out = pc.out,
+               by.group = by.group,
                idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,

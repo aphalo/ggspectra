@@ -12,6 +12,7 @@ A_plot(
   span,
   wls.target,
   annotations,
+  by.group,
   geom,
   text.size,
   chroma.type,
@@ -44,6 +45,10 @@ as arguments. A list with \code{numeric} and/or \code{character} values is
 also accepted.}
 
 \item{annotations}{a character vector.}
+
+\item{by.group}{logical flag If TRUE repeated identical annotation layers are
+added for each group within a plot panel as needed for animation. If
+\code{FALSE}, the default, single layers are added per panel.}
 
 \item{geom}{character.}
 

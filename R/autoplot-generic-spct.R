@@ -26,6 +26,9 @@
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
 #' @param annotations a character vector
+#' @param by.group logical flag If TRUE repeated identical annotation layers are
+#'   added for each group within a plot panel as needed for animation. If
+#'   \code{FALSE}, the default, single layers are added per panel.
 #' @param text.size numeric size of text in the plot decorations.
 #' @param idfactor character Name of an index column in data holding a
 #'   \code{factor} with each spectrum in a long-form multispectrum object
@@ -53,6 +56,7 @@ generic_plot <- function(spct,
                          span,
                          wls.target,
                          annotations,
+                         by.group,
                          text.size,
                          idfactor,
                          facets,
@@ -112,6 +116,7 @@ generic_plot <- function(spct,
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
                         facets = facets,
+                        map.linetype = !facets && !by.group,
                         annotations = annotations)
   plot <- plot + temp$ggplot_comp
   annotations <- temp$annotations
@@ -132,6 +137,7 @@ generic_plot <- function(spct,
                         x.max = max(spct),
                         x.min = min(spct),
                         annotations = annotations,
+                        by.group = by.group,
                         label.qty = label.qty,
                         span = span,
                         wls.target = wls.target,
@@ -233,6 +239,7 @@ autoplot.generic_spct <-
              span = NULL,
              wls.target = "HM",
              annotations = NULL,
+             by.group = FALSE,
              time.format = "",
              tz = "UTC",
              text.size = 2.5,
@@ -272,6 +279,7 @@ autoplot.generic_spct <-
                    span = span,
                    wls.target = wls.target,
                    annotations = annotations,
+                   by.group = by.group,
                    text.size = text.size,
                    idfactor = idfactor,
                    facets = facets,

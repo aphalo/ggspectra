@@ -8,12 +8,14 @@
 \method{autoplot}{raw_spct}(
   object,
   ...,
-  w.band = getOption("photobiology.plot.bands", default = list(UVC(), UVB(), UVA(),
-    PhR())),
+  w.band = getOption("photobiology.plot.bands", default =
+    list(photobiologyWavebands::UVC(), photobiologyWavebands::UVB(),
+    photobiologyWavebands::UVA(), photobiologyWavebands::PhR())),
   range = getOption("ggspectra.wlrange", default = NULL),
   norm = NA,
   unit.out = "counts",
   pc.out = getOption("ggspectra.pc.out", default = FALSE),
+  by.group = FALSE,
   label.qty = "mean",
   span = NULL,
   wls.target = "HM",
@@ -37,6 +39,7 @@
   norm = NA,
   unit.out = "counts",
   pc.out = getOption("ggspectra.pc.out", default = FALSE),
+  by.group = FALSE,
   idfactor = TRUE,
   facets = FALSE,
   plot.data = "as.is",
@@ -63,6 +66,10 @@ unit conversion applied.}
 
 \item{pc.out}{logical, if \code{TRUE} use percent instead of fraction of one
 for normalized spectral data.}
+
+\item{by.group}{logical flag If TRUE repeated identical annotation layers are
+added for each group within a plot panel as needed for animation. If
+\code{FALSE}, the default, single layers are added per panel.}
 
 \item{label.qty}{character string giving the type of summary quantity to use
 for labels, one of \code{"mean"}, \code{"total"}, \code{"contribution"},

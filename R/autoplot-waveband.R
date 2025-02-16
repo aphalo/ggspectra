@@ -43,6 +43,9 @@
 #'   response plotted.
 #' @param annotations a character vector. For details please see section Plot
 #'   Annotations.
+#' @param by.group logical flag If TRUE repeated identical annotation layers are
+#'   added for each group within a plot panel as needed for animation. If
+#'   \code{FALSE}, the default, single layers are added per panel.
 #' @param geom character The name of a ggplot geometry, currently only
 #'   \code{"area"}, \code{"spct"} and \code{"line"}.
 #' @param wb.trim logical. Passed to \code{\link[photobiology]{trim_wl}}.
@@ -80,6 +83,7 @@ autoplot.waveband <-
                                default = "energy"),
            unit.out = unit.in,
            annotations = NULL,
+           by.group = FALSE,
            geom = "line",
            wb.trim = TRUE,
            norm = NA,
@@ -138,6 +142,7 @@ autoplot.waveband <-
     autoplot(spct,
              w.band = w.band.range,
              annotations = annotations,
+             by.group = by.group,
              norm = norm,
              geom = geom,
              wb.trim = wb.trim,

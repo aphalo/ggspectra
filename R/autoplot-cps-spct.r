@@ -24,6 +24,9 @@
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
 #' @param annotations a character vector
+#' @param by.group logical flag If TRUE repeated identical annotation layers are
+#'   added for each group within a plot panel as needed for animation. If
+#'   \code{FALSE}, the default, single layers are added per panel.
 #' @param geom character The name of a ggplot geometry, currently only
 #'   \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
 #'   selects between them based on \code{stacked}.
@@ -51,6 +54,7 @@ cps_plot <- function(spct,
                      span,
                      wls.target,
                      annotations,
+                     by.group,
                      geom,
                      text.size,
                      idfactor,
@@ -58,7 +62,7 @@ cps_plot <- function(spct,
                      ylim,
                      object.label,
                      na.rm) {
-  if (!is.cps_spct(spct)) {
+  if (!photobiology::is.cps_spct(spct)) {
     stop("cps_plot() can only plot cps_spct objects.")
   }
   if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
@@ -69,20 +73,21 @@ cps_plot <- function(spct,
     ylim <- rep(NA_real_, 2L)
   }
   if (!is.null(range)) {
-    spct <- trim_wl(spct, range = range)
+    spct <- photobiology::trim_wl(spct, range = range)
   }
   if (!is.null(w.band)) {
-    w.band <- trim_wl(w.band, range = range(spct))
+    w.band <- photobiology::trim_wl(w.band, range = range(spct))
   }
   cps.cols <- names(spct)[grep("^cps", names(spct))]
   num.cps.cols <- length(cps.cols)
   # if individual spectra have multiple columns we force facets
-  if (!as.logical(facets) && num.cps.cols > 1L && getMultipleWl(spct) > 1L) {
+  if (!as.logical(facets) && num.cps.cols > 1L &&
+      photobiology::getMultipleWl(spct) > 1L) {
     message("Usings facets because spectra contain multiple scans.")
     facets <- TRUE
   }
 
-  if (is_scaled(spct)) {
+  if (photobiology::is_scaled(spct)) {
     if (pc.out) {
       warning("Percent scale supported only for normalized cps_spct objects.")
       pc.out <- FALSE
@@ -90,7 +95,7 @@ cps_plot <- function(spct,
     s.cps.label <-
       expression(Pixel~~response~~rate~~k %*% N[lambda]~~("rel."))
     cps.label <- ""
-  } else if (is_normalized(spct)) {
+  } else if (photobiology::is_normalized(spct)) {
     norm.ls <- photobiology::getNormalization(spct)
     norm.wl <- round(norm.ls[["norm.wl"]], digits = 1)
     if (pc.out) {
@@ -113,19 +118,28 @@ cps_plot <- function(spct,
 
   if (num.cps.cols > 1L) {
     spct <- photobiology::spct_wide2long(spct = spct, idfactor = "scan")
-    plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["cps"]], linetype = .data[["scan"]]))
+    plot <-
+      ggplot2::ggplot(spct,
+                      ggplot2::aes(x = .data[["w.length"]],
+                                   y = .data[["cps"]],
+                                   linetype = .data[["scan"]]))
     temp <- find_idfactor(spct = spct,
                           idfactor = idfactor,
                           facets = facets,
+                          map.linetype = !facets && !by.group,
                           annotations = annotations,
                           num.columns = num.cps.cols)
     plot <- plot + temp$ggplot_comp
     annotations <- temp$annotations
   } else {
-    plot <- ggplot(spct, aes(x = .data[["w.length"]], y = .data[["cps"]]))
+    plot <-
+      ggplot2::ggplot(spct,
+                      ggplot2::aes(x = .data[["w.length"]],
+                                   y = .data[["cps"]]))
     temp <- find_idfactor(spct = spct,
                           idfactor = idfactor,
                           facets = facets,
+                          map.linetype = !facets && !by.group,
                           annotations = annotations)
     plot <- plot + temp$ggplot_comp
     annotations <- temp$annotations
@@ -152,23 +166,27 @@ cps_plot <- function(spct,
   # We want data plotted on top of the boundary lines
   if ("boundaries" %in% annotations) {
     if (y.min < (-0.01 * y.max)) {
-      plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
+      plot <- plot +
+        ggplot2::geom_hline(yintercept = 0, linetype = "dashed", colour = "red")
     } else {
-      plot <- plot + geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
+      plot <- plot +
+        ggplot2::geom_hline(yintercept = 0, linetype = "dashed", colour = "black")
     }
   }
 
   if (!is.null(geom) && geom %in% c("area", "spct")) {
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
-  plot <- plot + geom_line(na.rm = na.rm)
-  plot <- plot + labs(x = expression("Wavelength, "*lambda~(nm)), y = s.cps.label)
+  plot <- plot + ggplot2::geom_line(na.rm = na.rm)
+  plot <- plot + ggplot2::labs(x = expression("Wavelength, "*lambda~(nm)),
+                               y = s.cps.label)
 
   if (length(annotations) == 1 && annotations == "") {
     return(plot)
   }
 
-  plot <- plot + scale_fill_identity() + scale_color_identity()
+  plot <- plot +
+    ggplot2::scale_fill_identity() + ggplot2::scale_color_identity()
 
   plot <- plot + decoration(w.band = w.band,
                             y.max = y.max,
@@ -176,6 +194,7 @@ cps_plot <- function(spct,
                             x.max = max(spct),
                             x.min = min(spct),
                             annotations = annotations,
+                            by.group = by.group,
                             label.qty = label.qty,
                             span = span,
                             wls.target = wls.target,
@@ -192,7 +211,7 @@ cps_plot <- function(spct,
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "summaries", "colour.guide", "reserve.space"), annotations)) > 0L) {
     y.limits <- c(y.min, y.min + (y.max - y.min) * 1.25)
-    x.limits <- c(min(spct) - wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
+    x.limits <- c(min(spct) - photobiology::wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
   } else {
     y.limits <- c(y.min, y.max)
     x.limits <- range(spct)
@@ -200,15 +219,16 @@ cps_plot <- function(spct,
 
   if (pc.out) {
     plot <- plot +
-      scale_y_continuous(labels = scales::percent,
-                         breaks = y.breaks,
-                         limits = y.limits)
+      ggplot2::scale_y_continuous(labels = scales::percent,
+                                  breaks = y.breaks,
+                                  limits = y.limits)
   } else {
     plot <-
-      plot + scale_y_continuous(breaks = y.breaks,
-                                limits = y.limits)
+      plot + ggplot2::scale_y_continuous(breaks = y.breaks,
+                                         limits = y.limits)
   }
-  plot + scale_x_continuous(limits = x.limits, breaks = scales::pretty_breaks(n = 7))
+  plot + ggplot2::scale_x_continuous(limits = x.limits,
+                                     breaks = scales::pretty_breaks(n = 7))
 
 }
 
@@ -251,7 +271,10 @@ autoplot.cps_spct <-
   function(object,
            ...,
            w.band = getOption("photobiology.plot.bands",
-                              default = list(UVC(), UVB(), UVA(), PhR())),
+                              default = list(photobiologyWavebands::UVC(),
+                                             photobiologyWavebands::UVB(),
+                                             photobiologyWavebands::UVA(),
+                                             photobiologyWavebands::PhR())),
            range = getOption("ggspectra.wlrange", default = NULL),
            norm = NA,
            unit.out = NULL,
@@ -260,6 +283,7 @@ autoplot.cps_spct <-
            span = NULL,
            wls.target = "HM",
            annotations = NULL,
+           by.group = FALSE,
            geom = "line",
            time.format = "",
            tz = "UTC",
@@ -278,7 +302,7 @@ autoplot.cps_spct <-
 
     if (plot.data != "as.is") {
       return(
-        autoplot(object = subset2mspct(object),
+        autoplot(object = photobiology::subset2mspct(object),
                  w.band = w.band,
                  range = range,
                  unit.out = unit.out,
@@ -287,6 +311,7 @@ autoplot.cps_spct <-
                  span = span,
                  wls.target = wls.target,
                  annotations = annotations,
+                 by.group = by.group,
                  geom = geom,
                  time.format = time.format,
                  tz = tz,
@@ -309,11 +334,12 @@ autoplot.cps_spct <-
 
     if (length(w.band) == 0) {
       if (is.null(range)) {
-        w.band <- waveband(object)
-      } else if (is.waveband(range)) {
+        w.band <- photobiology::waveband(object)
+      } else if (photobiology::is.waveband(range)) {
         w.band <- range
       } else {
-        w.band <-  waveband(range, wb.name = "Total")
+        w.band <-
+          photobiology::waveband(range, wb.name = "Total")
       }
     }
 
@@ -325,6 +351,7 @@ autoplot.cps_spct <-
              span = span,
              wls.target = wls.target,
              annotations = annotations,
+             by.group = by.group,
              geom = geom,
              text.size = text.size,
              idfactor = idfactor,
@@ -350,6 +377,7 @@ autoplot.cps_mspct <-
            norm = NA,
            unit.out = NULL,
            pc.out = getOption("ggspectra.pc.out", default = FALSE),
+           by.group = FALSE,
            idfactor = TRUE,
            facets = FALSE,
            plot.data = "as.is",
@@ -379,21 +407,24 @@ autoplot.cps_mspct <-
                 sd = photobiology::s_sd(object),
                 se = photobiology::s_se(object)
     )
-    if (is.cps_spct(z) && any(c("cps", "cps_1") %in% names(z))) {
+    if (photobiology::is.cps_spct(z) &&
+        any(c("cps", "cps_1") %in% names(z))) {
       autoplot(object = z,
                range = NULL, # trimmed above
                pc.out = pc.out,
+               by.group = by.group,
                idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,
                na.rm = na.rm,
                ...)
     } else {
-      z <- as.generic_spct(z)
+      z <- photobiology::as.generic_spct(z)
       autoplot(object = z,
                y.name = paste("cps", plot.data, sep = "."),
                range = NULL, # trimmed above
                pc.out = pc.out,
+               by.group = by.group,
                idfactor = NULL, # use idfactor already set in z
                facets = facets,
                object.label = object.label,
