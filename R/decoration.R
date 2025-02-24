@@ -100,7 +100,7 @@ decoration <- function(w.band,
                             contribution = stat_wb_contribution,
                             relative = stat_wb_relative,
                             none = stat_wb_label,
-                            function(...) {NA_real_},
+                            function(...) {NA_real_}, # default if no match
                             na.rm = na.rm)
   z <- list()
   if ("peaks" %in% annotations) {
