@@ -43,3 +43,4 @@ ggplot(my.data, aes(x, y, label = label)) +
   geom_point() +
   geom_text_repel(vjust = 1.5, direction = "y") +
   expand_limits(x = c(0, 4), y = c(0, 4))
+
