@@ -23,6 +23,9 @@
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
 #' @param annotations a character vector.
+#' @param by.group logical flag If TRUE repeated identical annotation layers are
+#'   added for each group within a plot panel as needed for animation. If
+#'   \code{FALSE}, the default, single layers are added per panel.
 #' @param geom character The name of a ggplot geometry, currently only
 #'   \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
 #'   selects between them based on \code{stacked}.
@@ -54,6 +57,7 @@ e_plot <- function(spct,
                    span,
                    wls.target,
                    annotations,
+                   by.group,
                    geom,
                    text.size,
                    chroma.type,
@@ -192,6 +196,7 @@ e_plot <- function(spct,
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
                         facets = facets,
+                        map.linetype = !facets && !by.group,
                         annotations = annotations)
   plot <- plot + temp$ggplot_comp
   annotations <- temp$annotations
@@ -233,6 +238,7 @@ e_plot <- function(spct,
                             x.max = max(spct),
                             x.min = min(spct),
                             annotations = annotations,
+                            by.group = by.group,
                             label.qty = label.qty,
                             span = span,
                             wls.target = wls.target,
@@ -317,6 +323,9 @@ e_plot <- function(spct,
 #'   as arguments. A list with \code{numeric} and/or \code{character} values is
 #'   also accepted.
 #' @param annotations a character vector
+#' @param by.group logical flag If TRUE repeated identical annotation layers are
+#'   added for each group within a plot panel as needed for animation. If
+#'   \code{FALSE}, the default, single layers are added per panel.
 #' @param geom character The name of a ggplot geometry, currently only
 #'   \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
 #'   selects between them based on \code{stacked}.
@@ -348,6 +357,7 @@ q_plot <- function(spct,
                    span,
                    wls.target,
                    annotations,
+                   by.group,
                    geom,
                    text.size,
                    chroma.type,
@@ -488,6 +498,7 @@ q_plot <- function(spct,
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
                         facets = facets,
+                        map.linetype = !facets && !by.group,
                         annotations = annotations)
   plot <- plot + temp$ggplot_comp
   annotations <- temp$annotations
@@ -531,6 +542,7 @@ q_plot <- function(spct,
                             x.max = max(spct),
                             x.min = min(spct),
                             annotations = annotations,
+                            by.group = by.group,
                             label.qty = label.qty,
                             span = span,
                             wls.target = wls.target,
@@ -624,6 +636,9 @@ q_plot <- function(spct,
 #'   \code{character} values is also accepted.
 #' @param annotations a character vector. For details please see sections Plot
 #'   \strong{Annotations} and \strong{Title Annotations}.
+#' @param by.group logical flag If TRUE repeated identical annotation layers are
+#'   added for each group within a plot panel as needed for animation. If
+#'   \code{FALSE}, the default, single layers are added per panel.
 #' @param geom character The name of a ggplot geometry, currently only
 #'   \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}
 #'   selects between them based on \code{stacked}.
@@ -718,7 +733,8 @@ q_plot <- function(spct,
 #' @family autoplot methods
 #'
 autoplot.source_spct <-
-  function(object, ...,
+  function(object,
+           ...,
            w.band = getOption("photobiology.plot.bands",
                               default = list(photobiologyWavebands::UVC(),
                                              photobiologyWavebands::UVB(),
@@ -733,6 +749,7 @@ autoplot.source_spct <-
            span = NULL,
            wls.target = "HM",
            annotations = NULL,
+           by.group = FALSE,
            geom = "line",
            time.format = "",
            tz = "UTC",
@@ -761,6 +778,7 @@ autoplot.source_spct <-
                           span = span,
                           wls.target = wls.target,
                           annotations = annotations,
+                          by.group = by.group,
                           geom = geom,
                           time.format = time.format,
                           tz = tz,
@@ -825,6 +843,7 @@ autoplot.source_spct <-
                            span = span,
                            wls.target = wls.target,
                            annotations = annotations,
+                           by.group = by.group,
                            geom = geom,
                            text.size = text.size,
                            chroma.type = chroma.type,
@@ -841,6 +860,7 @@ autoplot.source_spct <-
                            span = span,
                            wls.target = wls.target,
                            annotations = annotations,
+                           by.group = by.group,
                            geom = geom,
                            text.size = text.size,
                            chroma.type = chroma.type,
@@ -871,6 +891,7 @@ autoplot.source_mspct <-
            unit.out = getOption("photobiology.radiation.unit",
                                 default = "energy"),
            pc.out = getOption("ggspectra.pc.out", default = FALSE),
+           by.group = FALSE,
            idfactor = TRUE,
            facets = FALSE,
            plot.data = "as.is",
@@ -912,6 +933,7 @@ autoplot.source_mspct <-
                         unit.out = unit.out,
                         pc.out = pc.out,
                         idfactor = NULL, # use idfactor already set in z
+                        by.group = by.group,
                         facets = facets,
                         object.label = object.label,
                         na.rm = na.rm,
@@ -923,6 +945,7 @@ autoplot.source_mspct <-
                         range = NULL, # trimmed above
                         pc.out = pc.out,
                         idfactor = NULL, # use idfactor already set in z
+                        by.group = by.group,
                         facets = facets,
                         object.label = object.label,
                         na.rm = na.rm,

@@ -1,7 +1,10 @@
 #' Find 'idfactor'
 #'
-#' Find if an 'idfactor' is present and needed in the plot and assemble a
-#' suitable plot layer to handle it.
+#' Find if an 'idfactor' is present and build a suitable plot chuck.
+#'
+#' @details Implement facets and/or a mapping to linetype. The mapping to
+#'   linetype is done only if the number of spectra is <= 13 because of the
+#'   number of values available in the scale.
 #'
 #' @param spct generic_spct or derived object
 #' @param idfactor character Name of an index column in data holding a
@@ -14,6 +17,8 @@
 #' @param annotations a character vector.
 #' @param facets logical or numeric Flag indicating if facets are to be created
 #'   when the data contains multiple spectra, if numeric the number of columns.
+#' @param map.linetype logical flag indicating that the id is to be mapped to
+#'   the linetype aesthetic.
 #' @param num.columns numeric Number of data columns from multiple scans. Relevant
 #'   only to \code{raw_spct} and \code{cps_spct} objects.
 #' @param ... currently not used.
@@ -26,12 +31,14 @@
 find_idfactor <- function(spct,
                           idfactor,
                           annotations,
-                          facets = FALSE,
+                          facets,
+                          map.linetype,
                           num.columns = 1L,
                           ...) {
-  if ((is.null(idfactor) || !is.na(idfactor)) && getMultipleWl(spct) > num.columns) {
+  if ((is.null(idfactor) || !is.na(idfactor)) &&
+      photobiology::getMultipleWl(spct) > num.columns) {
     if (is.null(idfactor) || (is.logical(idfactor) && idfactor)) {
-      idfactor <- getIdFactor(spct)
+      idfactor <- photobiology::getIdFactor(spct)
       if (is.na(idfactor)) {
         # handle objects created with 'photobiology' <= 9.20
         idfactor <- "spct.idx"
@@ -40,23 +47,29 @@ find_idfactor <- function(spct,
     if (!exists(idfactor, spct, inherits = FALSE)) {
       message("'multiple.wl > 1' but no idexing factor found.")
       ggplot_comp <- list()
-    } else if (!facets) {
-      if (getMultipleWl(spct) <= 13L) {
+    } else if (is.logical(map.linetype) && map.linetype) {
+      if (photobiology::getMultipleWl(spct) <= 13L) {
         # ggplot2 linetype supports at most 13L levels
-        ggplot_comp <- list(ggplot2::aes(linetype = .data[[{{idfactor}}]]),
-                            theme(legend.key.width = grid::unit(2.5, "lines")))
+        ggplot_comp <-
+          list(ggplot2::aes(linetype = .data[[{{idfactor}}]]),
+               ggplot2::theme(legend.key.width = grid::unit(2.5, "lines")))
       } else {
-        ggplot_comp <- list(ggplot2::aes(group = .data[[{{idfactor}}]],
-                                         alpha = max(1, 1 / log2(getMultipleWl(spct)))),
-                            scale_alpha_continuous(guide = "none"))
+        ggplot_comp <-
+          list(ggplot2::aes(group = .data[[{{idfactor}}]],
+                            alpha = max(1, 1 / log2(photobiology::getMultipleWl(spct)))),
+               ggplot2::scale_alpha_continuous(guide = "none"))
       }
       annotations <- setdiff(annotations, "summaries")
     } else {
       if (is.numeric(facets)) {
-        ggplot_comp <- list(ggplot2::facet_wrap(facets = ggplot2::vars(.data[[{{idfactor}}]]),
-                                                ncol = as.integer(facets)))
+        ggplot_comp <-
+          list(ggplot2::facet_wrap(facets = ggplot2::vars(.data[[{{idfactor}}]]),
+                                   ncol = as.integer(facets)))
+      } else if (is.logical(facets) && facets) {
+        ggplot_comp <-
+          list(ggplot2::facet_wrap(facets = ggplot2::vars(.data[[{{idfactor}}]])))
       } else {
-        ggplot_comp <- list(ggplot2::facet_wrap(facets = ggplot2::vars(.data[[{{idfactor}}]])))
+        ggplot_comp <- list()
       }
     }
   } else { # only one spectrum or idfactor is NA

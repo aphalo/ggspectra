@@ -10,6 +10,7 @@ stat_wb_box(
   geom = "rect",
   position = "identity",
   ...,
+  by.group = FALSE,
   w.band = NULL,
   chroma.type = "CMF",
   ypos.mult = 1.07,
@@ -36,6 +37,10 @@ layer}
 \item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This
 can include aesthetics whose values you want to set, not map. See
 \code{\link[ggplot2]{layer}} for more details.}
+
+\item{by.group}{logical flag If TRUE repeated identical layers are added
+for each group within a plot panel as needed for animation. If
+\code{FALSE}, the default, a single layer is added per panel.}
 
 \item{w.band}{a waveband object or a list of waveband objects or numeric
 vector of at least length two.}
@@ -76,10 +81,25 @@ slightly above the peak of the spectrum. Sets suitable default aesthetics for
 \code{geom_rect()}. \strong{\code{x}-scale transformations and axis
   flipping are currently not supported}.
 }
+\details{
+By default \code{stat_wb_box()} uses a panel function and ignores
+  grouping as needed for annotation of layers supporting free axis scales.
+  Passing \code{by.group = TRUE} as argument changes this behaviour adding
+  the same layer repeatedly for each group as needed for constructing
+  animated plots with functions from package 'gganimate'.
+
+  The value returned as default value for \code{y} is based on the y-range of
+  spectral values for the whole data set.
+
+  As colours are returned as RGB colour definitions, depending on the
+  geometry used the use of \code{\link[ggplot2]{scale_fill_identity}}
+  and/or \code{\link[ggplot2]{scale_colour_identity}} can be necessary for
+  the correct colours to be displayed in the plot.
+}
 \note{
-This stat uses a panel function and ignores grouping as it is meant to
-  be used for annotations. The value returned as default value for \code{y}
-  is based on the y-range of spectral values for the whole data set.
+As only one colour scale can exist within a \code{"gg"} object, using
+  this scale prevents the mapping to the colour aesthetic of
+  factors in \code{data} to create a grouping.
 }
 \section{Computed variables}{
 
@@ -136,6 +156,9 @@ ggplot(sun.spct) +
 
 }
 \seealso{
+\code{\link[photobiology]{fast_color_of_wb}}, which is used in the
+  implementation.
+
 Other stats functions: 
 \code{\link{stat_color}()},
 \code{\link{stat_find_qtys}()},

@@ -19,6 +19,7 @@
   span = NULL,
   wls.target = "HM",
   annotations = NULL,
+  by.group = FALSE,
   geom = "line",
   time.format = "",
   tz = "UTC",
@@ -38,6 +39,7 @@
   norm = NA,
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
   pc.out = getOption("ggspectra.pc.out", default = FALSE),
+  by.group = FALSE,
   plot.data = "as.is",
   facets = FALSE,
   idfactor = TRUE,
@@ -83,6 +85,10 @@ also accepted as arguments. A list with \code{numeric} and/or
 
 \item{annotations}{a character vector. For details please see sections Plot
 \strong{Annotations} and \strong{Title Annotations}.}
+
+\item{by.group}{logical flag If TRUE repeated identical annotation layers are
+added for each group within a plot panel as needed for animation. If
+\code{FALSE}, the default, single layers are added per panel.}
 
 \item{geom}{character The name of a ggplot geometry, currently only
 \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}

@@ -18,6 +18,9 @@
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
 #'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param pos.shift numeric
+#' @param by.group logical flag If TRUE repeated identical annotation layers are
+#'   added for each group within a plot panel as needed for animation. If
+#'   \code{FALSE}, the default, single layers are added per panel.
 #' @param na.rm logical
 #'
 #' @return A list of ggplot "components" that can be added to a ggplot object
@@ -79,6 +82,7 @@ decoration <- function(w.band,
                        label.color = NULL,
                        chroma.type = "CMF",
                        pos.shift = 0,
+                       by.group = FALSE,
                        na.rm = TRUE) {
   if (grepl(".pc", label.qty, fixed = TRUE)) {
     label.mult = 100
@@ -96,7 +100,7 @@ decoration <- function(w.band,
                             contribution = stat_wb_contribution,
                             relative = stat_wb_relative,
                             none = stat_wb_label,
-                            function(...) {NA_real_},
+                            function(...) {NA_real_}, # default if no match
                             na.rm = na.rm)
   z <- list()
   if ("peaks" %in% annotations) {
@@ -257,6 +261,7 @@ decoration <- function(w.band,
   if ("colour.guide" %in% annotations) {
     z <- c(z,
            stat_wl_strip(chroma.type = chroma.type,
+                         by.group = by.group,
                          ymax = y.min + y.expanse * 1.26,
                          ymin = y.min + y.expanse * 1.22,
                          na.rm = na.rm,
@@ -266,6 +271,7 @@ decoration <- function(w.band,
     z <- c(z,
            stat_wl_strip(w.band = w.band,
                          chroma.type = chroma.type,
+                         by.group = by.group,
                          ymax = y.min + y.expanse * 1.20,
                          ymin = y.min + y.expanse * 1.08,
                          color = "white",
@@ -281,6 +287,7 @@ decoration <- function(w.band,
     z <- c(z,
            stat_wl_strip(w.band = w.band,
                          chroma.type = chroma.type,
+                         by.group = by.group,
                          ymax = y.min + y.expanse * 1.10,
                          ymin = y.min + y.expanse * 1.07,
                          color = "white",
@@ -363,6 +370,7 @@ decoration <- function(w.band,
                stat_wb_label(mapping = ggplot2::aes(color = after_stat(BW.color)),
                              w.band = w.band,
                              chroma.type = chroma.type,
+                             by.group = by.group,
                              ypos.fixed = y.min + y.expanse * (1.143 + pos.shift),
                              size = text.size,
                              na.rm = na.rm))
@@ -372,6 +380,7 @@ decoration <- function(w.band,
                              ypos.fixed = y.min + y.expanse * (1.143 + pos.shift),
                              color = label.color,
                              chroma.type = chroma.type,
+                             by.group = by.group,
                              size = text.size,
                              na.rm = na.rm))
       }

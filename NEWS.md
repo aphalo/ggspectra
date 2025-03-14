@@ -6,6 +6,10 @@ editor_options:
 
 # ggspectra 0.3.16
 
+The main change in this version is compatibility with package 'gganimate',
+making it possible to create animated plots using `autoplot()` methods and layer 
+functions from 'ggspectra'.
+
 - Update, mostly of internal code, to make available features from 
 'photobiology' (>= 0.12.0), which is recommended but not required.
 - The argument passed to `idfactor` when plotting multiple spectra stored in
@@ -15,6 +19,13 @@ the plot guide title.
 parameter `normalized`, character values are used as subscript to the symbol for
 the denominator, typically indicating type of normalization, such as `"max"`. In
 the case of logical `TRUE`, `"norm"` is used as subscript.
+- Statistics that add a single layer per plot panel are not compatible with
+'gganimate'. The statistics affected are `stat_wb_box()`, `stat_wb_label()` and
+`stat_wl_strip()`. These stats gain a parameter `by.group` controlling the
+addition of a plot layer for each group. The default behaviour remains unchanged
+from previous versions of the package.
+- `autoplot()` methods also gain a parameter `by.group` controlling the addition 
+of a plot layer for each group. 
 
 # ggspectra 0.3.15
 

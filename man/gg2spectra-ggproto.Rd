@@ -17,18 +17,24 @@
 \alias{StatPeaks}
 \alias{StatValleys}
 \alias{StatSpikes}
+\alias{compute_wb_box}
 \alias{StatWbBox}
+\alias{StatWbBoxG}
 \alias{wb_col_compute_group}
 \alias{StatWbColumn}
 \alias{StatWbContrib}
 \alias{StatWbHbar}
 \alias{StatWbIrrad}
+\alias{compute_wb_label}
 \alias{StatWbLabel}
+\alias{StatWbLabelG}
 \alias{StatWbMean}
 \alias{StatWbRelative}
 \alias{StatWbSIrrad}
 \alias{StatWbTotal}
+\alias{colour_guide_function}
 \alias{StatColorGuide}
+\alias{StatColorGuideG}
 \alias{StatWlSummary}
 \title{\code{Stat*} Objects}
 \format{
@@ -70,6 +76,8 @@ fields. To create a new type of Stat object, you typically will want to
 implement one or more of the following:
 }
 \seealso{
+\code{\link[ggplot2]{ggplot2-ggproto}}
+
 \code{\link[ggplot2]{ggplot2-ggproto}}
 
 \code{\link[ggplot2]{ggplot2-ggproto}}

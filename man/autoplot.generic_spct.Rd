@@ -20,6 +20,7 @@
   span = NULL,
   wls.target = "HM",
   annotations = NULL,
+  by.group = FALSE,
   time.format = "",
   tz = "UTC",
   text.size = 2.5,
@@ -68,6 +69,10 @@ also accepted as arguments. A list with \code{numeric} and/or
 
 \item{annotations}{a character vector. For details please see sections Plot
 \strong{Annotations} and \strong{Title Annotations}.}
+
+\item{by.group}{logical flag If TRUE repeated identical annotation layers are
+added for each group within a plot panel as needed for animation. If
+\code{FALSE}, the default, single layers are added per panel.}
 
 \item{time.format}{character Format as accepted by
 \code{\link[base]{strptime}}.}

@@ -13,6 +13,7 @@ e_rsp_plot(
   span,
   wls.target,
   annotations,
+  by.group,
   geom,
   text.size,
   idfactor,
@@ -46,6 +47,10 @@ as arguments. A list with \code{numeric} and/or \code{character} values is
 also accepted.}
 
 \item{annotations}{a character vector.}
+
+\item{by.group}{logical flag If TRUE repeated identical annotation layers are
+added for each group within a plot panel as needed for animation. If
+\code{FALSE}, the default, single layers are added per panel.}
 
 \item{geom}{character The name of a ggplot geometry, currently only
 \code{"area"}, \code{"spct"} and \code{"line"}. The default \code{NULL}

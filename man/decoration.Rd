@@ -25,6 +25,7 @@ decoration(
   label.color = NULL,
   chroma.type = "CMF",
   pos.shift = 0,
+  by.group = FALSE,
   na.rm = TRUE
 )
 }
@@ -53,6 +54,10 @@ decoration(
 (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.}
 
 \item{pos.shift}{numeric}
+
+\item{by.group}{logical flag If TRUE repeated identical annotation layers are
+added for each group within a plot panel as needed for animation. If
+\code{FALSE}, the default, single layers are added per panel.}
 
 \item{na.rm}{logical}
 }

@@ -25,6 +25,9 @@
 #'   \code{\link[ggplot2]{layer}} for more details.
 #' @param na.rm	a logical value indicating whether NA values should be stripped
 #'   before the computation proceeds.
+#' @param by.group logical flag If TRUE repeated identical layers are added
+#'   for each group within a plot panel as needed for animation. If
+#'   \code{FALSE}, the default, a single layer is added per panel.
 #' @param w.band a waveband object or a list of waveband objects or numeric
 #'   vector of at least length two.
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
@@ -75,6 +78,27 @@
 #'   \item{y}{numeric, a spectral quantity}
 #' }
 #'
+#' @details By default \code{stat_wb_box()} uses a panel function and ignores
+#'   grouping as needed for annotation of layers supporting free axis scales.
+#'   Passing \code{by.group = TRUE} as argument changes this behaviour adding
+#'   the same layer repeatedly for each group as needed for constructing
+#'   animated plots with functions from package 'gganimate'.
+#'
+#'   The value returned as default value for \code{y} is based on the y-range of
+#'   spectral values for the whole data set.
+#'
+#'   As colours are returned as RGB colour definitions, depending on the
+#'   geometry used the use of \code{\link[ggplot2]{scale_fill_identity}}
+#'   and/or \code{\link[ggplot2]{scale_colour_identity}} can be necessary for
+#'   the correct colours to be displayed in the plot.
+#'
+#' @note As only one colour scale can exist within a \code{"gg"} object, using
+#'   this scale prevents the mapping to the colour aesthetic of
+#'   factors in \code{data} to create a grouping.
+#'
+#' @seealso \code{\link[photobiology]{fast_color_of_wb}}, which is used in the
+#'   implementation.
+#
 #' @examples
 #'
 #' library(photobiologyWavebands)
@@ -88,10 +112,6 @@
 #'   geom_line() +
 #'   scale_fill_identity()
 #'
-#' @note This stat uses a panel function and ignores grouping as it is meant to
-#'   be used for annotations. The value returned as default value for \code{y}
-#'   is based on the y-range of spectral values for the whole data set.
-#'
 #' @export
 #' @family stats functions
 #'
@@ -100,6 +120,7 @@ stat_wb_box <- function(mapping = NULL,
                         geom = "rect",
                         position = "identity",
                         ...,
+                        by.group = FALSE,
                         w.band = NULL,
                         chroma.type = "CMF",
                         ypos.mult = 1.07,
@@ -108,17 +129,87 @@ stat_wb_box <- function(mapping = NULL,
                         na.rm = FALSE,
                         show.legend = NA,
                         inherit.aes = TRUE) {
-  ggplot2::layer(
-    stat = StatWbBox, data = data, mapping = mapping, geom = geom,
-    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(w.band = w.band,
-                  chroma.type = chroma.type,
-                  ypos.mult = ypos.mult,
-                  ypos.fixed = ypos.fixed,
-                  box.height = box.height,
-                  na.rm = na.rm,
-                  ...)
-  )
+  if (by.group) {
+    ggplot2::layer(
+      stat = StatWbBoxG, data = data, mapping = mapping, geom = geom,
+      position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+      params = list(w.band = w.band,
+                    chroma.type = chroma.type,
+                    ypos.mult = ypos.mult,
+                    ypos.fixed = ypos.fixed,
+                    box.height = box.height,
+                    na.rm = na.rm,
+                    ...)
+    )
+  } else {
+    ggplot2::layer(
+      stat = StatWbBox, data = data, mapping = mapping, geom = geom,
+      position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+      params = list(w.band = w.band,
+                    chroma.type = chroma.type,
+                    ypos.mult = ypos.mult,
+                    ypos.fixed = ypos.fixed,
+                    box.height = box.height,
+                    na.rm = na.rm,
+                    ...)
+    )
+  }
+}
+
+#' @rdname gg2spectra-ggproto
+#' @format NULL
+#' @usage NULL
+compute_wb_box <- function(data,
+                           scales,
+                           w.band,
+                           chroma.type,
+                           ypos.mult,
+                           ypos.fixed,
+                           box.height) {
+  wl.range <- range(data$x)
+  if (length(w.band) == 0) {
+    w.band <- waveband(wl.range)
+  }
+  if (is.any_spct(w.band) ||
+      (is.numeric(w.band) && length(stats::na.omit(w.band)) >= 2)) {
+    w.band <- waveband(range(w.band, na.rm = TRUE))
+  }
+  if (!is.list(w.band) || is.waveband(w.band)) {
+    w.band <- list(w.band)
+  }
+  w.band <- trim_wl(w.band, wl.range)
+
+  integ.df <- data.frame()
+  for (wb in w.band) {
+    if (is.numeric(wb)) { # user supplied a list of numeric vectors
+      wb <- waveband(wb)
+    }
+
+    range <- range(wb)
+    mydata <- trim_tails(data$x, data$y, use.hinges = TRUE,
+                         low.limit = range[1],
+                         high.limit = range[2])
+    wb.color <- photobiology::fast_color_of_wb(wb, chroma.type = chroma.type)
+    integ.df <- rbind(integ.df,
+                      data.frame(x = midpoint(mydata$x),
+                                 wb.xmin = min(wb),
+                                 wb.xmax = max(wb),
+                                 wb.ymin = min(data[["y"]]),
+                                 wb.ymax = max(data[["y"]]),
+                                 wb.color = wb.color,
+                                 wb.name = labels(wb)[["label"]],
+                                 BW.color = black_or_white(wb.color))
+    )
+  }
+  if (is.null(ypos.fixed)) {
+    integ.df[["y"]] <- with(integ.df, wb.ymin + (wb.ymax - wb.ymin) * ypos.mult)
+  } else {
+    integ.df[["y"]] <- ypos.fixed
+  }
+  integ.df[["ymax"]] <- with(integ.df, y + (wb.ymax - wb.ymin) * box.height / 2)
+  integ.df[["ymin"]] <- with(integ.df, y - (wb.ymax - wb.ymin) * box.height / 2)
+
+  integ.df
 }
 
 #' @rdname gg2spectra-ggproto
@@ -127,58 +218,22 @@ stat_wb_box <- function(mapping = NULL,
 #' @export
 StatWbBox <-
   ggplot2::ggproto("StatWbBox", ggplot2::Stat,
-                   compute_panel = function(data,
-                                            scales,
-                                            w.band,
-                                            chroma.type,
-                                            ypos.mult,
-                                            ypos.fixed,
-                                            box.height) {
-                     wl.range <- range(data$x)
-                     if (length(w.band) == 0) {
-                       w.band <- waveband(wl.range)
-                     }
-                     if (is.any_spct(w.band) ||
-                         (is.numeric(w.band) && length(stats::na.omit(w.band)) >= 2)) {
-                       w.band <- waveband(range(w.band, na.rm = TRUE))
-                     }
-                     if (!is.list(w.band) || is.waveband(w.band)) {
-                       w.band <- list(w.band)
-                     }
-                     w.band <- trim_wl(w.band, wl.range)
+                   compute_panel = compute_wb_box,
+                   default_aes = ggplot2::aes(xmin = after_stat(wb.xmin),
+                                              xmax = after_stat(wb.xmax),
+                                              ymin = after_stat(ymin),
+                                              ymax = after_stat(ymax),
+                                              fill = after_stat(wb.color)),
+                   required_aes = c("x", "y")
+  )
 
-                     integ.df <- data.frame()
-                     for (wb in w.band) {
-                       if (is.numeric(wb)) { # user supplied a list of numeric vectors
-                         wb <- waveband(wb)
-                       }
-
-                       range <- range(wb)
-                       mydata <- trim_tails(data$x, data$y, use.hinges = TRUE,
-                                            low.limit = range[1],
-                                            high.limit = range[2])
-                       wb.color <- photobiology::fast_color_of_wb(wb, chroma.type = chroma.type)
-                       integ.df <- rbind(integ.df,
-                                         data.frame(x = midpoint(mydata$x),
-                                                    wb.xmin = min(wb),
-                                                    wb.xmax = max(wb),
-                                                    wb.ymin = min(data[["y"]]),
-                                                    wb.ymax = max(data[["y"]]),
-                                                    wb.color = wb.color,
-                                                    wb.name = labels(wb)[["label"]],
-                                                    BW.color = black_or_white(wb.color))
-                                         )
-                     }
-                     if (is.null(ypos.fixed)) {
-                       integ.df[["y"]] <- with(integ.df, wb.ymin + (wb.ymax - wb.ymin) * ypos.mult)
-                     } else {
-                       integ.df[["y"]] <- ypos.fixed
-                     }
-                     integ.df[["ymax"]] <- with(integ.df, y + (wb.ymax - wb.ymin) * box.height / 2)
-                     integ.df[["ymin"]] <- with(integ.df, y - (wb.ymax - wb.ymin) * box.height / 2)
-
-                     integ.df
-                   },
+#' @rdname gg2spectra-ggproto
+#' @format NULL
+#' @usage NULL
+#' @export
+StatWbBoxG <-
+  ggplot2::ggproto("StatWbBoxG", ggplot2::Stat,
+                   compute_group = compute_wb_box,
                    default_aes = ggplot2::aes(xmin = after_stat(wb.xmin),
                                               xmax = after_stat(wb.xmax),
                                               ymin = after_stat(ymin),

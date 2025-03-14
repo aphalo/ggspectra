@@ -66,7 +66,7 @@ A data frame with one row for each waveband object in the argument to
 }
 \description{
 \code{stat_wb_hbar} computes means under a curve. It first integrates the
-area under a spectral curve and also the mean expressed per nanaometre of
+area under a spectral curve and also the mean expressed per nanometre of
 wavelength for each waveband in the input. Sets suitable default aesthetics
 for geoms "errorbarh" and "hline" from 'ggplot', and "linerangeh",
 and "errorbarh" from 'ggstance'. \strong{\code{x}-scale transformations and

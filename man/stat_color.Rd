@@ -76,8 +76,8 @@ For each row in \code{data} a colour definition is computed assuming
 
 Set by the statistic and available to geoms.
 \describe{
-  \item{color}{..wl.color..}
-  \item{fill}{..wl.color..}
+  \item{color}{after_stat(wl.color)}
+  \item{fill}{after_stat(wl.color)}
 }
 }
 
