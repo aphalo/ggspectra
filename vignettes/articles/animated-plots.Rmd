@@ -195,3 +195,22 @@ anim <- ggplot(data = fscale(my_sun.spct, f = e_irrad, target = 100)) +
           subtitle = 'Frame {frame} of {nframes}')
 animate(anim, duration = 20, fps = 10)
 ```
+
+## `autoplot()` partial support
+
+It is possible to animate a ggplot created with an `autoplot()` method. Currently
+`by.group = TRUE` has to be added to the call. This is because annotations
+need to be added by group instead of by panel, so that they are present in
+each frame.
+
+More problematic is the bug that fails to render the R expressions in the
+axis labels and instead copies them as text. Some bad interaction between
+'ggspectra' and 'gganimate' seems to be the cause.
+
+```{r}
+autoplot(my_sun.spct, by.group = TRUE) +
+  transition_states(spct.idx,
+                    transition_length = 2,
+                    state_length = 1)
+```
+
