@@ -140,7 +140,7 @@ cal_plot <- function(spct,
     counts.label <- ""
   } else {
     s.counts.label <-
-      expression(Coefficients~~k[italic(lambda)]~~(J~m^{-2}~nm^{-1}~n^{-1}))
+      bquote(Coefficients~~k[italic(lambda)]~~(J~m^{-2}~nm^{-1}~n^{-1}))
     counts.label <- ""
   }
 
@@ -199,7 +199,7 @@ cal_plot <- function(spct,
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
   plot <- plot + geom_line(na.rm = na.rm)
-  plot <- plot + labs(x = expression("Wavelength, "*lambda~(nm)), y = s.counts.label)
+  plot <- plot + labs(x = bquote("Wavelength, "*lambda~(nm)), y = s.counts.label)
 
   if (length(annotations) == 1 && annotations == "") {
     return(plot)

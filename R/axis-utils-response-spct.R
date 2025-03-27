@@ -137,9 +137,9 @@ s.q.response_label <- function(unit.exponent = 0,
       paste(label.text, " $R(Q)_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
       if (axis.symbols) {
-        expression(.(label.text)~italic(R(Q))[lambda]~plain((rel.~units)))
+        bquote(.(label.text)~italic(R(Q))[lambda]~plain((rel.~units)))
       } else {
-        expression(.(label.text)~plain((rel.~units)))
+        bquote(.(label.text)~plain((rel.~units)))
       }
     } else if (format == "R.character") {
       paste(label.text, " (rel. units)")
@@ -297,9 +297,9 @@ s.q.action_label <- function(unit.exponent = 0,
       paste(label.text, "$A(Q)_{\\lambda}$ (rel.\ units)")
     } else if (format == "R.expression") {
       if (axis.symbols) {
-        expression(.(label.text)~talic(A(Q))[lambda]~plain((rel.~units)))
+        bquote(.(label.text)~talic(A(Q))[lambda]~plain((rel.~units)))
       } else {
-        expression(.(label.text)~plain((rel.~units)))
+        bquote(.(label.text)~plain((rel.~units)))
       }
     } else if (format == "R.character") {
       paste(label.text, "A(Q)(lambda) (rel. units)")

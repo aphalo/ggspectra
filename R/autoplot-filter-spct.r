@@ -84,7 +84,7 @@ Afr_plot <- function(spct,
       pc.out <- FALSE
     }
     scale.factor <- 1
-    s.Afr.label <- expression(Spectral~~absorptance~~italic(A)[lambda]~~("rel."))
+    s.Afr.label <- bquote(Spectral~~absorptance~~italic(A)[lambda]~~("rel."))
     Afr.label.total  <- "atop(italic(A), (rel))"
     Afr.label.avg  <- "atop(bar(italic(A)[lambda]), (rel))"
   } else if (photobiology::is_normalized(spct)) {
@@ -92,12 +92,12 @@ Afr_plot <- function(spct,
     return(ggplot2::ggplot())
   } else if (pc.out) {
     scale.factor <- 100
-    s.Afr.label <- expression(Spectral~~absorptance~~italic(A)[lambda]~~("%"))
+    s.Afr.label <- bquote(Spectral~~absorptance~~italic(A)[lambda]~~("%"))
     Afr.label.total  <- "atop(italic(A), (total %*% 100))"
     Afr.label.avg  <- "atop(bar(italic(A)[lambda]), (\"%\"))"
   } else {
     scale.factor <- 1
-    s.Afr.label <- expression(Spectral~~absorptance~~italic(A)[lambda]~~("/1"))
+    s.Afr.label <- bquote(Spectral~~absorptance~~italic(A)[lambda]~~("/1"))
     Afr.label.total  <- "atop(italic(A), (\"/1\"))"
     Afr.label.avg  <- "atop(bar(italic(A)[lambda]), (\"/1\"))"
   }
@@ -181,7 +181,7 @@ Afr_plot <- function(spct,
   plot <-
     plot + ggplot2::geom_line(na.rm = na.rm)
   plot <-
-    plot + ggplot2::labs(x = expression("Wavelength, "*lambda~(nm)),
+    plot + ggplot2::labs(x = bquote("Wavelength, "*lambda~(nm)),
                          y = s.Afr.label)
 
   if (length(annotations) == 1 && annotations == "") {
@@ -444,7 +444,7 @@ T_plot <- function(spct,
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
   plot <- plot + ggplot2::geom_line(na.rm = na.rm)
-  plot <- plot + labs(x = expression("Wavelength, "*lambda~(nm)), y = s.Tfr.label)
+  plot <- plot + labs(x = bquote("Wavelength, "*lambda~(nm)), y = s.Tfr.label)
 
   if (length(annotations) == 1 && annotations == "") {
     return(plot)
@@ -676,7 +676,7 @@ A_plot <- function(spct,
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
   plot <- plot + geom_line(na.rm = na.rm)
-  plot <- plot + labs(x = expression("Wavelength, "*lambda~(nm)), y = s.A.label)
+  plot <- plot + labs(x = bquote("Wavelength, "*lambda~(nm)), y = s.A.label)
 
   if (length(annotations) == 1 && annotations == "") {
     return(plot)
@@ -918,7 +918,7 @@ R_plot <- function(spct,
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
   plot <- plot + ggplot2::geom_line(na.rm = na.rm)
-  plot <- plot + labs(x = expression("Wavelength, "*lambda~(nm)),
+  plot <- plot + labs(x = bquote("Wavelength, "*lambda~(nm)),
                       y = s.Rfr.label)
 
   if (length(annotations) == 1 && annotations == "") {
@@ -1066,7 +1066,7 @@ O_plot <- function(spct,
 #    warning("Internal transmittance converted to total transmittance")
     spct <- photobiology::convertTfrType(spct, Tfr.type = "total")
   }
-  s.Rfr.label <- expression(atop(Spectral~~reflectance~R[lambda]~~absorptance~~A[lambda], and~~transmittance~T[lambda]))
+  s.Rfr.label <- bquote(atop(Spectral~~reflectance~R[lambda]~~absorptance~~A[lambda], and~~transmittance~T[lambda]))
   spct[["Afr"]] <- 1.0 - spct[["Tfr"]] - spct[["Rfr"]]
   if (any((spct[["Afr"]]) < -0.01)) {
     message("Bad data or fluorescence.")
@@ -1138,9 +1138,9 @@ O_plot <- function(spct,
                                                Rfr = 0.25,
                                                Afr = 0.55),
                                     breaks = c("Rfr", "Afr", "Tfr"),
-                                    labels = c(Tfr = expression(T[lambda]),
-                                               Afr = expression(A[lambda]),
-                                               Rfr = expression(R[lambda])),
+                                    labels = c(Tfr = bquote(T[lambda]),
+                                               Afr = bquote(A[lambda]),
+                                               Rfr = bquote(R[lambda])),
                                     guide = guide_legend(title = NULL))
     } else {
       plot <-
@@ -1148,9 +1148,9 @@ O_plot <- function(spct,
                                   position = ggplot2::position_stack())
       plot <-
         plot +
-        ggplot2::scale_linetype(labels = c(Tfr = expression(T[lambda]),
-                                           Afr = expression(A[lambda]),
-                                           Rfr = expression(R[lambda])),
+        ggplot2::scale_linetype(labels = c(Tfr = bquote(T[lambda]),
+                                           Afr = bquote(A[lambda]),
+                                           Rfr = bquote(R[lambda])),
                                 guide = guide_legend(title = NULL))
     }
   } else {
@@ -1163,9 +1163,9 @@ O_plot <- function(spct,
       ggplot2::geom_line(aes(linetype = .data[["variable"]]))
     plot <-
       plot +
-      ggplot2::scale_linetype(labels = c(Tfr = expression(T[lambda]),
-                                         Afr = expression(A[lambda]),
-                                         Rfr = expression(R[lambda])),
+      ggplot2::scale_linetype(labels = c(Tfr = bquote(T[lambda]),
+                                         Afr = bquote(A[lambda]),
+                                         Rfr = bquote(R[lambda])),
                               guide = ggplot2::guide_legend(title = NULL))
   }
   if (is.numeric(facets)) {
@@ -1177,7 +1177,7 @@ O_plot <- function(spct,
       ggplot2::facet_wrap(facets = vars(.data[[idfactor]]))
   }
   plot <-
-    plot + ggplot2::labs(x = expression("Wavelength, "*lambda~(nm)), y = s.Rfr.label)
+    plot + ggplot2::labs(x = bquote("Wavelength, "*lambda~(nm)), y = s.Rfr.label)
 
   if (length(annotations) == 1 && annotations == "") {
     return(plot)

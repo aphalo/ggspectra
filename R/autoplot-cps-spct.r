@@ -93,7 +93,7 @@ cps_plot <- function(spct,
       pc.out <- FALSE
     }
     s.cps.label <-
-      expression(Pixel~~response~~rate~~k %*% N[lambda]~~("rel."))
+      bquote(Pixel~~response~~rate~~k %*% N[lambda]~~("rel."))
     cps.label <- ""
   } else if (photobiology::is_normalized(spct)) {
     norm.ls <- photobiology::getNormalization(spct)
@@ -112,7 +112,7 @@ cps_plot <- function(spct,
       pc.out <- FALSE
     }
     s.cps.label <-
-      expression(Pixel~~response~~rate~~N[lambda]~~(counts~~s^{-1}))
+      bquote(Pixel~~response~~rate~~N[lambda]~~(counts~~s^{-1}))
     cps.label <- ""
   }
 
@@ -178,7 +178,7 @@ cps_plot <- function(spct,
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
   plot <- plot + ggplot2::geom_line(na.rm = na.rm)
-  plot <- plot + ggplot2::labs(x = expression("Wavelength, "*lambda~(nm)),
+  plot <- plot + ggplot2::labs(x = bquote("Wavelength, "*lambda~(nm)),
                                y = s.cps.label)
 
   if (length(annotations) == 1 && annotations == "") {

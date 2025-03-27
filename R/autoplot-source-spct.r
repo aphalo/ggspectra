@@ -169,7 +169,7 @@ e_plot <- function(spct,
     irrad.label.total <- sub("E", "E^{eff}", irrad.label.total, fixed = TRUE)
     irrad.label.avg <- sub("E[lambda]", "E[lambda]^{eff}", irrad.label.avg, fixed = TRUE)
   }
-  s.irrad.label <- parse(text = s.irrad.label)
+  s.irrad.label <- str2lang(s = s.irrad.label)
   spct[["s.e.irrad"]] <- spct[["s.e.irrad"]] * scale.factor
 
   if (!is.na(ylim[1])) {
@@ -216,7 +216,7 @@ e_plot <- function(spct,
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
   plot <- plot + ggplot2::geom_line(na.rm = na.rm)
-  plot <- plot + ggplot2::labs(x = expression("Wavelength, "*lambda~(nm)), y = s.irrad.label)
+  plot <- plot + ggplot2::labs(x = bquote("Wavelength, "*lambda~(nm)), y = s.irrad.label)
 
   if (length(annotations) == 1 && annotations == "") {
     return(plot)
@@ -470,7 +470,7 @@ q_plot <- function(spct,
     irrad.label.total <- sub("Q", "Q^{eff}", irrad.label.total, fixed = TRUE)
     irrad.label.avg <- sub("Q[lambda]", "Q[lambda]^{eff}", irrad.label.avg, fixed = TRUE)
   }
-  s.irrad.label <- parse(text = s.irrad.label)
+  s.irrad.label <- str2lang(s = s.irrad.label)
   spct[["s.q.irrad"]] <- spct[["s.q.irrad"]] * scale.factor
 
   if (!is.na(ylim[1])) {
@@ -519,7 +519,7 @@ q_plot <- function(spct,
   }
   plot <- plot + ggplot2::geom_line(na.rm = na.rm)
   plot <- plot +
-    ggplot2::labs(x = expression("Wavelength, "*lambda~(nm)), y = s.irrad.label)
+    ggplot2::labs(x = bquote("Wavelength, "*lambda~(nm)), y = s.irrad.label)
 
   if (length(annotations) == 1 && annotations == "") {
     return(plot)

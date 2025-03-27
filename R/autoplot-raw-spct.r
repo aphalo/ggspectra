@@ -106,7 +106,7 @@ raw_plot <- function(spct,
       pc.out <- FALSE
     }
     s.counts.label <-
-      expression(Pixel~~response~~k %*% N[lambda]~~("rel."))
+      bquote(Pixel~~response~~k %*% N[lambda]~~("rel."))
     counts.label <- ""
   } else if (photobiology::is_normalized(spct)) {
     norm.ls <- photobiology::getNormalization(spct)
@@ -125,7 +125,7 @@ raw_plot <- function(spct,
       pc.out <- FALSE
     }
     s.counts.label <-
-      expression(Pixel~~response~~N[lambda]~~(counts))
+      bquote(Pixel~~response~~N[lambda]~~(counts))
     counts.label <- ""
   }
 
@@ -205,7 +205,7 @@ raw_plot <- function(spct,
   }
   plot <- plot + ggplot2::geom_line(na.rm = na.rm)
   plot <- plot +
-    ggplot2::labs(x = expression("Wavelength, "*lambda~(nm)),
+    ggplot2::labs(x = bquote("Wavelength, "*lambda~(nm)),
                   y = s.counts.label)
 
   if (length(annotations) == 1 && annotations == "") {

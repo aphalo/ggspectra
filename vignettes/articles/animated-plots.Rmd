@@ -184,7 +184,22 @@ animate(anim, duration = 20, fps = 10)
 To more easily see the differences in the shape of the spectra we can scale them to an equal total irradiance, i.e., equal area under the curves. To emphasize this, we can use `geom_spct()` instead of `geom_line()` that was used in the examples above 
 
 ```{r, eval=eval_chunks, warning=FALSE}
-anim <- ggplot(data = fscale(my_sun.spct, f = e_irrad, target = 100)) +
+anim <- ggplot(data = fscale(my_sun.spct, f = e_irrad, target = 100),
+               unit.out = "energy") +
+  geom_spct() +
+  scale_x_wl_continuous() +
+  scale_y_s.e.irrad_continuous(name = s.e.irrad_label(scaled = TRUE)) +
+  transition_states(get(idfactor),
+                    transition_length = 2,
+                    state_length = 1) +
+  ggtitle('Now showing {closest_state} UTC',
+          subtitle = 'Frame {frame} of {nframes}')
+animate(anim, duration = 20, fps = 10)
+```
+
+```{r, eval=eval_chunks, warning=FALSE}
+anim <- ggplot(data = fscale(my_sun.spct, f = q_irrad, target = 100),
+               unit.out = "photon") +
   geom_spct() +
   scale_x_wl_continuous() +
   scale_y_s.e.irrad_continuous(name = s.e.irrad_label(scaled = TRUE)) +
@@ -208,9 +223,17 @@ axis labels and instead copies them as text. Some bad interaction between
 'ggspectra' and 'gganimate' seems to be the cause.
 
 ```{r}
-autoplot(my_sun.spct, by.group = TRUE) +
+autoplot(my_sun.spct, by.group = TRUE, annotations = "", unit.out = "energy") +
   transition_states(spct.idx,
                     transition_length = 2,
                     state_length = 1)
 ```
 
+
+```{r, eval=FALSE}
+# broken!!
+autoplot(my_sun.spct, by.group = TRUE, annotations = "", unit.out = "photon") +
+  transition_states(spct.idx,
+                    transition_length = 2,
+                    state_length = 1)
+```

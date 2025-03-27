@@ -25,7 +25,9 @@ the case of logical `TRUE`, `"norm"` is used as subscript.
 addition of a plot layer for each group. The default behaviour remains unchanged
 from previous versions of the package.
 - `autoplot()` methods also gain a parameter `by.group` controlling the addition 
-of a plot layer for each group. 
+of a plot layer for each group.
+- For labels use `bquote()` instead of `expression()` as 'gganimate' does not
+expand expressions.
 
 # ggspectra 0.3.15
 
