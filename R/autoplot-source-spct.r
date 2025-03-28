@@ -169,7 +169,9 @@ e_plot <- function(spct,
     irrad.label.total <- sub("E", "E^{eff}", irrad.label.total, fixed = TRUE)
     irrad.label.avg <- sub("E[lambda]", "E[lambda]^{eff}", irrad.label.avg, fixed = TRUE)
   }
-  s.irrad.label <- str2lang(s = s.irrad.label)
+  if (is.character(s.irrad.label)) {
+    s.irrad.label <- str2lang(s = s.irrad.label)
+  }
   spct[["s.e.irrad"]] <- spct[["s.e.irrad"]] * scale.factor
 
   if (!is.na(ylim[1])) {
@@ -470,7 +472,9 @@ q_plot <- function(spct,
     irrad.label.total <- sub("Q", "Q^{eff}", irrad.label.total, fixed = TRUE)
     irrad.label.avg <- sub("Q[lambda]", "Q[lambda]^{eff}", irrad.label.avg, fixed = TRUE)
   }
-  s.irrad.label <- str2lang(s = s.irrad.label)
+  if (is.character(s.irrad.label)) {
+    s.irrad.label <- str2lang(s = s.irrad.label)
+  }
   spct[["s.q.irrad"]] <- spct[["s.q.irrad"]] * scale.factor
 
   if (!is.na(ylim[1])) {

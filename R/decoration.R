@@ -85,9 +85,13 @@ decoration <- function(w.band,
                        by.group = FALSE,
                        na.rm = TRUE) {
   if (grepl(".pc", label.qty, fixed = TRUE)) {
-    label.mult = 100
     label.qty <- sub(".pc", "", label.qty, fixed = TRUE)
-  }
+    if (label.qty %in% c("contribution", "relative")) {
+      label.mult <- label.mult * 100
+    } else {
+      warning("Using 'label.qty = \"", label.qty, "\"', invalid \".pc\" ending discarded")
+    }
+   }
   if (!"summaries" %in% annotations) {
     label.qty <- "none"
   }
@@ -95,12 +99,14 @@ decoration <- function(w.band,
                             total = stat_wb_total,
                             mean = stat_wb_mean,
                             average = stat_wb_mean,
-                            irrad = stat_wb_irrad,
+                            irrad = ifelse(unit.out == "photon",
+                                           stat_wb_q_irrad,
+                                           stat_wb_e_irrad),
                             sirrad = stat_wb_sirrad,
                             contribution = stat_wb_contribution,
                             relative = stat_wb_relative,
-                            none = stat_wb_label,
-                            function(...) {NA_real_}, # default if no match
+                            none = ,
+                            function(...) {NULL}, # default if no match
                             na.rm = na.rm)
   z <- list()
   if ("peaks" %in% annotations) {
