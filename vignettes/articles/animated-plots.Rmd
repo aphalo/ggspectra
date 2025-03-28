@@ -14,13 +14,34 @@ vignette: >
 
 ## Introduction
 
-Package `ggspectra` extends `ggplot2` with stats, geoms, scales and annotations suitable for light- or radiation-related spectra. It also defines `ggplot()` and  `autoplot()` methods specialized for the classes defined in package `photobiology` for storing different types of spectral data. The `autoplot()` methods are described separately in vignette _User Guide: 2 Autoplot Methods_ and the `ggplot()` methods, statistics, and scales in _User Guide: 1 Grammar of Graphics_.
+Package `ggspectra` extends `ggplot2` with stats, geoms, scales and annotations suitable for light- or radiation-related spectra. It also defines `ggplot()` and `autoplot()` methods specialized for the classes defined in package `photobiology` for storing different types of spectral data. The `autoplot()` methods are described separately in vignette _User Guide: 2 Autoplot Methods_ and the `ggplot()` methods, statistics, and scales in _User Guide: 1 Grammar of Graphics_.
 
 The new elements can be freely combined with methods and functions defined in packages 'ggplot2', `scales`, `ggrepel`, `gganimate` and other extensions to 'ggplot2'.
 
-This article, focuses on the animation of plots of time-series of spectra, which can be acquired easily using Ocean Optics spectrometers toether with R package 'ooacquire'. Such data can also be obtained with radiation transfer models. Simlarly, kinetics of chemical reactions involving light absorbing reactants and/or products as well as any other temporal change in colour and or intensity can be characterised through spectral data. In addition to time, as exemplified below using time-series, other series of measurements in response to changes in other continuous explanatory variables are well suited to animations. 
+This article, focuses on plots of time-series of spectra created with R package
+'ggspectra' and animated with package ['gganimate'](https://gganimate.com/).
+Time series of spectra stored in one of the classes from R package
+['photobiology'](https://docs.r4photobiology.info/photobiology/) can be acquired
+or imported easily when using Ocean Optics spectrometers, with R package
+['ooacquire'](https://docs.r4photobiology.info/ooacquire/). Such data can also
+be obtained with radiation transfer models u other brands of spectrometers and
+in many cases imported with R package
+['photobiologyInOut](https://docs.r4photobiology.info/photobiologyInOut/).
+Similarly, kinetics of chemical reactions involving light absorbing reactants
+and/or products as well as any other temporal change in colour and or intensity
+can be characterised through spectral data. In addition to time, as exemplified
+below using time-series, other series of measurements in response to changes in
+other continuous explanatory variables are well suited to animations.
 
-Currently, plots of spectra created with method `autoplot()` cannot be animated with 'gganimate'.
+_One limitation of the current version of 'gganimate' is that it does not
+support scales names that are R _expressions_ as returned by R functions 
+`parse()` and `expression()`. Functions `str2lang()` and `bquote()` have to
+be used instead. These functions are used within 'ggspectra' (>= 0.3.16) 
+improving compatibility._
+
+**A difficulty remains in that `unit.out` by default is in layer functions
+that of an R option. This option does not seem to be in all cases available
+when the animation is assembled.**
 
 ## Set up 
 
@@ -30,6 +51,8 @@ library(photobiology)
 library(photobiologySun)
 library(photobiologyWavebands)
 library(ggspectra)
+energy_as_default()
+
 library(lubridate)
 # if suggested packages are available
 gganimate_installed <- requireNamespace("gganimate", quietly = TRUE)
@@ -161,7 +184,7 @@ We can display all 16 spectra in a single static plot.
 ```{r, eval=eval_chunks, warning=FALSE}
 ggplot(data = my_sun.spct) +
   aes(group = get(idfactor)) +
-  geom_line(alpha = 1/3) +
+  geom_line(alpha = 1/3, na.rm = TRUE) +
   scale_x_wl_continuous() +
   scale_y_s.e.irrad_continuous()
 ```
@@ -170,7 +193,7 @@ The same data as above, but displayed as an animated plot.
 
 ```{r, eval=eval_chunks, warning=FALSE}
 anim <- ggplot(data = my_sun.spct) +
-  geom_line() +
+  geom_line(na.rm = TRUE) +
   scale_x_wl_continuous() +
   scale_y_s.e.irrad_continuous() +
   transition_states(get(idfactor),
@@ -186,7 +209,7 @@ To more easily see the differences in the shape of the spectra we can scale them
 ```{r, eval=eval_chunks, warning=FALSE}
 anim <- ggplot(data = fscale(my_sun.spct, f = e_irrad, target = 100),
                unit.out = "energy") +
-  geom_spct() +
+  geom_spct(na.rm = TRUE) +
   scale_x_wl_continuous() +
   scale_y_s.e.irrad_continuous(name = s.e.irrad_label(scaled = TRUE)) +
   transition_states(get(idfactor),
@@ -200,7 +223,7 @@ animate(anim, duration = 20, fps = 10)
 ```{r, eval=eval_chunks, warning=FALSE}
 anim <- ggplot(data = fscale(my_sun.spct, f = q_irrad, target = 100),
                unit.out = "photon") +
-  geom_spct() +
+  geom_spct(na.rm = TRUE) +
   scale_x_wl_continuous() +
   scale_y_s.e.irrad_continuous(name = s.e.irrad_label(scaled = TRUE)) +
   transition_states(get(idfactor),
@@ -216,23 +239,35 @@ animate(anim, duration = 20, fps = 10)
 It is possible to animate a ggplot created with an `autoplot()` method. Currently
 `by.group = TRUE` has to be added to the call. This is because annotations
 need to be added by group instead of by panel, so that they are present in
-each frame.
+all frames.
 
-More problematic is the bug that fails to render the R expressions in the
-axis labels and instead copies them as text. Some bad interaction between
-'ggspectra' and 'gganimate' seems to be the cause.
+All label definitions in 'ggspectra' (>= 0.3.16) are static or defined using
+`bquote()` as required by 'gganimate'. 
 
 ```{r}
-autoplot(my_sun.spct, by.group = TRUE, annotations = "", unit.out = "energy") +
+autoplot(my_sun.spct, by.group = TRUE) +
+  transition_states(spct.idx,
+                    transition_length = 2,
+                    state_length = 1)
+```
+
+Currently, `label.qty = "total"` and `label.qty = "irrad"` trigger an error.
+
+```{r, eval=FALSE}
+# broken!!
+photon_as_default()
+autoplot(my_sun.spct, by.group = TRUE) +
   transition_states(spct.idx,
                     transition_length = 2,
                     state_length = 1)
 ```
 
 
-```{r, eval=FALSE}
-# broken!!
-autoplot(my_sun.spct, by.group = TRUE, annotations = "", unit.out = "photon") +
+```{r}
+# works!!
+photon_as_default()
+autoplot(my_sun.spct, by.group = TRUE, label.qty = "sirrad", 
+         unit.out = "photon") +
   transition_states(spct.idx,
                     transition_length = 2,
                     state_length = 1)
