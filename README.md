@@ -3,6 +3,8 @@
 
 # ggspectra <img src="man/figures/logo.png" align="right" width="120" />
 
+## Extensions to ‘ggplot2’ for Radiation Spectra
+
 [![cran
 version](https://www.r-pkg.org/badges/version-last-release/ggspectra)](https://cran.r-project.org/package=ggspectra)
 [![cran
@@ -25,9 +27,9 @@ with quantities derived from spectral data. All summary quantities
 implemented in ‘photobiology’ can be used for annotations including
 biologically effective irradiances and exposures.
 
-Please, see the web site
-[r4photobiology](https://www.r4photobiology.info) for details on other
-packages available as part of the suite, and on how to install them.
+Please, see the web page [The R for Photobiology
+Suite](https://www.r4photobiology.info/pages/r4p-introduction.html) for
+an overview of the component packages.
 
 ## Examples
 

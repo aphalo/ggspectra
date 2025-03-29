@@ -1,5 +1,5 @@
 ---
-title: "Article: Plotting transformed spectral data"
+title: "Plotting transformed spectral data"
 subtitle: "'ggspectra' `r packageVersion('ggspectra')`"
 author: "Pedro J. Aphalo"
 date: "`r Sys.Date()`"
@@ -7,12 +7,14 @@ output:
   rmarkdown::html_vignette:
     toc: yes
 vignette: >
-  %\VignetteIndexEntry{Article: Plotting transformed spectral data}
+  %\VignetteIndexEntry{Plotting transformed spectral data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ## Introduction
+
+_This article is only available as part of [the on-line documentation of R package 'ggspectra'](https://docs.r4photobiology.info/ggspectra/). It is not installed in the local computer as part of the package._
 
 Package `ggspectra` extends `ggplot2` with stats, geoms, scales and annotations suitable for light spectra. It also defines `ggplot()` and  `autoplot()` methods specialized for the classes defined in package `photobiology` for storing different types of spectral data. The `autoplot()` methods are described separately in vignette _User Guide: 2 Autoplot Methods_ and the `ggplot()` methods, statistics, and scales in _User Guide: 1 Grammar of Graphics_.
 
@@ -22,9 +24,7 @@ This article, formerly the third part of the User Guide, describes how to combin
 
 In 'ggspectra' (>= 0.3.5) the data member of `gg` (ggplot) objects remains as an object of the classes for spectral data defined in 'photobiology' instead of being converted into a plain `data.frame`. This makes it possible data manipulations in layers to be done with methods specific to spectral data. In other words, the `data` object used as default for individual plot layers retains its original attributes, including its class. This makes it possible to use methods applicable to the original object to modify it for individual plot layers.
 
-The examples in this vignette depend conditionally on packages 'rlang', 
-'magrittr', and 'gganimate'. If these packages are not available when the article is built, the
-code chunks that require them are not evaluated.
+The examples in this vignette depend conditionally on packages 'rlang', 'magrittr', and 'gganimate'. If these packages are not available when the article is built, the code chunks that require them are not evaluated.
 
 ## Set up 
 
@@ -268,10 +268,16 @@ ggplot(data = sun_evening.mspct[c(1, 5)]) +
 
 There are few situations where applying different transformations to multiple
 spectra does not result in overcrowded plots, one example being animated plots 
-where different layers are displayed sequentially.
+where different layers are displayed sequentially. Further examples of 
+animations are available in the separate on-line only package article 
+[Animated plots of spectral data](https://docs.r4photobiology.info/ggspectra/articles/animated-plots.html).
 
 ```{r, eval=gganimate_installed}
 library(gganimate)
+message("'gganimate' version ", 
+        format(packageVersion('gganimate')), 
+        " loaded and attached.")
+
 ggplot(data = sun_evening.mspct) +
   geom_line() +
   geom_line(data = . %>% smooth_spct(method = "supsmu"),
@@ -283,10 +289,10 @@ ggplot(data = sun_evening.mspct) +
           subtitle = 'Frame {frame} of {nframes}')
 ```
 
-Another use case is when a layer displays a summary spectrum computed from multiple spectra shown in a different plot layer. In the example below the black line shows the median spectru. Other spectra are semitransparent and show as grey lines.
+Another use case is when a layer displays a summary spectrum computed from multiple spectra shown in a different plot layer. In the example below the black line shows the median spectrum. Other spectra are semitransparent and show as grey lines.
 
 ```{r}
 ggplot(data = sun_evening.spct) +
    geom_line(aes(group = spct.idx), alpha = 1/3) +
-   geom_line(data = . %>% subset2mspct() %>% s_median())
+   geom_line(data = . %>% s_median())
 ```

@@ -1,5 +1,5 @@
 ---
-title: "Article: Animated plots of spectral data"
+title: "Animated plots of spectral data"
 subtitle: "'ggspectra' `r packageVersion('ggspectra')`"
 author: "Pedro J. Aphalo"
 date: "`r Sys.Date()`"
@@ -7,12 +7,14 @@ output:
   rmarkdown::html_vignette:
     toc: yes
 vignette: >
-  %\VignetteIndexEntry{Article: Animated plots of spectral data}
+  %\VignetteIndexEntry{Animated plots of spectral data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ## Introduction
+
+_This article is only available as part of [the on-line documentation of R package 'ggspectra'](https://docs.r4photobiology.info/ggspectra/). It is not installed in the local computer as part of the package._
 
 Package `ggspectra` extends `ggplot2` with stats, geoms, scales and annotations suitable for light- or radiation-related spectra. It also defines `ggplot()` and `autoplot()` methods specialized for the classes defined in package `photobiology` for storing different types of spectral data. The `autoplot()` methods are described separately in vignette _User Guide: 2 Autoplot Methods_ and the `ggplot()` methods, statistics, and scales in _User Guide: 1 Grammar of Graphics_.
 
@@ -59,6 +61,7 @@ gganimate_installed <- requireNamespace("gganimate", quietly = TRUE)
 eval_chunks <- gganimate_installed
 if (eval_chunks) {
   library(gganimate)
+  message("'gganimate' version ", format(packageVersion('gganimate')), " loaded and attached.")
 } else {
   message("Please, install package 'gganimate'.")
 }
@@ -112,8 +115,19 @@ ggplot(data = my_sun.spct) +
                     transition_length = 2,
                     state_length = 1)
 ```
+The default base of expression for irradiance and spectral irradiance is `"energy"`, while `"photon"` (= quantum) is also supported. Below we edited the plot code immediately above adding `unit.out = "photon"` to `ggplot()` and replacing _y_ scale `scale_y_s.e.irrad_continuous()` with `scale_y_s.q.irrad_continuous()`.
 
-We add an indication of which spectrum is being displayed. Here we define the title and subtitle of the plot to be dynamic, showing information about the currently displayed frame of the animation.
+```{r, eval=eval_chunks}
+ggplot(data = my_sun.spct, unit.out = "photon") +
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_s.q.irrad_continuous() +
+  transition_states(spct.idx,
+                    transition_length = 2,
+                    state_length = 1)
+```
+
+Next, we add an indication of which spectrum is being displayed. Here we define the title and subtitle of the plot to be dynamic, showing information about the currently displayed frame of the animation.
 
 ```{r, eval=eval_chunks}
 ggplot(data = my_sun.spct) +
@@ -130,16 +144,42 @@ ggplot(data = my_sun.spct) +
 It is possible to add some annotations. Here energy irradiances for red and far-red light.
 
 ```{r, eval=eval_chunks}
-ggplot(data = sun_evening.mspct |> smooth_spct(method = "supsmu", strength = 0.5)) +
+ggplot(data = sun_evening.mspct) +
   geom_line() +
+  stat_wb_label(aes(colour = after_stat(wb.color)),
+                w.band = list(Red("Sellaro"), Far_red("Sellaro")),
+                ypos.fixed = 0.082, by.group = TRUE) +
   stat_wb_e_irrad(aes(colour = after_stat(wb.color)),
                   w.band = list(Red("Sellaro"), Far_red("Sellaro")),
                   ypos.fixed = 0.078) +
   stat_wb_hbar(aes(colour = after_stat(wb.color)),
-                  w.band = list(Red("Sellaro"), Far_red("Sellaro")),
-                  ypos.fixed = 0.082) +
+                  w.band = list(Red("Sellaro"), Far_red("Sellaro"))) +
   scale_x_wl_continuous() +
   scale_y_s.e.irrad_continuous() +
+  scale_colour_identity() +
+  transition_states(spct.idx,
+                    transition_length = 2,
+                    state_length = 1,
+                    ) +
+  ggtitle('Now showing {closest_state} UTC',
+          subtitle = 'Frame {frame} of {nframes}')
+```
+The code above edited to use photons as base of expression by changing as above, but also adjusting the position of annotations and their multiplier. While the scale and annotations are expresses in $\mu\mathrm{mol}\,\mathrm{m}^{-2}\,\mathrm{s}^{-1}\,\mathrm{nm}^{-1}$ the data are stored as $\mathrm{mol}\,\mathrm{m}^{-2}\,\mathrm{s}^{-1}\,\mathrm{nm}^{-1}$.
+
+```{r, eval=eval_chunks}
+ggplot(data = sun_evening.mspct, unit.out = "photon") +
+  geom_line() +
+  stat_wb_label(aes(colour = after_stat(wb.color)),
+                w.band = list(Red("Sellaro"), Far_red("Sellaro")),
+                ypos.fixed = 0.37e-6, by.group = TRUE) +
+  stat_wb_q_irrad(aes(colour = after_stat(wb.color)),
+                  w.band = list(Red("Sellaro"), Far_red("Sellaro")),
+                  label.mult = 1e6, 
+                  ypos.fixed = 0.35e-6) +
+  stat_wb_hbar(aes(colour = after_stat(wb.color)),
+                  w.band = list(Red("Sellaro"), Far_red("Sellaro"))) +
+  scale_x_wl_continuous() +
+  scale_y_s.q.irrad_continuous() +
   scale_colour_identity() +
   transition_states(spct.idx,
                     transition_length = 2,
@@ -154,13 +194,13 @@ ggplot(data = sun_evening.mspct |> smooth_spct(method = "supsmu", strength = 0.5
 
 ```{r}
 my_sun.spct <- sun_hourly_august.spct
-my_sun.spct
 ```
 
-Object `my_sun.spct` contains multiple spectra in long form. A variable identifies which rows belong to each spectrum, based on date and time. The data cover most of the daytime of two successive days. We select data for one day.
+Object `my_sun.spct` contains multiple spectra in long form. Variable `UTC` identifies which rows belong to each spectrum, based on date and time. The data cover most of the daytime of two successive days. We select data for one day.
 
 ```{r}
 my_sun.spct <- subset(my_sun.spct, day(UTC) == 21)
+summary(my_sun.spct)
 ```
 
 
