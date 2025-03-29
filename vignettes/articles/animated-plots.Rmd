@@ -291,7 +291,7 @@ autoplot(my_sun.spct, by.group = TRUE) +
                     state_length = 1)
 ```
 
-Currently, `label.qty = "total"` and `label.qty = "irrad"` trigger an error.
+**Currently, `label.qty = "total"` and `label.qty = "irrad"` trigger an ERROR for photon units when attempting to animate a plot created with `autoplot()`.**
 
 ```{r, eval=FALSE}
 # broken!!

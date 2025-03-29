@@ -4,11 +4,13 @@ editor_options:
     wrap: 72
 ---
 
-# ggspectra 0.3.16
+# ggspectra 0.3.15.9000
 
 The main change in this version is compatibility with package 'gganimate',
-making it possible to create animated plots using `autoplot()` methods and layer 
-functions from 'ggspectra'.
+making it possible to create animated plots using `autoplot()` methods and
+`ggplot()` together with layer functions from 'ggspectra'. See article
+[Animated plots of spectral data](https://docs.r4photobiology.info/ggspectra/articles/animated-plots.html) 
+for examples.
 
 - Update, mostly of internal code, to make available features from 
 'photobiology' (>= 0.12.0), which is recommended but not required.
@@ -19,15 +21,16 @@ the plot guide title.
 parameter `normalized`, character values are used as subscript to the symbol for
 the denominator, typically indicating type of normalization, such as `"max"`. In
 the case of logical `TRUE`, `"norm"` is used as subscript.
+- Use `bquote()` and `str2lang()` instead of `expression()` and
+`parse()` to allow animations with R package 'gganimate'.
 - Statistics that add a single layer per plot panel are not compatible with
 'gganimate'. The statistics affected are `stat_wb_box()`, `stat_wb_label()` and
-`stat_wl_strip()`. These stats gain a parameter `by.group` controlling the
-addition of a plot layer for each group. The default behaviour remains unchanged
-from previous versions of the package.
-- `autoplot()` methods also gain a parameter `by.group` controlling the addition 
-of a plot layer for each group.
-- For labels use `bquote()` and `str2lang()` instead of `expression()` and
-`parse()` as 'gganimate' does not currently supports expressions.
+`stat_wl_strip()`. These stats gain parameter `by.group` controlling the
+addition of a plot layer for each group. The default behaviour remains unchanged.
+- `autoplot()` methods also gain parameter `by.group` passed to the statistics,
+enabling compatibility with 'gganimate'. **A bug in this development version
+prevents animation of plots of spectral _photon_ irradiance with summary 
+annotations "total" or "irrad", if created with `autoplot()`.**
 
 # ggspectra 0.3.15
 
