@@ -26,7 +26,7 @@ Time series of spectra stored in one of the classes from R package
 ['photobiology'](https://docs.r4photobiology.info/photobiology/) can be acquired
 or imported easily when using Ocean Optics spectrometers, with R package
 ['ooacquire'](https://docs.r4photobiology.info/ooacquire/). Such data can also
-be obtained with radiation transfer models u other brands of spectrometers and
+be obtained with radiation transfer models or other brands of spectrometers and
 in many cases imported with R package
 ['photobiologyInOut](https://docs.r4photobiology.info/photobiologyInOut/).
 Similarly, kinetics of chemical reactions involving light absorbing reactants
