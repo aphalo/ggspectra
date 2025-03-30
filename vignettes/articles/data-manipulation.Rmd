@@ -107,7 +107,7 @@ ggplot(sun.spct) +
             colour = "red", linewidth = 1)
 ```
 
-Alternatively, without depending on 'magrittr' or 'rlang' we can pass an anonymous function as argument to `data` to the same effect, but possbly less clear code.
+Alternatively, without depending on 'magrittr' or 'rlang' we can pass an anonymous function as argument to `data` to the same effect, but possibly less clear code.
 
 ```{r, eval = eval_chunks}
 ggplot(sun.spct) + 
@@ -172,7 +172,7 @@ ggplot(sun.spct) +
              linetype = "dotted", span = NULL)
 ```
 
-We can easily highlight a wavelength range by overplotting the same line in a different colour.
+We can easily highlight a wavelength range by over-plotting the same line in a different colour.
 
 ```{r, eval = eval_chunks}
 ggplot(sun.spct) + 
@@ -212,7 +212,7 @@ Some of the methods from 'photobiology' are also defined for `data.frame` and ca
 
 Package 'photobiology' supports two alternative ways of storing multiple spectra in a single R object: collections of spectra in objects of classes with names ending in `_mspct` such as `source_mspct` and in objects of classes with names ending in `_spct` such as `source_spct`
 in objects. When passed to `ggplot()` they are both added to the `"gg"` object as objects of one
-of the `_spct` classes. (The former are an specilaization of lists of data frames, while the second are an specialization of data frame, and, thus, compatible with 'ggplot2'.)
+of the `_spct` classes. (The former are an specialization of lists of data frames, while the second are an specialization of data frame, and, thus, compatible with 'ggplot2'.)
 
 We use for this example data for a time series of five spectra measured close to sunset. We need to add a mapping to the factor used to identify the individual spectra.
 

@@ -36,7 +36,7 @@ opts_chunk$set(fig.align = 'center', fig.show = 'hold',
 options(warnPartialMatchArgs = FALSE)
 ```
 
-We will use an individual sunlight spectum `sun.spct` and a short time series of spectra `sun_evening.spct` and `sun_evening.mspct', from 'photobiology' for examples.
+We will use an individual sunlight spectrum `sun.spct` and a short time series of spectra `sun_evening.spct` and `sun_evening.mspct', from 'photobiology' for examples.
 
 ```{r}
 summary(sun.spct)
@@ -90,9 +90,9 @@ use without the possibility to adjust the design and components of the
 _ggplot_ object created. One approach is to use the grammar of graphics to
 add to the plot. However, it is also possible to control many features of the
 plot by passing additional arguments in the call to `autoplot()`. User-provided
-arguments overrrided the defaults.
+arguments override the defaults.
 
-When plotting `source_spct` and `response_spct` objects we can change the basis of expression of spectral irradiance and spectral responsivity from `"energy"` to `"photon"`. Be aware that by design, within one plot all spectral values and derived summaries will always use the same base of expression.
+When plotting `source_spct` and `response_spct` objects we can change the basis of expression of spectral irradiance and spectral response from `"energy"` to `"photon"`. Be aware that by design, within one plot all spectral values and derived summaries will always use the same base of expression.
 
 ```{r}
 autoplot(sun.spct, unit.out = "photon")
@@ -154,7 +154,7 @@ autoplot(sun_evening.mspct, facets = 2)
 
 ---
 
-Contrary to `"gg"` objects created with package 'ggplot2', the data embedded in the `"gg"` objects created with these `autoplot()` methods retains the attributes used by package 'photobiology', inlcuding the class.
+Contrary to `"gg"` objects created with package 'ggplot2', the data embedded in the `"gg"` objects created with these `autoplot()` methods retains the attributes used by package 'photobiology', including the class.
 
 ```{r}
 p1 <- autoplot(sun.spct)
@@ -195,7 +195,7 @@ autoplot(sun.spct, w.band = waveband(c(380, 760)))
 autoplot(sun.spct, w.band = NULL)
 ```
  
-Summarizing the examples above, arguments passed to `range` and `w.band` play very different roles. Parameter `range`, gives the wavelengths to include in the plot, and the default for `range` is always the range of wavelengths in the spectrum being plotted. The argument to `w.band` is only used for the _annotations_ and decorations, described in a leater section in more detail. 
+Summarizing the examples above, arguments passed to `range` and `w.band` play very different roles. Parameter `range`, gives the wavelengths to include in the plot, and the default for `range` is always the range of wavelengths in the spectrum being plotted. The argument to `w.band` is only used for the _annotations_ and decorations, described in a later section in more detail. 
 
 The effect of `range` is slightly different to the effect of `ggplot2::xlim()` as `range` is used to _trim_ the spectral data __before__ passing it to `ggplot`, using interpolation when needed (see `photobiology::trim_wl()`). In contrast `xlim` discards data for all wavelengths not within the range.
 
@@ -324,7 +324,7 @@ autoplot(sun.spct,
      annotations = c("=", "labels", "summaries", "color.guide", "peaks", "boundaries"))
 ```
 
-As indicated in the table above, some annotations override other annotations which fulfill a similar role. Here `"segments"` overrides the `"boxes"`, included in the default annotations.
+As indicated in the table above, some annotations override other annotations which fulfil a similar role. Here `"segments"` overrides the `"boxes"`, included in the default annotations.
 
 ```{r}
 autoplot(sun.spct, 
@@ -446,7 +446,7 @@ In the case of quantities like transmittance which have a certain range of valid
 autoplot(yellow_gel.spct, annotations = c("+", "boundaries"))
 ```
 
-Differently from other classes `raw_spct` and `cps_spct` objects can contain multiple columns of data, normally measured different integartion times, and meant to be combined before conversion into physical quantities. In the case of raw instrument counts data, if the spectral object contains an instrument descriptor as metadata, the upper boundary is set to the maximum counts of the detector.
+Differently from other classes `raw_spct` and `cps_spct` objects can contain multiple columns of data, normally measured different integration times, and meant to be combined before conversion into physical quantities. In the case of raw instrument counts data, if the spectral object contains an instrument descriptor as metadata, the upper boundary is set to the maximum counts of the detector.
 
 ```{r}
 autoplot(white_led.raw_spct, annotations = c("+", "boundaries"))

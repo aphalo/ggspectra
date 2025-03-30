@@ -331,7 +331,7 @@ ggplot(sun.spct) +
   scale_y_s.e.irrad_continuous()
 ```
 We can have also axis labels without symbols, either by passing an argument to
-parameter `axis.symbols` or by seeting R option `ggspectra.axis.symbols`, which
+parameter `axis.symbols` or by setting R option `ggspectra.axis.symbols`, which
 sets the default.
 
 ```{r}
@@ -590,7 +590,7 @@ ggplot(ccd.spct) +
 
 Two definitions of transmittance exist, total and internal. To obtain
 the correct labels we query the object containing the data. If we plot
-data from a data frame or tibble, then we can manualy pass one of
+data from a data frame or tibble, then we can manually pass one of
 `"total"` or `"internal"` as argument.
 
 ```{r}
@@ -620,7 +620,7 @@ ggplot(gel_internal.spct) +
 
 Two definitions of absorbance exist, total and internal. To obtain the
 correct labels we query the object containing the data. If we plot data
-from a data frame or tibble, then we can manualy pass one of `"total"`
+from a data frame or tibble, then we can manually pass one of `"total"`
 or `"internal"` as argument. *This package only supports absorbance as
 defined using logs on base 10.*
 
@@ -646,7 +646,7 @@ ggplot(yellow_gel.spct, plot.qty = "absorptance") +
 
 Two definitions of reflectance exist, total and specular. To obtain the
 correct labels we query the object containing the data. If we plot data
-from a data frame or tibble, then we can manualy pass one of `"total"`
+from a data frame or tibble, then we can manually pass one of `"total"`
 or `"specular"` as argument.
 
 ```{r}
@@ -688,7 +688,7 @@ geom, but they make using other geoms easier. Furthermore generated text
 labels are formatted with `sptintf()` and these six stats accept format
 definitions through parameters `label.fmt`, `x.label.fmt`, and
 `y.label.fmt`. Please see the documentation for a list of all the
-computed varaibles returned in `data`. These stats use internally
+computed variables returned in `data`. These stats use internally
 functions `photobiology::find_peaks()` and `photobiology::find_wls()`
 and arguments are passed down to them.
 
@@ -960,7 +960,7 @@ All statistics that generate color definitions from wavelengths or
 wavebands have a parameter, `chroma.type` to which can be used to select
 the color matching function or color coordinates to be used. If we use
 chromaticity coordinates, `"CC"`, instead of the default color matching
-fucntion, `"CMF"`, the apparent luminance is not taken into account,
+function, `"CMF"`, the apparent luminance is not taken into account,
 only the hue.
 
 ```{r}
