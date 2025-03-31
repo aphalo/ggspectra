@@ -11,7 +11,7 @@
 w_length_label(
   unit.exponent = -9,
   format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["w.length"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ", ", " "))[["w.length"]],
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)
 )
 

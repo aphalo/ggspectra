@@ -8,57 +8,69 @@
 \title{Spectral irradiance y-scale}
 \usage{
 scale_y_s.e.irrad_continuous(
-  unit.exponent = 0,
-  name = s.e.irrad_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = ifelse(is.numeric(normalized),
-    round(normalized, 1), unique(normalized)), axis.symbols = axis.symbols),
+  unit.exponent = NULL,
+  name = s.e.irrad_label(unit.exponent = unit.exponent, markup.format = markup.format,
+    time.unit = "second", label.text = label.text, pc.out = pc.out, scaled = scaled,
+    normalized = ifelse(is.numeric(normalized), round(normalized, 1),
+    unique(normalized)), axis.symbols = axis.symbols),
   labels = SI_pl_format(exponent = unit.exponent),
-  format = getOption("photobiology.math", default = "R.expression"),
+  markup.format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.e.irrad"]],
+  pc.out = FALSE,
   scaled = FALSE,
-  normalized = FALSE,
+  normalised = FALSE,
+  normalized = normalised,
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE),
   ...
 )
 
 scale_y_s.q.irrad_continuous(
-  unit.exponent = ifelse(normalized, 0, -6),
-  name = s.q.irrad_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = ifelse(is.numeric(normalized),
-    round(normalized, 1), unique(normalized)), axis.symbols = axis.symbols),
+  unit.exponent = NULL,
+  name = s.q.irrad_label(unit.exponent = unit.exponent, markup.format = markup.format,
+    time.unit = "second", label.text = label.text, pc.out = pc.out, scaled = scaled,
+    normalized = ifelse(is.numeric(normalized), round(normalized, 1),
+    unique(normalized)), axis.symbols = axis.symbols),
   labels = SI_pl_format(exponent = unit.exponent),
-  format = getOption("photobiology.math", default = "R.expression"),
+  markup.format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.q.irrad"]],
+  pc.out = FALSE,
   scaled = FALSE,
-  normalized = FALSE,
+  normalised = FALSE,
+  normalized = normalised,
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE),
   ...
 )
 
 scale_y_s.e.irrad_log10(
-  unit.exponent = 0,
-  name = s.e.irrad_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = ifelse(is.numeric(normalized),
-    round(normalized, 1), unique(normalized)), axis.symbols = axis.symbols),
+  unit.exponent = NULL,
+  name = s.e.irrad_label(unit.exponent = unit.exponent, markup.format = markup.format,
+    time.unit = "second", label.text = label.text, pc.out = pc.out, scaled = scaled,
+    normalized = ifelse(is.numeric(normalized), round(normalized, 1),
+    unique(normalized)), axis.symbols = axis.symbols),
   labels = SI_pl_format(exponent = unit.exponent),
-  format = getOption("photobiology.math", default = "R.expression"),
+  markup.format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.e.irrad"]],
+  pc.out = FALSE,
   scaled = FALSE,
-  normalized = FALSE,
+  normalised = FALSE,
+  normalized = normalised,
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE),
   ...
 )
 
 scale_y_s.q.irrad_log10(
-  unit.exponent = ifelse(normalized, 0, -6),
-  name = s.q.irrad_label(unit.exponent = unit.exponent, format = format, label.text =
-    label.text, scaled = scaled, normalized = ifelse(is.numeric(normalized),
-    round(normalized, 1), unique(normalized)), axis.symbols = axis.symbols),
+  unit.exponent = NULL,
+  name = s.q.irrad_label(unit.exponent = unit.exponent, markup.format = markup.format,
+    time.unit = "second", label.text = label.text, pc.out = pc.out, scaled = scaled,
+    normalized = ifelse(is.numeric(normalized), round(normalized, 1),
+    unique(normalized)), axis.symbols = axis.symbols),
   labels = SI_pl_format(exponent = unit.exponent),
-  format = getOption("photobiology.math", default = "R.expression"),
+  markup.format = getOption("photobiology.math", default = "R.expression"),
   label.text = axis_labels()[["s.q.irrad"]],
+  pc.out = FALSE,
   scaled = FALSE,
-  normalized = FALSE,
+  normalised = FALSE,
+  normalized = normalised,
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE),
   ...
 )
@@ -70,7 +82,7 @@ scale_y_s.q.irrad_log10(
 
 \item{labels}{The tick labels or a function to generate them.}
 
-\item{format}{character string, "R", "R.expression", "R.character", or
+\item{markup.format}{character string, "R", "R.expression", "r.character", or
 "LaTeX".}
 
 \item{label.text}{character Textual portion of the labels.}
@@ -99,6 +111,27 @@ ggplot(sun.spct) +
   scale_y_s.e.irrad_continuous() +
   scale_x_wl_continuous()
 
+ggplot(fscale(sun.spct)) +
+  geom_line() +
+  scale_y_s.e.irrad_continuous(scaled = TRUE) +
+  scale_x_wl_continuous()
+
+ggplot(normalize(sun.spct, norm = "max")) +
+  geom_line() +
+  scale_y_s.e.irrad_continuous(normalized = "max") +
+  scale_x_wl_continuous()
+
+my.spct <- normalize(sun.spct, norm = "max")
+ggplot(my.spct) +
+  geom_line() +
+  scale_y_s.e.irrad_continuous(normalized = normalization(my.spct)$norm.wl) +
+  scale_x_wl_continuous()
+
+ggplot(sun.spct) +
+  geom_line() +
+  scale_y_s.e.irrad_continuous(axis.symbols = FALSE) +
+  scale_x_wl_continuous()
+
 ggplot(sun.spct) +
   geom_line() +
   scale_y_s.e.irrad_continuous(label.text = "") +
@@ -106,7 +139,7 @@ ggplot(sun.spct) +
 
 ggplot(sun.spct) +
   geom_line() +
-  scale_y_s.e.irrad_continuous(label.text = "Irradiancia spectral,") +
+  scale_y_s.e.irrad_continuous(label.text = "Irradiancia espectral,") +
   scale_x_wl_continuous(label.text = "Longitud de onda,")
 
 ggplot(sun.spct) +
