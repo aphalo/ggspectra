@@ -2,14 +2,11 @@
 % Please edit documentation in R/axis-labels-texts.R
 \name{axis_labels_uk}
 \alias{axis_labels_uk}
-\alias{axis_labels_es}
 \alias{axis_labels_none}
 \alias{axis_labels}
 \title{Default text for axis labels}
 \usage{
 axis_labels_uk(append = "", sep = "")
-
-axis_labels_es(append = "", sep = "")
 
 axis_labels_none()
 
@@ -47,7 +44,6 @@ axis_labels()[["w.length"]] # no comma
 axis_labels(append = ",")[["w.length"]] # ending in a comma
 
 axis_labels_uk()[["w.length"]] # English (same as default)
-axis_labels_es()[["w.length"]] # Spanish
 axis_labels_none()[["w.length"]] # empty label
 
 }

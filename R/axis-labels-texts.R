@@ -31,7 +31,6 @@
 #' axis_labels(append = ",")[["w.length"]] # ending in a comma
 #'
 #' axis_labels_uk()[["w.length"]] # English (same as default)
-#' axis_labels_es()[["w.length"]] # Spanish
 #' axis_labels_none()[["w.length"]] # empty label
 #'
 axis_labels_uk <- function(append = "", sep = ""){
@@ -110,99 +109,6 @@ axis_labels_uk <- function(append = "", sep = ""){
       counts = "Pixel response",
 
       duration = "Exposure time:"
-    )
-
-  if (length(append) && append != "") {
-    z <- axis_labels_uk(append = "")
-    zz <- paste(z, append, sep = sep)
-    names(zz) <- names(z)
-    stopifnot(length(zz) == length(z))
-    zz
-  } else {
-    z
-  }
-}
-
-#' @rdname axis_labels
-#'
-#' @export
-#'
-axis_labels_es <- function(append = "", sep = ""){
-  z <-
-    c(w.length = "Longitud de onda",
-      w.number = "Wavenumber",
-      freq = "Frecuencia",
-      energy = "Energía del fotón",
-
-      irrad = "Irradiancia",
-      e.irrad = "Irradiancia de energía",
-      q.irrad = "Irradiancia de fotones",
-      s.irrad = "Irradiancia espectral",
-      s.e.irrad = "Irradiancia spectral de energía",
-      s.q.irrad = "Irradiancia spectral de fotones",
-
-      fluence = "Fluence",
-      e.fluence = "Energy fluence",
-      q.fluence = "Photon fluence",
-      s.fluence = "Spectral fluence",
-      s.e.fluence = "Spectral energy fluence",
-      s.q.fluence = "Spectral photon fluence",
-
-      fluence.rate = "Fluence rate",
-      e.fluence.rate = "Energy fluence rate",
-      q.fluence.rate = "Photon fluence rate",
-      s.fluence.rate = "Spectral fluence rate",
-      s.e.fluence.rate = "Spectral energy fluence rate",
-      s.q.fluence.rate = "Spectral photon fluence rate",
-
-      exposure = "Exposición",
-      e.exposure = "Exposición a energía",
-      q.exposure = "Exposición a fotones",
-      s.exposure = "Exposición espectral",
-      s.e.exposure = "Exposición espectral a energía",
-      s.q.exposure = "Exposición espectral a fotones",
-
-      response = "Respuesta",
-      e.response = "Respuesta a energía",
-      q.response = "Respuesta a fotones",
-      s.response = "Respuesta espectral",
-      s.e.response = "Respuesta espectral a energía",
-      s.q.response = "Respuesta espectral a fotones",
-
-      s.e.action = "Acción espectral de energía",
-      s.q.action = "Acción espectral de fotones",
-
-      A = "Absorbancia",
-      A.int = "Absorbancia interna",
-      A.tot = "Absorbancia total",
-      s.A = "Absorbancia espectral",
-      s.A.int = "Absorbancia espectral interna",
-      s.A.tot = "Absorbancia espectral total",
-
-      Afr = "Absorptance",
-      s.Afr = "Spectral absorptance",
-
-      Tfr = "Transmittancia",
-      Tfr.int = "Transmittancia intena",
-      Tfr.tot = "Transmittancia total",
-      s.Tfr = "Transmittancia espectral",
-      s.Tfr.int = "Transmittancia espectral interna",
-      s.Tfr.tot = "Transmittancia espectral total",
-
-      Rfr = "Reflectancia",
-      Rfr.spec = "Reflectancia especular",
-      Rfr.tot = "Reflectancia total",
-      s.Rfr = "Reflectancia espectral",
-      s.Rfr.spec = "Reflectancia espectral especular",
-      s.Rfr.tot = "Reflectancia espectral total",
-
-      e.mult = "Factores de calibración",
-      q.mult = "Factores de calibración",
-
-      cps = "Respuesta ",
-      counts = "Pixel response",
-
-      duration = "Tiempo de exposición:"
     )
 
   if (length(append) && append != "") {
