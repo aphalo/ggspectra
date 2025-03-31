@@ -10,7 +10,7 @@
 s.e.response_label(
   unit.exponent = 0,
   format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["s.e.response"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.e.response"]],
   scaled = FALSE,
   normalized = FALSE,
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)
@@ -19,7 +19,7 @@ s.e.response_label(
 s.q.response_label(
   unit.exponent = 0,
   format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["s.q.response"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.q.response"]],
   scaled = FALSE,
   normalized = FALSE,
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)
@@ -28,7 +28,7 @@ s.q.response_label(
 s.e.action_label(
   unit.exponent = 0,
   format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["s.e.action"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.e.action"]],
   scaled = FALSE,
   normalized = FALSE,
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)
@@ -37,7 +37,7 @@ s.e.action_label(
 s.q.action_label(
   unit.exponent = 0,
   format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["s.q.action"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.q.action"]],
   scaled = FALSE,
   normalized = FALSE,
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)

@@ -10,7 +10,7 @@ scale_x_frequency_continuous(
     axis.symbols = axis.symbols),
   breaks = scales::pretty_breaks(n = 7),
   labels = SI_pl_format(exponent = unit.exponent),
-  label.text = axis_labels()[["freq"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["freq"]],
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE),
   ...
 )

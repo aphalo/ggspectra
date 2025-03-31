@@ -51,10 +51,6 @@ in manometers (nm).}
 
 \item{axis.symbols}{logical If \code{TRUE} symbols of the quantities are
 added to the \code{name}. Supported only by \code{format = "R.expression"}.}
-
-\item{unit.out}{character string indicating type of radiation units to use
-for plotting: \code{"photon"} or its synonym \code{"quantum"}, or
-\code{"energy"}.}
 }
 \value{
 a character string or an R expression.

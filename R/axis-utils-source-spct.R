@@ -6,9 +6,6 @@
 #'
 #' @param unit.exponent integer. The default is guessed from \code{time.unit},
 #'   \code{scaled} and \code{normalized}.
-#' @param unit.out character string indicating type of radiation units to use
-#'   for plotting: \code{"photon"} or its synonym \code{"quantum"}, or
-#'   \code{"energy"}.
 #' @param markup.format character string, "R", "R.expresion", "r.character", or
 #'   "LaTeX".
 #' @param time.unit character or duration The length of time used as base of
@@ -227,7 +224,7 @@ s.e.irrad_label <-
         }
         if (markup.format == "latex") {
           if (has_SI_prefix(unit.exponent)) {
-           paste(label.text, " $E_{\\lambda}$ ($",
+            paste(label.text, " $E_{\\lambda}$ ($",
                   exponent2prefix(unit.exponent, char.set = "LaTeX"),
                   "J m^{-2} nm^{-1})$)", sep = "")
           } else {
@@ -450,7 +447,7 @@ s.q.irrad_label <-
         }
         if (markup.format == "latex") {
           if (has_SI_prefix(unit.exponent)) {
-             paste(label.text, " $Q_{\\lambda}$ ($",
+            paste(label.text, " $Q_{\\lambda}$ ($",
                   exponent2prefix(unit.exponent, char.set = "LaTeX"),
                   "mol m^{-2} nm^{-1})$)", sep = "")
           } else {
@@ -493,9 +490,11 @@ s.q.irrad_label <-
 #' @param markup.format character string, "R", "R.expression", "r.character", or
 #'   "LaTeX".
 #' @param label.text character Textual portion of the labels.
+#' @param pc.out logical, if \code{TRUE} use percent instead of fraction of one
+#'   for normalized spectral data.
 #' @param scaled logical If \code{TRUE} relative units are assumed.
-#' @param normalized logical (\code{FALSE}) or numeric Normalization wavelength
-#'   in manometers (nm).
+#' @param normalized,normalised logical (\code{FALSE}) or numeric Normalization
+#'   wavelength in manometers (nm).
 #' @param axis.symbols logical If \code{TRUE} symbols of the quantities are
 #'   added to the default \code{name}.
 #' @param ... other named arguments passed to \code{scale_y_continuous}
@@ -596,7 +595,7 @@ scale_y_s.e.irrad_continuous <-
            normalised = FALSE,
            normalized = normalised,
            axis.symbols = getOption("ggspectra.axis.symbols",
-                                   default = TRUE),
+                                    default = TRUE),
            ...) {
     scale_y_continuous(name = name,
                        labels = labels,

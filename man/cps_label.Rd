@@ -7,7 +7,7 @@
 cps_label(
   unit.exponent = 0,
   format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["cps"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["cps"]],
   scaled = FALSE,
   normalized = FALSE,
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)

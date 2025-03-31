@@ -11,7 +11,7 @@ scale_y_multipliers_continuous(
     round(normalized, 1), unique(normalized)), axis.symbols = axis.symbols),
   labels = SI_pl_format(exponent = unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["e.mult"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["e.mult"]],
   scaled = FALSE,
   normalized = FALSE,
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE),

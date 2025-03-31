@@ -8,14 +8,13 @@
 \title{Spectral irradiance y-scale}
 \usage{
 scale_y_s.e.irrad_continuous(
-  unit.exponent = NULL,
+  unit.exponent = 0,
   name = s.e.irrad_label(unit.exponent = unit.exponent, markup.format = markup.format,
     time.unit = "second", label.text = label.text, pc.out = pc.out, scaled = scaled,
-    normalized = ifelse(is.numeric(normalized), round(normalized, 1),
-    unique(normalized)), axis.symbols = axis.symbols),
-  labels = SI_pl_format(exponent = unit.exponent),
+    normalized = normalized, axis.symbols = axis.symbols),
+  labels = SI_pl_format(exponent = unit.exponent - pc.out * 2),
   markup.format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["s.e.irrad"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.e.irrad"]],
   pc.out = FALSE,
   scaled = FALSE,
   normalised = FALSE,
@@ -25,14 +24,13 @@ scale_y_s.e.irrad_continuous(
 )
 
 scale_y_s.q.irrad_continuous(
-  unit.exponent = NULL,
+  unit.exponent = -6,
   name = s.q.irrad_label(unit.exponent = unit.exponent, markup.format = markup.format,
     time.unit = "second", label.text = label.text, pc.out = pc.out, scaled = scaled,
-    normalized = ifelse(is.numeric(normalized), round(normalized, 1),
-    unique(normalized)), axis.symbols = axis.symbols),
-  labels = SI_pl_format(exponent = unit.exponent),
+    normalized = normalized, axis.symbols = axis.symbols),
+  labels = SI_pl_format(exponent = unit.exponent - pc.out * 2),
   markup.format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["s.q.irrad"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.q.irrad"]],
   pc.out = FALSE,
   scaled = FALSE,
   normalised = FALSE,
@@ -42,14 +40,13 @@ scale_y_s.q.irrad_continuous(
 )
 
 scale_y_s.e.irrad_log10(
-  unit.exponent = NULL,
+  unit.exponent = 0,
   name = s.e.irrad_label(unit.exponent = unit.exponent, markup.format = markup.format,
     time.unit = "second", label.text = label.text, pc.out = pc.out, scaled = scaled,
-    normalized = ifelse(is.numeric(normalized), round(normalized, 1),
-    unique(normalized)), axis.symbols = axis.symbols),
-  labels = SI_pl_format(exponent = unit.exponent),
+    normalized = normalized, axis.symbols = axis.symbols),
+  labels = SI_pl_format(exponent = unit.exponent - pc.out * 2),
   markup.format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["s.e.irrad"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.e.irrad"]],
   pc.out = FALSE,
   scaled = FALSE,
   normalised = FALSE,
@@ -59,14 +56,13 @@ scale_y_s.e.irrad_log10(
 )
 
 scale_y_s.q.irrad_log10(
-  unit.exponent = NULL,
+  unit.exponent = -6,
   name = s.q.irrad_label(unit.exponent = unit.exponent, markup.format = markup.format,
     time.unit = "second", label.text = label.text, pc.out = pc.out, scaled = scaled,
-    normalized = ifelse(is.numeric(normalized), round(normalized, 1),
-    unique(normalized)), axis.symbols = axis.symbols),
-  labels = SI_pl_format(exponent = unit.exponent),
+    normalized = normalized, axis.symbols = axis.symbols),
+  labels = SI_pl_format(exponent = unit.exponent - pc.out * 2),
   markup.format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["s.q.irrad"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.q.irrad"]],
   pc.out = FALSE,
   scaled = FALSE,
   normalised = FALSE,
@@ -87,10 +83,13 @@ scale_y_s.q.irrad_log10(
 
 \item{label.text}{character Textual portion of the labels.}
 
+\item{pc.out}{logical, if \code{TRUE} use percent instead of fraction of one
+for normalized spectral data.}
+
 \item{scaled}{logical If \code{TRUE} relative units are assumed.}
 
-\item{normalized}{logical (\code{FALSE}) or numeric Normalization wavelength
-in manometers (nm).}
+\item{normalized, normalised}{logical (\code{FALSE}) or numeric Normalization
+wavelength in manometers (nm).}
 
 \item{axis.symbols}{logical If \code{TRUE} symbols of the quantities are
 added to the default \code{name}.}
@@ -106,9 +105,14 @@ documentation for \code{\link[ggplot2]{scale_continuous}}
 }
 \examples{
 
-ggplot(sun.spct) +
+ggplot(sun.spct, unit.out = "energy") +
   geom_line() +
   scale_y_s.e.irrad_continuous() +
+  scale_x_wl_continuous()
+
+ggplot(sun.spct) +
+  geom_line() +
+  scale_y_s.e.irrad_continuous(unit.exponent = -3) +
   scale_x_wl_continuous()
 
 ggplot(fscale(sun.spct)) +
@@ -121,10 +125,17 @@ ggplot(normalize(sun.spct, norm = "max")) +
   scale_y_s.e.irrad_continuous(normalized = "max") +
   scale_x_wl_continuous()
 
-my.spct <- normalize(sun.spct, norm = "max")
+my.spct <- normalize(q2e(sun.spct, action = "replace"), norm = "max")
 ggplot(my.spct) +
   geom_line() +
-  scale_y_s.e.irrad_continuous(normalized = normalization(my.spct)$norm.wl) +
+  scale_y_s.e.irrad_continuous(normalized = normalization(my.spct)$norm.type,
+                               pc.out = TRUE) +
+  scale_x_wl_continuous()
+
+ggplot(my.spct) +
+  geom_line() +
+  scale_y_s.e.irrad_continuous(normalized = normalization(my.spct)$norm.wl,
+                               pc.out = TRUE) +
   scale_x_wl_continuous()
 
 ggplot(sun.spct) +
@@ -162,23 +173,5 @@ ggplot(clip_wl(sun.spct, c(295, NA)),
   geom_line(na.rm = TRUE) +
   scale_y_s.q.irrad_log10() +
   scale_x_wl_continuous()
-
-if (packageVersion("photobiology") < "0.11.4") {
-  photon_as_default()
-  normalized_sun.spct <- normalize(e2q(sun.spct, action = "replace"))
-  ggplot(normalized_sun.spct) +
-    geom_line(na.rm = TRUE) +
-    scale_y_s.q.irrad_continuous(normalized =
-                                 normalization(normalized_sun.spct)$norm.wl) +
-    scale_x_wl_continuous()
-
-  ggplot(normalized_sun.spct) +
-    geom_line(na.rm = TRUE) +
-    scale_y_s.q.irrad_continuous(normalized =
-                                 normalization(normalized_sun.spct)$norm.type) +
-    scale_x_wl_continuous()
-
-  unset_radiation_unit_default()
-}
 
 }

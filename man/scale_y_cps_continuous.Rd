@@ -11,7 +11,7 @@ scale_y_cps_continuous(
     round(normalized, 1), unique(normalized)), axis.symbols = axis.symbols),
   labels = SI_pl_format(exponent = unit.exponent),
   format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["cps"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["cps"]],
   scaled = FALSE,
   normalized = FALSE,
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE),
