@@ -13,6 +13,7 @@ stat_peaks(
   ...,
   span = 5,
   ignore_threshold = 0.01,
+  global.threshold = ignore_threshold,
   strict = is.null(span),
   refine.wl = FALSE,
   method = "spline",
@@ -36,6 +37,7 @@ stat_valleys(
   ...,
   span = 5,
   ignore_threshold = -0.01,
+  global.threshold = ignore_threshold,
   strict = is.null(span),
   refine.wl = FALSE,
   method = "spline",
@@ -73,14 +75,16 @@ greater than all other elements within a window of width \code{span}
 centered at that element. Use \code{NULL} for the global peak. Valleys are
 the reverse.}
 
-\item{ignore_threshold}{numeric For peaks, value between 0.0 and 1.0
+\item{global.threshold, ignore_threshold}{numeric For peaks, value between 0.0 and 1.0
 indicating the relative size of peaks compared to tallest peak threshold
 below which peaks will be ignored, while negative values between 0.0 and
 -1.0 set a threshold so that the tallest peaks are ignored, instead of the
 shortest. For valleys, value between 0.0 and 1.0 indicating the relative
 depth of valleys below which valleys will be ignored, while negative values
 between 0.0 and -1.0 set a threshold so that the deeper valleys are
-ignored, instead of the shallower ones.}
+ignored, instead of the shallower ones. Use of parameter
+\code{ignore_threshold} is deprecated, and \code{global.threshold} should
+be used instead.}
 
 \item{strict}{logical If \code{TRUE}, an element must be strictly greater
 than all other values in its window to be considered a peak.}

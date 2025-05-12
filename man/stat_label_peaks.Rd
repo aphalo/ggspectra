@@ -13,6 +13,7 @@ stat_label_peaks(
   ...,
   span = 5,
   ignore_threshold = 0,
+  global.threshold = ignore_threshold,
   strict = TRUE,
   chroma.type = "CMF",
   label.fmt = "\%.3g",
@@ -35,6 +36,7 @@ stat_label_valleys(
   ...,
   span = 5,
   ignore_threshold = 0,
+  global.threshold = ignore_threshold,
   strict = TRUE,
   chroma.type = "CMF",
   label.fmt = "\%.3g",
@@ -51,31 +53,39 @@ stat_label_valleys(
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
-\code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be
-set at the layer level if you are overriding the plot defaults.}
+\code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be set
+at the layer level if you are overriding the plot defaults.}
 
 \item{data}{A layer specific dataset - only needed if you want to override
 the plot defaults.}
 
 \item{geom}{The geometric object to use display the data}
 
-\item{position}{The position adjustment to use for overlapping points on this
-layer}
+\item{position}{The position adjustment to use for overlapping points
+on this layer}
 
-\item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This
-can include aesthetics whose values you want to set, not map. See
+\item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This can
+include aesthetics whose values you want to set, not map. See
 \code{\link[ggplot2]{layer}} for more details.}
 
-\item{span}{a peak is defined as an element in a sequence which is greater
-than all other elements within a window of width span centered at that
-element. The default value is 5, meaning that a peak is bigger than two
-consequtive neighbors on each side. Default: 5.}
+\item{span}{integer A peak is defined as an element in a sequence which is
+greater than all other elements within a window of width \code{span}
+centered at that element. Use \code{NULL} for the global peak. Valleys are
+the reverse.}
 
-\item{ignore_threshold}{numeric value between 0.0 and 1.0 indicating the size
-threshold below which peaks will be ignored.}
+\item{global.threshold, ignore_threshold}{numeric For peaks, value between 0.0 and 1.0
+indicating the relative size of peaks compared to tallest peak threshold
+below which peaks will be ignored, while negative values between 0.0 and
+-1.0 set a threshold so that the tallest peaks are ignored, instead of the
+shortest. For valleys, value between 0.0 and 1.0 indicating the relative
+depth of valleys below which valleys will be ignored, while negative values
+between 0.0 and -1.0 set a threshold so that the deeper valleys are
+ignored, instead of the shallower ones. Use of parameter
+\code{ignore_threshold} is deprecated, and \code{global.threshold} should
+be used instead.}
 
-\item{strict}{logical flag: if TRUE, an element must be strictly greater than
-all other values in its window to be considered a peak. Default: FALSE.}
+\item{strict}{logical If \code{TRUE}, an element must be strictly greater
+than all other values in its window to be considered a peak.}
 
 \item{chroma.type}{character one of "CMF" (color matching function) or "CC"
 (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.}
@@ -91,25 +101,26 @@ computing matching colours.}
 \item{label.fill}{character string to use for labels not at peaks or valleys
 being highlighted.}
 
-\item{na.rm}{a logical value indicating whether NA values should be stripped
-before the computation proceeds.}
+\item{na.rm}{a logical value indicating whether NA values should be
+stripped before the computation proceeds.}
 
 \item{show.legend}{logical. Should this layer be included in the legends?
-\code{NA}, the default, includes if any aesthetics are mapped. \code{FALSE}
-never includes, and \code{TRUE} always includes.}
+\code{NA}, the default, includes if any aesthetics are mapped.
+\code{FALSE} never includes, and \code{TRUE} always includes.}
 
-\item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics, rather
-than combining with them. This is most useful for helper functions that
-define both data and aesthetics and shouldn't inherit behaviour from the
-default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
+\item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
+rather than combining with them. This is most useful for helper functions
+that define both data and aesthetics and shouldn't inherit behaviour from
+the default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 }
 \value{
 The original data with additional computed variables added.
 }
 \description{
-\code{stat_labels_peaks} finds at which x positions local maxima are located,
-and adds labels and colors to the data without subsetting. To find local
-minima, you can use \code{stat_labels_valleys} instead. The variable
+\code{stat_labels_peaks} finds at which \code{x} positions the global maximum
+or local maxima are located,
+and adds labels and color definitions to the data without subsetting.
+\code{stat_labels_valleys} finds instead minima. The variable
 mapped to the \code{x} aesthetic is expected to contain wavelength values
 expressed in nanometres. \strong{Axis flipping is currently not supported.}
 }
@@ -135,14 +146,24 @@ These statistics assemble text labels for each peak or valley and
   returned can be controlled by the user.
 }
 \note{
-These stats work nicely together with geoms \code{geom_text_repel} and
+When using \code{geom_text}, to discard overlapping labels pass
+  \code{check_overlap = TRUE} in the call to the statistic.
+
+  These stats work nicely together with geoms \code{geom_text_repel} and
   \code{geom_label_repel} from package \code{\link[ggrepel]{ggrepel}} to
-  solve the problem of overlapping labels by displacing them. To discard
-  overlapping labels use \code{check_overlap = TRUE} as argument to
-  \code{geom_text}. By default the labels are character values suitable to be
-  plotted as is, but with a suitable \code{label.fmt} labels suitable for
-  parsing by the geoms (e.g. into expressions containing greek letters or
-  super or subscripts) can be also easily obtained.
+  solve the problem of overlapping labels by displacing them, without
+  discarding any of them. The difference between \code{stat_peaks} and
+  \code{stat_label_peaks}, and between \code{stat_valleys} and
+  \code{stat_label_valleys}, is that while the first only returns the rows in
+  data matching peaks or valleys, the second return all rows, but set the
+  labels to the value passed as argument to \code{label.fill}. In the "label"
+  stats the default \code{label.fill = ""} ensures that when using repulsive
+  geoms the labels do not overlap any observations, labelled or not.
+
+  By default the labels are character values suitable to be plotted as is,
+  but with a suitable \code{label.fmt} labels suitable for parsing by the
+  geoms (e.g. into expressions containing greek letters or super or
+  subscripts) can be also easily obtained.
 }
 \section{Computed variables}{
  \describe{ \item{x.label}{x-value at a peak (or
@@ -160,9 +181,9 @@ These stats work nicely together with geoms \code{geom_text_repel} and
 
 \section{Default aesthetics}{
  Set by the statistic and available to geoms.
-  \describe{ \item{label}{..x.label..} \item{xintercept}{..x..}
-  \item{yintercept}{..y..} \item{color}{black_or_white(..wl.color..)}
-  \item{fill}{..wl.color..} }
+  \describe{ \item{label}{after_stat(x.label)} \item{xintercept}{after_stat(x)}
+  \item{yintercept}{after_stat(y)} \item{color}{black_or_white(after_stat(wl.color))}
+  \item{fill}{after_stat(wl.color)} }
 }
 
 \section{Required aesthetics}{
@@ -222,7 +243,8 @@ ggplot(sun.spct) + geom_line() +
 }
 \seealso{
 \code{\link{stat_peaks}}, \code{\link{stat_valleys}} and
-  \code{\link[photobiology]{find_peaks}}, which is used internally.
+  \code{\link[photobiology]{find_peaks}}, which is used in the
+  implementation.
 
 Other stats functions: 
 \code{\link{stat_color}()},

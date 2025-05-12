@@ -136,7 +136,7 @@ norm_sun.spct <- normalize(sun.spct)
 ggplot(norm_sun.spct) + 
   geom_line() +
   scale_x_wl_continuous() +
-  scale_y_s.e.irrad_continuous(normalized = getNormalized(norm_sun.spct))
+  scale_y_s.e.irrad_continuous(normalized = is_normalized(norm_sun.spct))
 
 ## -----------------------------------------------------------------------------
 scaled_sun.spct <- fscale(sun.spct)
@@ -203,7 +203,7 @@ ggplot(sun.spct) +
 ggplot(sun.spct, unit.out = "photon", range = c(293, NA)) + 
   geom_line() +
   scale_x_wl_continuous() +
-  scale_y_s.e.irrad_log10(unit.exponent = -6)
+  scale_y_s.q.irrad_log10()
 
 ## -----------------------------------------------------------------------------
 ggplot(ccd.spct) + 
@@ -392,7 +392,8 @@ ggplot(two_suns.spct) + aes(color = spct.idx) +
   stat_peaks(span = NULL, color = "black") +
   stat_peaks(span = NULL, geom = "text", vjust = -0.5, size = 3, 
              color = "black", 
-             aes(label = paste(stat(y.label), "at", after_stat(x.label), "nm"))) +
+             aes(label = paste(after_stat(y.label), "at", 
+                               after_stat(x.label), "nm"))) +
   facet_grid(rows = vars(spct.idx))
 
 ## -----------------------------------------------------------------------------

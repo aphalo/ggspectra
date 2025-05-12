@@ -4,13 +4,14 @@ editor_options:
     wrap: 72
 ---
 
-# ggspectra 0.3.15.9000
+# ggspectra 0.4.0
 
 The main change in this version is compatibility with package 'gganimate',
 making it possible to create animated plots using `autoplot()` methods and
 `ggplot()` together with layer functions from 'ggspectra'. See article
 [Animated plots of spectral data](https://docs.r4photobiology.info/ggspectra/articles/animated-plots.html) 
-for examples.
+for examples. Due to a code-breaking change, it requires 'photobiology' 
+(>= 0.13.0).
 
 - Update, mostly of internal code, to make available features from 
 'photobiology' (>= 0.12.0), which is recommended but not required.

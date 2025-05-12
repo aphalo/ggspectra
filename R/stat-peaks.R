@@ -24,14 +24,16 @@
 #'   \code{\link[ggplot2]{layer}} for more details.
 #' @param na.rm	a logical value indicating whether NA values should be
 #'   stripped before the computation proceeds.
-#' @param ignore_threshold numeric For peaks, value between 0.0 and 1.0
+#' @param global.threshold,ignore_threshold numeric For peaks, value between 0.0 and 1.0
 #'   indicating the relative size of peaks compared to tallest peak threshold
 #'   below which peaks will be ignored, while negative values between 0.0 and
 #'   -1.0 set a threshold so that the tallest peaks are ignored, instead of the
 #'   shortest. For valleys, value between 0.0 and 1.0 indicating the relative
 #'   depth of valleys below which valleys will be ignored, while negative values
 #'   between 0.0 and -1.0 set a threshold so that the deeper valleys are
-#'   ignored, instead of the shallower ones.
+#'   ignored, instead of the shallower ones. Use of parameter
+#'   \code{ignore_threshold} is deprecated, and \code{global.threshold} should
+#'   be used instead.
 #' @param span integer A peak is defined as an element in a sequence which is
 #'   greater than all other elements within a window of width \code{span}
 #'   centered at that element. Use \code{NULL} for the global peak. Valleys are
@@ -152,6 +154,7 @@ stat_peaks <- function(mapping = NULL,
                        ...,
                        span = 5,
                        ignore_threshold = 0.01,
+                       global.threshold = ignore_threshold,
                        strict = is.null(span),
                        refine.wl = FALSE,
                        method = "spline",
@@ -175,7 +178,7 @@ stat_peaks <- function(mapping = NULL,
     stat = StatPeaks, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(span = span,
-                  ignore_threshold = ignore_threshold,
+                  global.threshold = global.threshold,
                   strict = strict,
                   refine.wl = refine.wl,
                   method = method,
@@ -214,7 +217,7 @@ StatPeaks <-
                    compute_group = function(data,
                                             scales,
                                             span,
-                                            ignore_threshold,
+                                            global.threshold,
                                             strict,
                                             refine.wl,
                                             method,
@@ -230,7 +233,7 @@ StatPeaks <-
                                            x.var.name = "x",
                                            y.var.name = "y",
                                            span = span,
-                                           ignore_threshold = ignore_threshold,
+                                           global.threshold = global.threshold,
                                            strict = strict,
                                            refine.wl = refine.wl,
                                            method = method,
@@ -263,7 +266,8 @@ stat_valleys <- function(mapping = NULL,
                          position = "identity",
                          ...,
                          span = 5,
-                         ignore_threshold = -0.01,
+                         ignore_threshold =  0.01,
+                         global.threshold = ignore_threshold,
                          strict = is.null(span),
                          refine.wl = FALSE,
                          method = "spline",
@@ -287,7 +291,7 @@ stat_valleys <- function(mapping = NULL,
     stat = StatValleys, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(span = span,
-                  ignore_threshold = ignore_threshold,
+                  global.threshold = global.threshold,
                   strict = strict,
                   refine.wl = refine.wl,
                   method = method,
@@ -312,7 +316,7 @@ StatValleys <-
                    compute_group = function(data,
                                             scales,
                                             span,
-                                            ignore_threshold,
+                                            global.threshold,
                                             strict,
                                             refine.wl,
                                             method,
@@ -328,7 +332,7 @@ StatValleys <-
                                              x.var.name = "x",
                                              y.var.name = "y",
                                              span = span,
-                                             ignore_threshold = ignore_threshold,
+                                             global.threshold = global.threshold,
                                              strict = strict,
                                              refine.wl = refine.wl,
                                              method = method,
