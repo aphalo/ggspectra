@@ -80,250 +80,245 @@ w_frequency <- photobiology::wl2frequency
 #' w_energy_J_label()
 #' w_energy_eV_label()
 #'
-w_length_label <- function(unit.exponent = -9,
-                           format = getOption("photobiology.math",
-                                              default = "R.expression"),
-                           label.text = axis_labels()[["w.length"]],
-                           axis.symbols = getOption("ggspectra.axis.symbols",
-                                                   default = TRUE)) {
-  if (!axis.symbols) {
-    label.text <- gsub(",$", "", label.text)
-  }
-  if (tolower(format) == "latex") {
-    if (has_SI_prefix(unit.exponent)) {
-      paste(label.text, " $\\lambda$ (",
-            exponent2prefix(unit.exponent, char.set = "LaTeX"),
+w_length_label <-
+  function(unit.exponent = -9,
+           format = getOption("photobiology.math",
+                              default = "R.expression"),
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["w.length"]],
+           axis.symbols = getOption("ggspectra.axis.symbols",
+                                    default = TRUE)) {
+    if (tolower(format) == "latex") {
+      if (has_SI_prefix(unit.exponent)) {
+        paste(label.text, " $\\lambda$ (",
+              exponent2prefix(unit.exponent, char.set = "LaTeX"),
+              "m)", sep = "")
+      } else {
+        paste(label.text, " $\\lambda$ ($\\times 10^{",
+              unit.exponent,
+              "}$~m)", sep = "")
+      }
+    } else if (format %in% c("R.expression")) {
+      if (has_SI_prefix(unit.exponent)) {
+        prefix <- exponent2prefix(unit.exponent)
+        if (axis.symbols) {
+          bquote(.(label.text)~lambda~(plain(.(prefix))*plain(m)))
+        } else {
+          bquote(.(label.text)~(plain(.(prefix))*plain(m)))
+        }
+      } else {
+        if (axis.symbols) {
+          bquote(.(label.text)~lambda~(10^{.(unit.exponent)}~plain(m)))
+        } else {
+          bquote(.(label.text)~(10^{.(unit.exponent)}~plain(m)))
+        }
+      }
+    } else if (format == "R.character" &&
+               has_SI_prefix(unit.exponent)) {
+      paste(label.text, " lambda (",
+            exponent2prefix(unit.exponent, char.set = "ascii"),
             "m)", sep = "")
     } else {
-      paste(label.text, " $\\lambda$ ($\\times 10^{",
-            unit.exponent,
-            "}$~m)", sep = "")
+      warning("'format = ", format,
+              "' not implemented for unit.exponent = ", unit.exponent)
     }
-  } else if (format %in% c("R.expression")) {
-    if (has_SI_prefix(unit.exponent)) {
-      prefix <- exponent2prefix(unit.exponent)
-      if (axis.symbols) {
-        bquote(.(label.text)~lambda~(plain(.(prefix))*plain(m)))
-      } else {
-        bquote(.(label.text)~(plain(.(prefix))*plain(m)))
-      }
-    } else {
-      if (axis.symbols) {
-        bquote(.(label.text)~lambda~(10^{.(unit.exponent)}~plain(m)))
-      } else {
-        bquote(.(label.text)~(10^{.(unit.exponent)}~plain(m)))
-      }
-    }
-  } else if (format == "R.character" &&
-             has_SI_prefix(unit.exponent)) {
-    paste(label.text, " lambda (",
-          exponent2prefix(unit.exponent, char.set = "ascii"),
-          "m)", sep = "")
-  } else {
-    warning("'format = ", format,
-            "' not implemented for unit.exponent = ", unit.exponent)
   }
-}
 
 #' @rdname w_length_label
 #'
 #' @export
 #'
-w_number_label <- function(unit.exponent = 0,
-                           format = getOption("photobiology.math",
-                                              default = "R.expression"),
-                           label.text = axis_labels()[["w.number"]],
-                           axis.symbols = getOption("ggspectra.axis.symbols",
-                                                   default = TRUE)) {
-  if (!axis.symbols) {
-    label.text <- gsub(",$", "", label.text)
-  }
-  if (tolower(format) == "latex") {
-    if (has_SI_prefix(unit.exponent)) {
-      paste(label.text, " $\\nu$ (",
-            exponent2prefix(unit.exponent, char.set = "LaTeX"),
-            "m$^{-1}$)", sep = "")
-    } else {
-      paste(label.text, " $\\nu$ ($\\times 10^{",
-            unit.exponent,
-            "m$^{-1}$)", sep = "")
-    }
-  } else if (format %in% c("R.expression")) {
-    if (has_SI_prefix(unit.exponent)) {
-      prefix <- exponent2prefix(unit.exponent)
-      if (axis.symbols) {
-        bquote(.(label.text)~nu~(plain(.(prefix))*plain(m)^{-1}))
+w_number_label <-
+  function(unit.exponent = 0,
+           format = getOption("photobiology.math",
+                              default = "R.expression"),
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["w.number"]],
+           axis.symbols = getOption("ggspectra.axis.symbols",
+                                    default = TRUE)) {
+    if (tolower(format) == "latex") {
+      if (has_SI_prefix(unit.exponent)) {
+        paste(label.text, " $\\nu$ (",
+              exponent2prefix(unit.exponent, char.set = "LaTeX"),
+              "m$^{-1}$)", sep = "")
       } else {
-        bquote(.(label.text)~(plain(.(prefix))*plain(m)^{-1}))
+        paste(label.text, " $\\nu$ ($\\times 10^{",
+              unit.exponent,
+              "m$^{-1}$)", sep = "")
       }
-    } else {
-      if (axis.symbols) {
-        bquote(.(label.text)~nu~(10^{.(unit.exponent)}~plain(m)^{-1}))
+    } else if (format %in% c("R.expression")) {
+      if (has_SI_prefix(unit.exponent)) {
+        prefix <- exponent2prefix(unit.exponent)
+        if (axis.symbols) {
+          bquote(.(label.text)~nu~(plain(.(prefix))*plain(m)^{-1}))
+        } else {
+          bquote(.(label.text)~(plain(.(prefix))*plain(m)^{-1}))
+        }
       } else {
-        bquote(.(label.text)~(10^{.(unit.exponent)}~plain(m)^{-1}))
+        if (axis.symbols) {
+          bquote(.(label.text)~nu~(10^{.(unit.exponent)}~plain(m)^{-1}))
+        } else {
+          bquote(.(label.text)~(10^{.(unit.exponent)}~plain(m)^{-1}))
+        }
       }
+    } else if (format == "R.character" &&
+               has_SI_prefix(unit.exponent)) {
+      paste(label.text, " v (1/",
+            exponent2prefix(unit.exponent, char.set = "ascii"),
+            "m)", sep = "")
+    } else {
+      warning("'format = ", format,
+              "' not implemented for unit.exponent = ", unit.exponent)
+      NA_character_
     }
-  } else if (format == "R.character" &&
-             has_SI_prefix(unit.exponent)) {
-    paste(label.text, " v (1/",
-          exponent2prefix(unit.exponent, char.set = "ascii"),
-          "m)", sep = "")
-  } else {
-    warning("'format = ", format,
-            "' not implemented for unit.exponent = ", unit.exponent)
-    NA_character_
   }
-}
 
 #' @rdname w_length_label
 #'
 #' @export
 #'
-w_frequency_label <- function(unit.exponent = 9,
-                              format = getOption("photobiology.math",
-                                                 default = "R.expression"),
-                              label.text = axis_labels()[["freq"]],
-                              axis.symbols = getOption("ggspectra.axis.symbols",
-                                                      default = TRUE)) {
-  if (!axis.symbols) {
-    label.text <- gsub(",$", "", label.text)
-  }
-  if (tolower(format) == "latex") {
-    if (has_SI_prefix(unit.exponent)) {
-      paste(label.text, " $f$ (",
-            exponent2prefix(unit.exponent, char.set = "LaTeX"),
+w_frequency_label <-
+  function(unit.exponent = 9,
+           format = getOption("photobiology.math",
+                              default = "R.expression"),
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["freq"]],
+           axis.symbols = getOption("ggspectra.axis.symbols",
+                                    default = TRUE)) {
+    if (tolower(format) == "latex") {
+      if (has_SI_prefix(unit.exponent)) {
+        paste(label.text, " $f$ (",
+              exponent2prefix(unit.exponent, char.set = "LaTeX"),
+              "Hz)", sep = "")
+      } else {
+        paste(label.text, " $f$ ($\\times 10^{",
+              unit.exponent,
+              "}$~Hz)", sep = "")
+      }
+    } else if (format %in% c("R.expression")) {
+      if (has_SI_prefix(unit.exponent)) {
+        prefix <- exponent2prefix(unit.exponent)
+        if (axis.symbols) {
+          bquote(.(label.text)~italic(f)~(plain(.(prefix))*plain(Hz)))
+        } else {
+          bquote(.(label.text)~(plain(.(prefix))*plain(Hz)))
+        }
+      } else {
+        if (axis.symbols) {
+          bquote(.(label.text)~italic(f)~(10^{.(unit.exponent)}~plain(Hz)))
+        } else {
+          bquote(.(label.text)~(10^{.(unit.exponent)}~plain(Hz)))
+        }
+      }
+    } else if (format == "R.character" &&
+               has_SI_prefix(unit.exponent)) {
+      paste(label.text, " f (",
+            exponent2prefix(unit.exponent, char.set = "ascii"),
             "Hz)", sep = "")
     } else {
-      paste(label.text, " $f$ ($\\times 10^{",
-            unit.exponent,
-            "}$~Hz)", sep = "")
+      warning("'format = ", format,
+              "' not implemented for unit.exponent = ", unit.exponent)
+      NA_character_
     }
-  } else if (format %in% c("R.expression")) {
-    if (has_SI_prefix(unit.exponent)) {
-      prefix <- exponent2prefix(unit.exponent)
-      if (axis.symbols) {
-        bquote(.(label.text)~italic(f)~(plain(.(prefix))*plain(Hz)))
-      } else {
-        bquote(.(label.text)~(plain(.(prefix))*plain(Hz)))
-      }
-    } else {
-      if (axis.symbols) {
-        bquote(.(label.text)~italic(f)~(10^{.(unit.exponent)}~plain(Hz)))
-      } else {
-        bquote(.(label.text)~(10^{.(unit.exponent)}~plain(Hz)))
-      }
-    }
-  } else if (format == "R.character" &&
-             has_SI_prefix(unit.exponent)) {
-    paste(label.text, " f (",
-          exponent2prefix(unit.exponent, char.set = "ascii"),
-          "Hz)", sep = "")
-  } else {
-    warning("'format = ", format,
-            "' not implemented for unit.exponent = ", unit.exponent)
-    NA_character_
   }
-}
 
 #' @rdname w_length_label
 #'
 #' @export
 #'
-w_energy_eV_label <- function(unit.exponent = 0,
-                           format = getOption("photobiology.math",
-                                              default = "R.expression"),
-                           label.text = axis_labels()[["energy"]],
-                           axis.symbols = getOption("ggspectra.axis.symbols",
-                                                   default = TRUE)) {
-  if (!axis.symbols) {
-    label.text <- gsub(",$", "", label.text)
-  }
-  if (tolower(format) == "latex") {
-    if (has_SI_prefix(unit.exponent)) {
-      paste(label.text, " $E$ (",
-            exponent2prefix(unit.exponent, char.set = "LaTeX"),
+w_energy_eV_label <-
+  function(unit.exponent = 0,
+           format = getOption("photobiology.math",
+                              default = "R.expression"),
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["energy"]],
+           axis.symbols = getOption("ggspectra.axis.symbols",
+                                    default = TRUE)) {
+    if (tolower(format) == "latex") {
+      if (has_SI_prefix(unit.exponent)) {
+        paste(label.text, " $E$ (",
+              exponent2prefix(unit.exponent, char.set = "LaTeX"),
+              "eV)", sep = "")
+      } else {
+        paste(label.text, " $E$ ($\\times 10^{",
+              unit.exponent,
+              "}$~eV)", sep = "")
+      }
+    } else if (format %in% c("R.expression")) {
+      if (has_SI_prefix(unit.exponent)) {
+        prefix <- exponent2prefix(unit.exponent)
+        if (axis.symbols) {
+          bquote(.(label.text)~italic(E)~(plain(.(prefix))*plain(eV)))
+        } else {
+          bquote(.(label.text)~(plain(.(prefix))*plain(eV)))
+        }
+      } else {
+        if (axis.symbols) {
+          bquote(.(label.text)~italic(E)~(10^{.(unit.exponent)}~plain(eV)))
+        } else {
+          bquote(.(label.text)~(10^{.(unit.exponent)}~plain(eV)))
+        }
+      }
+    } else if (format == "R.character" &&
+               has_SI_prefix(unit.exponent)) {
+      paste(label.text, " E (",
+            exponent2prefix(unit.exponent, char.set = "ascii"),
             "eV)", sep = "")
     } else {
-      paste(label.text, " $E$ ($\\times 10^{",
-            unit.exponent,
-            "}$~eV)", sep = "")
+      warning("'format = ", format,
+              "' not implemented for unit.exponent = ", unit.exponent)
+      NA_character_
     }
-  } else if (format %in% c("R.expression")) {
-    if (has_SI_prefix(unit.exponent)) {
-      prefix <- exponent2prefix(unit.exponent)
-      if (axis.symbols) {
-        bquote(.(label.text)~italic(E)~(plain(.(prefix))*plain(eV)))
-      } else {
-        bquote(.(label.text)~(plain(.(prefix))*plain(eV)))
-      }
-    } else {
-      if (axis.symbols) {
-        bquote(.(label.text)~italic(E)~(10^{.(unit.exponent)}~plain(eV)))
-      } else {
-        bquote(.(label.text)~(10^{.(unit.exponent)}~plain(eV)))
-      }
-    }
-  } else if (format == "R.character" &&
-             has_SI_prefix(unit.exponent)) {
-    paste(label.text, " E (",
-          exponent2prefix(unit.exponent, char.set = "ascii"),
-          "eV)", sep = "")
-  } else {
-    warning("'format = ", format,
-            "' not implemented for unit.exponent = ", unit.exponent)
-    NA_character_
   }
-}
 
 #' @rdname w_length_label
 #'
 #' @export
 #'
-w_energy_J_label <- function(unit.exponent = -18,
-                             format = getOption("photobiology.math",
-                                                default = "R.expression"),
-                             label.text = axis_labels()[["energy"]],
-                             axis.symbols = getOption("ggspectra.axis.symbols",
-                                                     default = TRUE)) {
-  if (!axis.symbols) {
-    label.text <- gsub(",$", "", label.text)
-  }
-  if (tolower(format) == "latex") {
-    if (has_SI_prefix(unit.exponent)) {
-      paste(label.text, " $E$ (",
-            exponent2prefix(unit.exponent, char.set = "LaTeX"),
+w_energy_J_label <-
+  function(unit.exponent = -18,
+           format = getOption("photobiology.math",
+                              default = "R.expression"),
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["energy"]],
+           axis.symbols = getOption("ggspectra.axis.symbols",
+                                    default = TRUE)) {
+    if (tolower(format) == "latex") {
+      if (has_SI_prefix(unit.exponent)) {
+        paste(label.text, " $E$ (",
+              exponent2prefix(unit.exponent, char.set = "LaTeX"),
+              "J)", sep = "")
+      } else {
+        paste(label.text, " $E$ ($\\times 10^{",
+              unit.exponent,
+              "}$~J)", sep = "")
+      }
+    } else if (format %in% c("R.expression")) {
+      if (has_SI_prefix(unit.exponent)) {
+        prefix <- exponent2prefix(unit.exponent)
+        if (axis.symbols) {
+          bquote(.(label.text)~italic(E)~(plain(.(prefix))*plain(J)))
+        } else {
+          bquote(.(label.text)~(plain(.(prefix))*plain(J)))
+        }
+      } else {
+        if (axis.symbols) {
+          bquote(.(label.text)~italic(E)~(10^{.(unit.exponent)}~plain(J)))
+        } else {
+          bquote(.(label.text)~(10^{.(unit.exponent)}~plain(J)))
+        }
+      }
+    } else if (format == "R.character" &&
+               has_SI_prefix(unit.exponent)) {
+      paste(label.text, " E (",
+            exponent2prefix(unit.exponent, char.set = "ascii"),
             "J)", sep = "")
     } else {
-      paste(label.text, " $E$ ($\\times 10^{",
-            unit.exponent,
-            "}$~J)", sep = "")
+      warning("'format = ", format,
+              "' not implemented for unit.exponent = ", unit.exponent)
+      NA_character_
     }
-  } else if (format %in% c("R.expression")) {
-    if (has_SI_prefix(unit.exponent)) {
-      prefix <- exponent2prefix(unit.exponent)
-      if (axis.symbols) {
-        bquote(.(label.text)~italic(E)~(plain(.(prefix))*plain(J)))
-      } else {
-        bquote(.(label.text)~(plain(.(prefix))*plain(J)))
-      }
-    } else {
-      if (axis.symbols) {
-        bquote(.(label.text)~italic(E)~(10^{.(unit.exponent)}~plain(J)))
-      } else {
-        bquote(.(label.text)~(10^{.(unit.exponent)}~plain(J)))
-      }
-    }
-  } else if (format == "R.character" &&
-             has_SI_prefix(unit.exponent)) {
-    paste(label.text, " E (",
-          exponent2prefix(unit.exponent, char.set = "ascii"),
-          "J)", sep = "")
-  } else {
-    warning("'format = ", format,
-            "' not implemented for unit.exponent = ", unit.exponent)
-    NA_character_
   }
-}
 
 #' Secondary axes for wavelengths
 #'
@@ -406,9 +401,10 @@ w_energy_J_label <- function(unit.exponent = -18,
 #'
 sec_axis_w_number <-
   function(unit.exponent = -6,
-           label.text = axis_labels()[["w.number"]],
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["w.number"]],
            axis.symbols = getOption("ggspectra.axis.symbols",
-                                   default = TRUE)) {
+                                    default = TRUE)) {
     ggplot2::sec_axis(trans = ~photobiology::wl2wavenumber(., unit.exponent),
                       name = w_number_label(unit.exponent = unit.exponent,
                                             label.text = label.text,
@@ -422,9 +418,10 @@ sec_axis_w_number <-
 #'
 sec_axis_w_frequency <-
   function(unit.exponent = 12,
-           label.text = axis_labels()[["freq"]],
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["freq"]],
            axis.symbols = getOption("ggspectra.axis.symbols",
-                                   default = TRUE)) {
+                                    default = TRUE)) {
     ggplot2::sec_axis(trans = ~photobiology::wl2frequency(., unit.exponent),
                       name = w_frequency_label(unit.exponent = unit.exponent,
                                                label.text = label.text,
@@ -439,9 +436,10 @@ sec_axis_w_frequency <-
 #'
 sec_axis_energy_eV <-
   function(unit.exponent = 0,
-           label.text = axis_labels()[["energy"]],
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["energy"]],
            axis.symbols = getOption("ggspectra.axis.symbols",
-                                   default = TRUE)) {
+                                    default = TRUE)) {
     ggplot2::sec_axis(trans = ~photobiology::wl2energy(., unit.exponent, unit = "eV"),
                       name = w_energy_eV_label(unit.exponent = unit.exponent,
                                                label.text = label.text,
@@ -456,12 +454,14 @@ sec_axis_energy_eV <-
 #'
 sec_axis_energy_J <-
   function(unit.exponent = -18,
-           label.text = axis_labels()[["energy"]],
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["energy"]],
            axis.symbols = getOption("ggspectra.axis.symbols",
-                                   default = TRUE)) {
-    ggplot2::sec_axis(trans = ~photobiology::wl2energy(., unit.exponent, unit = "joule"),
+                                    default = TRUE)) {
+    ggplot2::sec_axis(trans = ~photobiology::wl2energy(., unit.exponent,
+                                                       unit = "joule"),
                       name = w_energy_J_label(unit.exponent = unit.exponent,
-                                               label.text = label.text,
+                                              label.text = label.text,
                                               axis.symbols = axis.symbols),
                       breaks = scales::pretty_breaks(n = 8)
     )
@@ -473,9 +473,10 @@ sec_axis_energy_J <-
 #'
 sec_axis_wl <-
   function(unit.exponent = -9,
-           label.text = axis_labels()[["w.length"]],
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["w.length"]],
            axis.symbols = getOption("ggspectra.axis.symbols",
-                                   default = TRUE)) {
+                                    default = TRUE)) {
     ggplot2::sec_axis(trans = function(x) {x / 10^(9 + unit.exponent)},
                       name = w_length_label(unit.exponent = unit.exponent,
                                             label.text = label.text,
@@ -534,9 +535,10 @@ scale_x_wl_continuous <-
                                  axis.symbols= axis.symbols),
            breaks = scales::pretty_breaks(n = 7),
            labels = SI_pl_format(exponent = unit.exponent + 9),
-           label.text = axis_labels()[["w.length"]],
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["w.length"]],
            axis.symbols = getOption("ggspectra.axis.symbols",
-                                   default = TRUE),
+                                    default = TRUE),
            ...) {
     scale_x_continuous(name = name,
                        breaks = breaks,
@@ -589,9 +591,10 @@ scale_x_wavenumber_continuous <-
                                  axis.symbols = axis.symbols),
            breaks = scales::pretty_breaks(n = 7),
            labels = SI_pl_format(exponent = -unit.exponent),
-           label.text = axis_labels()[["w.number"]],
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["w.number"]],
            axis.symbols = getOption("ggspectra.axis.symbols",
-                                   default = TRUE),
+                                    default = TRUE),
            ...) {
     scale_x_continuous(name = name,
                        breaks = breaks,
@@ -644,9 +647,10 @@ scale_x_frequency_continuous <-
                                     axis.symbols = axis.symbols),
            breaks = scales::pretty_breaks(n = 7),
            labels = SI_pl_format(exponent = unit.exponent),
-           label.text = axis_labels()[["freq"]],
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["freq"]],
            axis.symbols = getOption("ggspectra.axis.symbols",
-                                   default = TRUE),
+                                    default = TRUE),
            ...) {
     scale_x_continuous(name = name,
                        breaks = breaks,
@@ -707,9 +711,10 @@ scale_x_energy_eV_continuous <-
                                     axis.symbols = axis.symbols),
            breaks = scales::pretty_breaks(n = 7),
            labels = SI_pl_format(exponent = unit.exponent),
-           label.text = axis_labels()[["energy"]],
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["energy"]],
            axis.symbols = getOption("ggspectra.axis.symbols",
-                                   default = TRUE),
+                                    default = TRUE),
            ...) {
     scale_x_continuous(name = name,
                        breaks = breaks,
@@ -728,9 +733,10 @@ scale_x_energy_J_continuous <-
                                    axis.symbols = axis.symbols),
            breaks = scales::pretty_breaks(n = 7),
            labels = SI_pl_format(exponent = unit.exponent),
-           label.text = axis_labels()[["energy"]],
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["energy"]],
            axis.symbols = getOption("ggspectra.axis.symbols",
-                                   default = TRUE),
+                                    default = TRUE),
            ...) {
     scale_x_continuous(name = name,
                        breaks = breaks,

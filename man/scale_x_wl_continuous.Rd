@@ -10,7 +10,7 @@ scale_x_wl_continuous(
     axis.symbols = axis.symbols),
   breaks = scales::pretty_breaks(n = 7),
   labels = SI_pl_format(exponent = unit.exponent + 9),
-  label.text = axis_labels()[["w.length"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["w.length"]],
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE),
   ...
 )

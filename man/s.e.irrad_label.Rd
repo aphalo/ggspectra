@@ -6,34 +6,47 @@
 \title{Spectral irradiance axis labels}
 \usage{
 s.e.irrad_label(
-  unit.exponent = 0,
-  format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["s.e.irrad"]],
+  unit.exponent = NULL,
+  markup.format = getOption("photobiology.math", default = "R.expression"),
+  time.unit = "second",
+  label.text = NULL,
+  pc.out = FALSE,
   scaled = FALSE,
-  normalized = FALSE,
+  normalised = FALSE,
+  normalized = normalised,
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)
 )
 
 s.q.irrad_label(
-  unit.exponent = ifelse(normalized, 0, -6),
-  format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["s.q.irrad"]],
+  unit.exponent = NULL,
+  markup.format = getOption("photobiology.math", default = "R.expression"),
+  time.unit = "second",
+  label.text = NULL,
+  pc.out = FALSE,
   scaled = FALSE,
-  normalized = FALSE,
+  normalised = FALSE,
+  normalized = normalised,
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)
 )
 }
 \arguments{
-\item{unit.exponent}{integer.}
+\item{unit.exponent}{integer. The default is guessed from \code{time.unit},
+\code{scaled} and \code{normalized}.}
 
-\item{format}{character string, "R", "R.expresion", "R.character", or
+\item{markup.format}{character string, "R", "R.expresion", "r.character", or
 "LaTeX".}
+
+\item{time.unit}{character or duration The length of time used as base of
+expression.}
 
 \item{label.text}{character Textual portion of the labels.}
 
+\item{pc.out}{logical Flag to enable display of normalised data as
+percentages.}
+
 \item{scaled}{logical If \code{TRUE} relative units are assumed.}
 
-\item{normalized}{logical (\code{FALSE}) or numeric Normalization wavelength
+\item{normalized, normalised}{logical (\code{FALSE}) or numeric Normalization wavelength
 in manometers (nm).}
 
 \item{axis.symbols}{logical If \code{TRUE} symbols of the quantities are
@@ -43,7 +56,7 @@ added to the \code{name}. Supported only by \code{format = "R.expression"}.}
 a character string or an R expression.
 }
 \description{
-Generate axis labels for spectral irradiance in SI units,
+Generate axis labels for spectral irradiance, fluence or exposure in SI units,
 using SI scale factors. Output can be selected as character, expression (R
 default devices) or LaTeX (for tikz device).
 }
@@ -51,13 +64,14 @@ default devices) or LaTeX (for tikz device).
 
 str(s.e.irrad_label())
 str(s.e.irrad_label(axis.symbols = FALSE))
-str(s.e.irrad_label(format = "R.expression"))
-str(s.e.irrad_label(format = "LaTeX"))
-
+str(s.e.irrad_label(markup.format = "R.expression"))
+str(s.e.irrad_label(markup.format = "LaTeX"))
+str(s.e.irrad_label(markup.format = "R.character"))
 
 str(s.q.irrad_label())
 str(s.q.irrad_label(axis.symbols = FALSE))
-str(s.q.irrad_label(format = "R.expression"))
-str(s.q.irrad_label(format = "LaTeX"))
+str(s.q.irrad_label(markup.format = "R.expression"))
+str(s.q.irrad_label(markup.format = "LaTeX"))
+str(s.q.irrad_label(markup.format = "R.character"))
 
 }

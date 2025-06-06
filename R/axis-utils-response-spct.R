@@ -41,23 +41,23 @@
 #' s.q.response_label(normalized = 300, format = "R.character")
 #' s.q.response_label(normalized = 300, format = "LaTeX")
 #'
-s.e.response_label <- function(unit.exponent = 0,
-                               format = getOption("photobiology.math",
-                                                  default = "R.expression"),
-                               label.text = axis_labels()[["s.e.response"]],
-                               scaled = FALSE,
-                               normalized = FALSE,
-                               axis.symbols = getOption("ggspectra.axis.symbols",
-                                                       default = TRUE)) {
-  if (!axis.symbols) {
-    label.text <- gsub(",$", "", label.text)
-  }
-  if (scaled) {
-    if (tolower(format) == "latex") {
-      paste(label.text, "$R(E)_{\\lambda}$ (rel.\ units)")
-    } else if (format == "R.expression") {
-      if (axis.symbols) {
-        bquote(.(label.text)~italic(R(E))[lambda]~plain((rel.~units)))
+s.e.response_label <-
+  function(unit.exponent = 0,
+           format = getOption("photobiology.math",
+                              default = "R.expression"),
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.e.response"]],
+           scaled = FALSE,
+           normalized = FALSE,
+           axis.symbols = getOption("ggspectra.axis.symbols",
+                                    default = TRUE)) {
+
+    if (scaled) {
+      if (tolower(format) == "latex") {
+        paste(label.text, "$R(E)_{\\lambda}$ (rel.\ units)")
+      } else if (format == "R.expression") {
+        if (axis.symbols) {
+          bquote(.(label.text)~italic(R(E))[lambda]~plain((rel.~units)))
       } else {
         bquote(.(label.text)~plain((rel.~units)))
       }
@@ -121,17 +121,17 @@ s.e.response_label <- function(unit.exponent = 0,
 #'
 #' @export
 #'
-s.q.response_label <- function(unit.exponent = 0,
-                               format = getOption("photobiology.math",
-                                                  default = "R.expression"),
-                               label.text = axis_labels()[["s.q.response"]],
-                               scaled = FALSE,
-                               normalized = FALSE,
-                               axis.symbols = getOption("ggspectra.axis.symbols",
-                                                       default = TRUE)) {
-  if (!axis.symbols) {
-    label.text <- gsub(",$", "", label.text)
-  }
+s.q.response_label <-
+  function(unit.exponent = 0,
+           format = getOption("photobiology.math",
+                              default = "R.expression"),
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.q.response"]],
+           scaled = FALSE,
+           normalized = FALSE,
+           axis.symbols = getOption("ggspectra.axis.symbols",
+                                    default = TRUE)) {
+
   if (scaled) {
     if (tolower(format) == "latex") {
       paste(label.text, " $R(Q)_{\\lambda}$ (rel.\ units)")
@@ -201,17 +201,17 @@ s.q.response_label <- function(unit.exponent = 0,
 #'
 #' @export
 #'
-s.e.action_label <- function(unit.exponent = 0,
-                             format = getOption("photobiology.math",
-                                                default = "R.expression"),
-                             label.text = axis_labels()[["s.e.action"]],
-                             scaled = FALSE,
-                             normalized = FALSE,
-                             axis.symbols = getOption("ggspectra.axis.symbols",
-                                                     default = TRUE)) {
-  if (!axis.symbols) {
-    label.text <- gsub(",$", "", label.text)
-  }
+s.e.action_label <-
+  function(unit.exponent = 0,
+           format = getOption("photobiology.math",
+                              default = "R.expression"),
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.e.action"]],
+           scaled = FALSE,
+           normalized = FALSE,
+           axis.symbols = getOption("ggspectra.axis.symbols",
+                                    default = TRUE)) {
+
   if (scaled) {
     if (tolower(format) == "latex") {
       paste(label.text, "$A(E)_{\\lambda}$ (rel.\ units)")
@@ -281,17 +281,17 @@ s.e.action_label <- function(unit.exponent = 0,
 #'
 #' @export
 #'
-s.q.action_label <- function(unit.exponent = 0,
-                             format = getOption("photobiology.math",
-                                                default = "R.expression"),
-                             label.text = axis_labels()[["s.q.action"]],
-                             scaled = FALSE,
-                             normalized = FALSE,
-                             axis.symbols = getOption("ggspectra.axis.symbols",
-                                                     default = TRUE)) {
-  if (!axis.symbols) {
-    label.text <- gsub(",$", "", label.text)
-  }
+s.q.action_label <-
+  function(unit.exponent = 0,
+           format = getOption("photobiology.math",
+                              default = "R.expression"),
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.q.action"]],
+           scaled = FALSE,
+           normalized = FALSE,
+           axis.symbols = getOption("ggspectra.axis.symbols",
+                                    default = TRUE)) {
+
   if (scaled) {
     if (tolower(format) == "latex") {
       paste(label.text, "$A(Q)_{\\lambda}$ (rel.\ units)")
@@ -448,7 +448,8 @@ scale_y_s.e.response_continuous <-
            labels = SI_pl_format(exponent = -unit.exponent), # per unit
            format = getOption("photobiology.math",
                               default = "R.expression"),
-           label.text = axis_labels()[["s.e.response"]],
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.e.response"]],
            scaled = FALSE,
            normalized = FALSE,
            axis.symbols = getOption("ggspectra.axis.symbols",
@@ -476,7 +477,8 @@ scale_y_s.q.response_continuous <-
            labels = SI_pl_format(exponent = -unit.exponent),  # per unit
            format = getOption("photobiology.math",
                               default = "R.expression"),
-           label.text = axis_labels()[["s.q.response"]],
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.q.response"]],
            scaled = FALSE,
            normalized = FALSE,
            axis.symbols = getOption("ggspectra.axis.symbols",
@@ -504,7 +506,8 @@ scale_y_s.e.action_continuous <-
            labels = SI_pl_format(exponent = -unit.exponent), # per unit
            format = getOption("photobiology.math",
                               default = "R.expression"),
-           label.text = axis_labels()[["s.e.action"]],
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.e.action"]],
            scaled = FALSE,
            normalized = FALSE,
            axis.symbols = getOption("ggspectra.axis.symbols",
@@ -532,7 +535,8 @@ scale_y_s.q.action_continuous <-
            labels = SI_pl_format(exponent = -unit.exponent),  # per unit
            format = getOption("photobiology.math",
                               default = "R.expression"),
-           label.text = axis_labels()[["s.q.action"]],
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.q.action"]],
            scaled = FALSE,
            normalized = FALSE,
            axis.symbols = getOption("ggspectra.axis.symbols",

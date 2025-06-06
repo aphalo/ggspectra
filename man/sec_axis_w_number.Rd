@@ -10,31 +10,31 @@
 \usage{
 sec_axis_w_number(
   unit.exponent = -6,
-  label.text = axis_labels()[["w.number"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["w.number"]],
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)
 )
 
 sec_axis_w_frequency(
   unit.exponent = 12,
-  label.text = axis_labels()[["freq"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["freq"]],
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)
 )
 
 sec_axis_energy_eV(
   unit.exponent = 0,
-  label.text = axis_labels()[["energy"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["energy"]],
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)
 )
 
 sec_axis_energy_J(
   unit.exponent = -18,
-  label.text = axis_labels()[["energy"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["energy"]],
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)
 )
 
 sec_axis_wl(
   unit.exponent = -9,
-  label.text = axis_labels()[["w.length"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["w.length"]],
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)
 )
 }

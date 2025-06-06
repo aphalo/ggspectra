@@ -7,7 +7,7 @@
 multipliers_label(
   unit.exponent = 0,
   format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["e.mult"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["e.mult"]],
   scaled = FALSE,
   normalized = FALSE,
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)

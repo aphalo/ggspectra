@@ -40,16 +40,16 @@ A_label <- function(unit.exponent = 0,
                                             default = TRUE),
                     Tfr.type) {
   if (is.null(label.text)) {
-    label.text <- switch(tolower(Tfr.type),
-                         internal = axis_labels()[["s.A.int"]],
-                         total = axis_labels()[["s.A.tot"]],
-                         stop("Bad Tfr.type: ", Tfr.type)
-    )
+    label.text <-
+      switch(tolower(Tfr.type),
+             internal =
+               axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.A.int"]],
+             total =
+               axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.A.tot"]],
+             stop("Bad Tfr.type: ", Tfr.type)
+      )
   }
 
-  if (!axis.symbols) {
-    label.text <- gsub(",$", "", label.text)
-  }
   if (scaled) {
     if (tolower(format) == "latex") {
       paste(label.text, " $A_{\\lambda}$ (rel.\ units)")
@@ -355,14 +355,14 @@ Tfr_label <- function(unit.exponent = ifelse(pc.out, -2, 0),
                                          default = FALSE),
                       Tfr.type) {
   if (is.null(label.text)) {
-    label.text <- switch(tolower(Tfr.type),
-                         internal = axis_labels()[["s.Tfr.int"]],
-                         total = axis_labels()[["s.Tfr.tot"]],
-                         stop("Bad Tfr.type: ", Tfr.type)
-    )
-  }
-  if (!axis.symbols) {
-    label.text <- gsub(",$", "", label.text)
+    label.text <-
+      switch(tolower(Tfr.type),
+             internal =
+               axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.Tfr.int"]],
+             total =
+               axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.Tfr.tot"]],
+             stop("Bad Tfr.type: ", Tfr.type)
+      )
   }
 
   if (unit.exponent == 0) {
@@ -684,19 +684,18 @@ scale_y_Tfr_total_continuous <-
 #' Afr_label(format = "LaTeX")
 #' Afr_label(-2, format = "LaTeX")
 #'
-Afr_label <- function(unit.exponent = ifelse(pc.out, -2, 0),
-                      format = getOption("photobiology.math",
-                                         default = "R.expression"),
-                      label.text = axis_labels()[["s.Afr"]],
-                      scaled = FALSE,
-                      normalized = FALSE,
-                      axis.symbols = getOption("ggspectra.axis.symbols",
-                                              default = TRUE),
-                      pc.out = getOption("ggspectra.pc.out",
-                                         default = FALSE)) {
-  if (!axis.symbols) {
-    label.text <- gsub(",$", "", label.text)
-  }
+Afr_label <-
+  function(unit.exponent = ifelse(pc.out, -2, 0),
+           format = getOption("photobiology.math",
+                              default = "R.expression"),
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.Afr"]],
+           scaled = FALSE,
+           normalized = FALSE,
+           axis.symbols = getOption("ggspectra.axis.symbols",
+                                    default = TRUE),
+           pc.out = getOption("ggspectra.pc.out",
+                              default = FALSE)) {
 
   if (unit.exponent == 0) {
     unit.text = "(/1)"
@@ -821,7 +820,8 @@ scale_y_Afr_continuous <-
            limits = c(0, 1),
            format = getOption("photobiology.math",
                               default = "R.expression"),
-           label.text = axis_labels()[["s.Afr"]],
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.Afr"]],
            scaled = FALSE,
            normalized = FALSE,
            axis.symbols = getOption("ggspectra.axis.symbols",
@@ -880,16 +880,16 @@ Rfr_label <- function(unit.exponent = ifelse(pc.out, -2, 0),
                                          default = FALSE),
                       Rfr.type) {
   if (is.null(label.text)) {
-    label.text <- switch(tolower(Rfr.type),
-                         specular = axis_labels()[["s.Rfr.spec"]],
-                         total = axis_labels()[["s.Rfr.tot"]],
-                         stop("Bad Rfr.type: ", Rfr.type)
+    label.text <-
+      switch(tolower(Rfr.type),
+             specular =
+               axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.Rfr.spec"]],
+             total =
+               axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.Rfr.tot"]],
+             stop("Bad Rfr.type: ", Rfr.type)
     )
   }
 
-  if (!axis.symbols) {
-    label.text <- gsub(",$", "", label.text)
-  }
   if (unit.exponent == 0) {
     unit.text = "(/1)"
     unit.tex = "(/1)"

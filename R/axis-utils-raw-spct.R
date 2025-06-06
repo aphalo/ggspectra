@@ -24,17 +24,17 @@
 #' counts_label("R.expression")
 #' counts_label("LaTeX")
 #'
-counts_label <- function(unit.exponent = 3,
-                         format = getOption("photobiology.math",
-                                            default = "R.expression"),
-                         label.text = axis_labels()[["counts"]],
-                         scaled = FALSE,
-                         normalized = FALSE,
-                         axis.symbols = getOption("ggspectra.axis.symbols",
-                                                 default = TRUE)) {
-  if (!axis.symbols) {
-    label.text <- gsub(",$", "", label.text)
-  }
+counts_label <-
+  function(unit.exponent = 3,
+           format = getOption("photobiology.math",
+                              default = "R.expression"),
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["counts"]],
+           scaled = FALSE,
+           normalized = FALSE,
+           axis.symbols = getOption("ggspectra.axis.symbols",
+                                    default = TRUE)) {
+
   if (scaled) {
     if (tolower(format) == "latex") {
       paste(label.text, "$N_{\\lambda}$ (rel.\ units)")
@@ -162,7 +162,8 @@ scale_y_counts_continuous <-
            labels = SI_pl_format(exponent = unit.exponent),
            format = getOption("photobiology.math",
                               default = "R.expression"),
-           label.text = axis_labels()[["counts"]],
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["counts"]],
            scaled = FALSE,
            normalized = FALSE,
            axis.symbols = getOption("ggspectra.axis.symbols",
@@ -190,7 +191,8 @@ scale_y_counts_tg_continuous <-
            labels = SI_tg_format(exponent = unit.exponent),
            format = getOption("photobiology.math",
                               default = "R.expression"),
-           label.text = axis_labels()[["counts"]],
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["counts"]],
            scaled = FALSE,
            normalized = FALSE,
            axis.symbols = getOption("ggspectra.axis.symbols",

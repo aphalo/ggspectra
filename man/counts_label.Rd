@@ -7,7 +7,7 @@
 counts_label(
   unit.exponent = 3,
   format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["counts"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["counts"]],
   scaled = FALSE,
   normalized = FALSE,
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)

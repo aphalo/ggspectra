@@ -26,17 +26,16 @@
 #' cps_label(format = "LaTeX")
 #' cps_label(3, format = "LaTeX")
 #'
-cps_label <- function(unit.exponent = 0,
-                      format = getOption("photobiology.math",
-                                         default = "R.expression"),
-                      label.text = axis_labels()[["cps"]],
-                      scaled = FALSE,
-                      normalized = FALSE,
-                      axis.symbols = getOption("ggspectra.axis.symbols",
+cps_label <-
+  function(unit.exponent = 0,
+           format = getOption("photobiology.math",
+                              default = "R.expression"),
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["cps"]],
+           scaled = FALSE,
+           normalized = FALSE,
+           axis.symbols = getOption("ggspectra.axis.symbols",
                                               default = TRUE)) {
-  if (!axis.symbols) {
-    label.text <- gsub(",$", "", label.text)
-  }
   if (scaled) {
     if (tolower(format) == "latex") {
       paste(label.text, "rate $n_{\\lambda}$ (rel.\ units)")
@@ -169,7 +168,8 @@ scale_y_cps_continuous <-
            labels = SI_pl_format(exponent = unit.exponent),
            format = getOption("photobiology.math",
                               default = "R.expression"),
-           label.text = axis_labels()[["cps"]],
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["cps"]],
            scaled = FALSE,
            normalized = FALSE,
            axis.symbols = getOption("ggspectra.axis.symbols",

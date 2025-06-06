@@ -26,77 +26,76 @@
 #' multipliers_label(format = "LaTeX")
 #' multipliers_label(3, format = "LaTeX")
 #'
-multipliers_label <- function(unit.exponent = 0,
-                              format = getOption("photobiology.math",
-                                                 default = "R.expression"),
-                              label.text = axis_labels()[["e.mult"]],
-                              scaled = FALSE,
-                              normalized = FALSE,
-                              axis.symbols = getOption("ggspectra.axis.symbols",
-                                                      default = TRUE)) {
-  if (!axis.symbols) {
-    label.text <- gsub(",$", "", label.text)
-  }
-  if (scaled) {
-    if (tolower(format) == "latex") {
-      paste(label.text, "$k_{\\lambda}$ (rel.\ units)")
-    } else if (format == "R.expression") {
-      if (axis.symbols) {
-        bquote(.(label.text)~italic(k)[lambda]~plain((rel.~units)))
-      } else {
-        bquote(.(label.text)~plain((rel.~units)))
-      }
-    } else if (format == "R.character") {
-      paste(label.text, "k(lambda) (rel. units)")
-    }
-  } else if (is.character(normalized) || normalized) {
-    if (is.logical(normalized)) {
-      normalized <- "norm"
-    }
-    if (tolower(format) == "latex") {
-      paste(label.text, " $k_{\\lambda} / k_{", normalized, "}$ (/1)", sep = "")
-    } else if (format == "R.expression") {
-      if (axis.symbols) {
-        bquote(.(label.text)~italic(k)[lambda]/italic(k)[.(normalized)]~plain("(/1)"))
-      } else {
-        bquote(.(label.text)*", normalised"~plain("(/1)"))
-      }
-    } else if (format == "R.character") {
-      paste(label.text, "k(lambda) (norm. at", normalized, "nm)")
-    }
-  } else {
-    if (tolower(format) == "latex") {
-      if (unit.exponent == 0) {
-        paste(label.text, "$k_{\\lambda}$ ($W m^{-2} nm^{-1} \\mathrm{count}^{-1}~s$)")
-      } else {
-        paste(label.text, " $k_{\\lambda}$ ($\\times 10^{",
-              unit.exponent,
-              "} W m^{-2} nm^{-1} \\mathrm{count}^{-1}~s$)", sep = "")
-      }
-    } else if (format %in% c("R.expression")) {
-      if (unit.exponent == 0) {
+multipliers_label <-
+  function(unit.exponent = 0,
+           format = getOption("photobiology.math",
+                              default = "R.expression"),
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["e.mult"]],
+           scaled = FALSE,
+           normalized = FALSE,
+           axis.symbols = getOption("ggspectra.axis.symbols",
+                                    default = TRUE)) {
+    if (scaled) {
+      if (tolower(format) == "latex") {
+        paste(label.text, "$k_{\\lambda}$ (rel.\ units)")
+      } else if (format == "R.expression") {
         if (axis.symbols) {
-          bquote(.(label.text)~italic(k)[lambda]~(plain(W~m^{-2}~nm^{-1}~counts^{-1}~s)))
+          bquote(.(label.text)~italic(k)[lambda]~plain((rel.~units)))
         } else {
-          bquote(.(label.text)~(plain(W~m^{-2}~nm^{-1}~counts^{-1}~s)))
+          bquote(.(label.text)~plain((rel.~units)))
         }
-      } else {
-        if (axis.symbols) {
-
-        } else {
-
-        }
-        bquote(.(label.text)~italic(k)[lambda]~(10^{.(unit.exponent)}*plain(W~m^{-2}~nm^{-1}~counts^{-1}~s)))
+      } else if (format == "R.character") {
+        paste(label.text, "k(lambda) (rel. units)")
       }
-    } else if (format == "R.character" && unit.exponent == 0) {
-      paste(label.text, "k(lambda) (W m-2 nm-1 per counts/s)")
+    } else if (is.character(normalized) || normalized) {
+      if (is.logical(normalized)) {
+        normalized <- "norm"
+      }
+      if (tolower(format) == "latex") {
+        paste(label.text, " $k_{\\lambda} / k_{", normalized, "}$ (/1)", sep = "")
+      } else if (format == "R.expression") {
+        if (axis.symbols) {
+          bquote(.(label.text)~italic(k)[lambda]/italic(k)[.(normalized)]~plain("(/1)"))
+        } else {
+          bquote(.(label.text)*", normalised"~plain("(/1)"))
+        }
+      } else if (format == "R.character") {
+        paste(label.text, "k(lambda) (norm. at", normalized, "nm)")
+      }
     } else {
-      warning("'format = ", format,
-              "' not implemented for unit.exponent = ", unit.exponent)
-      NA_character_
+      if (tolower(format) == "latex") {
+        if (unit.exponent == 0) {
+          paste(label.text, "$k_{\\lambda}$ ($W m^{-2} nm^{-1} \\mathrm{count}^{-1}~s$)")
+        } else {
+          paste(label.text, " $k_{\\lambda}$ ($\\times 10^{",
+                unit.exponent,
+                "} W m^{-2} nm^{-1} \\mathrm{count}^{-1}~s$)", sep = "")
+        }
+      } else if (format %in% c("R.expression")) {
+        if (unit.exponent == 0) {
+          if (axis.symbols) {
+            bquote(.(label.text)~italic(k)[lambda]~(plain(W~m^{-2}~nm^{-1}~counts^{-1}~s)))
+          } else {
+            bquote(.(label.text)~(plain(W~m^{-2}~nm^{-1}~counts^{-1}~s)))
+          }
+        } else {
+          if (axis.symbols) {
+
+          } else {
+
+          }
+          bquote(.(label.text)~italic(k)[lambda]~(10^{.(unit.exponent)}*plain(W~m^{-2}~nm^{-1}~counts^{-1}~s)))
+        }
+      } else if (format == "R.character" && unit.exponent == 0) {
+        paste(label.text, "k(lambda) (W m-2 nm-1 per counts/s)")
+      } else {
+        warning("'format = ", format,
+                "' not implemented for unit.exponent = ", unit.exponent)
+        NA_character_
+      }
     }
   }
-}
 
 #' Calibration multipliers y-scale
 #'
@@ -135,11 +134,12 @@ scale_y_multipliers_continuous <-
            labels = SI_pl_format(exponent = unit.exponent),
            format = getOption("photobiology.math",
                               default = "R.expression"),
-           label.text = axis_labels()[["e.mult"]],
+           label.text =
+             axis_labels(append = ifelse(axis.symbols, ",", ""))[["e.mult"]],
            scaled = FALSE,
            normalized = FALSE,
            axis.symbols = getOption("ggspectra.axis.symbols",
-                                   default = TRUE),
+                                    default = TRUE),
            ...) {
     ggplot2::scale_y_continuous(name = name,
                                 labels = labels,

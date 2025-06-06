@@ -1,0 +1,84 @@
+---
+title: "Peaks, Valleys and Spikes"
+subtitle: "'ggspectra' `r packageVersion('ggspectra')`"
+author: "Pedro J. Aphalo"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: yes
+vignette: >
+  %\VignetteIndexEntry{Animated plots of spectral data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction
+
+_This article is only available as part of [the on-line documentation of R package 'ggspectra'](https://docs.r4photobiology.info/ggspectra/). It is not installed in the local computer as part of the package._
+
+Package 'ggspectra' extends 'ggplot2' with stats, geoms, scales and annotations suitable for light- or radiation-related spectra. It also defines `ggplot()` and `autoplot()` methods specialized for the classes defined in package 'photobiology' for storing different types of spectral data. The `ggplot()` methods, statistics, and scales in [_User Guide: 1 Grammar of Graphics_](https://docs.r4photobiology.info/ggspectra/articles/userguide1-grammar.html) and the `autoplot()` methods are described separately in vignette [_User Guide: 2 Autoplot Methods_](https://docs.r4photobiology.info/ggspectra/articles/userguide2-autoplot-methods.html).
+
+The new elements can be freely combined with methods and functions defined in packages 'ggplot2', 'scales', 'ggrepel', 'gganimate' and other extensions to 'ggplot2'.
+This article, focuses on highlighting and annotating peaks, valleys and spikes in plots of spectral data created with R package 'ggspectra'.
+
+## Set up 
+
+```{r}
+library(ggplot2)
+library(photobiology)
+library(photobiologySun)
+library(photobiologyWavebands)
+library(ggspectra)
+energy_as_default()
+```
+
+## Peaks, valleys and spikes
+
+In a spectrum, maxima of the spectral quantity are called peaks and minima, valleys. Spikes are very narrow, frequently single detector pixel, peaks or valleys. Spikes are frequently caused by detector noise or ambient radiation, such as cosmic rays.
+
+When measuring radiation spectra the monochromator acquires data at specific wavelengths, while the true position of peaks may fall in-between the centre of the bands "seen" by the spectrometer. When the wavelength resolution of the spectrometer is higher than the accuracy with which the wavelength at the peaks needs to be determined, we can simply search for the wavelengths matching maxima or minima in the acquired data. In this case we search for peaks so as to find them in the data. An example of this is when the optical resolution of an array spectromter is much less than the pixel resolution of the detector array.
+
+When the accuracy needed is more, the approach used is to fit a curve describing the shape of the peak, and analytically or numerically determine the maxima of the fitted function. This not only requires additional computations but also the choice of a function form capable of describing well the shape of the peak or valley. In this case we first search for peaks, and subsequently fit a function to each of the peaks found, and find the wavelength value at which the derivative of the fitted function is equal to zero. The accuracy of the estimated wavelength at the peak and the height of the peaks are not necessarily both good, one can be better than the other, so it is important to visually check the quality of these estimates.
+
+The algorithm used to find valleys is the same as for peaks, but applied to the data after a change of sign. Thus, the explanation above about peaks also applies to valleys.
+
+Spikes are in many cases not of interest and are simply removed from the data. In other cases, spikes may identify defective pixels in an array spectrometer. Very rarely spikes are of interest in themselves, but some cases exist. For example when peaks of interest are narrow compared to the wavelength resolution used for acquiring the spectrum, they may appear in the acquired data as spikes.
+
+In 'ggspectra', peaks, valleys and spikes are treated similarly. They are searched for and fitted with functions from package 'photobiology'. Below most examples are for peaks, and only a few for valleys and spikes to highlight the similarities and differences.
+
+## Locating peaks
+
+We save a _base_ plot to use in examples.
+
+```{r}
+p0 <- 
+  ggplot(sun.spct) +
+  geom_spct()
+```
+
+Using default arguments for the statistic and passing two arguments indirectly to the geometry, creates a plot with many peaks highlighted by small red points.
+
+```{r}
+p0 +
+  stat_peaks(colour = "red", size = 1)
+```
+
+With the argument to parameter `span`, with default `span = 5`, peaks are searched as maxima within a moving window of width five. Passing an odd `integer` value sets the width of window to be used. Passing `span = NULL` sets the window width to the whole data set, forcing a search for maximum of the spectrum as a whole.
+
+```{r}
+p0 +
+  stat_peaks(span = NULL, colour = "red", size = 1)
+```
+
+```{r}
+p0 +
+  stat_peaks(span = 11, colour = "red", size = 1)
+```
+
+Above some peaks are highlighted very close to `s.e.irrad` equal to zero. As these are just noise, we can limit the search, for example, to the top 2/3 of the _y_ range.
+
+```{r}
+p0 +
+  stat_peaks(global.threshold = 2/3,
+             colour = "red", size = 1)
+```

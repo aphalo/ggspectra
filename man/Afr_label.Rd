@@ -8,7 +8,7 @@
 Afr_label(
   unit.exponent = ifelse(pc.out, -2, 0),
   format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["s.Afr"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["s.Afr"]],
   scaled = FALSE,
   normalized = FALSE,
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE),

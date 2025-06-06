@@ -11,35 +11,35 @@
 w_length_label(
   unit.exponent = -9,
   format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["w.length"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["w.length"]],
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)
 )
 
 w_number_label(
   unit.exponent = 0,
   format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["w.number"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["w.number"]],
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)
 )
 
 w_frequency_label(
   unit.exponent = 9,
   format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["freq"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["freq"]],
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)
 )
 
 w_energy_eV_label(
   unit.exponent = 0,
   format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["energy"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["energy"]],
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)
 )
 
 w_energy_J_label(
   unit.exponent = -18,
   format = getOption("photobiology.math", default = "R.expression"),
-  label.text = axis_labels()[["energy"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["energy"]],
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE)
 )
 }

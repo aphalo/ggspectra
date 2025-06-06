@@ -1,47 +1,13 @@
 #' Label peaks and valleys.
 #'
-#' \code{stat_labels_peaks} finds at which x positions local maxima are located,
-#' and adds labels and colors to the data without subsetting. To find local
-#' minima, you can use \code{stat_labels_valleys} instead. The variable
+#' \code{stat_labels_peaks} finds at which \code{x} positions the global maximum
+#' or local maxima are located,
+#' and adds labels and color definitions to the data without subsetting.
+#' \code{stat_labels_valleys} finds instead minima. The variable
 #' mapped to the \code{x} aesthetic is expected to contain wavelength values
 #' expressed in nanometres. \strong{Axis flipping is currently not supported.}
 #'
-#' @param mapping The aesthetic mapping, usually constructed with
-#'   \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be
-#'   set at the layer level if you are overriding the plot defaults.
-#' @param data A layer specific dataset - only needed if you want to override
-#'   the plot defaults.
-#' @param geom The geometric object to use display the data
-#' @param position The position adjustment to use for overlapping points on this
-#'   layer
-#' @param show.legend logical. Should this layer be included in the legends?
-#'   \code{NA}, the default, includes if any aesthetics are mapped. \code{FALSE}
-#'   never includes, and \code{TRUE} always includes.
-#' @param inherit.aes If \code{FALSE}, overrides the default aesthetics, rather
-#'   than combining with them. This is most useful for helper functions that
-#'   define both data and aesthetics and shouldn't inherit behaviour from the
-#'   default plot specification, e.g. \code{\link[ggplot2]{borders}}.
-#' @param ... other arguments passed on to \code{\link[ggplot2]{layer}}. This
-#'   can include aesthetics whose values you want to set, not map. See
-#'   \code{\link[ggplot2]{layer}} for more details.
-#' @param na.rm	a logical value indicating whether NA values should be stripped
-#'   before the computation proceeds.
-#' @param ignore_threshold numeric value between 0.0 and 1.0 indicating the size
-#'   threshold below which peaks will be ignored.
-#' @param span a peak is defined as an element in a sequence which is greater
-#'   than all other elements within a window of width span centered at that
-#'   element. The default value is 5, meaning that a peak is bigger than two
-#'   consequtive neighbors on each side. Default: 5.
-#' @param strict logical flag: if TRUE, an element must be strictly greater than
-#'   all other values in its window to be considered a peak. Default: FALSE.
-#' @param chroma.type character one of "CMF" (color matching function) or "CC"
-#'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
-#' @param label.fmt,x.label.fmt,y.label.fmt character  strings giving a format
-#'   definition for construction of character strings labels with function
-#'   \code{\link{sprintf}} from \code{x} and/or \code{y} values.
-#' @param x.label.transform,y.label.transform,x.colour.transform function Applied
-#'   to \code{x} or \code{y} values when constructing the character labels or
-#'   computing matching colours.
+#' @inheritParams stat_peaks
 #' @param label.fill character string to use for labels not at peaks or valleys
 #'   being highlighted.
 #'
@@ -60,16 +26,17 @@
 #'   white).} }
 #'
 #' @section Default aesthetics: Set by the statistic and available to geoms.
-#'   \describe{ \item{label}{..x.label..} \item{xintercept}{..x..}
-#'   \item{yintercept}{..y..} \item{color}{black_or_white(..wl.color..)}
-#'   \item{fill}{..wl.color..} }
+#'   \describe{ \item{label}{after_stat(x.label)} \item{xintercept}{after_stat(x)}
+#'   \item{yintercept}{after_stat(y)} \item{color}{black_or_white(after_stat(wl.color))}
+#'   \item{fill}{after_stat(wl.color)} }
 #'
 #' @section Required aesthetics: Required by the statistic and need to be set
 #'   with \code{aes()}. \describe{ \item{x}{numeric, wavelength in nanometres}
 #'   \item{y}{numeric, a spectral quantity} }
 #'
 #' @seealso \code{\link{stat_peaks}}, \code{\link{stat_valleys}} and
-#'   \code{\link[photobiology]{find_peaks}}, which is used internally.
+#'   \code{\link[photobiology]{find_peaks}}, which is used in the
+#'   implementation.
 #'
 #' @details These statistics assemble text labels for each peak or valley and
 #'   compute the colour corresponding to the wavelength of the peaks and
@@ -91,14 +58,24 @@
 #'   \code{geom_hline} and \code{geom_vline}. The formatting of the labels
 #'   returned can be controlled by the user.
 #'
-#' @note These stats work nicely together with geoms \code{geom_text_repel} and
+#' @note When using \code{geom_text}, to discard overlapping labels pass
+#'   \code{check_overlap = TRUE} in the call to the statistic.
+#'
+#'   These stats work nicely together with geoms \code{geom_text_repel} and
 #'   \code{geom_label_repel} from package \code{\link[ggrepel]{ggrepel}} to
-#'   solve the problem of overlapping labels by displacing them. To discard
-#'   overlapping labels use \code{check_overlap = TRUE} as argument to
-#'   \code{geom_text}. By default the labels are character values suitable to be
-#'   plotted as is, but with a suitable \code{label.fmt} labels suitable for
-#'   parsing by the geoms (e.g. into expressions containing greek letters or
-#'   super or subscripts) can be also easily obtained.
+#'   solve the problem of overlapping labels by displacing them, without
+#'   discarding any of them. The difference between \code{stat_peaks} and
+#'   \code{stat_label_peaks}, and between \code{stat_valleys} and
+#'   \code{stat_label_valleys}, is that while the first only returns the rows in
+#'   data matching peaks or valleys, the second return all rows, but set the
+#'   labels to the value passed as argument to \code{label.fill}. In the "label"
+#'   stats the default \code{label.fill = ""} ensures that when using repulsive
+#'   geoms the labels do not overlap any observations, labelled or not.
+#'
+#'   By default the labels are character values suitable to be plotted as is,
+#'   but with a suitable \code{label.fmt} labels suitable for parsing by the
+#'   geoms (e.g. into expressions containing greek letters or super or
+#'   subscripts) can be also easily obtained.
 #'
 #' @examples
 #'
@@ -139,7 +116,7 @@
 #' library(ggrepel)
 #'
 #' ggplot(sun.spct) + geom_line() +
-#'   stat_peaks(span = 41, shape = 21, size = 3) +
+#'   stat_peaks(span = 41, shape = 21, size = 2) +
 #'   stat_label_peaks(span = 41, geom = "label_repel", segment.colour = "red",
 #'                    nudge_y = 0.12, label.fmt = "%3.0f nm",
 #'                    max.overlaps = Inf, min.segment.length = 0) +
@@ -159,6 +136,7 @@ stat_label_peaks <-
            ...,
            span = 5,
            ignore_threshold = 0,
+           global.threshold = ignore_threshold,
            strict = TRUE,
            chroma.type = "CMF",
            label.fmt = "%.3g",
@@ -186,7 +164,7 @@ stat_label_peaks <-
       stat = StatLabelPeaks, data = data, mapping = mapping, geom = geom,
       position = position, show.legend = show.legend, inherit.aes = inherit.aes,
       params = list(span = span,
-                    ignore_threshold = ignore_threshold,
+                    global.threshold = global.threshold,
                     strict = strict,
                     chroma.type = chroma.type,
                     label.fmt = label.fmt,
@@ -224,7 +202,7 @@ StatLabelPeaks <-
                    compute_group = function(data,
                                             scales,
                                             span,
-                                            ignore_threshold,
+                                            global.threshold,
                                             strict,
                                             chroma.type,
                                             label.fmt,
@@ -244,7 +222,7 @@ StatLabelPeaks <-
                        peaks.idx <-
                          photobiology::find_peaks(data[["y"]],
                                                   span = span,
-                                                  ignore_threshold = ignore_threshold,
+                                                  global.threshold = global.threshold,
                                                   strict = strict)
                      }
                      out.df[["is_peak"]] <- FALSE
@@ -293,6 +271,7 @@ stat_label_valleys <- function(mapping = NULL,
                                ...,
                                span = 5,
                                ignore_threshold = 0,
+                               global.threshold = ignore_threshold,
                                strict = TRUE,
                                chroma.type = "CMF",
                                label.fmt = "%.3g",
@@ -320,7 +299,7 @@ stat_label_valleys <- function(mapping = NULL,
     stat = StatLabelValleys, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(span = span,
-                  ignore_threshold = ignore_threshold,
+                  global.threshold = global.threshold,
                   strict = strict,
                   chroma.type = chroma.type,
                   label.fmt = label.fmt,
@@ -344,7 +323,7 @@ StatLabelValleys <-
                    compute_group =   function(data,
                                               scales,
                                               span,
-                                              ignore_threshold,
+                                              global.threshold,
                                               strict,
                                               chroma.type,
                                               label.fmt,
@@ -364,7 +343,7 @@ StatLabelValleys <-
                        valleys.idx <-
                          photobiology::find_peaks(-data[["y"]],
                                                   span = span,
-                                                  ignore_threshold = ignore_threshold,
+                                                  global.threshold = global.threshold,
                                                   strict = strict)
                      }
                      out.df[["is_valley"]] <- FALSE

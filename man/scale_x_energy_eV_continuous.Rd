@@ -11,7 +11,7 @@ scale_x_energy_eV_continuous(
     axis.symbols = axis.symbols),
   breaks = scales::pretty_breaks(n = 7),
   labels = SI_pl_format(exponent = unit.exponent),
-  label.text = axis_labels()[["energy"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["energy"]],
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE),
   ...
 )
@@ -22,7 +22,7 @@ scale_x_energy_J_continuous(
     axis.symbols = axis.symbols),
   breaks = scales::pretty_breaks(n = 7),
   labels = SI_pl_format(exponent = unit.exponent),
-  label.text = axis_labels()[["energy"]],
+  label.text = axis_labels(append = ifelse(axis.symbols, ",", ""))[["energy"]],
   axis.symbols = getOption("ggspectra.axis.symbols", default = TRUE),
   ...
 )
