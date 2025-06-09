@@ -68,24 +68,26 @@ on this layer}
 include aesthetics whose values you want to set, not map. See
 \code{\link[ggplot2]{layer}} for more details.}
 
-\item{span}{integer A peak is defined as an element in a sequence which is
-greater than all other elements within a window of width \code{span}
-centered at that element. Use \code{NULL} for the global peak. Valleys are
-the reverse.}
+\item{span}{odd positive integer A peak is defined as an element in a
+sequence which is greater than all other elements within a moving window of
+width \code{span} centred at that element. The default value is 5, meaning
+that a peak is taller than its four nearest neighbours. \code{span = NULL}
+extends the span to the whole length of \code{x}.}
 
-\item{global.threshold, ignore_threshold}{numeric For peaks, value between 0.0 and 1.0
-indicating the relative size of peaks compared to tallest peak threshold
-below which peaks will be ignored, while negative values between 0.0 and
--1.0 set a threshold so that the tallest peaks are ignored, instead of the
-shortest. For valleys, value between 0.0 and 1.0 indicating the relative
-depth of valleys below which valleys will be ignored, while negative values
-between 0.0 and -1.0 set a threshold so that the deeper valleys are
-ignored, instead of the shallower ones. Use of parameter
-\code{ignore_threshold} is deprecated, and \code{global.threshold} should
-be used instead.}
+\item{ignore_threshold}{Deprecated synonym for \code{global.threshold}.}
 
-\item{strict}{logical If \code{TRUE}, an element must be strictly greater
-than all other values in its window to be considered a peak.}
+\item{global.threshold}{numeric A value belonging to class
+\code{"AsIs"} is interpreted as an absolute minimum height or depth
+expressed in data units. A bare \code{numeric} value (normally between 0.0
+and 1.0), is interpreted as relative to the range of the data. In both
+cases it sets a \emph{global} height (depth) threshold below which peaks
+(valleys) are ignored. A bare negative \code{numeric} value indicates the
+\emph{global} height (depth) threshold below which peaks (valleys) are be
+ignored. If \code{global.threshold = NULL}, no threshold is applied and all
+peaks are returned.}
+
+\item{strict}{logical flag: if \code{TRUE}, an element must be strictly
+greater than all other values in its window to be considered a peak.}
 
 \item{chroma.type}{character one of "CMF" (color matching function) or "CC"
 (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.}

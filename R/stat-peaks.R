@@ -24,22 +24,31 @@
 #'   \code{\link[ggplot2]{layer}} for more details.
 #' @param na.rm	a logical value indicating whether NA values should be
 #'   stripped before the computation proceeds.
-#' @param global.threshold,ignore_threshold numeric For peaks, value between 0.0 and 1.0
-#'   indicating the relative size of peaks compared to tallest peak threshold
-#'   below which peaks will be ignored, while negative values between 0.0 and
-#'   -1.0 set a threshold so that the tallest peaks are ignored, instead of the
-#'   shortest. For valleys, value between 0.0 and 1.0 indicating the relative
-#'   depth of valleys below which valleys will be ignored, while negative values
-#'   between 0.0 and -1.0 set a threshold so that the deeper valleys are
-#'   ignored, instead of the shallower ones. Use of parameter
-#'   \code{ignore_threshold} is deprecated, and \code{global.threshold} should
-#'   be used instead.
-#' @param span integer A peak is defined as an element in a sequence which is
-#'   greater than all other elements within a window of width \code{span}
-#'   centered at that element. Use \code{NULL} for the global peak. Valleys are
-#'   the reverse.
-#' @param strict logical If \code{TRUE}, an element must be strictly greater
-#'   than all other values in its window to be considered a peak.
+#' @param global.threshold numeric A value belonging to class
+#'   \code{"AsIs"} is interpreted as an absolute minimum height or depth
+#'   expressed in data units. A bare \code{numeric} value (normally between 0.0
+#'   and 1.0), is interpreted as relative to the range of the data. In both
+#'   cases it sets a \emph{global} height (depth) threshold below which peaks
+#'   (valleys) are ignored. A bare negative \code{numeric} value indicates the
+#'   \emph{global} height (depth) threshold below which peaks (valleys) are be
+#'   ignored. If \code{global.threshold = NULL}, no threshold is applied and all
+#'   peaks are returned.
+#' @param ignore_threshold Deprecated synonym for \code{global.threshold}.
+#' @param local.threshold numeric A value belonging to class \code{"AsIs"} is
+#'   interpreted as an absolute minimum height (depth) expressed in data units
+#'   relative to the within-window computed minimum (maximum) value. A bare
+#'   \code{numeric} value (normally between 0.0 and 1.0), is interpreted as
+#'   expressed in units relative to the range of the data. In both cases
+#'   \code{local.threshold} sets a \emph{local} height (depth) threshold below
+#'   which peaks (valleys) are ignored. If \code{local.threshold = NULL} or if
+#'   \code{span} spans the whole of \code{x}, no threshold is applied.
+#' @param span odd positive integer A peak is defined as an element in a
+#'   sequence which is greater than all other elements within a moving window of
+#'   width \code{span} centred at that element. The default value is 5, meaning
+#'   that a peak is taller than its four nearest neighbours. \code{span = NULL}
+#'   extends the span to the whole length of \code{x}.
+#' @param strict logical flag: if \code{TRUE}, an element must be strictly
+#'   greater than all other values in its window to be considered a peak.
 #' @param refine.wl logical Flag indicating if peak or valleys locations should
 #'   be refined by fitting a function.
 #' @param method character String with the name of a method used for peak
@@ -105,38 +114,72 @@
 #'  be also easily obtained.
 #'
 #' @examples
-#'
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
+#'
+#' # PEAKS
+#'
 #' ggplot(sun.spct) +
 #'   geom_line() +
 #'   stat_peaks()
 #'
+#' # threshold relative to data range [0..1]
 #' ggplot(sun.spct) +
 #'   geom_line() +
 #'   stat_peaks(global.threshold = 0.6) # 0.6 * range of data
 #'
+#' # threshold in data units
 #' ggplot(sun.spct) +
 #'   geom_line() +
-#'   stat_peaks(global.threshold = I(0.4)) # data units
+#'   stat_peaks(global.threshold = I(0.4))
+#'
+#' # threshold in data units
+#' ggplot(sun.spct, unit.out = "photon") +
+#'   geom_line() +
+#'   stat_peaks(global.threshold = I(2e-6)) # Q in mol m-2 s-1
+#'
+#' # VALLEYS
 #'
 #' ggplot(sun.spct) +
 #'   geom_line() +
 #'   stat_valleys()
 #'
+#' # discard multiple maxima or minima
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_valleys(strict = TRUE)
+#'
+#' # threshold relative to data range [0..1]
 #' ggplot(sun.spct) +
 #'   geom_line() +
 #'   stat_valleys(global.threshold = 0.6)
 #'
+#' # reverse threshold relative to data range [-1..0]
 #' ggplot(sun.spct) +
 #'   geom_line() +
-#'   stat_valleys(global.threshold = I(0.6))
+#'   stat_valleys(global.threshold = -0.9)
 #'
+#' # threshold in data units using I()
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_valleys(global.threshold = I(0.6), strict = TRUE)
+#'
+#' # USING OTHER COMPUTED VALUES
+#'
+#' # colours matching the wavelength at peaks
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_peaks(span = 51, size = 2.7,
+#'              mapping = aes(colour = after_stat(wl.colour))) +
+#'   scale_color_identity()
+#'
+#' # labels for local maxima
 #' ggplot(sun.spct) +
 #'   geom_line() +
 #'   stat_peaks(span = 51, geom = "point", colour = "red") +
 #'   stat_peaks(span = 51, geom = "text", colour = "red",
 #'              vjust = -0.4, label.fmt = "%3.2f nm")
 #'
+#' # labels for local fitted peaks
 #' ggplot(sun.spct) +
 #'   geom_line() +
 #'   stat_peaks(span = 51, geom = "point", colour = "red", refine.wl = TRUE) +
@@ -144,17 +187,18 @@
 #'              vjust = -0.4, label.fmt = "%3.2f nm",
 #'              refine.wl = TRUE)
 #'
+#' # fitted peaks and valleys
 #' ggplot(sun.spct) +
 #'   geom_line() +
-#'   stat_peaks(span = 51, geom = "point", colour = "red", refine.wl = TRUE) +
+#'   stat_peaks(span = 31, geom = "point", colour = "red", refine.wl = TRUE) +
 #'   stat_peaks(mapping = aes(fill = after_stat(wl.colour), color = after_stat(BW.colour)),
-#'              span = 51, geom = "label",
-#'              size = 3, vjust = -0.2, label.fmt = "%.3g nm",
+#'              span = 31, geom = "label",
+#'              size = 3, vjust = -0.2, label.fmt = "%.4g nm",
 #'              refine.wl = TRUE) +
-#'   stat_valleys(span = 71, geom = "point", colour = "blue", refine.wl = TRUE) +
+#'   stat_valleys(span = 51, geom = "point", colour = "blue", refine.wl = TRUE) +
 #'   stat_valleys(mapping = aes(fill = after_stat(wl.colour), color = after_stat(BW.colour)),
-#'                span = 71, geom = "label",
-#'                size = 3, vjust = 1.2, label.fmt = "%.3g nm",
+#'                span = 51, geom = "label",
+#'                size = 3, vjust = 1.2, label.fmt = "%.4g nm",
 #'                refine.wl = TRUE) +
 #'   expand_limits(y = 0.85) + # make room for label
 #'   scale_fill_identity() +
@@ -171,6 +215,7 @@ stat_peaks <- function(mapping = NULL,
                        span = 5,
                        ignore_threshold = 0.01,
                        global.threshold = ignore_threshold,
+                       local.threshold = NULL,
                        strict = is.null(span),
                        refine.wl = FALSE,
                        method = "spline",
@@ -195,6 +240,7 @@ stat_peaks <- function(mapping = NULL,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(span = span,
                   global.threshold = global.threshold,
+                  local.threshold = local.threshold,
                   strict = strict,
                   refine.wl = refine.wl,
                   method = method,
@@ -234,6 +280,7 @@ StatPeaks <-
                                             scales,
                                             span,
                                             global.threshold,
+                                            local.threshold,
                                             strict,
                                             refine.wl,
                                             method,
@@ -250,7 +297,7 @@ StatPeaks <-
                                            y.var.name = "y",
                                            span = span,
                                            global.threshold = global.threshold,
-                                           local.threshold = NULL,
+                                           local.threshold = local.threshold,
                                            local.reference = "minimum",
                                            threshold.range = NULL,
                                            strict = strict,
@@ -287,6 +334,7 @@ stat_valleys <- function(mapping = NULL,
                          span = 5,
                          ignore_threshold = 0.01,
                          global.threshold = ignore_threshold,
+                         local.threshold = NULL,
                          strict = is.null(span),
                          refine.wl = FALSE,
                          method = "spline",
@@ -311,6 +359,7 @@ stat_valleys <- function(mapping = NULL,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(span = span,
                   global.threshold = global.threshold,
+                  local.threshold = local.threshold,
                   strict = strict,
                   refine.wl = refine.wl,
                   method = method,
@@ -336,6 +385,7 @@ StatValleys <-
                                             scales,
                                             span,
                                             global.threshold,
+                                            local.threshold,
                                             strict,
                                             refine.wl,
                                             method,
@@ -352,7 +402,7 @@ StatValleys <-
                                              y.var.name = "y",
                                              span = span,
                                              global.threshold = global.threshold,
-                                             local.threshold = NULL,
+                                             local.threshold = local.threshold,
                                              local.reference = "minimum",
                                              threshold.range = NULL,
                                              strict = strict,

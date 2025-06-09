@@ -6,15 +6,18 @@ editor_options:
 
 # ggspectra 0.4.0
 
-The main change in this version is compatibility with package 'gganimate',
-making it possible to create animated plots using `autoplot()` methods and
+Track new features available and other changes in 'photobiology' (>= 0.13.1),
+which is now required. Partial compatibility with package 'gganimate' makes
+possible to create some animated plots using `autoplot()` methods or
 `ggplot()` together with layer functions from 'ggspectra'. See article
 [Animated plots of spectral data](https://docs.r4photobiology.info/ggspectra/articles/animated-plots.html) 
-for examples. Due to a code-breaking change, it requires 'photobiology' 
-(>= 0.13.0).
+for up-to-date examples.
 
 - Update, mostly of internal code, to make available features from 
-'photobiology' (>= 0.12.0), which is recommended but not required.
+'photobiology' (>= 0.13.1), which is required.
+- `stat_peaks()` and `stat_valleys()` gain the new local and global threshold
+features from `find_peaks()` and `find_valleys()` from 'photobiology' 
+(>= 0.13.1).
 - The argument passed to `idfactor` when plotting multiple spectra stored in
 long form can now be used to rename the existing `idfactor` and, thus, change
 the plot guide title.
