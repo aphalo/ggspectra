@@ -113,7 +113,23 @@
 #'
 #' ggplot(sun.spct) +
 #'   geom_line() +
+#'   stat_peaks(global.threshold = 0.6) # 0.6 * range of data
+#'
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_peaks(global.threshold = I(0.4)) # data units
+#'
+#' ggplot(sun.spct) +
+#'   geom_line() +
 #'   stat_valleys()
+#'
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_valleys(global.threshold = 0.6)
+#'
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_valleys(global.threshold = I(0.6))
 #'
 #' ggplot(sun.spct) +
 #'   geom_line() +
@@ -234,6 +250,9 @@ StatPeaks <-
                                            y.var.name = "y",
                                            span = span,
                                            global.threshold = global.threshold,
+                                           local.threshold = NULL,
+                                           local.reference = "minimum",
+                                           threshold.range = NULL,
                                            strict = strict,
                                            refine.wl = refine.wl,
                                            method = method,
@@ -266,7 +285,7 @@ stat_valleys <- function(mapping = NULL,
                          position = "identity",
                          ...,
                          span = 5,
-                         ignore_threshold =  0.01,
+                         ignore_threshold = 0.01,
                          global.threshold = ignore_threshold,
                          strict = is.null(span),
                          refine.wl = FALSE,
@@ -333,6 +352,9 @@ StatValleys <-
                                              y.var.name = "y",
                                              span = span,
                                              global.threshold = global.threshold,
+                                             local.threshold = NULL,
+                                             local.reference = "minimum",
+                                             threshold.range = NULL,
                                              strict = strict,
                                              refine.wl = refine.wl,
                                              method = method,

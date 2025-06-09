@@ -231,7 +231,7 @@ ggplot(sun.spct) +
 library(ggrepel)
 
 ggplot(sun.spct) + geom_line() +
-  stat_peaks(span = 41, shape = 21, size = 3) +
+  stat_peaks(span = 41, shape = 21, size = 2) +
   stat_label_peaks(span = 41, geom = "label_repel", segment.colour = "red",
                    nudge_y = 0.12, label.fmt = "\%3.0f nm",
                    max.overlaps = Inf, min.segment.length = 0) +
