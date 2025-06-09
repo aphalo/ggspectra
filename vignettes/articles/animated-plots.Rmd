@@ -192,6 +192,12 @@ ggplot(data = sun_evening.mspct, unit.out = "photon") +
 
 ## A longer time series of spectra
 
+With these examples `animate()` crashes R. I do not know where the trouble originates, 'gganimate' or 'ggspectra'. For the time being I disable them.
+
+```{r}
+eval_chunks <- FALSE
+```
+
 ```{r}
 my_sun.spct <- sun_hourly_august.spct
 ```
@@ -213,7 +219,7 @@ unique(my_sun.spct[[idfactor]])
 
 For building an animation, we need the indexing variable to be a `factor`.
 
-```{r, eval=eval_chunks, warning=FALSE}
+```{r}
 my_sun.spct[["time"]] <- my_sun.spct[[idfactor]]
 my_sun.spct[[idfactor]] <- factor(my_sun.spct[[idfactor]])
 length(levels(my_sun.spct[[idfactor]]))
@@ -221,7 +227,7 @@ length(levels(my_sun.spct[[idfactor]]))
 
 We can display all 16 spectra in a single static plot.
 
-```{r, eval=eval_chunks, warning=FALSE}
+```{r}
 ggplot(data = my_sun.spct) +
   aes(group = get(idfactor)) +
   geom_line(alpha = 1/3, na.rm = TRUE) +
@@ -229,9 +235,10 @@ ggplot(data = my_sun.spct) +
   scale_y_s.e.irrad_continuous()
 ```
 
-The same data as above, but displayed as an animated plot.
+The same data as above, but displayed as an animated plot. 
 
 ```{r, eval=eval_chunks, warning=FALSE}
+getIdFactor(my_sun.spct)
 anim <- ggplot(data = my_sun.spct) +
   geom_line(na.rm = TRUE) +
   scale_x_wl_continuous() +
@@ -284,7 +291,7 @@ all frames.
 All label definitions in 'ggspectra' (>= 0.3.16) are static or defined using
 `bquote()` as required by 'gganimate'. 
 
-```{r}
+```{r, eval=eval_chunks}
 autoplot(my_sun.spct, by.group = TRUE) +
   transition_states(spct.idx,
                     transition_length = 2,
@@ -303,8 +310,7 @@ autoplot(my_sun.spct, by.group = TRUE) +
 ```
 
 
-```{r}
-# works!!
+```{r, eval=eval_chunks}
 photon_as_default()
 autoplot(my_sun.spct, by.group = TRUE, label.qty = "sirrad", 
          unit.out = "photon") +
