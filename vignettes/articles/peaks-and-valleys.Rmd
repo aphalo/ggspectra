@@ -208,7 +208,7 @@ p0 +
 
 ### Peak prominence: `local.threshold`
 
-A different creterion for "filtering-out" peaks is their prominence compared to
+A different criterion for "filtering-out" peaks is their prominence compared to
 their neighbours. As implemented here, it is based on comparing the peak height
 to the lowest data value within the same window where the peak is found. In this
 example, only peaks whose height compared to the smallest value in their window
@@ -216,7 +216,15 @@ differs by at least 1/10 of the data range are kept.
 
 ```{r}
 p0 +
-  stat_peaks(colour = "red", size = 1, span = 11, local.threshold = 0.1)
+  stat_peaks(colour = "red", size = 1, span = 11, local.threshold = 0.03)
+```
+
+By default the reference for the local prominence of a peak is the median observation within the window. Alternatively, the minimum of the values in the window can be used as reference, in which case larger `local.threshold` values tend to be needed to obtain a similar effect with `"minimum"` as with `"median"`. The reference used is controlled by parameter `local.reference`.
+
+```{r}
+p0 +
+  stat_peaks(colour = "red", size = 1, span = 11, 
+             local.reference = "farthest", local.threshold = 0.1)
 ```
 
 As for `global.threshold` we can specify the minimum local height in data units
@@ -224,7 +232,7 @@ with a call to `I()`.
 
 ```{r}
 p0 +
-  stat_peaks(colour = "red", size = 1, span = 11, local.threshold = I(0.1))
+  stat_peaks(colour = "red", size = 1, span = 11, local.threshold = I(0.03))
 ```
 
 It is important to keep in mind that `span`, `local.threshold` and
@@ -235,9 +243,9 @@ for.
 ```{r}
 p0 +
   stat_peaks(colour = "red", size = 1, 
-             span = 11, 
-             local.threshold = I(0.1),
-             global.threshold = I(0.6))
+             span = 5, 
+             local.threshold = I(0.01),
+             global.threshold = I(0.5))
 ```
 
 ### Fitting peaks: `refine.wl`
