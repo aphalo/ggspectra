@@ -291,6 +291,9 @@ StatPeaks <-
                                             x.label.transform,
                                             y.label.transform,
                                             x.colour.transform) {
+
+                     photobiology::check_wl_stepsize(data[["x"]])
+
                      peaks.df <-
                        photobiology::peaks(data,
                                            x.var.name = "x",
@@ -396,6 +399,9 @@ StatValleys <-
                                             x.label.transform,
                                             y.label.transform,
                                             x.colour.transform) {
+
+                     photobiology::check_wl_stepsize(data[["x"]], span = span)
+
                      valleys.df <-
                        photobiology::valleys(data,
                                              x.var.name = "x",

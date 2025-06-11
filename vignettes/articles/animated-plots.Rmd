@@ -39,11 +39,13 @@ _One limitation of the current version of 'gganimate' is that it does not
 support scales names that are R _expressions_ as returned by R functions 
 `parse()` and `expression()`. Functions `str2lang()` and `bquote()` have to
 be used instead. These functions are used within 'ggspectra' (>= 0.3.16) 
-improving compatibility._
+improving compatibility . _
 
-**A difficulty remains in that `unit.out` by default is in layer functions
-that of an R option. This option does not seem to be in all cases available
-when the animation is assembled.**
+'gganimate' imposes a couple of restrictions: a) statistics must generate output for each group in groupings created by mapping aesthetics to factors, as image frames in animations behave like groups, b) expressions used as labels when including substitution of values from data must be defined using `bquote()` so that the subtitution takes place at the correct stage in the building of the animations. Deviations from these requirements made 'ggspectra' < 3.16.0 incompatible with 'gganimate'. These two requirements are now fulfilled.
+
+**A difficulty remains in that within 'ggspectra' and 'photobiology' the default argument for `unit.out` is determined through an R option. When not set, `"energy"` is used. This option does not seem to be in all cases visible when an animation is assembled leading to inconsistencies that break the animation code when the R option is set to `"photon"` instead of `"energy"`. Currently, the solution is to pass `unit.out = "photon"` explicitly in the function calls when creating animations.**
+
+**Compatibility with 'gganimate' is rather fragile, and may break when 'ggplot2', 'gganimate' or R itself are updated. Thus, long-term compatibility between 'ggspectra' and 'gganimate' cannot be assured.**
 
 ## Set up 
 
@@ -81,7 +83,9 @@ We change the default theme.
 theme_set(theme_bw())
 ```
 
-## A short time series of spectra
+## Using the grammar of graphics
+
+### A time series of five spectra
 
 We change the labels in the factor so that the time of measurement can be shown.
 
@@ -91,7 +95,7 @@ time <- when_measured(my_sun.spct, as.df = TRUE)
 my_sun.spct$spct.idx <- factor(my_sun.spct$spct.idx, 
                                levels = time[["spct.idx"]], 
                                labels = as.character(round_date(time[["when.measured"]], unit = "minute")))
-my_sun.spct
+summary(my_sun.spct)
 ```
 
 We create a base plot to play with:
@@ -141,14 +145,30 @@ ggplot(data = my_sun.spct) +
           subtitle = 'Frame {frame} of {nframes}')
 ```
 
-It is possible to add some annotations. Here energy irradiances for red and far-red light.
+Some statistics have compute functions that work by ggplot panel instead of by
+ggplot group to avoid redundant output in regular plots. To be used in
+animations, statistics should generate output for each group, as groups are the
+basis of the frames in the animation. Starting from 'ggspectra' 3.16.0
+statistics that normally produce a single output per panel have a formal
+parameter `by.group` that when passed `TRUE` changes their behaviour to
+repeatedly produce the same output for each group. A typical example are
+"annotation-like" output, like labels for wavebands with `stat_wb_label()`.
+These statistics use the data mostly as reference for positioning and extent,
+but not directly. For example, labels for wavebands located automatically just
+above the top of the tallest spectrum in a normal figure panel and "trimmed" to
+the wavelengths in data. In an animation, they must be added, instead of once
+per plot to each individual image frame, that internally are ggplot groups,
+rather than panels.
+
+Thus, it is possible to add various annotations. Here energy irradiances for red and far-red light together with labels for the wavebands.
 
 ```{r, eval=eval_chunks}
 ggplot(data = sun_evening.mspct) +
   geom_line() +
   stat_wb_label(aes(colour = after_stat(wb.color)),
                 w.band = list(Red("Sellaro"), Far_red("Sellaro")),
-                ypos.fixed = 0.082, by.group = TRUE) +
+                ypos.fixed = 0.082, 
+                by.group = TRUE) + # needed for animation
   stat_wb_e_irrad(aes(colour = after_stat(wb.color)),
                   w.band = list(Red("Sellaro"), Far_red("Sellaro")),
                   ypos.fixed = 0.078) +
@@ -189,53 +209,56 @@ ggplot(data = sun_evening.mspct, unit.out = "photon") +
           subtitle = 'Frame {frame} of {nframes}')
 ```
 
+### A time series of 15 spectra
 
-## A longer time series of spectra
+_With these examples `animate()` crashed R 4.5.0 with 'ggplot2' 3.5.2 and 'gganimate' 1.0.9. I do not know where the trouble originated, however setting the factor describing the times differently in the spectral data, seems to have made the examples work once again. There is still one border line example that fails._
 
-With these examples `animate()` crashes R. I do not know where the trouble originates, 'gganimate' or 'ggspectra'. For the time being I disable them.
-
-```{r}
-eval_chunks <- FALSE
-```
+Object `sun_hourly_august.spct` contains multiple spectra in long form. Variable `UTC` indicate the date and time for each spectrum, and factor `spct.idx` identifies the spectra using a name. The data included in package 'photobiologySun' cover most of the daytime of two successive days. We select data for one day.
 
 ```{r}
-my_sun.spct <- sun_hourly_august.spct
+# select data for 21 August
+my_sun.spct <- 
+  subset(sun_hourly_august.spct, 
+         day(UTC) == 21 & spct.idx != "spct.30")
+# number of spectra
+getMultipleWl(my_sun.spct)
+# levels of the factor identifying the individual spectra
+levels(my_sun.spct[[getIdFactor(my_sun.spct)]])
+# summary of spectra
+summary(my_sun.spct, expand = "collection")
 ```
 
-Object `my_sun.spct` contains multiple spectra in long form. Variable `UTC` identifies which rows belong to each spectrum, based on date and time. The data cover most of the daytime of two successive days. We select data for one day.
+We replace the indexing factor with one using local time of day for levels
+instead of arbitrary names. This makes it easier to display the times in the
+animations.
 
 ```{r}
-my_sun.spct <- subset(my_sun.spct, day(UTC) == 21)
-summary(my_sun.spct)
+# replace the values used for indexing to times of day
+my_sun.spct[[getIdFactor(my_sun.spct)]] <- 
+  factor(format.POSIXct(my_sun.spct[["UTC"]],
+                 format = "%H:%M",
+                 tz = "Europe/Helsinki"))
+# rename the factor used for indexing
+setIdFactor(my_sun.spct, "tod")
+getIdFactor(my_sun.spct)
+summary(my_sun.spct[[getIdFactor(my_sun.spct)]])
+# head
+my_sun.spct
+# summary of spectra
+summary(my_sun.spct, expand = "collection")
 ```
 
-
-```{r}
-idfactor <- getIdFactor(my_sun.spct)
-idfactor
-class(my_sun.spct[[idfactor]])
-unique(my_sun.spct[[idfactor]])
-```
-
-For building an animation, we need the indexing variable to be a `factor`.
-
-```{r}
-my_sun.spct[["time"]] <- my_sun.spct[[idfactor]]
-my_sun.spct[[idfactor]] <- factor(my_sun.spct[[idfactor]])
-length(levels(my_sun.spct[[idfactor]]))
-```
-
-We can display all 16 spectra in a single static plot.
+All 15 spectra in a single static plot, without using 'gganimate'. It is not easy to get a sense of how the spectrum varies through the day.
 
 ```{r}
 ggplot(data = my_sun.spct) +
-  aes(group = get(idfactor)) +
+  aes(group = tod) +
   geom_line(alpha = 1/3, na.rm = TRUE) +
   scale_x_wl_continuous() +
   scale_y_s.e.irrad_continuous()
 ```
 
-The same data as above, but displayed as an animated plot. 
+The same data as above, but displayed as an animated plot. This plot communicates better the temporal dynamics of spectral irradiance.
 
 ```{r, eval=eval_chunks, warning=FALSE}
 getIdFactor(my_sun.spct)
@@ -243,15 +266,15 @@ anim <- ggplot(data = my_sun.spct) +
   geom_line(na.rm = TRUE) +
   scale_x_wl_continuous() +
   scale_y_s.e.irrad_continuous() +
-  transition_states(get(idfactor),
+  transition_states(tod,
                     transition_length = 2,
                     state_length = 1) +
-  ggtitle('Now showing {closest_state} UTC',
+  ggtitle('Now showing {closest_state} local time (EEST)',
           subtitle = 'Frame {frame} of {nframes}')
 animate(anim, duration = 20, fps = 10)
 ```
 
-To more easily see the differences in the shape of the spectra we can scale them to an equal total irradiance, i.e., equal area under the curves. To emphasize this, we can use `geom_spct()` instead of `geom_line()` that was used in the examples above 
+To more easily see the differences in the shape of the spectra we can scale them to an equal total irradiance, $100\,\mathrm{W\,m^{-2}}$, i.e., equal area under each of the curves. To visually emphasize this, we use `geom_spct()` instead of `geom_line()` used in the examples above.
 
 ```{r, eval=eval_chunks, warning=FALSE}
 anim <- ggplot(data = fscale(my_sun.spct, f = e_irrad, target = 100),
@@ -259,7 +282,7 @@ anim <- ggplot(data = fscale(my_sun.spct, f = e_irrad, target = 100),
   geom_spct(na.rm = TRUE) +
   scale_x_wl_continuous() +
   scale_y_s.e.irrad_continuous(name = s.e.irrad_label(scaled = TRUE)) +
-  transition_states(get(idfactor),
+  transition_states(tod,
                     transition_length = 2,
                     state_length = 1) +
   ggtitle('Now showing {closest_state} UTC',
@@ -267,13 +290,15 @@ anim <- ggplot(data = fscale(my_sun.spct, f = e_irrad, target = 100),
 animate(anim, duration = 20, fps = 10)
 ```
 
+A similar plot as above can be created expressing the spectral irradiance in photon-based units instead of in energy-based units. We scale the spectra to $1\,000\,\mathrm{\mu mol\,m^{-2}\,s{-1}}$.
+
 ```{r, eval=eval_chunks, warning=FALSE}
-anim <- ggplot(data = fscale(my_sun.spct, f = q_irrad, target = 100),
+anim <- ggplot(data = fscale(my_sun.spct, f = q_irrad, target = 1e-3),
                unit.out = "photon") +
   geom_spct(na.rm = TRUE) +
   scale_x_wl_continuous() +
-  scale_y_s.e.irrad_continuous(name = s.e.irrad_label(scaled = TRUE)) +
-  transition_states(get(idfactor),
+  scale_y_s.q.irrad_continuous(name = s.q.irrad_label(scaled = TRUE)) +
+  transition_states(tod,
                     transition_length = 2,
                     state_length = 1) +
   ggtitle('Now showing {closest_state} UTC',
@@ -283,38 +308,39 @@ animate(anim, duration = 20, fps = 10)
 
 ## `autoplot()` partial support
 
-It is possible to animate a ggplot created with an `autoplot()` method. Currently
-`by.group = TRUE` has to be added to the call. This is because annotations
-need to be added by group instead of by panel, so that they are present in
-all frames.
+It is possible to animate ggplots created with `autoplot()` methods. Currently
+`by.group = TRUE` has to be added to the call. This is because annotations need
+to be added by group instead of by panel, so that they are present in all
+frames. (Internally `by.group = TRUE` is passed to the statistics that support
+it).
 
-All label definitions in 'ggspectra' (>= 0.3.16) are static or defined using
-`bquote()` as required by 'gganimate'. 
+All label definitions created by functions and methods from 'ggspectra' (>=
+0.3.16) are static or defined using `bquote()` as required by 'gganimate'.
 
 ```{r, eval=eval_chunks}
 autoplot(my_sun.spct, by.group = TRUE) +
-  transition_states(spct.idx,
+  transition_states(tod,
                     transition_length = 2,
                     state_length = 1)
 ```
 
-**Currently, `label.qty = "total"` and `label.qty = "irrad"` trigger an ERROR for photon units when attempting to animate a plot created with `autoplot()`.**
+The conversion to photon based units works as expected when set in the call.
+
+```{r, eval=eval_chunks}
+autoplot(my_sun.spct, by.group = TRUE, label.qty = "sirrad", 
+         unit.out = "photon") +
+  transition_states(tod,
+                    transition_length = 2,
+                    state_length = 1)
+```
+
+**Currently, `label.qty = "total"` and `label.qty = "irrad"` trigger an ERROR for photon units when attempting to animate a plot created with `autoplot()` when `unit.out` is set through an R option. It does work when the same attempted by passing an argument in the call as above.**
 
 ```{r, eval=FALSE}
 # broken!!
 photon_as_default()
 autoplot(my_sun.spct, by.group = TRUE) +
-  transition_states(spct.idx,
-                    transition_length = 2,
-                    state_length = 1)
-```
-
-
-```{r, eval=eval_chunks}
-photon_as_default()
-autoplot(my_sun.spct, by.group = TRUE, label.qty = "sirrad", 
-         unit.out = "photon") +
-  transition_states(spct.idx,
+  transition_states(tod,
                     transition_length = 2,
                     state_length = 1)
 ```

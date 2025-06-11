@@ -7,19 +7,30 @@ output:
   rmarkdown::html_vignette:
     toc: yes
 vignette: >
-  %\VignetteIndexEntry{Animated plots of spectral data}
+  %\VignetteIndexEntry{Peaks, Valleys and Spikes}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ## Introduction
 
-_This article is only available as part of [the on-line documentation of R package 'ggspectra'](https://docs.r4photobiology.info/ggspectra/). It is not installed in the local computer as part of the package._
+_This article is only available as part of [the on-line documentation of R
+package 'ggspectra'](https://docs.r4photobiology.info/ggspectra/). It is not
+installed in the local computer as part of the package._
 
-Package 'ggspectra' extends 'ggplot2' with stats, geoms, scales and annotations suitable for light- or radiation-related spectra. It also defines `ggplot()` and `autoplot()` methods specialized for the classes defined in package 'photobiology' for storing different types of spectral data. The `ggplot()` methods, statistics, and scales in [_User Guide: 1 Grammar of Graphics_](https://docs.r4photobiology.info/ggspectra/articles/userguide1-grammar.html) and the `autoplot()` methods are described separately in vignette [_User Guide: 2 Autoplot Methods_](https://docs.r4photobiology.info/ggspectra/articles/userguide2-autoplot-methods.html).
+Package 'ggspectra' extends 'ggplot2' with stats, geoms, scales and annotations
+suitable for light- or radiation-related spectra. It also defines `ggplot()` and
+`autoplot()` methods specialized for the classes defined in package
+'photobiology' for storing different types of spectral data. The `ggplot()`
+methods, statistics, and scales in [_User Guide: 1 Grammar of
+Graphics_](https://docs.r4photobiology.info/ggspectra/articles/userguide1-grammar.html)
+and the `autoplot()` methods are described separately in vignette 
+[_User Guide: 2 Autoplot Methods_](https://docs.r4photobiology.info/ggspectra/articles/userguide2-autoplot-methods.html).
 
-The new elements can be freely combined with methods and functions defined in packages 'ggplot2', 'scales', 'ggrepel', 'gganimate' and other extensions to 'ggplot2'.
-This article, focuses on highlighting and annotating peaks, valleys and spikes in plots of spectral data created with R package 'ggspectra'.
+The new elements can be freely combined with methods and functions defined in
+packages 'ggplot2', 'scales', 'ggrepel', 'gganimate' and other extensions to
+'ggplot2'. This article, focuses on highlighting and annotating peaks, valleys
+and spikes in plots of spectral data created with R package 'ggspectra'.
 
 ## Set up 
 
@@ -29,24 +40,95 @@ library(photobiology)
 library(photobiologySun)
 library(photobiologyWavebands)
 library(ggspectra)
+library(ggpp)
+
 energy_as_default()
+theme_set(theme_bw())
 ```
 
-## Peaks, valleys and spikes
+```{r, include=FALSE, echo=FALSE}
+library(knitr)
+opts_chunk$set(fig.align = 'center', 
+               fig.show = 'hold', fig.width = 7, fig.height = 4,
+               cache = FALSE)
+options(warnPartialMatchArgs = FALSE)
+```
 
-In a spectrum, maxima of the spectral quantity are called peaks and minima, valleys. Spikes are very narrow, frequently single detector pixel, peaks or valleys. Spikes are frequently caused by detector noise or ambient radiation, such as cosmic rays.
 
-When measuring radiation spectra the monochromator acquires data at specific wavelengths, while the true position of peaks may fall in-between the centre of the bands "seen" by the spectrometer. When the wavelength resolution of the spectrometer is higher than the accuracy with which the wavelength at the peaks needs to be determined, we can simply search for the wavelengths matching maxima or minima in the acquired data. In this case we search for peaks so as to find them in the data. An example of this is when the optical resolution of an array spectromter is much less than the pixel resolution of the detector array.
+## Introduction: Peaks, Valleys and Spikes
 
-When the accuracy needed is more, the approach used is to fit a curve describing the shape of the peak, and analytically or numerically determine the maxima of the fitted function. This not only requires additional computations but also the choice of a function form capable of describing well the shape of the peak or valley. In this case we first search for peaks, and subsequently fit a function to each of the peaks found, and find the wavelength value at which the derivative of the fitted function is equal to zero. The accuracy of the estimated wavelength at the peak and the height of the peaks are not necessarily both good, one can be better than the other, so it is important to visually check the quality of these estimates.
+In a spectrum, maxima of the spectral quantity are called peaks, and minima are
+called valleys. Spikes are very narrow peaks or valleys. Spikes are frequently
+caused by detector noise or ambient radiation, such as cosmic rays inpinging on
+an individual sensing element in a detector array. Anomalous detector elements,
+usually called hot, cold or dead pixels, can also create spikes. Although spikes
+are in many cases a "nuisance", this is not always the case,
 
-The algorithm used to find valleys is the same as for peaks, but applied to the data after a change of sign. Thus, the explanation above about peaks also applies to valleys.
+When measuring radiation spectra the monochromator acquires data at specific
+wavelengths, while the true position of peaks may fall in-between the centre of
+the bands "seen" by the spectrometer. When the optical wavelength resolution and
+detector pitch of the spectrometer are higher than the accuracy with which the
+wavelength at the peaks needs to be determined, we can simply search for the
+wavelengths matching maxima or minima in the acquired data. In this case, the
+approach is to search for global or local maxima so as to find them in the data.
+An example of this is when the optical resolution of the monochromator is much
+lower than the wavelength resolution of the detector array. In an array
+spectrometer it is a rather frequent case to have a detector array with a
+wavelength resolution given by the pixel pitch that is significantly better than
+the wavelength resolution of the grating used as monochromator.
 
-Spikes are in many cases not of interest and are simply removed from the data. In other cases, spikes may identify defective pixels in an array spectrometer. Very rarely spikes are of interest in themselves, but some cases exist. For example when peaks of interest are narrow compared to the wavelength resolution used for acquiring the spectrum, they may appear in the acquired data as spikes.
+When the accuracy needed is more, the approach used is to fit a curve describing
+the shape of the peak, and analytically or numerically determine the maxima of
+the fitted function. This not only requires additional computations but also the
+choice of a function form capable of describing well the shape of the peak or
+valley. In this case we first search for peaks, and subsequently fit a function
+to each of the peaks found, and find the wavelength value at which the
+derivative of the fitted function is equal to zero. The accuracy of the
+estimated wavelength at the peak and the height of the peaks are not necessarily
+both good, one can be better than the other, so it is important to visually
+check the quality of these estimates. _The choice of function to fit depends on
+the shape of the peaks and the with of the peak compared to the wavelength
+resolution at which the data have been measured. There are different
+mathematical formulations in common use. If the wavelength resolution is high
+compared to the width of the peaks and the data are not affected by noise, using
+a spline function can be a useful alternative._
 
-In 'ggspectra', peaks, valleys and spikes are treated similarly. They are searched for and fitted with functions from package 'photobiology'. Below most examples are for peaks, and only a few for valleys and spikes to highlight the similarities and differences.
+In many cases, some peaks are considered "relevant" while others lack interest.
+Peaks that are much shorter than the tallest ones or peaks that are not locally
+prominent, are frequently considered irrelevance. When "filtering-out" those
+local maxima that are of no interest, both creiteria can be combined. In both
+cases it is possible to set size thresholds that are relative to the data range
+or fixed and expressed in the same units as the data.
 
-## Locating peaks
+The algorithms used to find, fit and filter valleys is the same as for peaks,
+but applied to the data after a change of sign. Thus, the explanation above
+about peaks also applies to valleys.
+
+Spikes are in many cases not of interest and are simply removed from the data.
+In other cases, spikes may identify defective pixels in an array spectrometer.
+Very rarely spikes are of interest in themselves, but some cases exist. For
+example when peaks of interest are narrow compared to the wavelength resolution
+used for acquiring the spectrum, they may appear in the acquired data as spikes.
+
+In 'ggspectra', peaks, valleys and spikes are treated similarly. They are
+searched for and fitted with functions from package 'photobiology'. Other
+related features are wavelengths at specific levels of the spectral response and
+the "half maximum full width" (HMFW) of peaks. Below most examples are for
+peaks, and only a few for valleys and spikes to highlight the similarities and
+differences.
+
+## Peaks and Valleys
+
+The formal parameters of functions `stat_peaks()` and `stat_labels()` can be
+grouped into those controlling the detection of peaks and valleys: `span`,
+`strict`, `global.threshold`, and `local.threshold`, those related to fitting of
+peaks: `refine.wl` and `method`, those affecting the values generated as labels
+and colours used to depict the peaks and valleys in plots: `chroma.type`,
+`label.fmt`, `x.label.fmt`, and `y.label.fmt`, and finally those related to the
+use transformations in axis scales: `x.label.transform`, `y.label.transform`,
+and `x.colour.transform`.
+
+### Search window: `Span` 
 
 We save a _base_ plot to use in examples.
 
@@ -56,29 +138,415 @@ p0 <-
   geom_spct()
 ```
 
-Using default arguments for the statistic and passing two arguments indirectly to the geometry, creates a plot with many peaks highlighted by small red points.
+Using default arguments for the statistic and passing two arguments indirectly
+to the geometry, creates a plot with many peaks highlighted by small red points.
 
 ```{r}
 p0 +
   stat_peaks(colour = "red", size = 1)
 ```
 
-With the argument to parameter `span`, with default `span = 5`, peaks are searched as maxima within a moving window of width five. Passing an odd `integer` value sets the width of window to be used. Passing `span = NULL` sets the window width to the whole data set, forcing a search for maximum of the spectrum as a whole.
+With the argument to parameter `span`, with default `span = 5`, peaks are
+searched as maxima within a moving window of width five. Passing an odd
+`integer` value sets the width of window to be used. Passing `span = NULL` sets
+the window width to the whole data set, forcing a search for maximum of the
+spectrum as a whole.
 
 ```{r}
 p0 +
   stat_peaks(span = NULL, colour = "red", size = 1)
 ```
 
+How near to each other are the detected peaks depends on the width of the moving
+window, given by the argument passed to `span`. This span is given as a number
+of successive data points along the _x_ axis, _not in wavelength units!_
+
 ```{r}
 p0 +
   stat_peaks(span = 11, colour = "red", size = 1)
 ```
 
-Above some peaks are highlighted very close to `s.e.irrad` equal to zero. As these are just noise, we can limit the search, for example, to the top 2/3 of the _y_ range.
+### Peak height: `global.threshold`
+
+Above, the default value for `global.threshold` is `0.01` and enables the
+"filtering-out" of the smallest peaks. Passing `global.threshold = NULL`
+disables filtering.
 
 ```{r}
 p0 +
-  stat_peaks(global.threshold = 2/3,
+  stat_peaks(span = 11, colour = "red", size = 1, global.threshold = NULL)
+```
+
+To limit the detected (and highlighted) peaks to taller ones than by default, we
+can limit the search, for example, to the top 1/3 of the _y_ range, by
+filtering-out those in the lower 2/3 of the _y_ range of the data.
+
+```{r}
+p0 +
+  stat_peaks(global.threshold = 2/3, colour = "red", size = 1)
+```
+
+We can also limit the search by giving a threshold in data units, for example,
+to keeå only those exceeding a value of 0.7 for `s.e.irrad`, the variable mapped
+to the _y_ aesthetic. We indicate use of data units by enclosing the value in a
+call to `I()`. Function `I()` sets the class of its argument to `"AsIs"`, thus
+such values can be saved in variables and passed as arguments also by name.
+
+```{r}
+p0 +
+  stat_peaks(global.threshold = I(0.7), colour = "red", size = 1)
+```
+
+Very rarely the tallest peaks need to be discarded, but it is also possible,
+when using relative sizes.
+
+```{r}
+p0 +
+  stat_peaks(global.threshold = -1/2,
              colour = "red", size = 1)
 ```
+
+### Peak prominence: `local.threshold`
+
+A different creterion for "filtering-out" peaks is their prominence compared to
+their neighbours. As implemented here, it is based on comparing the peak height
+to the lowest data value within the same window where the peak is found. In this
+example, only peaks whose height compared to the smallest value in their window
+differs by at least 1/10 of the data range are kept.
+
+```{r}
+p0 +
+  stat_peaks(colour = "red", size = 1, span = 11, local.threshold = 0.1)
+```
+
+As for `global.threshold` we can specify the minimum local height in data units
+with a call to `I()`.
+
+```{r}
+p0 +
+  stat_peaks(colour = "red", size = 1, span = 11, local.threshold = I(0.1))
+```
+
+It is important to keep in mind that `span`, `local.threshold` and
+`global.threshold` can be combined. However, `span` affects the effect of
+`local.threshold` by widening the window in which the minimum value is searched
+for.
+
+```{r}
+p0 +
+  stat_peaks(colour = "red", size = 1, 
+             span = 11, 
+             local.threshold = I(0.1),
+             global.threshold = I(0.6))
+```
+
+### Fitting peaks: `refine.wl`
+
+The solar spectrum data used above has values at `r nrow(sun.spct)` different
+wavelengths and a difference between successive wavelength values of 
+$\approx `r max(wl_stepsize(sun.spct))` \,\mathrm{nm}$. Above we used the default `geom_point()`.
+To demonstrate the effect of fitting, we use `geom_text()`.
+
+```{r}
+p0 +
+  stat_peaks(span = NULL, 
+             colour = "red", size = 3, geom = "text", vjust = -0.5, 
+             x.label.fmt = "%#.5g nm")
+```
+
+
+```{r}
+p0 +
+  stat_peaks(span = NULL, refine.wl = TRUE,
+             colour = "red", size = 3, geom = "text", vjust = -0.5, 
+             x.label.fmt = "%#.5g nm")
+```
+
+### Labels: `label.fmt`, `x.label.fmt`, `y.label.fmt`, and `chroma.type`
+
+Above, `x.label.fmt` was used without explanation. Statistics `stat_peaks()` and
+`stat_valleys()` not only return the rows in plot `data` corresponding to peaks
+or valleys but in addition add columns with computed RGB colour definition
+values matching the visual colour at the peak's wavelength and `character`
+strings for both _x_ (wavelength) and _y_ (spectral quantity) values at the
+peaks.
+
+The default `chroma.type = "CMF"` rarely needs to be overriden. Above, 
+`colour = "red", size = 3, vjust = -0.5` are all arguments passed to
+`geom_text` unchanged.
+
+```{r}
+p0 +
+  stat_peaks(span = NULL, refine.wl = TRUE, geom = "text")
+```
+
+As the returned values are colour definitions, for them to display correctly
+`scale_fill_identity()` and `scale_colour_identity()` must be added to the plot
+when using them.
+
+```{r}
+p0 +
+  stat_peaks(span = NULL, refine.wl = TRUE, 
+             geom = "label", colour = "white", vjust = "bottom") +
+  expand_limits(y = 0.85) +
+  scale_fill_identity()
+```
+
+The formatting of labels frequently needs to the set by users. Format strings
+are as described for R function `sprintf()` and are described in detail in its
+help page. The format is a `character` string with a place holder for the
+numeric value of _x_ or _y_ at the peak. While the default `label.fmt = "%.3g"`
+gives a bare number with three significant digits both for _x_ and _y_ as below,
+above we used `x.label.fmt = "%#.5g nm"` indicating a number with five
+significant digits followed by a literal `" nm"`. The use of `#` ensures that
+trailing zeros are displayed.
+
+Labels are not only generated for wavelengths but also for the spectral 
+quantity. The argument to parameter `label.fmt` is used for both for both
+variables, unless overriden by arguments topassed to `x.label.fmt` and/or
+`y.label.fmt`. The _y_ label variable needs to be mapped to be used as the
+_x_ label is be default mapped to the `label` aesthetic. The format defines
+a `character` string that after substitution of the place holder needs to
+be parsed into an R expression. This makes it possible to include _plotmath_
+expressions.
+
+```{r}
+p0 +
+  stat_peaks(mapping = aes(label = after_stat(y.label)),
+             span = NULL, refine.wl = TRUE,
+             y.label.fmt = "%.3f~W~m^{-2}~nm^{-1}", parse = TRUE, 
+             geom = "label", colour = "white", vjust = "bottom") +
+  expand_limits(y = 0.85) +
+  scale_fill_identity()
+```
+
+There are different possible ways of combining _x_ and _y_ labels. Here is an
+example relying on the statistic to format the labels.
+
+```{r}
+p0 +
+  stat_peaks(mapping = 
+               aes(label = paste(after_stat(y.label), 
+                                "\" at \"", 
+                                after_stat(x.label), 
+                                sep = "*"),
+                   color = after_stat(BW.colour)), # precomputed contrasting colour
+             span = NULL, refine.wl = TRUE,
+             x.label.fmt = "%.4g~nm",
+             y.label.fmt = "%.3f~W~m^{-2}~nm^{-1}",
+             parse = TRUE, 
+             geom = "label",
+             vjust = "bottom", size = 3) +
+  expand_limits(y = 0.85) +
+  scale_fill_identity() +
+  scale_color_identity()
+```
+
+The formatting can also be done within the call to `aes()` as below just
+using the numeric values of _X_ and _y_. (This approach is general and can
+be used with any ggplot statistic that returns `numeric` values.)
+
+```{r}
+p0 +
+  stat_peaks(mapping = 
+               aes(label = sprintf("%.3f~W~m^{-2}~nm^{-1}*\" at \"*%.4g~nm",
+                                   after_stat(y), after_stat(x))),
+             span = NULL, refine.wl = TRUE,
+             parse = TRUE, 
+             geom = "label", colour = "white", vjust = "bottom", size = 3) +
+  expand_limits(y = 0.85) +
+  scale_fill_identity()
+```
+
+The colours used above for `fill` are computed from the wavelength with method
+`color_of()` from package 'photobiology', using the default _colour matching
+function_ (`"CMF"`) for human vision.
+
+## Values at half maximum
+
+In the case of light spectra with a single peak, we may be interested in
+highlighting the wavelengths at half maximum, or at some other value of the
+spectral quantity. This is implemented in `stat_find_wls()`. The algorithm used
+is extremely simple, if no _y_ value in the data falls exactly at the `target`,
+the _x_ value at the target is estimated by linear interpolation between the two
+bordering observations. The formal parameters related to colour and labels are
+identical to those in `stat_peaks()` and `stat_valleys()`. The only new parameter is `target` that makes it possible to set the target _y_ values in different ways. The default is to use half the height of the tallest peak in the curve.
+
+```{r}
+my.format <- "%#.1f nm"
+
+ggplot(white_led.source_spct) +
+  geom_spct() +
+  stat_find_wls() +
+  stat_find_wls(aes(colour = after_stat(BW.colour)),
+                x.label.fmt = my.format,
+                geom = "label", hjust = c(1.1, -0.1)) +
+  expand_limits(y = 0.7) +
+  scale_colour_identity() +
+  scale_fill_identity()
+```
+
+In the case of a long pass filter, we may be interested in showing the
+wavelengths at 10% and 50% transmittance ($\tau_\lambda = 0.1$ and $\tau_\lambda = 0.5$).
+
+```{r}
+my.format <- "%#.1f nm"
+
+ggplot(yellow_gel.spct) +
+  geom_spct() +
+  stat_find_wls(target = c(0.1, 0.5)) +
+  stat_find_wls(target = c(0.1, 0.5), geom = "text", hjust = 1.2)
+```
+
+## Values at wavelength
+
+The value of the spectral quantity at a user specified wavelengths can be shown with `stat_find_qts()` that similarly to `stat_find_wls()` uses interpolation as needed.
+
+```{r}
+my.format <- "%#.1f nm"
+
+ggplot(yellow_gel.spct) +
+  geom_spct() +
+  stat_find_qtys(target = 500) +
+  stat_find_qtys(target = 500, geom = "text", hjust = 1.2)
+```
+
+## Spikes
+
+Function `stat_spikes()` is very similar in its interface to `stat_peaks()` and
+`stat_valleys()`. However, as the algorithm used is different, the parameters used to control the search for spikes are different, while those related to the formatting of labels and colours are identical.
+
+A more suitable example spectrum than `sun.spct` is one with very narrow peaks as some discharge lamps, like a low pressure mercury fluorescent tube. However,
+the data set used here has been reduced in size by decreasing the wavelength
+resolution in featureless regions. Because of this, a warning is triggered although in this case three spikes are anyway found after passing suitable arguments.
+
+```{r}
+library(photobiologyLamps)
+
+p1 <-
+  ggplot(lamps.mspct$Eiko.F36T8.BLB) +
+  geom_spct() + 
+  geom_point(size = 1)
+```
+
+In the first plot all observations are shown as points.
+
+```{r}
+p1
+```
+
+
+```{r}
+p1 + stat_spikes(z.threshold = 30, max.spike.width = 5,
+                 size = 1, colour = "red")
+```
+
+With different arguments a lower $z$ threshold and higher maximum width, we  detect more spikes. Whether the large peak should be considered a spike or not is debatable. In addition, because of the uneven wavelength steps, the shoulder of the large peak is wrongly detected as being part of a spike.
+
+```{r}
+p1 + 
+  stat_spikes(z.threshold = 20, max.spike.width = 10,
+              size = 1, colour = "red")
+```
+
+## Complete plot examples
+
+In the bare-bones examples above most statistics and their features were exemplified individually. Plots as used in real-life situations in many cases a much more elaborated. The examples in the present section combine different features into finished plots such as those that could be used in a presentation or publication.
+
+In these examples additional "building blocks" provided by packages 'ggspectra' and 'ggplot2' are used in addition to those specific to annotation of peaks, valleys and spikes.
+
+### Wavelengths at target _y_ values
+
+```{r}
+my.format <- "%.1f nm"
+
+ggplot(normalise(yellow_gel.spct)) +
+  geom_spct(colour = "black", linewidth = 0.35) +
+  stat_find_wls(target = c(0.1, 0.5, 0.9), colour = "red") +
+  stat_find_wls(target = c(0.1, 0.5, 0.9), geom = "rug", colour = "red") +
+  stat_find_wls(aes(colour = after_stat(BW.colour)),
+                target = c(0.1, 0.5, 0.9),
+                x.label.fmt = my.format,
+                geom = "label", size = 3, hjust = 1.1) +
+  scale_colour_identity() +
+  scale_fill_identity() +
+  scale_y_Tfr_continuous(breaks = c(0, 0.10, 0.50, 0.90, 1.00), 
+                         Tfr.type = "internal") +
+  scale_x_wl_continuous() +
+  theme_classic()
+```
+
+### Peaks and valleys in one plot
+
+The plot below makes use of the different features described above. In this
+plot each of `stat_peaks()` and `stat_valleys()` are used to add two leyers,
+using two different geometries, `geom_point()` and `geom_label()`. To
+demonstrate its effect, `local.threshold = 0.15` is passed only when using
+`geom_label()` so that only prominent peaks and valleys are labelled with the
+fitted wavelengths. The wavelengths are correct only to the $1\,\mathrm{nm}$
+resolution of the sampling used for the extraterrestrial solar spectrum data
+used as input for the simulations.
+
+```{r}
+my.format <- "%#.4g nm" # used twice, easier to set here
+
+ggplot(sun.spct) +
+  geom_line() +
+  stat_peaks(span = 31, geom = "point", colour = "red", refine.wl = TRUE) +
+  stat_peaks(mapping = aes(fill = after_stat(wl.colour), 
+                           color = after_stat(BW.colour)),
+             span = 31, local.threshold = 0.15,
+             label.fmt = my.format,
+             refine.wl = TRUE,
+             geom = "label", size = 3, hjust = -0.1, angle = 90) +
+  stat_valleys(span = 31, refine.wl = TRUE,
+               geom = "point", colour = "blue") +
+  stat_valleys(mapping = aes(fill = after_stat(wl.colour), 
+                             color = after_stat(BW.colour)),
+               span = 31, local.threshold = 0.15,
+               label.fmt = my.format,
+               refine.wl = TRUE,
+               geom = "label", size = 3, hjust = 1.1, angle = 90) +
+  expand_limits(y = c(-0.05, 1)) + # make room for label
+  scale_fill_identity() +
+  scale_color_identity() +
+  scale_x_wl_continuous() +
+  scale_y_s.e.irrad_continuous()
+```
+
+The colours used above for `fill` are computed from the wavelength of each peak.
+
+## Exploring the data returned by statistics
+
+With `geom_debug()` from package 'gginnards' we can explore the `data` data
+frame passed by the statistic to the geometry. `geom_debug()` by default
+prints the value returned by `head()` as a tibble without adding a layer to the 
+plot. Thus, its behaviour is atypical.
+
+```{r}
+library(gginnards)
+
+ggplot(sun.spct) +
+  geom_spct() +
+  stat_peaks(span = 31,
+             geom = "debug",
+             dbgfun.data = "head", 
+             dbgfun.data.args = list(n = 20))
+```
+
+This approach can be also used to explore the effect of passing different
+arguments in the call to the stattistic.
+
+```{r}
+ggplot(sun.spct) +
+  geom_spct() +
+  stat_peaks(mapping = aes(label = after_stat(y.label)),
+             span = NULL, refine.wl = TRUE,
+             y.label.fmt = "%.3f~W~m^{-2}~nm^{-1}", 
+             colour = "white", vjust = "bottom",
+             geom = "debug", 
+             dbgfun.data = "head") +
+  expand_limits(y = 0.85) +
+  scale_fill_identity()
+```
+

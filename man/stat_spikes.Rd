@@ -71,8 +71,10 @@ that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 }
 \value{
-A data frame with one row for each peak (or valley) found in the
-  data.
+A data frame of observations found in the data matching the criterion
+  of being part of a spike. That is to say, the returned data frame not only
+  includes the observation at the tip of the spike but also those on its
+  shoulders.
 }
 \description{
 \code{stat_spikes} finds at which \code{x} positions spikes are located.
@@ -82,33 +84,33 @@ Spikes can be either upwards or downwards from the baseline.
 \details{
 This stat uses \code{geom_point} by default as it is the geom most
   likely to work well in almost any situation without need of tweaking. The
-  default aesthetics set by this stat allows its direct use with
+  default aesthetics set by this stat allow its direct use with
   \code{geom_text}, \code{geom_label}, \code{geom_line}, \code{geom_rug},
   \code{geom_hline} and \code{geom_vline}. The formatting of the labels
   returned can be controlled by the user.
 }
 \note{
-This stat works nicely together with geoms
-  \code{geom_text_repel} and
-  \code{geom_label_repel} from package
-  \code{\link[ggrepel]{ggrepel}} to solve the problem of overlapping labels
+This stat works nicely together with geoms \code{geom_text_repel} and
+  \code{geom_label_repel} from package \code{\link[ggrepel]{ggrepel}} to
+  solve the problem of overlapping labels
   by displacing them. To discard overlapping labels use \code{check_overlap =
   TRUE} as argument to \code{geom_text}.
- By default the labels are character values suitable to be plotted as is, but
- with a suitable \code{label.fmt} labels suitable for parsing by the geoms
- (e.g. into expressions containing greek letters or super or subscripts) can
- be also easily obtained.
+
+  By default the labels are character values suitable to be plotted as is,
+  but with a suitable \code{label.fmt} argument labels suitable for parsing
+  by the geoms (e.g., into expressions containing greek letters or super or
+  subscripts) can be also easily obtained.
 }
 \section{Computed variables}{
 
 \describe{
   \item{x}{x-value at the peak (or valley) as numeric}
   \item{y}{y-value at the peak (or valley) as numeric}
-  \item{x.label}{x-value at the peak (or valley) formatted as character}
-  \item{y.label}{y-value at the peak (or valley) formatted as character}
+  \item{x.label}{x-value of observations in the spike formatted as character}
+  \item{y.label}{y-value of observations in the spike formatted as character}
   \item{wl.color}{color definition calculated by assuming that x-values are
   wavelengths expressed in nanometres.}
-  \item{BW.color}{color definition that either "black" or "white", to ensure
+  \item{BW.color}{color definition that is either "black" or "white", to ensure
   high contrast to \code{wl.color}.}
 }
 }
