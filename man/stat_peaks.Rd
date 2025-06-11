@@ -15,6 +15,7 @@ stat_peaks(
   ignore_threshold = 0.01,
   global.threshold = ignore_threshold,
   local.threshold = NULL,
+  local.reference = "minimum",
   strict = is.null(span),
   refine.wl = FALSE,
   method = "spline",
@@ -40,6 +41,7 @@ stat_valleys(
   ignore_threshold = 0.01,
   global.threshold = ignore_threshold,
   local.threshold = NULL,
+  local.reference = "maximum",
   strict = is.null(span),
   refine.wl = FALSE,
   method = "spline",
@@ -99,6 +101,11 @@ expressed in units relative to the range of the data. In both cases
 which peaks (valleys) are ignored. If \code{local.threshold = NULL} or if
 \code{span} spans the whole of \code{x}, no threshold is applied.}
 
+\item{local.reference}{character One of \code{"minimum"}/\code{maximum} or
+\code{"median"}. The reference used to assess the height of the peak,
+either the minimum value within the window or the median of all values in
+the window.}
+
 \item{strict}{logical flag: if \code{TRUE}, an element must be strictly
 greater than all other values in its window to be considered a peak.}
 
@@ -133,7 +140,10 @@ the default plot specification, e.g. \code{\link[ggplot2]{borders}}.}
 }
 \value{
 A data frame with one row for each peak (or valley) found in the
-  data.
+  data. If \code{refine.wl = FALSE}, the returned rows have \code{x} and
+  \code{y} matching those in a row in the input \code{data}. If
+  \code{refine.wl = TRUE}, interpolation based on a fitted spline is used to
+  compute new \code{x} and \code{y} values.
 }
 \description{
 \code{stat_peaks} finds at which x positions local maxima are located. If
@@ -147,6 +157,21 @@ These stats use \code{geom_point} by default as it is the geom most
   \code{geom_text}, \code{geom_label}, \code{geom_line}, \code{geom_rug},
   \code{geom_hline} and \code{geom_vline}. The formatting of the labels
   returned can be controlled by the user.
+
+  Two tests make it possible to ignore irrelevant peaks or valleys. One test
+  controlled by (\code{global.threshold}) is based on the absolute
+  height/depth  of peaks/valleys and can be used in all cases to ignore
+  globally low peaks and shallow valleys. A second test controlled by
+  (\code{local.threshold}) is available when the window defined by `span`
+  does not include all observations and can be used to ignore peaks/valleys
+  that are not locally prominent. In this second approach the height/depth of
+  each peak/valley is compared to a summary computed from other values within
+  the window where it was found. In this second case, the reference value
+  used is the summary indicated by \code{local.reference}. The values
+  \code{global.threshold} and \code{local.threshold} if bare numeric are
+  relative to the range of \emph{y}. Thresholds for ignoring too small peaks
+  are applied after peaks are searched for, and threshold values can in some
+  cases result in no peaks being displayed.
 }
 \note{
 These stats work nicely together with geoms
@@ -160,7 +185,7 @@ These stats work nicely together with geoms
  (e.g. into expressions containing greek letters or super or subscripts) can
  be also easily obtained.
 }
-\section{Computed variables}{
+\section{Computed and copied variables in the returned data frame}{
 
 \describe{
   \item{x}{x-value at the peak (or valley) as numeric}

@@ -42,6 +42,10 @@
 #'   \code{local.threshold} sets a \emph{local} height (depth) threshold below
 #'   which peaks (valleys) are ignored. If \code{local.threshold = NULL} or if
 #'   \code{span} spans the whole of \code{x}, no threshold is applied.
+#' @param local.reference character One of \code{"minimum"}/\code{maximum} or
+#'   \code{"median"}. The reference used to assess the height of the peak,
+#'   either the minimum value within the window or the median of all values in
+#'   the window.
 #' @param span odd positive integer A peak is defined as an element in a
 #'   sequence which is greater than all other elements within a moving window of
 #'   width \code{span} centred at that element. The default value is 5, meaning
@@ -63,9 +67,12 @@
 #'   computing matching colours.
 #'
 #' @return A data frame with one row for each peak (or valley) found in the
-#'   data.
+#'   data. If \code{refine.wl = FALSE}, the returned rows have \code{x} and
+#'   \code{y} matching those in a row in the input \code{data}. If
+#'   \code{refine.wl = TRUE}, interpolation based on a fitted spline is used to
+#'   compute new \code{x} and \code{y} values.
 #'
-#' @section Computed variables:
+#' @section Computed and copied variables in the returned data frame:
 #' \describe{
 #'   \item{x}{x-value at the peak (or valley) as numeric}
 #'   \item{y}{y-value at the peak (or valley) as numeric}
@@ -101,6 +108,21 @@
 #'   \code{geom_text}, \code{geom_label}, \code{geom_line}, \code{geom_rug},
 #'   \code{geom_hline} and \code{geom_vline}. The formatting of the labels
 #'   returned can be controlled by the user.
+#'
+#'   Two tests make it possible to ignore irrelevant peaks or valleys. One test
+#'   controlled by (\code{global.threshold}) is based on the absolute
+#'   height/depth  of peaks/valleys and can be used in all cases to ignore
+#'   globally low peaks and shallow valleys. A second test controlled by
+#'   (\code{local.threshold}) is available when the window defined by `span`
+#'   does not include all observations and can be used to ignore peaks/valleys
+#'   that are not locally prominent. In this second approach the height/depth of
+#'   each peak/valley is compared to a summary computed from other values within
+#'   the window where it was found. In this second case, the reference value
+#'   used is the summary indicated by \code{local.reference}. The values
+#'   \code{global.threshold} and \code{local.threshold} if bare numeric are
+#'   relative to the range of \emph{y}. Thresholds for ignoring too small peaks
+#'   are applied after peaks are searched for, and threshold values can in some
+#'   cases result in no peaks being displayed.
 #'
 #' @note These stats work nicely together with geoms
 #'   \code{geom_text_repel} and
@@ -216,6 +238,7 @@ stat_peaks <- function(mapping = NULL,
                        ignore_threshold = 0.01,
                        global.threshold = ignore_threshold,
                        local.threshold = NULL,
+                       local.reference = "minimum",
                        strict = is.null(span),
                        refine.wl = FALSE,
                        method = "spline",
@@ -241,6 +264,7 @@ stat_peaks <- function(mapping = NULL,
     params = list(span = span,
                   global.threshold = global.threshold,
                   local.threshold = local.threshold,
+                  local.reference = local.reference,
                   strict = strict,
                   refine.wl = refine.wl,
                   method = method,
@@ -281,6 +305,7 @@ StatPeaks <-
                                             span,
                                             global.threshold,
                                             local.threshold,
+                                            local.reference,
                                             strict,
                                             refine.wl,
                                             method,
@@ -301,7 +326,7 @@ StatPeaks <-
                                            span = span,
                                            global.threshold = global.threshold,
                                            local.threshold = local.threshold,
-                                           local.reference = "minimum",
+                                           local.reference = local.reference,
                                            threshold.range = NULL,
                                            strict = strict,
                                            refine.wl = refine.wl,
@@ -338,6 +363,7 @@ stat_valleys <- function(mapping = NULL,
                          ignore_threshold = 0.01,
                          global.threshold = ignore_threshold,
                          local.threshold = NULL,
+                         local.reference = "maximum",
                          strict = is.null(span),
                          refine.wl = FALSE,
                          method = "spline",
@@ -363,6 +389,7 @@ stat_valleys <- function(mapping = NULL,
     params = list(span = span,
                   global.threshold = global.threshold,
                   local.threshold = local.threshold,
+                  local.reference = local.reference,
                   strict = strict,
                   refine.wl = refine.wl,
                   method = method,
@@ -389,6 +416,7 @@ StatValleys <-
                                             span,
                                             global.threshold,
                                             local.threshold,
+                                            local.reference,
                                             strict,
                                             refine.wl,
                                             method,
@@ -409,7 +437,7 @@ StatValleys <-
                                              span = span,
                                              global.threshold = global.threshold,
                                              local.threshold = local.threshold,
-                                             local.reference = "minimum",
+                                             local.reference = local.reference,
                                              threshold.range = NULL,
                                              strict = strict,
                                              refine.wl = refine.wl,
