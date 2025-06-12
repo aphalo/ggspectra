@@ -69,8 +69,11 @@ reference:
     - autoplot.generic_spct
     - autoplot.waveband
     - autotitle
-    - set_annotations_default
     - color_chart
+  - title: Options
+    desc: Options can be used to change the default arguments for some formal parameters of `autoplot()`, `decoration()` and _scales_ and axis labels.
+    contents:
+    - set_annotations_default
   - title: Helper functions
     desc: Formatters, International System of units, unit conversions.
     contents:

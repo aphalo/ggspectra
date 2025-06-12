@@ -853,3 +853,19 @@ color_chart(grep("blue", colors(), value = TRUE), ncol = 5, text.size = 4)
             use.names = TRUE, text.size = 4) +
   ggtitle("Reddish colors", subtitle = "Labels: wavelength (nm)")
 
+## -----------------------------------------------------------------------------
+ggplot(sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous(axis.symbols = FALSE) +
+  scale_y_s.e.irrad_continuous(axis.symbols = FALSE)
+
+## -----------------------------------------------------------------------------
+old.axis.symbols <- set_axis_symbols_default(FALSE)
+
+ggplot(sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_s.e.irrad_continuous()
+
+set_axis_symbols_default(old.axis.symbols) # optionally restore
+

@@ -135,7 +135,7 @@ approximate luminosity of each color in the input. The main use is to
 automatically achieve suitable contrast between text plotted on top of a
 color background.
 
-### What is function `autotitle()` for?
+### What is method `autotitle()` for?
 
 Function `autotitle()` adds a title, subtitle and/or a caption to a
 plot. The difference with `ggtitle()` from package 'ggplot2' is that
@@ -144,6 +144,10 @@ based on *keys*. It is used internally by all `autoplot()` methods
 defined in package 'ggspectra' and allowed syntax and key values are
 described in *User Guide 2: Autoplot Methods* together with plot
 annotations.
+
+### How can defaults be modified?
+
+In general modifying the behaviour of functions by other means than arguments passed in a call is not recommended as it can affect reproducibility. On the other hand, in plotting functions there are parameters that only modify how a plots looks without fundamentally changing its interpretation or validity. A good example is the use themes in 'ggplot2' and the setting of the default theme with function `theme_set()`. In a similar vein some defaults in packages 'photobiology' and 'ggspectra' are controlled by R options, and convenience functions are provided for setting them. As with `theme_set()` this just a convenience that saves typing and makes it easier to achieve consistency among a group of plots.
 
 ## Set up
 
@@ -1704,4 +1708,28 @@ color_chart(grep("blue", colors(), value = TRUE), ncol = 5, text.size = 4)
  color_chart(w_length2rgb(570:689, color.name = as.character(570:689)), 
             use.names = TRUE, text.size = 4) +
   ggtitle("Reddish colors", subtitle = "Labels: wavelength (nm)")
+```
+
+## Changing the default arguments
+
+We can disable the use of symbols in axis labels by passing `axis.symbols = FALSE` each time we call a scale.
+
+```{r}
+ggplot(sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous(axis.symbols = FALSE) +
+  scale_y_s.e.irrad_continuous(axis.symbols = FALSE)
+```
+
+Alternatively, we can change the default for all farther calls.
+
+```{r}
+old.axis.symbols <- set_axis_symbols_default(FALSE)
+
+ggplot(sun.spct) + 
+  geom_line() +
+  scale_x_wl_continuous() +
+  scale_y_s.e.irrad_continuous()
+
+set_axis_symbols_default(old.axis.symbols) # optionally restore
 ```

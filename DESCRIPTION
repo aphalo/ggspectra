@@ -22,6 +22,8 @@ Depends:
     photobiology (>= 0.13.0),
     ggplot2 (>= 3.5.0)
 Imports:
+    stats,
+    grid,
     photobiologyWavebands (>= 0.5.2),
     scales (>= 1.2.0),
     ggrepel (>= 0.9.2),

@@ -224,7 +224,6 @@ Other autoplot methods:
 \code{\link{autoplot.reflector_spct}()},
 \code{\link{autoplot.response_spct}()},
 \code{\link{autoplot.source_spct}()},
-\code{\link{autoplot.waveband}()},
-\code{\link{set_annotations_default}()}
+\code{\link{autoplot.waveband}()}
 }
 \concept{autoplot methods}

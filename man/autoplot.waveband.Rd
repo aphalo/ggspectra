@@ -139,7 +139,6 @@ Other autoplot methods:
 \code{\link{autoplot.raw_spct}()},
 \code{\link{autoplot.reflector_spct}()},
 \code{\link{autoplot.response_spct}()},
-\code{\link{autoplot.source_spct}()},
-\code{\link{set_annotations_default}()}
+\code{\link{autoplot.source_spct}()}
 }
 \concept{autoplot methods}
