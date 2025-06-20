@@ -768,6 +768,8 @@ autoplot.source_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
+    stopifnot("Bad 'unit.out' argument" =
+                unit.out %in% c("energy", "photon"))
     force(object.label)
     object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor)
@@ -904,6 +906,8 @@ autoplot.source_mspct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
+    stopifnot("Bad 'unit.out' argument" =
+                unit.out %in% c("energy", "photon"))
     force(object.label)
     object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)

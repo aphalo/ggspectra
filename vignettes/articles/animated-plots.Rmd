@@ -308,14 +308,11 @@ animate(anim, duration = 20, fps = 10)
 
 ## `autoplot()` partial support
 
-It is possible to animate ggplots created with `autoplot()` methods. Currently
-`by.group = TRUE` has to be added to the call. This is because annotations need
-to be added by group instead of by panel, so that they are present in all
-frames. (Internally `by.group = TRUE` is passed to the statistics that support
-it).
+It is possible to animate ggplots created with `autoplot()` methods. However, because in animations "plot decorations" need to be added by group instead of by panel, `by.group = TRUE` has to be added to the call, which is otherwise as for a static plot. (Internally `by.group = TRUE` is passed to the statistics from 'ggspectra' that support it, as described above.).
 
-All label definitions created by functions and methods from 'ggspectra' (>=
-0.3.16) are static or defined using `bquote()` as required by 'gganimate'.
+All label definitions created by functions and methods from 'ggspectra' (>= 0.3.16) are static or defined using `bquote()` as required by 'gganimate'.
+
+Currently there is a further limitation: _changing the default for `unit.out` into `"photon"` using the R option results in an error unless it is also passed as argument in the call to `autoplot()`._
 
 ```{r, eval=eval_chunks}
 autoplot(my_sun.spct, by.group = TRUE) +
@@ -334,7 +331,7 @@ autoplot(my_sun.spct, by.group = TRUE, label.qty = "sirrad",
                     state_length = 1)
 ```
 
-**Currently, `label.qty = "total"` and `label.qty = "irrad"` trigger an ERROR for photon units when attempting to animate a plot created with `autoplot()` when `unit.out` is set through an R option. It does work when the same attempted by passing an argument in the call as above.**
+**Currently, when `unit.out` is set through an R option but not in the call, an error is triggered when the plot is animated.**
 
 ```{r, eval=FALSE}
 # broken!!
