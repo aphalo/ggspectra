@@ -125,7 +125,7 @@ test_that("source_spct", {
   vdiffr::expect_doppelganger("source-scaled-irrad-200-PAR",
                               autoplot(fscale(white_led.source_spct, f = irrad, target = 200, range = PhR())))
   vdiffr::expect_doppelganger("source-product-wb",
-                              autoplot(sun.spct * Red()))
+                              autoplot(photobiology::sun.spct * Red()))
   vdiffr::expect_doppelganger("source-product-BSWF",
                               autoplot(sun.spct * CIE()))
   vdiffr::expect_doppelganger("source-product-BSWF-wl",
