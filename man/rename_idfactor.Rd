@@ -16,8 +16,9 @@ stored in long form.}
 Conditionally call \code{\link[photobiology]{setIdFactor}}.
 }
 \note{
-There is no check for \code{NA} or \code{NULL} as we assume that
+There is no check for \code{NA_character_} as we assume that
   \code{\link{check_idfactor_arg}} has already been called on \code{idfactor}
-  to check its sanity.
+  to check its sanity. \code{NULL} and non-character values including
+  \code{NA} \emph{are ignored silently!}
 }
 \keyword{internal}

@@ -84,7 +84,7 @@ stat_color <- function(mapping = NULL,
                        position = "identity",
                        ...,
                        chroma.type = "CMF",
-                       x.colour.transform = I,
+                       x.colour.transform = function(x) {x},
                        na.rm = FALSE,
                        show.legend = FALSE,
                        inherit.aes = TRUE) {

@@ -5,23 +5,29 @@
 #' different types of spectra but as it may change in the future it is not
 #' exported.
 #'
-#' @param w.band waveband object or list of waveband objects
-#' @param y.max,y.min,x.max,x.min,x.expanse,y.expanse numeric
-#' @param annotations character vector
-#' @param span numeric
-#' @param strict logical
-#' @param wls.target numeric or character vector
-#' @param label.qty character
-#' @param summary.label character
-#' @param text.size numeric
+#' @param w.band waveband object or list of waveband objects passed to
+#'   statistics as argument to their \code{w.band} formal parameter.
+#' @param y.max,y.min,x.max,x.min,x.expanse,y.expanse numeric. Used to compute
+#'   the positions of annotations.
+#' @param annotations character vector with names of annotations.
+#' @param span numeric passed to \code{stat_peaks()} and \code{stat_valleys()}.
+#' @param strict logical passed to \code{stat_peaks()} and \code{stat_valleys()}.
+#' @param wls.target numeric or character vector passed to \code{stat_find_wls()}
+#' @param label.qty character the quantity for \code{"summaries"} annotaion,
+#'   affecting the statistic called or the arguments passed to it.
+#' @param summary.label character the name of the quantity to be parsed into a
+#'   plotmath expression.
+#' @param text.size numeric giving the size of text for \code{"labels"} and
+#'   \code{"summaries"}.
 #' @param label.color color definition or name
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
 #'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
-#' @param pos.shift numeric
+#'   Used to generate colour definitions from wavelengths.
+#' @param pos.shift numeric Shift the position of the annotations.
 #' @param by.group logical flag If TRUE repeated identical annotation layers are
 #'   added for each group within a plot panel as needed for animation. If
 #'   \code{FALSE}, the default, single layers are added per panel.
-#' @param na.rm logical
+#' @param na.rm logical Passed to all statistics and geometries.
 #'
 #' @return A list of ggplot "components" that can be added to a ggplot object
 #'   with operator \code{+}. The length of the list depends on the value of argument
@@ -135,7 +141,7 @@ decoration <- function(w.band,
     nudge.y <- 0.04 * y.expanse
     z <- c(z,
            stat_label_peaks(geom = "label_repel",
-                            mapping = ggplot2::aes(color = after_stat(BW.color)),
+                            mapping = ggplot2::aes(color = ggplot2::after_stat(BW.color)),
                             span = span,
                             ignore_threshold = 0.02,
                             strict = strict,
@@ -188,7 +194,7 @@ decoration <- function(w.band,
     nudge.y <- -0.04 * y.expanse
     z <- c(z,
            stat_label_valleys(geom = "label_repel",
-                              mapping = ggplot2::aes(color = after_stat(BW.color)),
+                              mapping = ggplot2::aes(color = ggplot2::after_stat(BW.color)),
                               span = span,
                               ignore_threshold = -0.02,
                               strict = strict,
@@ -238,7 +244,7 @@ decoration <- function(w.band,
     nudge.x <- 0.03 * x.expanse
     z <- c(z,
            stat_find_wls(geom = "label_repel",
-                         mapping = ggplot2::aes(color = after_stat(BW.color)),
+                         mapping = ggplot2::aes(color = ggplot2::after_stat(BW.color)),
                          target = wls.target,
                          interpolate = TRUE,
                          chroma.type = chroma.type,
@@ -304,12 +310,12 @@ decoration <- function(w.band,
   if ("labels" %in% annotations || "summaries" %in% annotations) {
 
     if ("labels" %in% annotations && "summaries" %in% annotations) {
-      mapping <- ggplot2::aes(label = paste(after_stat(wb.name), after_stat(y.label), sep = "\n"),
-                      color = after_stat(BW.color))
+      mapping <- ggplot2::aes(label = paste(ggplot2::after_stat(wb.name), ggplot2::after_stat(y.label), sep = "\n"),
+                      color = ggplot2::after_stat(BW.color))
     } else if ("labels" %in% annotations) {
-      mapping <- ggplot2::aes(label = after_stat(wb.name), color = after_stat(BW.color))
+      mapping <- ggplot2::aes(label = ggplot2::after_stat(wb.name), color = ggplot2::after_stat(BW.color))
     } else if ("summaries" %in% annotations) {
-      mapping <- ggplot2::aes(label = after_stat(y.label), color = after_stat(BW.color))
+      mapping <- ggplot2::aes(label = ggplot2::after_stat(y.label), color = ggplot2::after_stat(BW.color))
     }
 
     if ("summaries" %in% annotations) {
@@ -371,7 +377,7 @@ decoration <- function(w.band,
     } else {
       if (is.null(label.color)) {
         z <- c(z,
-               stat_wb_label(mapping = ggplot2::aes(color = after_stat(BW.color)),
+               stat_wb_label(mapping = ggplot2::aes(color = ggplot2::after_stat(BW.color)),
                              w.band = w.band,
                              chroma.type = chroma.type,
                              by.group = by.group,

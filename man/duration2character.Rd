@@ -9,6 +9,9 @@ duration2character(time.unit)
 \arguments{
 \item{time.unit}{lubridate::duration object or character}
 }
+\value{
+A character string describing a time base or exposure duration.
+}
 \description{
 Convert lubridate duration objects to a string if possible
 }

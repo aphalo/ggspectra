@@ -11,6 +11,8 @@ check_idfactor_arg(object, idfactor = NULL, default = FALSE)
 
 \item{idfactor}{character, NULL or NA The name of the factor identifying
 spectra when stored in long form.}
+
+\item{default}{logical}
 }
 \description{
 Check idfactor argument and retrieve if needed

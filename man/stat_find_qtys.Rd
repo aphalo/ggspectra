@@ -16,8 +16,12 @@ stat_find_qtys(
   label.fmt = "\%.3g",
   x.label.fmt = label.fmt,
   y.label.fmt = label.fmt,
-  x.label.transform = I,
-  y.label.transform = I,
+  x.label.transform = function(x) {
+     x
+ },
+  y.label.transform = function(x) {
+     x
+ },
   x.colour.transform = x.label.transform,
   na.rm = FALSE,
   show.legend = FALSE,

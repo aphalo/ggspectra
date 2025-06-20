@@ -11,7 +11,9 @@ stat_color(
   position = "identity",
   ...,
   chroma.type = "CMF",
-  x.colour.transform = I,
+  x.colour.transform = function(x) {
+     x
+ },
   na.rm = FALSE,
   show.legend = FALSE,
   inherit.aes = TRUE

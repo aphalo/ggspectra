@@ -30,36 +30,42 @@ decoration(
 )
 }
 \arguments{
-\item{w.band}{waveband object or list of waveband objects}
+\item{w.band}{waveband object or list of waveband objects passed to
+statistics as argument to their \code{w.band} formal parameter.}
 
-\item{y.max, y.min, x.max, x.min, x.expanse, y.expanse}{numeric}
+\item{y.max, y.min, x.max, x.min, x.expanse, y.expanse}{numeric. Used to compute
+the positions of annotations.}
 
-\item{annotations}{character vector}
+\item{annotations}{character vector with names of annotations.}
 
-\item{span}{numeric}
+\item{span}{numeric passed to \code{stat_peaks()} and \code{stat_valleys()}.}
 
-\item{strict}{logical}
+\item{strict}{logical passed to \code{stat_peaks()} and \code{stat_valleys()}.}
 
-\item{wls.target}{numeric or character vector}
+\item{wls.target}{numeric or character vector passed to \code{stat_find_wls()}}
 
-\item{label.qty}{character}
+\item{label.qty}{character the quantity for \code{"summaries"} annotaion,
+affecting the statistic called or the arguments passed to it.}
 
-\item{summary.label}{character}
+\item{summary.label}{character the name of the quantity to be parsed into a
+plotmath expression.}
 
-\item{text.size}{numeric}
+\item{text.size}{numeric giving the size of text for \code{"labels"} and
+\code{"summaries"}.}
 
 \item{label.color}{color definition or name}
 
 \item{chroma.type}{character one of "CMF" (color matching function) or "CC"
-(color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.}
+(color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
+Used to generate colour definitions from wavelengths.}
 
-\item{pos.shift}{numeric}
+\item{pos.shift}{numeric Shift the position of the annotations.}
 
 \item{by.group}{logical flag If TRUE repeated identical annotation layers are
 added for each group within a plot panel as needed for animation. If
 \code{FALSE}, the default, single layers are added per panel.}
 
-\item{na.rm}{logical}
+\item{na.rm}{logical Passed to all statistics and geometries.}
 }
 \value{
 A list of ggplot "components" that can be added to a ggplot object

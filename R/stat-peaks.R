@@ -246,8 +246,8 @@ stat_peaks <- function(mapping = NULL,
                        label.fmt = "%.3g",
                        x.label.fmt = label.fmt,
                        y.label.fmt = label.fmt,
-                       x.label.transform = I,
-                       y.label.transform = I,
+                       x.label.transform = function(x) {x},
+                       y.label.transform = function(x) {x},
                        x.colour.transform = x.label.transform,
                        na.rm = FALSE,
                        show.legend = FALSE,
@@ -255,7 +255,7 @@ stat_peaks <- function(mapping = NULL,
   if (!(is.function(x.label.transform) &&
         is.function(y.label.transform) &&
         is.function(x.colour.transform))) {
-    stop("'transform' arguments must be function defintions")
+    stop("'transform' arguments must be function definitions")
   }
 
   ggplot2::layer(
@@ -371,8 +371,8 @@ stat_valleys <- function(mapping = NULL,
                          label.fmt = "%.3g",
                          x.label.fmt = label.fmt,
                          y.label.fmt = label.fmt,
-                         x.label.transform = I,
-                         y.label.transform = I,
+                         x.label.transform = function(x) {x},
+                         y.label.transform = function(x) {x},
                          x.colour.transform = x.label.transform,
                          na.rm = FALSE,
                          show.legend = FALSE,
@@ -380,7 +380,7 @@ stat_valleys <- function(mapping = NULL,
   if (!(is.function(x.label.transform) &&
         is.function(y.label.transform) &&
         is.function(x.colour.transform))) {
-    stop("'transform' arguments must be function defintions")
+    stop("'transform' arguments must be function definitions")
   }
 
   ggplot2::layer(
