@@ -61,7 +61,6 @@ duration2character <- function(time.unit) {
   if (time.unit == lubridate::duration(1, "seconds")) return("second")
   if (time.unit == lubridate::duration(1, "hours")) return("hour")
   if (time.unit == lubridate::duration(1, "days")) return("day")
-  if (lubridate::is.duration(time.unit)) return(format(time.unit))
   "duration"
 }
 
