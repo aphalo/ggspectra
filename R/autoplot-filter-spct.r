@@ -1154,9 +1154,11 @@ O_plot <- function(spct,
                                 guide = guide_legend(title = NULL))
     }
   } else {
+    # grouping as plot default
+    plot <- plot + aes(group = .data[["variable"]])
     if (!is.null(geom) && geom %in% c("spct", "area")) {
-      plot <- plot + geom_spct(aes(group = .data[["variable"]]),
-                               fill = "black", colour = NA, alpha = 0.2)
+      plot <- plot +
+        geom_spct(fill = "black", colour = NA, alpha = 0.2)
     }
     plot <-
       plot +

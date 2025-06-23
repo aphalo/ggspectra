@@ -670,7 +670,9 @@ q_plot <- function(spct,
 #' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.
 #'
-#' @details The plot object returned is a ggplot (an object of class
+#' @details The \code{autoplot()} methods  from 'ggspectra' are convenience wrapper functions that easy the creation
+#'   of plots from spectral objects at the cost of lacking the flexibility of the
+#'   grammar of graphics. The plot object returned is a ggplot (an object of class
 #'   \code{"gg"}) and it can be added to or modified as any other ggplot. The
 #'   axis labels are encoded as \emph{plotmath} expressions as they contain
 #'   superscripts and special characters. In 'ggplot2', plotmath expressions do

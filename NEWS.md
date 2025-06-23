@@ -18,6 +18,8 @@ for up-to-date examples.
 - `stat_peaks()` and `stat_valleys()` gain the new local and global threshold
 features from `find_peaks()` and `find_valleys()` from 'photobiology' 
 (>= 0.13.1).
+- Breaking: Changed defaults into `strict = FALSE` and `global.threshold = 0.01` 
+in `stat_peaks()` and `stat_valleys()`.
 - The argument passed to `idfactor` when plotting multiple spectra stored in
 long form can now be used to rename the existing `idfactor` and, thus, change
 the plot guide title.
@@ -32,9 +34,11 @@ the case of logical `TRUE`, `"norm"` is used as subscript.
 `stat_wl_strip()`. These stats gain parameter `by.group` controlling the
 addition of a plot layer for each group. The default behaviour remains unchanged.
 - `autoplot()` methods also gain parameter `by.group` passed to the statistics,
-enabling compatibility with 'gganimate'. **A bug in this development version
-prevents animation of plots of spectral _photon_ irradiance with summary 
-annotations "total" or "irrad", if created with `autoplot()`.**
+enabling compatibility with 'gganimate'. **Changing default arguments using R 
+options is not supported and `by.group = TRUE` is supported only for animated
+plots.**
+- Bug fix: `aoutoplot()` method for `object_spct` with `stacked = FALSE` did 
+not group correctly by variable. Notably some peaks and valleys were missing.
 
 # ggspectra 0.3.15
 

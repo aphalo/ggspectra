@@ -67,6 +67,14 @@ if (eval_chunks) {
 } else {
   message("Please, install package 'gganimate'.")
 }
+
+eval_repel <- requireNamespace("ggrepel", quietly = TRUE)
+if (eval_repel) {
+  library(ggrepel)
+  message("'ggrepel' version ", format(packageVersion('ggrepel')), " loaded and attached.")
+} else {
+  message("Please, install package 'ggrepel'.")
+}
 ```
 
 ```{r, include=FALSE, echo=FALSE}
@@ -306,7 +314,7 @@ anim <- ggplot(data = fscale(my_sun.spct, f = q_irrad, target = 1e-3),
 animate(anim, duration = 20, fps = 10)
 ```
 
-## `autoplot()` partial support
+## `autoplot()` support
 
 It is possible to animate ggplots created with `autoplot()` methods. However, because in animations "plot decorations" need to be added by group instead of by panel, `by.group = TRUE` has to be added to the call, which is otherwise as for a static plot. (Internally `by.group = TRUE` is passed to the statistics from 'ggspectra' that support it, as described above.).
 
@@ -320,6 +328,19 @@ autoplot(my_sun.spct, by.group = TRUE) +
                     transition_length = 2,
                     state_length = 1)
 ```
+
+
+```{r, eval=eval_chunks&&eval_repel}
+autoplot(my_sun.spct, 
+         by.group = TRUE, 
+         geom = "spct",
+         span = 51,
+         annotations = c("+", "peak.labels")) +
+  transition_states(tod,
+                    transition_length = 2,
+                    state_length = 1)
+```
+
 
 The conversion to photon based units works as expected when set in the call.
 

@@ -496,14 +496,14 @@ resolution of the sampling used for the extraterrestrial solar spectrum data
 used as input for the simulations.
 
 ```{r}
-my.format <- "%#.4g nm" # used twice, easier to set here
+my.format <- "%.3g nm" # used twice, easier to set here
 
 ggplot(sun.spct) +
   geom_line() +
   stat_peaks(span = 31, geom = "point", colour = "red", refine.wl = TRUE) +
   stat_peaks(mapping = aes(fill = after_stat(wl.colour), 
                            color = after_stat(BW.colour)),
-             span = 31, local.threshold = 0.15,
+             span = 31, local.threshold = 0.045,
              label.fmt = my.format,
              refine.wl = TRUE,
              geom = "label", size = 3, hjust = -0.1, angle = 90) +
@@ -511,7 +511,7 @@ ggplot(sun.spct) +
                geom = "point", colour = "blue") +
   stat_valleys(mapping = aes(fill = after_stat(wl.colour), 
                              color = after_stat(BW.colour)),
-               span = 31, local.threshold = 0.15,
+               span = 31, local.threshold = 0.1,
                label.fmt = my.format,
                refine.wl = TRUE,
                geom = "label", size = 3, hjust = 1.1, angle = 90) +

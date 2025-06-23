@@ -239,7 +239,7 @@ stat_peaks <- function(mapping = NULL,
                        global.threshold = ignore_threshold,
                        local.threshold = NULL,
                        local.reference = "median",
-                       strict = is.null(span),
+                       strict = FALSE,
                        refine.wl = FALSE,
                        method = "spline",
                        chroma.type = "CMF",
@@ -317,8 +317,6 @@ StatPeaks <-
                                             y.label.transform,
                                             x.colour.transform) {
 
-                     photobiology::check_wl_stepsize(data[["x"]])
-
                      peaks.df <-
                        photobiology::peaks(data,
                                            x.var.name = "x",
@@ -364,7 +362,7 @@ stat_valleys <- function(mapping = NULL,
                          global.threshold = ignore_threshold,
                          local.threshold = NULL,
                          local.reference = "median",
-                         strict = is.null(span),
+                         strict = FALSE,
                          refine.wl = FALSE,
                          method = "spline",
                          chroma.type = "CMF",
@@ -427,8 +425,6 @@ StatValleys <-
                                             x.label.transform,
                                             y.label.transform,
                                             x.colour.transform) {
-
-                     photobiology::check_wl_stepsize(data[["x"]], span = span)
 
                      valleys.df <-
                        photobiology::valleys(data,
