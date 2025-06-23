@@ -721,8 +721,6 @@ q_plot <- function(spct,
 #' autoplot(sun.spct)
 #' autoplot(sun.spct, geom = "spct")
 #' autoplot(sun.spct, unit.out = "photon")
-#' autoplot(normalize(sun.spct))
-#' autoplot(normalize(sun.spct), pc.out = TRUE)
 #'
 #' # multiple spectra in long form
 #' autoplot(sun_evening.spct)
@@ -733,10 +731,7 @@ q_plot <- function(spct,
 #'
 #' # multiple spectra as a collection
 #' autoplot(sun_evening.mspct)
-#' autoplot(sun_evening.mspct, facets = 1) # one column
-#' autoplot(sun_evening.mspct, facets = 2) # two columns
-#' autoplot(sun_evening.mspct, plot.data = "mean")
-#' autoplot(sun_evening.mspct, idfactor = "Time")
+#' # other examples above using .mspct instead of .spct
 #'
 #' @family autoplot methods
 #'
