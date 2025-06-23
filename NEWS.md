@@ -4,13 +4,13 @@ editor_options:
     wrap: 72
 ---
 
-# ggspectra 0.4.0
+# ggspectra 0.3.16
 
 Track new features available and other changes in 'photobiology' (>= 0.13.1),
-which is now required. Partial compatibility with package 'gganimate' makes
-possible to create some animated plots using `autoplot()` methods or
-`ggplot()` together with layer functions from 'ggspectra'. See article
-[Animated plots of spectral data](https://docs.r4photobiology.info/ggspectra/articles/animated-plots.html) 
+which is now required. Improved compatibility with package 'gganimate' makes
+possible to create some animated plots using `autoplot()` methods or `ggplot()`
+together with layer functions from 'ggspectra'. See article
+[Animated plots of spectral data](https://docs.r4photobiology.info/ggspectra/articles/animated-plots.html)
 for up-to-date examples.
 
 - Update, mostly of internal code, to make available features from 
@@ -39,6 +39,8 @@ options is not supported and `by.group = TRUE` is supported only for animated
 plots.**
 - Bug fix: `aoutoplot()` method for `object_spct` with `stacked = FALSE` did 
 not group correctly by variable. Notably some peaks and valleys were missing.
+- Check compatibility with upcoming 'ggplot2' 4.0.0.
+- Articles added or updated in the on-line documentation.
 
 # ggspectra 0.3.15
 
