@@ -1,8 +1,9 @@
 #' Find peaks and valleys.
 #'
-#' \code{stat_peaks} finds at which x positions local maxima are located. If
-#' you want find local minima, you can use \code{stat_valleys} instead.
-#' \strong{Axis flipping is currently not supported.}
+#' \code{stat_peaks} finds at which x positions the global y maximun or local
+#' y maxima are located. \code{stat_valleys} finds at which x positions the
+#' global y minimum or local y minima located. They both support filtering
+#' of relevant peaks. \strong{Axis flipping is currently not supported.}
 #'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'    \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be set
@@ -124,16 +125,16 @@
 #'   are applied after peaks are searched for, and threshold values can in some
 #'   cases result in no peaks being displayed.
 #'
-#' @note These stats work nicely together with geoms
-#'   \code{geom_text_repel} and
-#'   \code{geom_label_repel} from package
-#'   \code{\link[ggrepel]{ggrepel}} to solve the problem of overlapping labels
+#' @note These stats work nicely together with geoms \code{geom_text_repel} and
+#'   \code{geom_label_repel} from package \code{\link[ggrepel]{ggrepel}} to
+#'   solve the problem of overlapping labels
 #'   by displacing them. To discard overlapping labels use \code{check_overlap =
 #'   TRUE} as argument to \code{geom_text}.
-#'  By default the labels are character values suitable to be plotted as is, but
-#'  with a suitable \code{label.fmt} labels suitable for parsing by the geoms
-#'  (e.g. into expressions containing greek letters or super or subscripts) can
-#'  be also easily obtained.
+#'
+#'   By default the labels are character values ready to be added as is, but
+#'   with a suitable \code{label.fmt} labels suitable for parsing by the geoms
+#'   (e.g. into expressions containing Greek letters or super or subscripts) can
+#'   be also easily obtained.
 #'
 #' @examples
 #' # ggplot() methods for spectral objects set a default mapping for x and y.
