@@ -169,7 +169,7 @@ p0 +
 ### Peak height: `global.threshold`
 
 Above, the default value for `global.threshold` is `0.01` and enables the
-"filtering-out" of the smallest peaks. Passing `global.threshold = NULL`
+"filtering-out" of the smallest "peaks". Passing `global.threshold = NULL`
 disables filtering.
 
 ```{r}
@@ -177,33 +177,111 @@ p0 +
   stat_peaks(span = 11, colour = "red", size = 1, global.threshold = NULL)
 ```
 
-To limit the detected (and highlighted) peaks to taller ones than by default, we
-can limit the search, for example, to the top 1/3 of the _y_ range, by
-filtering-out those in the lower 2/3 of the _y_ range of the data.
-
-```{r}
-p0 +
-  stat_peaks(global.threshold = 2/3, colour = "red", size = 1)
-```
-
-We can also limit the search by giving a threshold in data units, for example,
-to keeå only those exceeding a value of 0.7 for `s.e.irrad`, the variable mapped
-to the _y_ aesthetic. We indicate use of data units by enclosing the value in a
-call to `I()`. Function `I()` sets the class of its argument to `"AsIs"`, thus
-such values can be saved in variables and passed as arguments also by name.
+The search for peaks can be constrained by giving a minimum height threshold in data units. For example,
+we can keep only peaks exceeding a value of 0.7 for `s.e.irrad`, the variable mapped
+to the _y_ aesthetic. We indicate the use of data units by enclosing the argument for `global.threshold` in a
+call to `I()`. (Function `I()` sets the class of its argument to `"AsIs"`, thus
+such values can be saved in variables and passed as arguments also by name.)
 
 ```{r}
 p0 +
   stat_peaks(global.threshold = I(0.7), colour = "red", size = 1)
 ```
 
-Very rarely the tallest peaks need to be discarded, but it is also possible,
-when using relative sizes.
+The same plot as above, annotated with the threshold and the range of the observations.
 
 ```{r}
 p0 +
-  stat_peaks(global.threshold = -1/2,
-             colour = "red", size = 1)
+  stat_peaks(global.threshold = I(0.7), colour = "red", size = 1) +
+  geom_hline(yintercept = 0.7, linetype = "dashed", colour = "red") +
+    scale_y_continuous(
+    sec.axis =
+      dup_axis(name = "global.threshold (\"AsIs\")",
+               breaks = 
+                 c(min(sun.spct$s.e.irrad), 0.7, max(sun.spct$s.e.irrad)), labels = function(x) round(x, 2))) +
+  theme(axis.text.y.right = element_text(colour = "red"),
+        axis.title.y.right = element_text(colour = "red"))
+```
+
+
+To limit the detected (and highlighted) peaks to taller ones than by default, we
+can limit the search, for example, to the top 1/3 of the _y_ range, by
+filtering-out those in the lower 2/3 of the _y_ range of the data.
+
+```{r}
+p0 +
+  stat_peaks(global.threshold = 2/3, colour = "red", size = 1) 
+```
+
+The same plot annotated to show how the threshold range of $0\ldots 1$ relates to the data range.
+
+```{r}
+p0 +
+  stat_peaks(global.threshold = 0.67, colour = "red", size = 1) +
+  geom_hline(aes(yintercept = min(s.e.irrad) + (max(s.e.irrad) - min(s.e.irrad)) * 0.67), 
+             linetype = "dashed", colour = "red") +
+  scale_y_continuous(
+    sec.axis =
+      dup_axis(name = "global.threshold (relative)",
+               breaks = 
+                 min(sun.spct$s.e.irrad) + 
+                     (max(sun.spct$s.e.irrad) - min(sun.spct$s.e.irrad)) * c(0, 0.25, 0.5, 0.67, 0.75, 1),
+               labels = c(0, 0.25, 0.5, 0.67, 0.75, 1))) +
+  theme(axis.text.y.right = element_text(colour = "red"),
+        axis.title.y.right = element_text(colour = "red")) 
+```
+
+Very rarely the tallest peaks need to be discarded, but if needed this can be achieved by passing a number in $-1\ldots 0$ as argument to `global.threshold`.
+
+```{r}
+p0 +
+  stat_peaks(global.threshold = -0.5, colour = "red", size = 1)
+```
+
+The same plot as above, annotated.
+
+```{r}
+p0 +
+  stat_peaks(global.threshold = -0.5, colour = "red", size = 1) +
+  geom_hline(aes(yintercept = min(s.e.irrad) + (max(s.e.irrad) - min(s.e.irrad)) * 0.5), 
+             linetype = "dashed", colour = "red") +
+  scale_y_continuous(
+    sec.axis =
+      dup_axis(name = "global.threshold (negative, relative)",
+               breaks = 
+                 min(sun.spct$s.e.irrad) + 
+                     (max(sun.spct$s.e.irrad) - min(sun.spct$s.e.irrad)) * c(0, 0.25, 0.5, 0.75, 1),
+               labels = -c(0, 0.25, 0.5, 0.75, 1))) +
+  theme(axis.text.y.right = element_text(colour = "red"),
+        axis.title.y.right = element_text(colour = "red"))
+```
+
+Global thresholds work similarly with `stat_valleys()`, and numbers closer to one apply a more stringent threshold than smaller values.
+
+
+```{r}
+p0 +
+  stat_valleys(global.threshold = 0.5, colour = "blue", size = 1)
+```
+
+And the same plot as above, annotated with the threshold used and the possible range.
+
+
+```{r}
+p0 +
+  stat_valleys(global.threshold = 0.5, colour = "blue", size = 1) +
+  geom_hline(aes(yintercept = min(s.e.irrad) + (max(s.e.irrad) - min(s.e.irrad)) * 0.5), 
+             linetype = "dashed", colour = "blue") +
+  scale_y_continuous(
+    sec.axis =
+      dup_axis(name = "global.threshold (relative)",
+               breaks = 
+                 max(sun.spct$s.e.irrad) - 
+                     (max(sun.spct$s.e.irrad) - min(sun.spct$s.e.irrad)) * c(0, 0.25, 0.5, 0.75, 1),
+               labels = c(0, 0.25, 0.5, 0.75, 1))) +
+  theme(axis.text.y.right = element_text(colour = "blue"),
+        axis.title.y.right = element_text(colour = "blue"))
+  
 ```
 
 ### Peak prominence: `local.threshold`
@@ -219,12 +297,32 @@ p0 +
   stat_peaks(colour = "red", size = 1, span = 11, local.threshold = 0.03)
 ```
 
-By default the reference for the local prominence of a peak is the median observation within the window. Alternatively, the minimum of the values in the window can be used as reference, in which case larger `local.threshold` values tend to be needed to obtain a similar effect with `"minimum"` as with `"median"`. The reference used is controlled by parameter `local.reference`.
+The same plot as above, annotated with the running median, used as local reference for the threshold.
+
+```{r}
+p0 +
+  stat_peaks(colour = "red", size = 1, span = 11, local.threshold = 0.03) +
+  geom_line(aes(y = stats::runmed(s.e.irrad, k = 5, endrule = "median")), colour = "red", linetype = "dashed")
+```
+
+By default the reference for the local prominence of a peak is the median observation within the window. Alternatively, the farthest value in the window can be used as reference, in which case larger `local.threshold` values tend to be needed to obtain a similar effect with `"farthest"` as with `"median"`. The reference used is controlled by parameter `local.reference`.
 
 ```{r}
 p0 +
   stat_peaks(colour = "red", size = 1, span = 11, 
              local.reference = "farthest", local.threshold = 0.1)
+```
+
+The same plot as above, annotated with the running minimum line.
+
+```{r}
+p0 +
+  stat_peaks(colour = "red", size = 1, span = 11, 
+             local.reference = "farthest", local.threshold = 0.1) +
+  geom_line(aes(y = caTools::runmin(s.e.irrad, 
+                                    k = 5, 
+                                    endrule = "min")), 
+            colour = "red", linetype = "dashed")
 ```
 
 As for `global.threshold` we can specify the minimum local height in data units
@@ -236,9 +334,8 @@ p0 +
 ```
 
 It is important to keep in mind that `span`, `local.threshold` and
-`global.threshold` can be combined. However, `span` affects the effect of
-`local.threshold` by widening the window in which the minimum value is searched
-for.
+`global.threshold` can be combined. However, `span` modifies the effect of
+`local.threshold` by widening the window in which the median or farthest value is searched.
 
 ```{r}
 p0 +
@@ -247,6 +344,8 @@ p0 +
              local.threshold = I(0.01),
              global.threshold = I(0.5))
 ```
+
+Local thresholds also are implemented in `stat_valleys()` or work similarly as in `stat_peaks()`. The reference lines are as for peaks but the distance is assessed downwards from the line instead of upwards, even if arguments passed to `local.threshold` are in $0\ldots 1$ or data units as for peaks.
 
 ### Fitting peaks: `refine.wl`
 
