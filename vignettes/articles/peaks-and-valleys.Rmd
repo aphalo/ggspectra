@@ -190,7 +190,7 @@ p0 +
 
 The same plot as above, annotated with the threshold and the range of the observations.
 
-```{r}
+```{r, echo=FALSE}
 p0 +
   stat_peaks(global.threshold = I(0.7), colour = "red", size = 1) +
   geom_hline(yintercept = 0.7, linetype = "dashed", colour = "red") +
@@ -215,7 +215,7 @@ p0 +
 
 The same plot annotated to show how the threshold range of $0\ldots 1$ relates to the data range.
 
-```{r}
+```{r, echo=FALSE}
 p0 +
   stat_peaks(global.threshold = 0.67, colour = "red", size = 1) +
   geom_hline(aes(yintercept = min(s.e.irrad) + (max(s.e.irrad) - min(s.e.irrad)) * 0.67), 
@@ -240,7 +240,7 @@ p0 +
 
 The same plot as above, annotated.
 
-```{r}
+```{r, echo=FALSE}
 p0 +
   stat_peaks(global.threshold = -0.5, colour = "red", size = 1) +
   geom_hline(aes(yintercept = min(s.e.irrad) + (max(s.e.irrad) - min(s.e.irrad)) * 0.5), 
@@ -266,8 +266,7 @@ p0 +
 
 And the same plot as above, annotated with the threshold used and the possible range.
 
-
-```{r}
+```{r, echo=FALSE}
 p0 +
   stat_valleys(global.threshold = 0.5, colour = "blue", size = 1) +
   geom_hline(aes(yintercept = min(s.e.irrad) + (max(s.e.irrad) - min(s.e.irrad)) * 0.5), 
@@ -299,10 +298,19 @@ p0 +
 
 The same plot as above, annotated with the running median, used as local reference for the threshold.
 
-```{r}
+```{r, echo=FALSE}
 p0 +
+  geom_line(aes(y = stats::runmed(s.e.irrad, k = 5, endrule = "median")), colour = "red") +
   stat_peaks(colour = "red", size = 1, span = 11, local.threshold = 0.03) +
-  geom_line(aes(y = stats::runmed(s.e.irrad, k = 5, endrule = "median")), colour = "red", linetype = "dashed")
+  scale_y_continuous(
+    sec.axis =
+      dup_axis(name = "local.threshold range (relative)",
+               breaks = 
+                 min(sun.spct$s.e.irrad) + 
+                     (max(sun.spct$s.e.irrad) - min(sun.spct$s.e.irrad)) * c(0, 0.25, 0.5, 0.75, 1),
+               labels = -c(0, 0.25, 0.5, 0.75, 1))) +
+  theme(axis.text.y.right = element_text(colour = "red"),
+        axis.title.y.right = element_text(colour = "red"))
 ```
 
 By default the reference for the local prominence of a peak is the median observation within the window. Alternatively, the farthest value in the window can be used as reference, in which case larger `local.threshold` values tend to be needed to obtain a similar effect with `"farthest"` as with `"median"`. The reference used is controlled by parameter `local.reference`.
@@ -315,14 +323,23 @@ p0 +
 
 The same plot as above, annotated with the running minimum line.
 
-```{r}
+```{r, echo=FALSE}
 p0 +
-  stat_peaks(colour = "red", size = 1, span = 11, 
-             local.reference = "farthest", local.threshold = 0.1) +
   geom_line(aes(y = caTools::runmin(s.e.irrad, 
                                     k = 5, 
                                     endrule = "min")), 
-            colour = "red", linetype = "dashed")
+            colour = "red") +
+  stat_peaks(colour = "red", size = 1, span = 11, 
+             local.reference = "farthest", local.threshold = 0.1) +
+  scale_y_continuous(
+    sec.axis =
+      dup_axis(name = "local.threshold range (relative)",
+               breaks = 
+                 min(sun.spct$s.e.irrad) + 
+                     (max(sun.spct$s.e.irrad) - min(sun.spct$s.e.irrad)) * c(0, 0.25, 0.5, 0.75, 1),
+               labels = -c(0, 0.25, 0.5, 0.75, 1))) +
+  theme(axis.text.y.right = element_text(colour = "red"),
+        axis.title.y.right = element_text(colour = "red"))
 ```
 
 As for `global.threshold` we can specify the minimum local height in data units
