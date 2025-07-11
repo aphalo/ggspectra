@@ -5,6 +5,8 @@
 #' global y minimum or local y minima located. They both support filtering
 #' of relevant peaks. \strong{Axis flipping is currently not supported.}
 #'
+#' @inheritParams photobiology::peaks
+#'
 #' @param mapping The aesthetic mapping, usually constructed with
 #'    \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be set
 #'    at the layer level if you are overriding the plot defaults.
@@ -25,35 +27,6 @@
 #'   \code{\link[ggplot2]{layer}} for more details.
 #' @param na.rm	a logical value indicating whether NA values should be
 #'   stripped before the computation proceeds.
-#' @param global.threshold numeric A value belonging to class
-#'   \code{"AsIs"} is interpreted as an absolute minimum height or depth
-#'   expressed in data units. A bare \code{numeric} value (normally between 0.0
-#'   and 1.0), is interpreted as relative to the range of the data. In both
-#'   cases it sets a \emph{global} height (depth) threshold below which peaks
-#'   (valleys) are ignored. A bare negative \code{numeric} value indicates the
-#'   \emph{global} height (depth) threshold below which peaks (valleys) are be
-#'   ignored. If \code{global.threshold = NULL}, no threshold is applied and all
-#'   peaks are returned.
-#' @param ignore_threshold Deprecated synonym for \code{global.threshold}.
-#' @param local.threshold numeric A value belonging to class \code{"AsIs"} is
-#'   interpreted as an absolute minimum height (depth) expressed in data units
-#'   relative to the within-window computed minimum (maximum) value. A bare
-#'   \code{numeric} value (normally between 0.0 and 1.0), is interpreted as
-#'   expressed in units relative to the range of the data. In both cases
-#'   \code{local.threshold} sets a \emph{local} height (depth) threshold below
-#'   which peaks (valleys) are ignored. If \code{local.threshold = NULL} or if
-#'   \code{span} spans the whole of \code{x}, no threshold is applied.
-#' @param local.reference character One of \code{"minimum"}/\code{maximum} or
-#'   \code{"median"}. The reference used to assess the height of the peak,
-#'   either the minimum value within the window or the median of all values in
-#'   the window.
-#' @param span odd positive integer A peak is defined as an element in a
-#'   sequence which is greater than all other elements within a moving window of
-#'   width \code{span} centred at that element. The default value is 5, meaning
-#'   that a peak is taller than its four nearest neighbours. \code{span = NULL}
-#'   extends the span to the whole length of \code{x}.
-#' @param strict logical flag: if \code{TRUE}, an element must be strictly
-#'   greater than all other values in its window to be considered a peak.
 #' @param refine.wl logical Flag indicating if peak or valleys locations should
 #'   be refined by fitting a function.
 #' @param method character String with the name of a method used for peak
@@ -124,6 +97,8 @@
 #'   relative to the range of \emph{y}. Thresholds for ignoring too small peaks
 #'   are applied after peaks are searched for, and threshold values can in some
 #'   cases result in no peaks being displayed.
+#' @note Parameter \code{ignore_threshold} was renamed \code{global.threshold}
+#'   in version 0.3.16.
 #'
 #' @note These stats work nicely together with geoms \code{geom_text_repel} and
 #'   \code{geom_label_repel} from package \code{\link[ggrepel]{ggrepel}} to
@@ -236,8 +211,7 @@ stat_peaks <- function(mapping = NULL,
                        position = "identity",
                        ...,
                        span = 5,
-                       ignore_threshold = 0.01,
-                       global.threshold = ignore_threshold,
+                       global.threshold = 0.01,
                        local.threshold = NULL,
                        local.reference = "median",
                        strict = FALSE,
@@ -359,8 +333,7 @@ stat_valleys <- function(mapping = NULL,
                          position = "identity",
                          ...,
                          span = 5,
-                         ignore_threshold = 0.01,
-                         global.threshold = ignore_threshold,
+                         global.threshold = 0.01,
                          local.threshold = NULL,
                          local.reference = "median",
                          strict = FALSE,

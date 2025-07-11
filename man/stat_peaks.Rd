@@ -12,8 +12,7 @@ stat_peaks(
   position = "identity",
   ...,
   span = 5,
-  ignore_threshold = 0.01,
-  global.threshold = ignore_threshold,
+  global.threshold = 0.01,
   local.threshold = NULL,
   local.reference = "median",
   strict = FALSE,
@@ -42,8 +41,7 @@ stat_valleys(
   position = "identity",
   ...,
   span = 5,
-  ignore_threshold = 0.01,
-  global.threshold = ignore_threshold,
+  global.threshold = 0.01,
   local.threshold = NULL,
   local.reference = "median",
   strict = FALSE,
@@ -88,31 +86,30 @@ width \code{span} centred at that element. The default value is 5, meaning
 that a peak is taller than its four nearest neighbours. \code{span = NULL}
 extends the span to the whole length of \code{x}.}
 
-\item{ignore_threshold}{Deprecated synonym for \code{global.threshold}.}
-
-\item{global.threshold}{numeric A value belonging to class
-\code{"AsIs"} is interpreted as an absolute minimum height or depth
-expressed in data units. A bare \code{numeric} value (normally between 0.0
-and 1.0), is interpreted as relative to the range of the data. In both
-cases it sets a \emph{global} height (depth) threshold below which peaks
-(valleys) are ignored. A bare negative \code{numeric} value indicates the
-\emph{global} height (depth) threshold below which peaks (valleys) are be
-ignored. If \code{global.threshold = NULL}, no threshold is applied and all
-peaks are returned.}
+\item{global.threshold}{numeric A value belonging to class \code{"AsIs"} is
+interpreted as an absolute minimum height or depth expressed in data units.
+A bare \code{numeric} value (normally between 0.0 and 1.0), is interpreted
+as relative to \code{threshold.range}. In both cases it sets a
+\emph{global} height (depth) threshold below which peaks (valleys) are
+ignored. A bare negative \code{numeric} value indicates the \emph{global}
+height (depth) threshold below which peaks (valleys) are be ignored. If
+\code{global.threshold = NULL}, no threshold is applied and all peaks
+returned.}
 
 \item{local.threshold}{numeric A value belonging to class \code{"AsIs"} is
 interpreted as an absolute minimum height (depth) expressed in data units
-relative to the within-window computed minimum (maximum) value. A bare
-\code{numeric} value (normally between 0.0 and 1.0), is interpreted as
-expressed in units relative to the range of the data. In both cases
-\code{local.threshold} sets a \emph{local} height (depth) threshold below
-which peaks (valleys) are ignored. If \code{local.threshold = NULL} or if
-\code{span} spans the whole of \code{x}, no threshold is applied.}
+relative to a within-window computed reference value. A bare \code{numeric}
+value (normally between 0.0 and 1.0), is interpreted as expressed in units
+relative to \code{threshold.range}. In both cases \code{local.threshold}
+sets a \emph{local} height (depth) threshold below which peaks (valleys)
+are ignored. If \code{local.threshold = NULL} or if \code{span} spans the
+whole of \code{x}, no threshold is applied.}
 
-\item{local.reference}{character One of \code{"minimum"}/\code{maximum} or
-\code{"median"}. The reference used to assess the height of the peak,
-either the minimum value within the window or the median of all values in
-the window.}
+\item{local.reference}{character One of \code{"median"}, \code{"median.log"},
+\code{"median.sqrt"}, \code{"farthest"}, \code{"farthest.log"} or
+\code{"farthest.sqrt"}. The reference used to assess the height of the
+peak, either the minimum/maximum value within the window or the median of
+all values in the window.}
 
 \item{strict}{logical flag: if \code{TRUE}, an element must be strictly
 greater than all other values in its window to be considered a peak.}
@@ -154,9 +151,10 @@ A data frame with one row for each peak (or valley) found in the
   compute new \code{x} and \code{y} values.
 }
 \description{
-\code{stat_peaks} finds at which x positions local maxima are located. If
-you want find local minima, you can use \code{stat_valleys} instead.
-\strong{Axis flipping is currently not supported.}
+\code{stat_peaks} finds at which x positions the global y maximun or local
+y maxima are located. \code{stat_valleys} finds at which x positions the
+global y minimum or local y minima located. They both support filtering
+of relevant peaks. \strong{Axis flipping is currently not supported.}
 }
 \details{
 These stats use \code{geom_point} by default as it is the geom most
@@ -182,16 +180,19 @@ These stats use \code{geom_point} by default as it is the geom most
   cases result in no peaks being displayed.
 }
 \note{
-These stats work nicely together with geoms
-  \code{geom_text_repel} and
-  \code{geom_label_repel} from package
-  \code{\link[ggrepel]{ggrepel}} to solve the problem of overlapping labels
+Parameter \code{ignore_threshold} was renamed \code{global.threshold}
+  in version 0.3.16.
+
+These stats work nicely together with geoms \code{geom_text_repel} and
+  \code{geom_label_repel} from package \code{\link[ggrepel]{ggrepel}} to
+  solve the problem of overlapping labels
   by displacing them. To discard overlapping labels use \code{check_overlap =
   TRUE} as argument to \code{geom_text}.
- By default the labels are character values suitable to be plotted as is, but
- with a suitable \code{label.fmt} labels suitable for parsing by the geoms
- (e.g. into expressions containing greek letters or super or subscripts) can
- be also easily obtained.
+
+  By default the labels are character values ready to be added as is, but
+  with a suitable \code{label.fmt} labels suitable for parsing by the geoms
+  (e.g. into expressions containing Greek letters or super or subscripts) can
+  be also easily obtained.
 }
 \section{Computed and copied variables in the returned data frame}{
 

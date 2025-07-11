@@ -12,9 +12,8 @@ stat_label_peaks(
   position = "identity",
   ...,
   span = 5,
-  ignore_threshold = 0,
-  global.threshold = ignore_threshold,
-  strict = TRUE,
+  global.threshold = 0.01,
+  strict = FALSE,
   chroma.type = "CMF",
   label.fmt = "\%.3g",
   x.label.fmt = label.fmt,
@@ -39,9 +38,8 @@ stat_label_valleys(
   position = "identity",
   ...,
   span = 5,
-  ignore_threshold = 0,
-  global.threshold = ignore_threshold,
-  strict = TRUE,
+  global.threshold = 0.01,
+  strict = FALSE,
   chroma.type = "CMF",
   label.fmt = "\%.3g",
   x.label.fmt = label.fmt,
@@ -82,17 +80,15 @@ width \code{span} centred at that element. The default value is 5, meaning
 that a peak is taller than its four nearest neighbours. \code{span = NULL}
 extends the span to the whole length of \code{x}.}
 
-\item{ignore_threshold}{Deprecated synonym for \code{global.threshold}.}
-
-\item{global.threshold}{numeric A value belonging to class
-\code{"AsIs"} is interpreted as an absolute minimum height or depth
-expressed in data units. A bare \code{numeric} value (normally between 0.0
-and 1.0), is interpreted as relative to the range of the data. In both
-cases it sets a \emph{global} height (depth) threshold below which peaks
-(valleys) are ignored. A bare negative \code{numeric} value indicates the
-\emph{global} height (depth) threshold below which peaks (valleys) are be
-ignored. If \code{global.threshold = NULL}, no threshold is applied and all
-peaks are returned.}
+\item{global.threshold}{numeric A value belonging to class \code{"AsIs"} is
+interpreted as an absolute minimum height or depth expressed in data units.
+A bare \code{numeric} value (normally between 0.0 and 1.0), is interpreted
+as relative to \code{threshold.range}. In both cases it sets a
+\emph{global} height (depth) threshold below which peaks (valleys) are
+ignored. A bare negative \code{numeric} value indicates the \emph{global}
+height (depth) threshold below which peaks (valleys) are be ignored. If
+\code{global.threshold = NULL}, no threshold is applied and all peaks
+returned.}
 
 \item{strict}{logical flag: if \code{TRUE}, an element must be strictly
 greater than all other values in its window to be considered a peak.}
