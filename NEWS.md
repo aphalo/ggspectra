@@ -13,6 +13,8 @@ and `stat_label_valleys()` parameter `ignore_threshold` replaced by
 `global.threshold = 0.01` in `stat_label_peaks()` and `stat_label_valleys()`.
 - Add parameter `idfactor` to `ggplot()` methods making it possible to select
 the name of the factor used to group the data by spectrum with multiple spectra.
+- Update handling of user-supplied mappings in `ggplot()` methods.
+- Fix bug in mapping of id.factor in `ggplot()` methods.
 
 # ggspectra 0.3.16
 
