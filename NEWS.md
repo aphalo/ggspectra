@@ -4,6 +4,16 @@ editor_options:
     wrap: 72
 ---
 
+# ggspectra 0.4.0
+
+- Breaking: In `stat_peaks()`, `stat_valleys()`, `stat_label_peaks()` 
+and `stat_label_valleys()` parameter `ignore_threshold` replaced by 
+`global.threshold`.
+- Breaking: Changed defaults into `strict = FALSE` and 
+`global.threshold = 0.01` in `stat_label_peaks()` and `stat_label_valleys()`.
+- Add parameter `idfactor` to `ggplot()` methods making it possible to select
+the name of the factor used to group the data by spectrum with multiple spectra.
+
 # ggspectra 0.3.16
 
 Track new features available and other changes in 'photobiology' (>= 0.13.1),
@@ -17,7 +27,7 @@ for up-to-date examples.
 'photobiology' (>= 0.13.1), which is required.
 - `stat_peaks()` and `stat_valleys()` gain the new local and global threshold
 features from `find_peaks()` and `find_valleys()` from 'photobiology' 
-(>= 0.13.1).
+(>= 0.13.1). Parameter `ignore_threshold` is deprecated.
 - Breaking: Changed defaults into `strict = FALSE` and `global.threshold = 0.01` 
 in `stat_peaks()` and `stat_valleys()`.
 - The argument passed to `idfactor` when plotting multiple spectra stored in
