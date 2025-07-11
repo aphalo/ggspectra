@@ -209,10 +209,12 @@ When using the default automatic mapping to \emph{x} and \emph{y}
 
   The current implementation merges the default mapping for \emph{x} and
   \emph{y} aesthetics with the user supplied mapping if it only contains
-  mappings to other aesthetics. In addition, if the user does not supply any mapping and
-  the object contains multiple spectra, a mapping of the indexing factor to
-  the \code{group} aesthetic is automatically added. The name of the id
-  factor is retrieved from the \code{data} object metadata.
+  mappings to aesthetics other than \emph{x} or \emph{y} or an empty
+  mapping. In addition, when the user does not pass an argument to
+  \code{mapping}, not even an empty one, if the object contains
+  multiple spectra, a mapping of the indexing factor to the \code{group}
+  aesthetic is added. The name of the id factor is retrieved
+  from the \code{data} object metadata.
 
   Differently to objects of other spectral classes, objects of class
   \code{\link[photobiology]{object_spct}} contain data for multiple physical
@@ -225,7 +227,7 @@ When using the default automatic mapping to \emph{x} and \emph{y}
   variables (=columns) when added to the plot object. \code{"reflectance"}
   passed as argument to \code{plot.qty} triggers conversion of the
   \code{object_spct} object passed as argument to \code{data} into a
-  \code{\link[photobiology]{replector_spct}} object and \code{"absorbance"},
+  \code{\link[photobiology]{reflector_spct}} object and \code{"absorbance"},
   \code{"absorptance"} and \code{"reflectance"}, trigger conversion into a
   \code{\link[photobiology]{filter_spct}} object. After conversion the
   objects are forwarded to the matching \code{ggplot} method.
@@ -234,8 +236,9 @@ When using the default automatic mapping to \emph{x} and \emph{y}
   through additional. When plotting collections of spectra a factor named as
   indicated by the argument passed to parameter \code{idfactor}, or
   \code{"spct.idx"} by default, is added using as levels the names of the
-  individual members of the collection. This factor can be mapped to
-  aesthetics such as \code{colour} or \code{group} or used for faceting.
+  individual members of the collection. The spectral object is forwarded
+  to the \code{ggplot} method matching its new class.
+
   \emph{Heterogeneous generic collections of spectra containing members
   belonging to more than one class are not supported.}
 }
