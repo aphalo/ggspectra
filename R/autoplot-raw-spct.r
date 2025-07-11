@@ -131,10 +131,10 @@ raw_plot <- function(spct,
 
   if (num.counts.cols > 1L) {
     spct <- photobiology::spct_wide2long(spct = spct, idfactor = "scan")
-    plot <- ggplot2::ggplot(spct) +
-      ggplot2::aes(x = .data[["w.length"]],
-                   y = .data[["counts"]],
-                   linetype = .data[["scan"]])
+    plot <- ggplot2::ggplot(data = spct,
+                            mapping = ggplot2::aes(x = .data[["w.length"]],
+                                                   y = .data[["counts"]],
+                                                   linetype = .data[["scan"]]))
     temp <- find_idfactor(spct = spct,
                           idfactor = idfactor,
                           facets = facets,
@@ -144,8 +144,9 @@ raw_plot <- function(spct,
     plot <- plot + temp$ggplot_comp
     annotations <- temp$annotations
   } else {
-    plot <- ggplot2::ggplot(spct) +
-      ggplot2::aes(x = .data[["w.length"]], y = .data[["counts"]])
+    plot <- ggplot2::ggplot(data = spct,
+                            mapping = ggplot2::aes(x = .data[["w.length"]],
+                                                   y = .data[["counts"]]))
     temp <- find_idfactor(spct = spct,
                           idfactor = idfactor,
                           facets = facets,

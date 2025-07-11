@@ -192,9 +192,9 @@ e_plot <- function(spct,
     y.max <- max(spct[["s.e.irrad"]], y.min, 0, na.rm = TRUE)
   }
 
-  plot <- ggplot2::ggplot(spct,
-                          ggplot2::aes(x = .data[["w.length"]],
-                                       y = .data[["s.e.irrad"]]))
+  plot <- ggplot2::ggplot(data = spct,
+                          mapping = ggplot2::aes(x = .data[["w.length"]],
+                                                 y = .data[["s.e.irrad"]]))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
                         facets = facets,
@@ -497,9 +497,9 @@ q_plot <- function(spct,
   }
 
   plot <-
-    ggplot2::ggplot(spct,
-                    ggplot2::aes(x = .data[["w.length"]],
-                                 y = .data[["s.q.irrad"]]))
+    ggplot2::ggplot(data = spct,
+                    mapping = ggplot2::aes(x = .data[["w.length"]],
+                                           y = .data[["s.q.irrad"]]))
   temp <- find_idfactor(spct = spct,
                         idfactor = idfactor,
                         facets = facets,
