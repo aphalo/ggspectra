@@ -47,22 +47,24 @@ test_that("stat_label_valleys", {
   vdiffr::expect_doppelganger("stat-label-valleys",
                               ggplot(sun.spct)+
                                 geom_line() +
-                                stat_label_valleys())
+                                stat_label_valleys(strict = TRUE)
+                              )
 
   vdiffr::expect_doppelganger("stat-label-valleys-span-11",
                               ggplot(sun.spct)+
                                 geom_line() +
-                                stat_label_valleys(span = 11))
+                                stat_label_valleys(span = 11, strict = TRUE)
+                              )
 
   vdiffr::expect_doppelganger("stat-label-valleys-span-101",
                               ggplot(sun.spct)+
                                 geom_line() +
-                                stat_label_valleys(span = 101))
+                                stat_label_valleys(span = 101, strict = TRUE))
 
   vdiffr::expect_doppelganger("stat-label-valleys-span-1001",
                               ggplot(sun.spct)+
                                 geom_line() +
-                                stat_label_valleys(span = 1001))
+                                stat_label_valleys(span = 1001, strict = TRUE))
 
   vdiffr::expect_doppelganger("stat-label-valleys-span-null",
                               ggplot(sun.spct)+
