@@ -39,6 +39,7 @@
 #'   layer added to the plot.
 #' @param mapping Default list of aesthetic mappings to use for plot. If not
 #'   specified, in the case of spectral objects, a default mapping will be used.
+#' @param ... Other arguments passed on to methods.
 #' @param range an R object on which range() returns a vector of length 2, with
 #'   min and max wavelengths (nm).
 #' @param unit.out character string indicating type of units to use for
@@ -48,7 +49,11 @@
 #'   \code{"absorptance"} or \code{"absorbance"} for \code{filter_spct} objects,
 #'   and in addition to these \code{"reflectance"}, \code{"all"} or
 #'   \code{"as.is"} for \code{object_spct} objects.
-#' @param ... Other arguments passed on to methods.
+#' @param by.group logical flag If \code{FALSE}, the default, individual spectra
+#'   are mapped to the \code{group} aesthetic to ensure separate lines are
+#'   plotted. Must be set to \code{by.group = TRUE} when plots are animated with
+#'   'gganimate' "by group" as the grouping for animation is NOT set using
+#'   \code{aes}.
 #' @param environment If a variable defined in the aesthetic mapping is not
 #'   found in the data, ggplot will look for it in this environment. It defaults
 #'   to using the environment in which \code{ggplot()} is called. The use of
@@ -143,6 +148,7 @@ ggplot.source_spct <-
            range = NULL,
            unit.out = getOption("photobiology.radiation.unit",
                                 default = "energy"),
+           by.group = FALSE,
            environment = parent.frame()) {
 
     if (!is.null(range)) {
@@ -181,7 +187,7 @@ ggplot.source_spct <-
     if (auto.map) {
       # we look for multiple spectra in long form
       num.spectra <- photobiology::getMultipleWl(p[["data"]])
-      if (num.spectra > 1) {
+      if (num.spectra > 1 && !by.group) {
         p <- p +
           ggplot2::aes(group = .data[[id_factor(p[["data"]])]])
       }
@@ -200,6 +206,7 @@ ggplot.response_spct <-
            range = NULL,
            unit.out = getOption("photobiology.radiation.unit",
                                 default = "energy"),
+           by.group = FALSE,
            environment = parent.frame()) {
     if (!is.null(range)) {
       data <- photobiology::trim_wl(data,
@@ -237,7 +244,7 @@ ggplot.response_spct <-
     if (auto.map) {
       # we look for multiple spectra in long form
       num.spectra <- photobiology::getMultipleWl(p[["data"]])
-      if (num.spectra > 1) {
+      if (num.spectra > 1 && !by.group) {
         p <- p +
           ggplot2::aes(group = .data[[id_factor(p[["data"]])]])
       }
@@ -256,6 +263,7 @@ ggplot.filter_spct <-
            range = NULL,
            plot.qty = getOption("photobiology.filter.qty",
                                 default = "transmittance"),
+           by.group = FALSE,
            environment = parent.frame()) {
     if (!is.null(range)) {
       data <- photobiology::trim_wl(data,
@@ -296,7 +304,7 @@ ggplot.filter_spct <-
     if (auto.map) {
       # we look for multiple spectra in long form
       num.spectra <- photobiology::getMultipleWl(p[["data"]])
-      if (num.spectra > 1) {
+      if (num.spectra > 1 && !by.group) {
         p <- p +
           ggplot2::aes(group = .data[[id_factor(p[["data"]])]])
       }
@@ -316,6 +324,7 @@ ggplot.reflector_spct <-
            ...,
            range = NULL,
            plot.qty = NULL,
+           by.group = FALSE,
            environment = parent.frame()) {
     if (!is.null(range)) {
       data <- photobiology::trim_wl(data,
@@ -345,7 +354,7 @@ ggplot.reflector_spct <-
     if (auto.map) {
       # we look for multiple spectra in long form
       num.spectra <- photobiology::getMultipleWl(p[["data"]])
-      if (num.spectra > 1) {
+      if (num.spectra > 1 && !by.group) {
         p <- p +
           ggplot2::aes(group = .data[[id_factor(p[["data"]])]])
       }
@@ -362,6 +371,7 @@ ggplot.cps_spct <-
            mapping = NULL,
            ...,
            range = NULL,
+           by.group = FALSE,
            environment = parent.frame()) {
     if (!is.null(range)) {
       data <- photobiology::trim_wl(data,
@@ -395,7 +405,7 @@ ggplot.cps_spct <-
     if (auto.map) {
       # we look for multiple spectra in long form
       num.spectra <- photobiology::getMultipleWl(p[["data"]])
-      if (num.spectra > 1) {
+      if (num.spectra > 1 && !by.group) {
         p <- p +
           ggplot2::aes(group = .data[[id_factor(p[["data"]])]])
       }
@@ -412,6 +422,7 @@ ggplot.calibration_spct <-
            mapping = NULL,
            ...,
            range = NULL,
+           by.group = FALSE,
            environment = parent.frame()) {
     if (!is.null(range)) {
       data <- photobiology::trim_wl(data,
@@ -445,7 +456,7 @@ ggplot.calibration_spct <-
     if (auto.map) {
       # we look for multiple spectra in long form
       num.spectra <- photobiology::getMultipleWl(p[["data"]])
-      if (num.spectra > 1) {
+      if (num.spectra > 1 && !by.group) {
         p <- p +
           ggplot2::aes(group = .data[[id_factor(p[["data"]])]])
       }
@@ -462,6 +473,7 @@ ggplot.raw_spct <-
            mapping = NULL,
            ...,
            range = NULL,
+           by.group = FALSE,
            environment = parent.frame()) {
     if (!is.null(range)) {
       data <- photobiology::trim_wl(data,
@@ -495,7 +507,7 @@ ggplot.raw_spct <-
     if (auto.map) {
       # we look for multiple spectra in long form
       num.spectra <- photobiology::getMultipleWl(p[["data"]])
-      if (num.spectra > 1) {
+      if (num.spectra > 1 && !by.group) {
         p <- p +
           ggplot2::aes(group = .data[[id_factor(p[["data"]])]])
       }

@@ -23,6 +23,7 @@
   ...,
   range = NULL,
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
+  by.group = FALSE,
   environment = parent.frame()
 )
 
@@ -32,6 +33,7 @@
   ...,
   range = NULL,
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
+  by.group = FALSE,
   environment = parent.frame()
 )
 
@@ -41,6 +43,7 @@
   ...,
   range = NULL,
   plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
+  by.group = FALSE,
   environment = parent.frame()
 )
 
@@ -50,14 +53,36 @@
   ...,
   range = NULL,
   plot.qty = NULL,
+  by.group = FALSE,
   environment = parent.frame()
 )
 
-\method{ggplot}{cps_spct}(data, mapping = NULL, ..., range = NULL, environment = parent.frame())
+\method{ggplot}{cps_spct}(
+  data,
+  mapping = NULL,
+  ...,
+  range = NULL,
+  by.group = FALSE,
+  environment = parent.frame()
+)
 
-\method{ggplot}{calibration_spct}(data, mapping = NULL, ..., range = NULL, environment = parent.frame())
+\method{ggplot}{calibration_spct}(
+  data,
+  mapping = NULL,
+  ...,
+  range = NULL,
+  by.group = FALSE,
+  environment = parent.frame()
+)
 
-\method{ggplot}{raw_spct}(data, mapping = NULL, ..., range = NULL, environment = parent.frame())
+\method{ggplot}{raw_spct}(
+  data,
+  mapping = NULL,
+  ...,
+  range = NULL,
+  by.group = FALSE,
+  environment = parent.frame()
+)
 
 \method{ggplot}{object_spct}(
   data,
@@ -134,6 +159,12 @@ min and max wavelengths (nm).}
 \item{unit.out}{character string indicating type of units to use for
 plotting spectral irradiance or spectral response, \code{"photon"} or
 \code{"energy"}.}
+
+\item{by.group}{logical flag If \code{FALSE}, the default, individual spectra
+are mapped to the \code{group} aesthetic to ensure separate lines are
+plotted. Must be set to \code{by.group = TRUE} when plots are animated with
+'gganimate' "by group" as the grouping for animation is NOT set using
+\code{aes}.}
 
 \item{environment}{If a variable defined in the aesthetic mapping is not
 found in the data, ggplot will look for it in this environment. It defaults
