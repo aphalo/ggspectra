@@ -47,7 +47,8 @@ to the y aesthetic.}
 \item{w.band}{a single waveband object or a list of waveband objects.}
 
 \item{range}{an R object on which \code{range()} returns a vector of length
-2, with minimum and maximum wavelengths (nm).}
+2, with minimum and maximum wavelengths (nm). Used to trim the spectrum or
+to expand the wavelength limits of the plot.}
 
 \item{norm}{numeric or character. Normalization to apply before plotting, If
 \code{object} is already normalized, the normalization is updated when a

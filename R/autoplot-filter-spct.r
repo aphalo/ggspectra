@@ -211,11 +211,12 @@ Afr_plot <- function(spct,
       length(intersect(c("labels", "summaries", "colour.guide", "reserve.space"),
                        annotations)) > 0L) {
     y.limits <- c(y.min, y.min + (y.max - y.min) * 1.25)
-    x.limits <- c(photobiology::wl_min(spct) -
-                    photobiology::wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
+    x.limits <- c(min(spct$w.length, range, na.rm = TRUE) - photobiology::wl_expanse(spct) * 0.025,
+                  max(spct$w.length, range, na.rm = TRUE) + 1) # +1 needed because of rounding errors
   } else {
-    y.limits <- c(y.min, y.max)
-    x.limits <- photobiology::wl_range(spct)
+    y.limits <- c(y.min, y.max * 1.05)
+    x.limits <- c(min(spct$w.length, range, na.rm = TRUE) - 1,
+                  max(spct$w.length, range, na.rm = TRUE) + 1)
   }
 
   if (pc.out) {
@@ -472,10 +473,12 @@ T_plot <- function(spct,
   if (!is.null(annotations) &&
       length(intersect(c("labels", "summaries", "colour.guide", "reserve.space"), annotations)) > 0L) {
     y.limits <- c(y.min, y.min + (y.max - y.min) * 1.25)
-    x.limits <- c(min(spct) - wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
+    x.limits <- c(min(spct$w.length, range, na.rm = TRUE) - photobiology::wl_expanse(spct) * 0.025,
+                  max(spct$w.length, range, na.rm = TRUE) + 1) # +1 needed because of rounding errors
   } else {
-    y.limits <- c(y.min, y.max)
-    x.limits <- range(spct)
+    y.limits <- c(y.min, y.max * 1.05)
+    x.limits <- c(min(spct$w.length, range, na.rm = TRUE) - 1,
+                  max(spct$w.length, range, na.rm = TRUE) + 1)
   }
   if (pc.out) {
     plot <-
@@ -703,12 +706,15 @@ A_plot <- function(spct,
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "summaries",
                          "colour.guide", "reserve.space"), annotations)) > 0L) {
-    y.limits <- c(y.min, min(y.max, 6) * 1.25)
-    x.limits <- c(min(spct) - photobiology::wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
+    y.limits <- c(y.min, y.min + (y.max - y.min) * 1.25)
+    x.limits <- c(min(spct$w.length, range, na.rm = TRUE) - photobiology::wl_expanse(spct) * 0.025,
+                  max(spct$w.length, range, na.rm = TRUE) + 1) # +1 needed because of rounding errors
   } else {
-    y.limits <- c(y.min, min(y.max, 6))
-    x.limits <- range(spct)
+    y.limits <- c(y.min, y.max * 1.05)
+    x.limits <- c(min(spct$w.length, range, na.rm = TRUE) - 1,
+                  max(spct$w.length, range, na.rm = TRUE) + 1)
   }
+
   plot <- plot + ggplot2::scale_y_continuous(limits = y.limits)
   plot + ggplot2::scale_x_continuous(limits = x.limits,
                                      breaks = scales::pretty_breaks(n = 7))
@@ -946,10 +952,12 @@ R_plot <- function(spct,
   if (!is.null(annotations) &&
       length(intersect(c("labels", "summaries", "colour.guide", "reserve.space"), annotations)) > 0L) {
     y.limits <- c(y.min, y.min + (y.max - y.min) * 1.25)
-    x.limits <- c(min(spct) - photobiology::wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
+    x.limits <- c(min(spct$w.length, range, na.rm = TRUE) - photobiology::wl_expanse(spct) * 0.025,
+                  max(spct$w.length, range, na.rm = TRUE) + 1) # +1 needed because of rounding errors
   } else {
-    y.limits <- c(y.min, y.max)
-    x.limits <- photobiology::wl_range(spct)
+    y.limits <- c(y.min, y.max * 1.05)
+    x.limits <- c(min(spct$w.length, range, na.rm = TRUE) - 1,
+                  max(spct$w.length, range, na.rm = TRUE) + 1)
   }
   if (pc.out) {
     plot <-
@@ -1210,14 +1218,15 @@ O_plot <- function(spct,
                             na.rm = TRUE)
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "colour.guide", "reserve.space"), annotations)) > 0L) {
-    y.limits <- c(y.min, y.min + (y.max - y.min) * 1.25)
-    x.limits <-
-      c(photobiology::wl_min(spct) - photobiology::wl_expanse(spct) * 0.025, NA)
-  } else {
-    y.limits <- c(y.min, y.max)
-    x.limits <- photobiology::wl_range(spct)
-  }
-  if (pc.out) {
+  y.limits <- c(y.min, y.min + (y.max - y.min) * 1.25)
+  x.limits <- c(min(spct$w.length, range, na.rm = TRUE) - photobiology::wl_expanse(spct) * 0.025,
+                max(spct$w.length, range, na.rm = TRUE) + 1) # +1 needed because of rounding errors
+} else {
+  y.limits <- c(y.min, y.max * 1.05)
+  x.limits <- c(min(spct$w.length, range, na.rm = TRUE) - 1,
+                max(spct$w.length, range, na.rm = TRUE) + 1)
+}
+if (pc.out) {
     plot <- plot +
       scale_y_continuous(labels = scales::percent,
                          breaks = y.breaks,
@@ -1371,6 +1380,19 @@ autoplot.filter_spct <-
       } else {
         w.band <-  photobiology::waveband(range, wb.name = "Total")
       }
+    }
+    if (is.null(range)) {
+      range <- rep(NA_real_, 2)
+    } else if (photobiology::is.waveband(range) ||
+               photobiology::is.any_spct(range)) {
+      range <- photobiology::wl_range(range)
+    } else if (is.numeric(range) &&
+               (length(range) > 2L || !anyNA(range))) {
+      range <- range(range, na.rm = TRUE)
+    }
+    if (!length(range) == 2L || !is.numeric(range)) {
+      warning("Ignoring bad 'range' argument")
+      range <- rep(NA_real_, 2)
     }
 
     if (plot.qty == "transmittance") {
@@ -1626,6 +1648,20 @@ autoplot.reflector_spct <-
         w.band <-  photobiology::waveband(range, wb.name = "Total")
       }
     }
+    if (is.null(range)) {
+      range <- rep(NA_real_, 2)
+    } else if (photobiology::is.waveband(range) ||
+               photobiology::is.any_spct(range)) {
+      range <- photobiology::wl_range(range)
+    } else if (is.numeric(range) &&
+               (length(range) > 2L || !anyNA(range))) {
+      range <- range(range, na.rm = TRUE)
+    }
+    if (!length(range) == 2L || !is.numeric(range)) {
+      warning("Ignoring bad 'range' argument")
+      range <- rep(NA_real_, 2)
+    }
+
     if (plot.qty == "reflectance") {
       out.ggplot <- R_plot(spct = object,
                            w.band = w.band,
@@ -1766,18 +1802,11 @@ autoplot.reflector_mspct <-
 #'   \code{\link[ggplot2]{autoplot}}
 #'
 #' @examples
-#'
-#' low_res.spct <- thin_wl(Ler_leaf.spct,
-#'                         max.wl.step = 20,
-#'                         max.slope.delta = 0.01,
-#'                         col.names = "Tfr")
-#' autoplot(low_res.spct)
-#' autoplot(low_res.spct, geom = "line")
-#'
-#' two_leaves.mspct <-
-#'   object_mspct(list("Arabidopsis leaf 1" = low_res.spct,
-#'                     "Arabidopsis leaf 2" = low_res.spct))
-#' autoplot(two_leaves.mspct, idfactor = "Spectra")
+#' autoplot(Ler_leaf.spct)
+#' autoplot(Ler_leaf.spct, geom = "line")
+#' autoplot(Ler_leaf.spct, plot.qty = "absorptance")
+#' autoplot(Ler_leaf.spct, plot.qty = "reflectance")
+#' autoplot(Ler_leaf.spct, plot.qty = "transmittance")
 #'
 #' @family autoplot methods
 #'
@@ -1872,6 +1901,20 @@ autoplot.object_spct <-
           w.band <-  photobiology::waveband(range, wb.name = "Total")
         }
       }
+      if (is.null(range)) {
+        range <- rep(NA_real_, 2)
+      } else if (photobiology::is.waveband(range) ||
+                 photobiology::is.any_spct(range)) {
+        range <- photobiology::wl_range(range)
+      } else if (is.numeric(range) &&
+                 (length(range) > 2L || !anyNA(range))) {
+        range <- range(range, na.rm = TRUE)
+      }
+      if (!length(range) == 2L || !is.numeric(range)) {
+        warning("Ignoring bad 'range' argument")
+        range <- rep(NA_real_, 2)
+      }
+
       out.ggplot <- O_plot(spct = object,
                            w.band = w.band,
                            range = range,
@@ -1979,7 +2022,7 @@ autoplot.object_mspct <-
     )
     col.name <- c(transmittance = "Tfr", absorptance = "Afr", reflectance = "Rfr")
     if ((photobiology::is.object_spct(z) && sum(col.name %in% names(z)) >= 2) ||
-        (photobiology::is.filter_spct(z) && any(c("Tfr", "Afr", "A")) %in% names(z)) ||
+        (photobiology::is.filter_spct(z) && any(c("Tfr", "Afr", "A") %in% names(z))) ||
         (photobiology::is.reflector_spct(z) && "Rfr" %in% names(z)))  {
       autoplot(object = z,
                range = NULL, # trimmed above

@@ -107,9 +107,18 @@ autoplot.waveband <-
       if (is.null(w.length) || length(w.length) < 2) {
         range <- range(w.band)
       }
-    } else {
-      range <- range(range)
+    } else if (photobiology::is.waveband(range) ||
+               photobiology::is.any_spct(range)) {
+      range <- photobiology::wl_range(range)
+    } else if (is.numeric(range) &&
+               (length(range) > 2L || !anyNA(range))) {
+      range <- range(range, na.rm = TRUE)
     }
+    if (!length(range) == 2L || !is.numeric(range)) {
+      warning("Ignoring bad 'range' argument")
+      range <- rep(NA_real_, 2)
+    }
+
     w.length <- w.length[w.length > range[1] & w.length < range[2]]
     if (is.null(w.length)) {
       w.length <- seq(range[1], range[2], length.out = 200)

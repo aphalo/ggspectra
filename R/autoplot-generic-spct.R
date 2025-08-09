@@ -148,12 +148,13 @@ generic_plot <- function(spct,
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "summaries",
                          "colour.guide", "reserve.space"), annotations)) > 0L) {
-    y.limits <- c(y.min, y.max + (y.max - y.min) * 0.25)
-    x.limits <-
-      c(photobiology::wl_min(spct) - photobiology::wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
+    y.limits <- c(y.min, y.min + (y.max - y.min) * 1.25)
+    x.limits <- c(min(spct$w.length, range, na.rm = TRUE) - photobiology::wl_expanse(spct) * 0.025,
+                  max(spct$w.length, range, na.rm = TRUE) + 1) # +1 needed because of rounding errors
   } else {
-    y.limits <- c(y.min, y.max)
-    x.limits <- photobiology::wl_range(spct)
+    y.limits <- c(y.min, y.max * 1.05)
+    x.limits <- c(min(spct$w.length, range, na.rm = TRUE) - 1,
+                  max(spct$w.length, range, na.rm = TRUE) + 1)
   }
 
   plot <- plot +
@@ -266,6 +267,19 @@ autoplot.generic_spct <-
         } else {
           w.band <- photobiology::waveband(range, wb.name = "Total")
         }
+      }
+      if (is.null(range)) {
+        range <- rep(NA_real_, 2)
+      } else if (photobiology::is.waveband(range) ||
+                 photobiology::is.any_spct(range)) {
+        range <- photobiology::wl_range(range)
+      } else if (is.numeric(range) &&
+                 (length(range) > 2L || !anyNA(range))) {
+        range <- range(range, na.rm = TRUE)
+      }
+      if (!length(range) == 2L || !is.numeric(range)) {
+        warning("Ignoring bad 'range' argument")
+        range <- rep(NA_real_, 2)
       }
 
       generic_plot(spct = object,

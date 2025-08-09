@@ -48,8 +48,22 @@ test_that("filter_spct default", {
                               autoplot(Ler_leaf_trns.spct, label.qty = "average"))
   vdiffr::expect_doppelganger("filter-label-mean-tot",
                               autoplot(Ler_leaf_trns.spct, label.qty = "mean"))
-  vdiffr::expect_doppelganger("filter-range-num-tot",
+  vdiffr::expect_doppelganger("filter-range-num-shrink",
                               autoplot(Ler_leaf_trns.spct, range = c(500, 700)))
+  vdiffr::expect_doppelganger("filter-range-num-shrink-long",
+                              autoplot(Ler_leaf_trns.spct, range = c(500, 600, 700)))
+  vdiffr::expect_doppelganger("filter-range-num-shrink-r",
+                              autoplot(Ler_leaf_trns.spct, range = c(NA, 700)))
+  vdiffr::expect_doppelganger("filter-range-num-shrink-l",
+                              autoplot(Ler_leaf_trns.spct, range = c(500, NA)))
+  vdiffr::expect_doppelganger("filter-range-num-expand",
+                              autoplot(Ler_leaf_trns.spct, range = c(150, 1000)))
+  vdiffr::expect_doppelganger("filter-range-num-expand-long",
+                              autoplot(Ler_leaf_trns.spct, range = c(150, 600, 1000)))
+  vdiffr::expect_doppelganger("filter-range-num-expand-r",
+                              autoplot(Ler_leaf_trns.spct, range = c(NA, 1000)))
+  vdiffr::expect_doppelganger("filter-range-num-expand-l",
+                              autoplot(Ler_leaf_trns.spct, range = c(150, NA)))
   vdiffr::expect_doppelganger("filter-range-wb-tot",
                               autoplot(Ler_leaf_trns.spct, range = waveband(c(500, 700))))
   vdiffr::expect_doppelganger("filter-no-annotations-tot",
@@ -314,8 +328,22 @@ test_that("reflector_spct", {
                               autoplot(Ler_leaf_rflt.spct, label.qty = "average"))
   vdiffr::expect_doppelganger("reflector-label-mean-tot",
                               autoplot(Ler_leaf_rflt.spct, label.qty = "mean"))
-  vdiffr::expect_doppelganger("reflector-range-num-tot",
+  vdiffr::expect_doppelganger("reflector-range-num-shrink",
                               autoplot(Ler_leaf_rflt.spct, range = c(500, 700)))
+  vdiffr::expect_doppelganger("reflector-range-num-shrink-long",
+                              autoplot(Ler_leaf_rflt.spct, range = c(500, 600, 700)))
+  vdiffr::expect_doppelganger("reflector-range-num-shrink-r",
+                              autoplot(Ler_leaf_rflt.spct, range = c(NA, 700)))
+  vdiffr::expect_doppelganger("reflector-range-num-shrink-l",
+                              autoplot(Ler_leaf_rflt.spct, range = c(500, NA)))
+  vdiffr::expect_doppelganger("reflector-range-num-expand",
+                              autoplot(Ler_leaf_rflt.spct, range = c(200, 1000)))
+  vdiffr::expect_doppelganger("reflector-range-num-expand-long",
+                              autoplot(Ler_leaf_rflt.spct, range = c(200, 600, 1000)))
+  vdiffr::expect_doppelganger("reflector-range-num-expand-r",
+                              autoplot(Ler_leaf_rflt.spct, range = c(NA, 1000)))
+  vdiffr::expect_doppelganger("reflector-range-num-expand-l",
+                              autoplot(Ler_leaf_rflt.spct, range = c(200, NA)))
   vdiffr::expect_doppelganger("reflector-range-wb-tot",
                               autoplot(Ler_leaf_rflt.spct, range = waveband(c(500, 700))))
   vdiffr::expect_doppelganger("reflector-no-annotations-tot",

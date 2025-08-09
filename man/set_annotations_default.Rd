@@ -31,7 +31,8 @@ set_axis_symbols_default(axis.symbols = TRUE)
 "LaTeX".}
 
 \item{range}{an R object on which \code{range()} returns a vector of length
-2, with minimum and maximum wavelengths (nm).}
+2, with minimum and maximum wavelengths (nm). Used to trim the spectrum or
+to expand the wavelength limits of the plot.}
 
 \item{pc.out}{logical, if \code{TRUE} use percent instead of fraction of one
 for normalized spectral data.}

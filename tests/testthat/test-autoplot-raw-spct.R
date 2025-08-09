@@ -18,8 +18,22 @@ test_that("raw_spct", {
                               autoplot(white_led.raw_spct, ylim = c(NA, 9e4)))
   vdiffr::expect_doppelganger("raw-ylim2",
                               autoplot(white_led.raw_spct, ylim = c(-5e3, 9e4)))
-  vdiffr::expect_doppelganger("raw-range-num",
+  vdiffr::expect_doppelganger("raw-range-num-shrink",
                               autoplot(white_led.raw_spct, range = c(500, 700)))
+  vdiffr::expect_doppelganger("raw-range-num-shrink-long",
+                              autoplot(white_led.raw_spct, range = c(500, 600, 700)))
+  vdiffr::expect_doppelganger("raw-range-num-shrink-r",
+                              autoplot(white_led.raw_spct, range = c(NA, 700)))
+  vdiffr::expect_doppelganger("raw-range-num-shrink-l",
+                              autoplot(white_led.raw_spct, range = c(500, NA)))
+  vdiffr::expect_doppelganger("raw-range-num-expand",
+                              autoplot(white_led.raw_spct, range = c(100, 1300)))
+  vdiffr::expect_doppelganger("raw-range-num-expand-long",
+                              autoplot(white_led.raw_spct, range = c(100, 600, 1300)))
+  vdiffr::expect_doppelganger("raw-range-num-expand-r",
+                              autoplot(white_led.raw_spct, range = c(NA, 1300)))
+  vdiffr::expect_doppelganger("raw-range-num-expand-l",
+                              autoplot(white_led.raw_spct, range = c(100, NA)))
   vdiffr::expect_doppelganger("raw-range-wb",
                               autoplot(white_led.raw_spct, range = waveband(c(500, 700))))
   vdiffr::expect_doppelganger("raw-no-annotations",

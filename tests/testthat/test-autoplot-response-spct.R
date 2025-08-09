@@ -33,8 +33,22 @@ test_that("response_spct", {
                               autoplot(ccd.spct, label.qty = "contribution"))
   vdiffr::expect_doppelganger("response-label-relative",
                               autoplot(ccd.spct, label.qty = "relative"))
-  vdiffr::expect_doppelganger("response-range-num",
+  vdiffr::expect_doppelganger("response-range-num-shrink",
                               autoplot(ccd.spct, range = c(300, 700)))
+  vdiffr::expect_doppelganger("response-range-num-shrink-long",
+                              autoplot(ccd.spct, range = c(300, 500, 700)))
+  vdiffr::expect_doppelganger("response-range-num-shrink-r",
+                              autoplot(ccd.spct, range = c(NA, 700)))
+  vdiffr::expect_doppelganger("response-range-num-shrink-l",
+                              autoplot(ccd.spct, range = c(300, NA)))
+  vdiffr::expect_doppelganger("response-range-num-expand",
+                              autoplot(ccd.spct, range = c(150, 1200)))
+  vdiffr::expect_doppelganger("response-range-num-expand-long",
+                              autoplot(ccd.spct, range = c(150, 300, 1200)))
+  vdiffr::expect_doppelganger("response-range-num-expand-r",
+                              autoplot(ccd.spct, range = c(NA, 1200)))
+  vdiffr::expect_doppelganger("response-range-num-expand-l",
+                              autoplot(ccd.spct, range = c(150, NA)))
   vdiffr::expect_doppelganger("response-range-wb",
                               autoplot(ccd.spct, range = waveband(c(300, 700))))
   vdiffr::expect_doppelganger("response-no-annotations",
@@ -66,8 +80,18 @@ test_that("response_spct", {
                               autoplot(ccd.spct, unit.out = "photon", label.qty = "contribution"))
   vdiffr::expect_doppelganger("response-label-relative-q",
                               autoplot(ccd.spct, unit.out = "photon", label.qty = "relative"))
-  vdiffr::expect_doppelganger("response-range-num-q",
+  vdiffr::expect_doppelganger("response-range-num-shrink-q",
                               autoplot(ccd.spct, unit.out = "photon", range = c(500, 700)))
+  vdiffr::expect_doppelganger("response-range-num-shrink-r-q",
+                              autoplot(ccd.spct, unit.out = "photon", range = c(NA, 700)))
+  vdiffr::expect_doppelganger("response-range-num-shrink-l-q",
+                              autoplot(ccd.spct, unit.out = "photon", range = c(500, NA)))
+  vdiffr::expect_doppelganger("response-range-num-expand-q",
+                              autoplot(ccd.spct, unit.out = "photon", range = c(150, 1200)))
+  vdiffr::expect_doppelganger("response-range-num-expand-r-q",
+                              autoplot(ccd.spct, unit.out = "photon", range = c(NA, 1200)))
+  vdiffr::expect_doppelganger("response-range-num-expand-l-q",
+                              autoplot(ccd.spct, unit.out = "photon", range = c(150, NA)))
   vdiffr::expect_doppelganger("response-range-wb-q",
                               autoplot(ccd.spct, unit.out = "photon", range = waveband(c(500, 700))))
   vdiffr::expect_doppelganger("response-no-annotations-q",

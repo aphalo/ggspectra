@@ -47,8 +47,22 @@ test_that("source_spct", {
                               autoplot(white_led.source_spct, label.qty = "contribution"))
   vdiffr::expect_doppelganger("source-label-relative",
                               autoplot(white_led.source_spct, label.qty = "relative"))
-  vdiffr::expect_doppelganger("source-range-num",
+  vdiffr::expect_doppelganger("source-range-num-shrink",
                               autoplot(white_led.source_spct, range = c(500, 700)))
+  vdiffr::expect_doppelganger("source-range-num-shrink-long",
+                              autoplot(white_led.source_spct, range = c(500, 600, 700)))
+  vdiffr::expect_doppelganger("source-range-num-shrink-r",
+                              autoplot(white_led.source_spct, range = c(NA, 700)))
+  vdiffr::expect_doppelganger("source-range-num-shrink-l",
+                              autoplot(white_led.source_spct, range = c(500, NA)))
+  vdiffr::expect_doppelganger("source-range-num-expand",
+                              autoplot(white_led.source_spct, range = c(200, 1100)))
+  vdiffr::expect_doppelganger("source-range-num-expand-long",
+                              autoplot(white_led.source_spct, range = c(200, 600, 1100)))
+  vdiffr::expect_doppelganger("source-range-num-expand-r",
+                              autoplot(white_led.source_spct, range = c(NA, 1100)))
+  vdiffr::expect_doppelganger("source-range-num-expand-l",
+                              autoplot(white_led.source_spct, range = c(200, NA)))
   vdiffr::expect_doppelganger("source-range-wb",
                               autoplot(white_led.source_spct, range = waveband(c(500, 700))))
   vdiffr::expect_doppelganger("source-no-annotations",
@@ -81,8 +95,22 @@ test_that("source_spct", {
                               autoplot(white_led.source_spct, unit.out = "photon", label.qty = "average"))
   vdiffr::expect_doppelganger("source-label-mean-q",
                               autoplot(white_led.source_spct, unit.out = "photon", label.qty = "mean"))
-  vdiffr::expect_doppelganger("source-range-num-q",
+  vdiffr::expect_doppelganger("source-range-num-shrink-q",
                               autoplot(white_led.source_spct, unit.out = "photon", range = c(500, 700)))
+  vdiffr::expect_doppelganger("source-range-num-shrink-long-q",
+                              autoplot(white_led.source_spct, unit.out = "photon", range = c(500, 600, 700)))
+  vdiffr::expect_doppelganger("source-range-num-shrink-r-q",
+                              autoplot(white_led.source_spct, unit.out = "photon", range = c(NA, 700)))
+  vdiffr::expect_doppelganger("source-range-num-shrink-l-q",
+                              autoplot(white_led.source_spct, unit.out = "photon", range = c(500, NA)))
+  vdiffr::expect_doppelganger("source-range-num-expand-q",
+                              autoplot(white_led.source_spct, unit.out = "photon", range = c(200, 1100)))
+  vdiffr::expect_doppelganger("source-range-num-expand-long-q",
+                              autoplot(white_led.source_spct, unit.out = "photon", range = c(200, 600, 1100)))
+  vdiffr::expect_doppelganger("source-range-num-expand-r-q",
+                              autoplot(white_led.source_spct, unit.out = "photon", range = c(NA, 1100)))
+  vdiffr::expect_doppelganger("source-range-num-expand-l-q",
+                              autoplot(white_led.source_spct, unit.out = "photon", range = c(200, NA)))
   vdiffr::expect_doppelganger("source-range-wb-q",
                               autoplot(white_led.source_spct, unit.out = "photon", range = waveband(c(500, 700))))
   vdiffr::expect_doppelganger("source-no-annotations-q",

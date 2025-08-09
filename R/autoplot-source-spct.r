@@ -278,14 +278,18 @@ e_plot <- function(spct,
     y.breaks <- scales::pretty_breaks(n = 5)
   }
 
+  # limits need to be computed so that an argument to range can expand or
+  # contract the limits.
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "summaries",
                          "colour.guide", "reserve.space"), annotations)) > 0L) {
     y.limits <- c(y.min, y.min + (y.max - y.min) * 1.25)
-    x.limits <- c(min(spct) - photobiology::wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
+    x.limits <- c(min(spct$w.length, range, na.rm = TRUE) - photobiology::wl_expanse(spct) * 0.025,
+                  max(spct$w.length, range, na.rm = TRUE) + 1) # +1 needed because of rounding errors
   } else {
     y.limits <- c(y.min, y.max * 1.05)
-    x.limits <- range(spct)
+    x.limits <- c(min(spct$w.length, range, na.rm = TRUE) - 1,
+                  max(spct$w.length, range, na.rm = TRUE) + 1)
   }
 
   if (pc.out) {
@@ -583,14 +587,18 @@ q_plot <- function(spct,
     y.breaks <- scales::pretty_breaks(n = 5)
   }
 
+  # limits need to be computed so that an argument to range can expand or
+  # contract the limits.
   if (!is.null(annotations) &&
       length(intersect(c("boxes", "segments", "labels", "summaries",
                          "colour.guide", "reserve.space"), annotations)) > 0L) {
     y.limits <- c(y.min, y.min + (y.max - y.min) * 1.25)
-    x.limits <- c(min(spct) - photobiology::wl_expanse(spct) * 0.025, NA) # NA needed because of rounding errors
+    x.limits <- c(min(spct$w.length, range, na.rm = TRUE) - photobiology::wl_expanse(spct) * 0.025,
+                  max(spct$w.length, range, na.rm = TRUE) + 1) # +1 needed because of rounding errors
   } else {
     y.limits <- c(y.min, y.max * 1.05)
-    x.limits <- range(spct)
+    x.limits <- c(min(spct$w.length, range, na.rm = TRUE) - 1,
+                  max(spct$w.length, range, na.rm = TRUE) + 1)
   }
 
   if (pc.out) {
@@ -620,7 +628,8 @@ q_plot <- function(spct,
 #'   to the plot methods for individual spectra, otherwise currently ignored.
 #' @param w.band a single waveband object or a list of waveband objects.
 #' @param range an R object on which \code{range()} returns a vector of length
-#'   2, with minimum and maximum wavelengths (nm).
+#'   2, with minimum and maximum wavelengths (nm). Used to trim the spectrum or
+#'   to expand the wavelength limits of the plot.
 #' @param norm numeric or character. Normalization to apply before plotting, If
 #'   \code{object} is already normalized, the normalization is updated when a
 #'   unit conversion applied.
@@ -670,31 +679,39 @@ q_plot <- function(spct,
 #' @param object.label character The name of the object being plotted.
 #' @param na.rm logical.
 #'
-#' @details The \code{autoplot()} methods  from 'ggspectra' are convenience wrapper functions that easy the creation
-#'   of plots from spectral objects at the cost of lacking the flexibility of the
-#'   grammar of graphics. The plot object returned is a ggplot (an object of class
-#'   \code{"gg"}) and it can be added to or modified as any other ggplot. The
-#'   axis labels are encoded as \emph{plotmath} expressions as they contain
-#'   superscripts and special characters. In 'ggplot2', plotmath expressions do
-#'   not obey theme settings related to text fonts, except for \code{size}.
+#' @details The \code{autoplot()} methods  from 'ggspectra' are convenience
+#'   wrapper functions that easy the creation of plots from spectral objects at
+#'   the cost of lacking the flexibility of the grammar of graphics. The plot
+#'   object returned is a ggplot (an object of class \code{"gg"}) and it can be
+#'   added to or modified as any other ggplot. The axis labels are encoded as
+#'   \emph{plotmath} expressions as they contain superscripts and special
+#'   characters. In 'ggplot2', plotmath expressions do not obey theme settings
+#'   related to text fonts, except for \code{size}.
 #'
-#'   Scale limits are expanded so as to make space for the annotations. If
-#'   annotations are disabled, limits are not expanded unless
-#'   \code{reserve.space} is passed to parameter \code{annotations}.
+#'   Limits of the y scale are expanded so as to make space for the annotations.
+#'   If annotations are disabled, limits are not expanded unless
+#'   \code{"reserve.space"} is passed to parameter \code{annotations}. An
+#'   argument passed to parameter \code{ylim} manually sets the limits.
 #'
-#'   The generic of the \code{\link[ggplot2]{autoplot}} method is defined in
+#'   An argument passed to parameter \code{range} sets the limits of the x scale
+#'   to which wavelengths in nanometres are mapped. When the limits are narrower
+#'   than the data the spectrum in "trimmed", when broader only the scale limits
+#'   are expanded. If the argument is a vector of length 2, NA values are
+#'   replaced by the default limits.
+#'
+#'   The generic of the \code{\link[ggplot2]{autoplot}()} method is defined in
 #'   package 'ggplot2'. Package 'ggspectra' defines specializations for the
 #'   different classes for storage of spectral data defined in package
 #'   \code{\link[photobiology]{photobiology}}.
 #'
 #'   For details about normalization and arguments to parameter \code{norm},
-#'   please, see \code{\link[photobiology]{normalize}}. If \code{norm = NA},
+#'   please, see \code{\link[photobiology]{normalize}()}. If \code{norm = NA},
 #'   the default, \code{normalize()} is not called. All other values passed
 #'   as argument to \code{norm} result in a call to \code{normalize()} with
 #'   this value as its argument. In the case of objects
 #'   created with 'photobiology' (<= 0.10.9) \code{norm = "undo"} is not
 #'   supported. Be aware that calls to \code{normalize()} remove any scaling
-#'   previously applied with \code{\link[photobiology]{fscale}} methods.
+#'   previously applied with \code{\link[photobiology]{fscale}()} methods.
 #'
 #'   For multiple spectra in long form spectral objects, with \code{idfactor
 #'   = NULL}, the default, the name of the factor is retrieved from metadata. If
@@ -708,11 +725,11 @@ q_plot <- function(spct,
 #'   data and annotations. The \code{data} member retains its original class
 #'   and metadata attributes.
 #'
-#' @seealso \code{\link[photobiology]{normalize}},
-#'   \code{\link[photobiology]{source_spct}},
-#'   \code{\link[photobiology]{waveband}},
+#' @seealso \code{\link[photobiology]{normalize}()},
+#'   \code{\link[photobiology]{source_spct}()},
+#'   \code{\link[photobiology]{waveband}()},
 #'   \code{\link[photobiologyWavebands]{photobiologyWavebands-package}} and
-#'   \code{\link[ggplot2]{autoplot}}
+#'   \code{\link[ggplot2]{autoplot}()}
 #'
 #' @export
 #'
@@ -837,6 +854,19 @@ autoplot.source_spct <-
         w.band[[wb.PAR]] <-
           photobiology::waveband(x = c(400, 700), wb.name = "PAR")
       }
+    }
+    if (is.null(range)) {
+      range <- rep(NA_real_, 2)
+    } else if (photobiology::is.waveband(range) ||
+               photobiology::is.any_spct(range)) {
+      range <- photobiology::wl_range(range)
+    } else if (is.numeric(range) &&
+               (length(range) > 2L || !anyNA(range))) {
+      range <- range(range, na.rm = TRUE)
+    }
+    if (!length(range) == 2L || !is.numeric(range)) {
+      warning("Ignoring bad 'range' argument")
+      range <- rep(NA_real_, 2)
     }
 
     if (unit.out %in% c("photon", "quantum")) {

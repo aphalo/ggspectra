@@ -55,7 +55,8 @@ to the plot methods for individual spectra, otherwise currently ignored.}
 \item{w.band}{a single waveband object or a list of waveband objects.}
 
 \item{range}{an R object on which \code{range()} returns a vector of length
-2, with minimum and maximum wavelengths (nm).}
+2, with minimum and maximum wavelengths (nm). Used to trim the spectrum or
+to expand the wavelength limits of the plot.}
 
 \item{unit.out}{character IGNORED.}
 
@@ -129,31 +130,39 @@ data contained in a \code{calibration_spct} or a \code{calibration_mspct}
 object.
 }
 \details{
-The \code{autoplot()} methods  from 'ggspectra' are convenience wrapper functions that easy the creation
-  of plots from spectral objects at the cost of lacking the flexibility of the
-  grammar of graphics. The plot object returned is a ggplot (an object of class
-  \code{"gg"}) and it can be added to or modified as any other ggplot. The
-  axis labels are encoded as \emph{plotmath} expressions as they contain
-  superscripts and special characters. In 'ggplot2', plotmath expressions do
-  not obey theme settings related to text fonts, except for \code{size}.
+The \code{autoplot()} methods  from 'ggspectra' are convenience
+  wrapper functions that easy the creation of plots from spectral objects at
+  the cost of lacking the flexibility of the grammar of graphics. The plot
+  object returned is a ggplot (an object of class \code{"gg"}) and it can be
+  added to or modified as any other ggplot. The axis labels are encoded as
+  \emph{plotmath} expressions as they contain superscripts and special
+  characters. In 'ggplot2', plotmath expressions do not obey theme settings
+  related to text fonts, except for \code{size}.
 
-  Scale limits are expanded so as to make space for the annotations. If
-  annotations are disabled, limits are not expanded unless
-  \code{reserve.space} is passed to parameter \code{annotations}.
+  Limits of the y scale are expanded so as to make space for the annotations.
+  If annotations are disabled, limits are not expanded unless
+  \code{"reserve.space"} is passed to parameter \code{annotations}. An
+  argument passed to parameter \code{ylim} manually sets the limits.
 
-  The generic of the \code{\link[ggplot2]{autoplot}} method is defined in
+  An argument passed to parameter \code{range} sets the limits of the x scale
+  to which wavelengths in nanometres are mapped. When the limits are narrower
+  than the data the spectrum in "trimmed", when broader only the scale limits
+  are expanded. If the argument is a vector of length 2, NA values are
+  replaced by the default limits.
+
+  The generic of the \code{\link[ggplot2]{autoplot}()} method is defined in
   package 'ggplot2'. Package 'ggspectra' defines specializations for the
   different classes for storage of spectral data defined in package
   \code{\link[photobiology]{photobiology}}.
 
   For details about normalization and arguments to parameter \code{norm},
-  please, see \code{\link[photobiology]{normalize}}. If \code{norm = NA},
+  please, see \code{\link[photobiology]{normalize}()}. If \code{norm = NA},
   the default, \code{normalize()} is not called. All other values passed
   as argument to \code{norm} result in a call to \code{normalize()} with
   this value as its argument. In the case of objects
   created with 'photobiology' (<= 0.10.9) \code{norm = "undo"} is not
   supported. Be aware that calls to \code{normalize()} remove any scaling
-  previously applied with \code{\link[photobiology]{fscale}} methods.
+  previously applied with \code{\link[photobiology]{fscale}()} methods.
 
   For multiple spectra in long form spectral objects, with \code{idfactor
   = NULL}, the default, the name of the factor is retrieved from metadata. If
