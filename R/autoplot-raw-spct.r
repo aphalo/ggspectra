@@ -459,7 +459,7 @@ autoplot.raw_mspct <-
     if (photobiology::is.raw_spct(z) &&
         any(c("counts", "counts_1") %in% names(z))) {
       autoplot(object = z,
-               range = NULL, # trimmed above
+               range = range, # trimmed above, needed for expansion
                unit.out = unit.out,
                pc.out = pc.out,
                by.group = by.group,
@@ -472,7 +472,7 @@ autoplot.raw_mspct <-
       z <- photobiology::as.generic_spct(z)
       autoplot(object = z,
                y.name = paste("counts", plot.data, sep = "."),
-               range = NULL, # trimmed above
+               range = range, # trimmed above, needed for expansion
                pc.out = pc.out,
                by.group = by.group,
                idfactor = NULL, # use idfactor already set in z

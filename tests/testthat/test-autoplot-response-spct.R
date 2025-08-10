@@ -154,8 +154,10 @@ test_that("response_mspct", {
 
   vdiffr::expect_doppelganger("response-mspct-default",
                               autoplot(two_ccds.mspct))
-  vdiffr::expect_doppelganger("response-mspct-default-range",
+  vdiffr::expect_doppelganger("response-mspct-default-range-shrink",
                               autoplot(two_ccds.mspct, range = c(500, 700)))
+  vdiffr::expect_doppelganger("response-mspct-default-range-expand",
+                              autoplot(two_ccds.mspct, range = c(100, 1200)))
   vdiffr::expect_doppelganger("response-mspct-default-e",
                               autoplot(two_ccds.mspct, unit.out = "energy"))
   vdiffr::expect_doppelganger("response-mspct-default-p",

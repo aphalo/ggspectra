@@ -1507,7 +1507,7 @@ autoplot.filter_mspct <-
     col.name <- c(transmittance = "Tfr", absorptance = "Afr", absorbance = "A")
     if (photobiology::is.filter_spct(z) && col.name[plot.qty] %in% names(z)) {
       autoplot(object = z,
-               range = NULL, # trimmed above
+               range = range, # trimmed above, needed for expansion
                plot.qty = plot.qty,
                pc.out = pc.out,
                idfactor = NULL, # use idfactor already set in z
@@ -1521,7 +1521,7 @@ autoplot.filter_mspct <-
       z <- as.generic_spct(z)
       autoplot(object = z,
                y.name = paste(col.name[plot.qty], plot.data, sep = "."),
-               range = NULL, # trimmed above
+               range = range, # trimmed above, needed for expansion
                pc.out = pc.out,
                idfactor = NULL, # use idfactor already set in z
                by.group = by.group,
@@ -1737,7 +1737,7 @@ autoplot.reflector_mspct <-
     )
     if (photobiology::is.reflector_spct(z) && "Rfr" %in% names(z)) {
       autoplot(object = z,
-               range = NULL, # trimmed above
+               range = range, # trimmed above, needed for expansion
                plot.qty = plot.qty,
                pc.out = pc.out,
                by.group = by.group,
@@ -1750,7 +1750,7 @@ autoplot.reflector_mspct <-
       z <- as.generic_spct(z)
       autoplot(object = z,
                y.name = paste("Rfr", plot.data, sep = "."),
-               range = NULL, # trimmed above
+               range = range, # trimmed above, needed for expansion
                pc.out = pc.out,
                by.group = by.group,
                idfactor = NULL, # use idfactor already set in z
@@ -2025,7 +2025,7 @@ autoplot.object_mspct <-
         (photobiology::is.filter_spct(z) && any(c("Tfr", "Afr", "A") %in% names(z))) ||
         (photobiology::is.reflector_spct(z) && "Rfr" %in% names(z)))  {
       autoplot(object = z,
-               range = NULL, # trimmed above
+               range = range, # trimmed above, needed for expansion
                plot.qty = plot.qty,
                pc.out = pc.out,
                by.group = by.group,
@@ -2038,7 +2038,7 @@ autoplot.object_mspct <-
       z <- photobiology::as.generic_spct(z)
       autoplot(object = z,
                y.name = paste(col.name[plot.qty], plot.data, sep = "."),
-               range = NULL, # trimmed above
+               range = range, # trimmed above, needed for expansion
                pc.out = pc.out,
                by.group = by.group,
                idfactor = NULL, # use idfactor already set in z
@@ -2050,7 +2050,7 @@ autoplot.object_mspct <-
       z <- photobiology::as.generic_spct(z)
       autoplot(object = z,
                y.name = paste("Rfr", plot.data, sep = "."),
-               range = NULL, # trimmed above
+               range = range, # trimmed above, needed for expansion
                pc.out = pc.out,
                by.group = by.group,
                idfactor = NULL, # use idfactor already set in z

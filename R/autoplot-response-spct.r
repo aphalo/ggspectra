@@ -764,7 +764,7 @@ autoplot.response_mspct <-
     col.name <- c(photon = "s.q.response", energy = "s.e.response")
     if (photobiology::is.response_spct(z) && any(col.name %in% names(z))) {
       autoplot(object = z,
-               range = NULL,
+               range = range, # trimmed above, needed for expansion
                unit.out = unit.out,
                pc.out = pc.out,
                facets = facets,
@@ -777,7 +777,7 @@ autoplot.response_mspct <-
       z <- photobiology::as.generic_spct(z)
       autoplot(object = z,
                y.name = paste(col.name[unit.out], plot.data, sep = "."),
-               range = NULL,
+               range = range, # trimmed above, needed for expansion
                pc.out = pc.out,
                facets = facets,
                idfactor = NULL, # use idfactor already set in z

@@ -425,7 +425,7 @@ autoplot.cps_mspct <-
     if (photobiology::is.cps_spct(z) &&
         any(c("cps", "cps_1") %in% names(z))) {
       autoplot(object = z,
-               range = NULL, # trimmed above
+               range = range, # trimmed above, needed for expansion
                pc.out = pc.out,
                by.group = by.group,
                idfactor = NULL, # use idfactor already set in z
@@ -437,7 +437,7 @@ autoplot.cps_mspct <-
       z <- photobiology::as.generic_spct(z)
       autoplot(object = z,
                y.name = paste("cps", plot.data, sep = "."),
-               range = NULL, # trimmed above
+               range = range, # trimmed above, needed for expansion
                pc.out = pc.out,
                by.group = by.group,
                idfactor = NULL, # use idfactor already set in z

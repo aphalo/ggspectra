@@ -213,8 +213,22 @@ test_that("source_mspct", {
                               autoplot(two_leds.mspct, geom = "spct"))
   vdiffr::expect_doppelganger("source-mspct-ylim",
                               autoplot(two_leds.mspct, ylim = c(-0.1, 1.2)))
-  vdiffr::expect_doppelganger("source-mspct-default-range",
+  vdiffr::expect_doppelganger("source-mspct-default-range-shrink",
                               autoplot(two_leds.mspct, range = c(500, 700)))
+  vdiffr::expect_doppelganger("source-mspct-default-range-shrink-long",
+                              autoplot(two_leds.mspct, range = c(500, 600, 700)))
+  vdiffr::expect_doppelganger("source-mspct-default-range-shrink-r",
+                              autoplot(two_leds.mspct, range = c(NA, 700)))
+  vdiffr::expect_doppelganger("source-mspct-default-range-shrink-l",
+                              autoplot(two_leds.mspct, range = c(500, NA)))
+  vdiffr::expect_doppelganger("source-mspct-default-range-expand",
+                              autoplot(two_leds.mspct, range = c(200, 1100)))
+  vdiffr::expect_doppelganger("source-mspct-default-range-expand-long",
+                              autoplot(two_leds.mspct, range = c(200, 600, 1100)))
+  vdiffr::expect_doppelganger("source-mspct-default-range-expand-r",
+                              autoplot(two_leds.mspct, range = c(NA, 1100)))
+  vdiffr::expect_doppelganger("source-mspct-default-range-expand-l",
+                              autoplot(two_leds.mspct, range = c(200, NA)))
   vdiffr::expect_doppelganger("source-mspct-default-wband-wb",
                               autoplot(two_leds.mspct, w.band = VIS()))
   vdiffr::expect_doppelganger("source-mspct-default-wband-wbls",
@@ -236,7 +250,7 @@ test_that("source_mspct", {
   vdiffr::expect_doppelganger("source-mspct-sum",
                               autoplot(two_leds.mspct, plot.data = "sum"))
   # triggers warning
-  # vdiffr::expect_doppelganger("source-mspct-sum",
+  # vdiffr::expect_doppelganger("source-mspct-prod",
   #                             autoplot(two_leds.mspct, plot.data = "prod"))
   testthat::expect_warning(autoplot(two_leds.mspct, plot.data = "prod"))
   vdiffr::expect_doppelganger("source-mspct-se",

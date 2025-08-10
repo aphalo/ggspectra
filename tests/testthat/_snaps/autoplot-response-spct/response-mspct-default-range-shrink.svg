@@ -231,6 +231,6 @@
 <line x1='656.48' y1='297.78' x2='685.28' y2='297.78' style='stroke-width: 1.07; stroke-dasharray: 2.85,2.85; stroke-linecap: butt;' />
 <text x='694.36' y='283.53' style='font-size: 8.80px; font-family: sans;' textLength='14.68px' lengthAdjust='spacingAndGlyphs'>one</text>
 <text x='694.36' y='300.81' style='font-size: 8.80px; font-family: sans;' textLength='14.19px' lengthAdjust='spacingAndGlyphs'>half</text>
-<text x='53.33' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='176.12px' lengthAdjust='spacingAndGlyphs'>response-mspct-default-range</text>
+<text x='53.33' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='215.73px' lengthAdjust='spacingAndGlyphs'>response-mspct-default-range-shrink</text>
 </g>
 </svg>

@@ -253,8 +253,10 @@ test_that("filter_mspct", {
                               autoplot(two_leaves.mspct))
   vdiffr::expect_doppelganger("filter-mspct-default-ylim",
                               autoplot(two_leaves.mspct, ylim = c(-0.2, 1.2)))
-  vdiffr::expect_doppelganger("filter-mspct-default-range",
+  vdiffr::expect_doppelganger("filter-mspct-default-range-shrink",
                               autoplot(two_leaves.mspct, range = c(500, 700)))
+  vdiffr::expect_doppelganger("filter-mspct-default-range-expand",
+                              autoplot(two_leaves.mspct, range = c(200, 1100)))
   # use range to avoid Tfr == 0 values.
   vdiffr::expect_doppelganger("filter-mspct-default-A",
                               autoplot(T2A(two_leaves.mspct, action = "replace"),
@@ -400,8 +402,10 @@ test_that("object_spct", {
                               autoplot(Ler_leaf.spct, text.size = 3.5))
   vdiffr::expect_doppelganger("object-wb-vis-tot",
                               autoplot(Ler_leaf.spct, w.band = VIS_bands()))
-  vdiffr::expect_doppelganger("object-range-num-tot",
+  vdiffr::expect_doppelganger("object-range-num-shrink",
                               autoplot(Ler_leaf.spct, range = c(500, 700)))
+  vdiffr::expect_doppelganger("object-range-num-expand",
+                              autoplot(Ler_leaf.spct, range = c(200, 1100)))
   vdiffr::expect_doppelganger("object-range-wb-tot",
                               autoplot(Ler_leaf.spct, range = waveband(c(500, 700))))
   vdiffr::expect_doppelganger("object-no-annotations-tot",
@@ -429,8 +433,10 @@ test_that("object_spct", {
                               autoplot(Ler_leaf.spct, stacked = FALSE, span = 401, annotations = c("+", "valleys")))
   vdiffr::expect_doppelganger("object-wb-vis-stk",
                               autoplot(Ler_leaf.spct, stacked = FALSE, w.band = VIS_bands()))
-  vdiffr::expect_doppelganger("object-range-num-stk",
+  vdiffr::expect_doppelganger("object-range-num-stk-shrink",
                               autoplot(Ler_leaf.spct, stacked = FALSE, range = c(500, 700)))
+  vdiffr::expect_doppelganger("object-range-num-stk-expand",
+                              autoplot(Ler_leaf.spct, stacked = FALSE, range = c(200, 1100)))
   vdiffr::expect_doppelganger("object-range-wb-stk",
                               autoplot(Ler_leaf.spct, stacked = FALSE, range = waveband(c(500, 700))))
   vdiffr::expect_doppelganger("object-no-annotations-stk",

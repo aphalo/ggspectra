@@ -966,7 +966,7 @@ autoplot.source_mspct <-
     col.name <- c(photon = "s.q.irrad", energy = "s.e.irrad")
     if (photobiology::is.source_spct(z) && any(col.name %in% names(z))) {
       ggplot2::autoplot(object = z,
-                        range = NULL, # trimmed above
+                        range = range, # trimmed above, needed for expansion
                         unit.out = unit.out,
                         pc.out = pc.out,
                         idfactor = NULL, # use idfactor already set in z
@@ -979,7 +979,7 @@ autoplot.source_mspct <-
       z <- photobiology::as.generic_spct(z)
       ggplot2::autoplot(object = z,
                         y.name = paste(col.name[unit.out], plot.data, sep = "."),
-                        range = NULL, # trimmed above
+                        range = range, # trimmed above, needed for expansion
                         pc.out = pc.out,
                         idfactor = NULL, # use idfactor already set in z
                         by.group = by.group,

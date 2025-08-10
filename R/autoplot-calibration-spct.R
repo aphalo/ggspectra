@@ -411,7 +411,7 @@ autoplot.calibration_mspct <-
     )
     if (is.calibration_spct(z) && "irrad.mult" %in% names(z)) {
       autoplot(object = z,
-               range = NULL, # trimmed above
+               range = range, # trimmed above, needed for expansion
                unit.out = unit.out,
                pc.out = pc.out,
                by.group = by.group,
@@ -424,7 +424,7 @@ autoplot.calibration_mspct <-
       z <- as.generic_spct(z)
       autoplot(object = z,
                y.name = paste("irrad.mult", plot.data, sep = "."),
-               range = NULL, # trimmed above
+               range = range, # trimmed above, needed for expansion
                unit.out = unit.out,
                pc.out = pc.out,
                by.group = by.group,
