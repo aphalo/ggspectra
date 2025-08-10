@@ -29,6 +29,8 @@
 #'   for each group within a plot panel as needed for animation. If
 #'   \code{FALSE}, the default, a single layer is added per panel.
 #' @param w.band waveband object or a list of such objects or NULL.
+#' @param range an R object on which \code{range()} returns a vector of length
+#'   2, with minimum and maximum wavelengths (nm).
 #' @param length.out The number of steps to use to simulate a continuous range
 #'   of colours when w.band == NULL.
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
@@ -94,6 +96,11 @@
 #'   stat_wl_strip(ymax = -0.02, ymin = -0.04) +
 #'   scale_fill_identity()
 #'
+#' ggplot(sun.spct) +
+#'   geom_line() +
+#'   stat_wl_strip(ymax = -0.02, ymin = -0.04, range = c(380, 760)) +
+#'   scale_fill_identity()
+#'
 #' # on some graphic devices the output may show spurious vertical lines
 #' ggplot(sun.spct) +
 #'   wl_guide(alpha = 0.33, color = NA) +
@@ -109,6 +116,7 @@ stat_wl_strip <- function(mapping = NULL,
                           ...,
                           by.group = FALSE,
                           w.band = NULL,
+                          range = NULL,
                           length.out = 150,
                           chroma.type = "CMF",
                           na.rm = TRUE,
@@ -116,20 +124,32 @@ stat_wl_strip <- function(mapping = NULL,
                           inherit.aes = TRUE) {
   if (by.group) {
     ggplot2::layer(
-      stat = StatColorGuideG, data = data, mapping = mapping, geom = geom,
-      position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+      stat = StatColorGuideG,
+      data = data,
+      mapping = mapping,
+      geom = geom,
+      position = position,
+      show.legend = show.legend,
+      inherit.aes = inherit.aes,
       params = list(chroma.type = chroma.type,
                     w.band = w.band,
+                    range = range,
                     length.out = length.out,
                     na.rm = na.rm,
                     ...)
     )
   } else {
     ggplot2::layer(
-      stat = StatColorGuide, data = data, mapping = mapping, geom = geom,
-      position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+      stat = StatColorGuide,
+      data = data,
+      mapping = mapping,
+      geom = geom,
+      position = position,
+      show.legend = show.legend,
+      inherit.aes = inherit.aes,
       params = list(chroma.type = chroma.type,
                     w.band = w.band,
+                    range = range,
                     length.out = length.out,
                     na.rm = na.rm,
                     ...)
@@ -143,14 +163,26 @@ stat_wl_strip <- function(mapping = NULL,
 colour_guide_function <- function(data,
                                   scales,
                                   w.band,
+                                  range,
                                   length.out,
                                   chroma.type) {
+  if (is.null(range)) {
+    range <- range(data[["x"]])
+  } else if (is.numeric(range)) {
+    range <- range(range, na.rm = TRUE)
+  } else if (is.waveband(range) || is.any_spct(range)) {
+    range <- wl_range(range)
+  }
+  if (!is.numeric(range) || length(range) != 2L) {
+    stop("Bad 'range' argument!")
+  }
+
   if (length(w.band) == 0) {
-    w.band <- split_bands(range(data[["x"]]),
+    w.band <- split_bands(x = range,
                           length.out = length.out)
   } else {
     w.band <- trim_waveband(w.band = w.band,
-                            range = data[["x"]],
+                            range = range,
                             trim = TRUE)
   }
   fast_wb2rect_df(w.band = w.band, chroma.type = chroma.type)
@@ -198,6 +230,7 @@ wl_guide <- function(mapping = NULL,
                      by.group = FALSE,
                      chroma.type = "CMF",
                      w.band = NULL,
+                     range = NULL,
                      length.out = 150,
                      ymin = -Inf,
                      ymax = Inf,
@@ -208,6 +241,7 @@ wl_guide <- function(mapping = NULL,
                      data = data,
                      geom = "rect",
                      w.band = w.band,
+                     range = range,
                      chroma.type = chroma.type,
                      length.out = length.out,
                      by.group = by.group,

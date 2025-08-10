@@ -13,6 +13,7 @@ stat_wl_strip(
   ...,
   by.group = FALSE,
   w.band = NULL,
+  range = NULL,
   length.out = 150,
   chroma.type = "CMF",
   na.rm = TRUE,
@@ -28,6 +29,7 @@ wl_guide(
   by.group = FALSE,
   chroma.type = "CMF",
   w.band = NULL,
+  range = NULL,
   length.out = 150,
   ymin = -Inf,
   ymax = Inf,
@@ -58,6 +60,9 @@ for each group within a plot panel as needed for animation. If
 \code{FALSE}, the default, a single layer is added per panel.}
 
 \item{w.band}{waveband object or a list of such objects or NULL.}
+
+\item{range}{an R object on which \code{range()} returns a vector of length
+2, with minimum and maximum wavelengths (nm).}
 
 \item{length.out}{The number of steps to use to simulate a continuous range
 of colours when w.band == NULL.}
@@ -148,6 +153,11 @@ Required by the statistic and need to be set with \code{aes()}.
 ggplot(sun.spct) +
   geom_line() +
   stat_wl_strip(ymax = -0.02, ymin = -0.04) +
+  scale_fill_identity()
+
+ggplot(sun.spct) +
+  geom_line() +
+  stat_wl_strip(ymax = -0.02, ymin = -0.04, range = c(380, 760)) +
   scale_fill_identity()
 
 # on some graphic devices the output may show spurious vertical lines
