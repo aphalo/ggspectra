@@ -75,7 +75,14 @@ e_rsp_plot <- function(spct,
     spct <- photobiology::trim_wl(spct, range = range)
   }
   if (!is.null(w.band)) {
-    w.band <- photobiology::trim_wl(w.band, range = photobiology::wl_range(spct))
+    if ("summaries" %in% annotations) {
+      # boxes or segments display summarised wavelengths
+      w.band <- photobiology::trim_wl(w.band,
+                                      range = photobiology::wl_range(spct))
+    } else {
+      # boxes and segments display wavebands' definitions if they fit in plot
+      w.band <- photobiology::trim_wl(w.band, range = range)
+    }
   }
 
   exposure.label <- NA
@@ -328,8 +335,14 @@ q_rsp_plot <- function(spct,
     spct <- photobiology::trim_wl(spct, range = range)
   }
   if (!is.null(w.band)) {
-    w.band <- photobiology::trim_wl(w.band,
-                                    range = photobiology::wl_range(spct))
+    if ("summaries" %in% annotations) {
+      # boxes or segments display summarised wavelengths
+      w.band <- photobiology::trim_wl(w.band,
+                                      range = photobiology::wl_range(spct))
+    } else {
+      # boxes and segments display wavebands' definitions if they fit in plot
+      w.band <- photobiology::trim_wl(w.band, range = range)
+    }
   }
 
   exposure.label <- NA
@@ -591,37 +604,50 @@ autoplot.response_spct <-
     idfactor <- check_idfactor_arg(object, idfactor)
     object <- rename_idfactor(object, idfactor)
 
-    if (photobiology::getMultipleWl(object) > 1L
-        && plot.data != "as.is") {
-      return(
-        autoplot(object = photobiology::subset2mspct(object),
-                 w.band = w.band,
-                 range = range,
-                 pc.out = pc.out,
-                 label.qty = label.qty,
-                 span = span,
-                 wls.target = wls.target,
-                 annotations = annotations,
-                 by.group = by.group,
-                 geom = geom,
-                 time.format = time.format,
-                 tz = tz,
-                 text.size = text.size,
-#                 chroma.type = chroma.type,
-                 idfactor = ifelse(is.null(idfactor), TRUE, idfactor),
-                 facets = facets,
-                 plot.data = plot.data,
-                 ylim = ylim,
-                 object.label = object.label,
-                 na.rm = na.rm)
-      )
+    if (photobiology::getMultipleWl(object) > 1L) {
+      if (plot.data == "as.is") {
+        if (facets) {
+          # with a single spectrum per panel we include summaries
+          annotations.default <-
+            c("boxes", "labels", "summaries", "colour.guide", "peaks")
+        } else {
+          # We skip "summaries", which also affects trimming of wavebands
+          annotations.default <- c("boxes", "labels", "colour.guide", "peaks")
+        }
+      } else {
+        # compute parallel summaries across spectra
+        return(
+          autoplot(object = photobiology::subset2mspct(object),
+                   w.band = w.band,
+                   range = range,
+                   pc.out = pc.out,
+                   label.qty = label.qty,
+                   span = span,
+                   wls.target = wls.target,
+                   annotations = annotations,
+                   by.group = by.group,
+                   geom = geom,
+                   time.format = time.format,
+                   tz = tz,
+                   text.size = text.size,
+                   #                 chroma.type = chroma.type,
+                   idfactor = ifelse(is.null(idfactor), TRUE, idfactor),
+                   facets = facets,
+                   plot.data = plot.data,
+                   ylim = ylim,
+                   object.label = object.label,
+                   na.rm = na.rm)
+        )
+      }
+    } else {
+      # with a single spectrum we include summaries
+      annotations.default <-
+        c("boxes", "labels", "summaries", "colour.guide", "peaks")
     }
 
     annotations.default <-
-      getOption("photobiology.plot.annotations",
-                default = c("boxes", "labels", "summaries", "colour.guide", "peaks"))
-    annotations <- decode_annotations(annotations,
-                                      annotations.default)
+      getOption("photobiology.plot.annotations", default = annotations.default)
+    annotations <- decode_annotations(annotations, annotations.default)
 
     # Change units if needed, and update normalization
     object <- switch(unit.out,
