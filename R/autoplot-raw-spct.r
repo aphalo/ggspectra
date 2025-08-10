@@ -337,38 +337,47 @@ autoplot.raw_spct <-
     idfactor <- check_idfactor_arg(object, idfactor)
     object <- rename_idfactor(object, idfactor)
 
-    if (photobiology::getMultipleWl(object) > 1L && plot.data != "as.is") {
-      return(
-        autoplot(object = photobiology::subset2mspct(object),
-                 w.band = w.band,
-                 range = range,
-                 unit.out = unit.out,
-                 pc.out = pc.out,
-                 label.qty = label.qty,
-                 span = span,
-                 wls.target = wls.target,
-                 annotations = annotations,
-                 by.group = by.group,
-                 geom = geom,
-                 time.format = time.format,
-                 tz = tz,
-                 text.size = text.size,
-#                 chroma.type = chroma.type,
-                 idfactor = idfactor,
-                 facets = facets,
-                 plot.data = plot.data,
-                 ylim = ylim,
-                 object.label = object.label,
-                 na.rm = na.rm)
-      )
-    }
-
     annotations.default <-
       getOption("photobiology.plot.annotations",
                 default = c("boxes", "labels", "colour.guide",
                             "peaks", "boundaries"))
     annotations <- decode_annotations(annotations,
                                       annotations.default)
+
+    if (photobiology::getMultipleWl(object) > 1L) {
+      if (plot.data == "as.is") {
+        if (!facets) {
+          # with a multiple spectra per panel do not include summaries
+          annotations <-
+            decode_annotations(c("-", "summaries"), annotations)
+        }
+      } else {
+        # compute parallel summaries across spectra
+        return(
+          autoplot(object = photobiology::subset2mspct(object),
+                   w.band = w.band,
+                   range = range,
+                   unit.out = unit.out,
+                   pc.out = pc.out,
+                   label.qty = label.qty,
+                   span = span,
+                   wls.target = wls.target,
+                   annotations = annotations,
+                   by.group = by.group,
+                   geom = geom,
+                   time.format = time.format,
+                   tz = tz,
+                   text.size = text.size,
+                   #                 chroma.type = chroma.type,
+                   idfactor = idfactor,
+                   facets = facets,
+                   plot.data = plot.data,
+                   ylim = ylim,
+                   object.label = object.label,
+                   na.rm = na.rm)
+        )
+      }
+    }
 
     if (length(w.band) == 0) {
       if (is.null(range)) {

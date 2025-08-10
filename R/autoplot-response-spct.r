@@ -604,15 +604,18 @@ autoplot.response_spct <-
     idfactor <- check_idfactor_arg(object, idfactor)
     object <- rename_idfactor(object, idfactor)
 
+    annotations.default <-
+      getOption("photobiology.plot.annotations",
+                default =
+                  c("boxes", "labels", "summaries", "colour.guide", "peaks"))
+    annotations <- decode_annotations(annotations, annotations.default)
+
     if (photobiology::getMultipleWl(object) > 1L) {
       if (plot.data == "as.is") {
-        if (facets) {
-          # with a single spectrum per panel we include summaries
-          annotations.default <-
-            c("boxes", "labels", "summaries", "colour.guide", "peaks")
-        } else {
-          # We skip "summaries", which also affects trimming of wavebands
-          annotations.default <- c("boxes", "labels", "colour.guide", "peaks")
+        if (!facets) {
+          # with a multiple spectra per panel do not include summaries
+          annotations <-
+            decode_annotations(c("-", "summaries"), annotations)
         }
       } else {
         # compute parallel summaries across spectra
@@ -639,15 +642,7 @@ autoplot.response_spct <-
                    na.rm = na.rm)
         )
       }
-    } else {
-      # with a single spectrum we include summaries
-      annotations.default <-
-        c("boxes", "labels", "summaries", "colour.guide", "peaks")
     }
-
-    annotations.default <-
-      getOption("photobiology.plot.annotations", default = annotations.default)
-    annotations <- decode_annotations(annotations, annotations.default)
 
     # Change units if needed, and update normalization
     object <- switch(unit.out,
