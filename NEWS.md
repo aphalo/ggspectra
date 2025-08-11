@@ -6,6 +6,13 @@ editor_options:
 
 # ggspectra 0.4.0
 
+The main new feature is in `autoplot()` methods support arguments to `range`
+that expand the limits of the wavelength axis past the range of the spectral
+data. "Filtering" of peaks as newly implemented in (== 0.3.16) has been
+adjusted, resulting in a code breaking change. In addition, the changes in
+`autoplot()` methods may result in plots that slightly differ from those in
+proveious versions.
+
 - Breaking: In `stat_peaks()`, `stat_valleys()`, `stat_label_peaks()` 
 and `stat_label_valleys()` parameter `ignore_threshold` replaced by 
 `global.threshold`.
@@ -17,6 +24,8 @@ the name of the factor used to group the data by spectrum with multiple spectra.
 - Fix bug in mapping of id.factor in `ggplot()` methods.
 - Enhance handling of parameter `range` in `autoplot()` methods. Support `NA`
 to indicate default limit and implement _x_ limits expansion.
+- Add parameter `range` to `stat_wb_label()` and `stat_wl_strip()` and edit
+`decoration()` pass `x.min` and `x.max` when calling these statistics.
 
 # ggspectra 0.3.16
 
@@ -51,7 +60,7 @@ addition of a plot layer for each group. The default behaviour remains unchanged
 enabling compatibility with 'gganimate'. **Changing default arguments using R 
 options is not supported and `by.group = TRUE` is supported only for animated
 plots.**
-- Bug fix: `aoutoplot()` method for `object_spct` with `stacked = FALSE` did 
+- Bug fix: `autoplot()` method for `object_spct` with `stacked = FALSE` did 
 not group correctly by variable. Notably some peaks and valleys were missing.
 - Check compatibility with upcoming 'ggplot2' 4.0.0.
 - Articles added or updated in the on-line documentation.

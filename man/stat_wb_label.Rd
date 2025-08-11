@@ -12,6 +12,7 @@ stat_wb_label(
   ...,
   by.group = FALSE,
   w.band = NULL,
+  range = NULL,
   chroma.type = "CMF",
   label.fmt = "\%s",
   ypos.fixed = 0,
@@ -43,6 +44,9 @@ for each group within a plot panel as needed for animation. If
 
 \item{w.band}{a waveband object or a list of waveband objects or numeric
 vector of at least length two.}
+
+\item{range}{an R object on which \code{range()} returns a vector of length
+2, with minimum and maximum wavelengths (nm).}
 
 \item{chroma.type}{character one of "CMF" (color matching function) or "CC"
 (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.}

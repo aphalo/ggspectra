@@ -65,6 +65,7 @@ e_plot <- function(spct,
                    facets,
                    ylim,
                    na.rm) {
+
   if (!photobiology::is.source_spct(spct)) {
     stop("e_plot() can only plot source_spct objects.")
   }
@@ -89,6 +90,18 @@ e_plot <- function(spct,
       w.band <- photobiology::trim_wl(w.band, range = range)
     }
   }
+  # replace NULL and NAs in range
+  if (is.null(range)) {
+    range <- range(spct[["w.length"]], na.rm = TRUE)
+  } else {
+    if (is.na(range[1])) {
+      range[1] <- min(spct[["w.length"]], na.rm = TRUE)
+    }
+    if (is.na(range[2])) {
+      range[2] <- max(spct[["w.length"]], na.rm = TRUE)
+    }
+  }
+
   duration.label <- NA
   if (photobiology::is_scaled(spct)) {
     if (pc.out) {
@@ -244,8 +257,8 @@ e_plot <- function(spct,
                             time.unit = photobiology::getTimeUnit(spct),
                             y.max = y.max,
                             y.min = y.min,
-                            x.max = max(spct),
-                            x.min = min(spct),
+                            x.max = range[2],
+                            x.min = range[1],
                             annotations = annotations,
                             by.group = by.group,
                             label.qty = label.qty,
@@ -401,6 +414,18 @@ q_plot <- function(spct,
     } else {
       # boxes and segments display wavebands' definitions if they fit in plot
       w.band <- photobiology::trim_wl(w.band, range = range)
+    }
+  }
+
+  # replace NULL and NAs in range
+  if (is.null(range)) {
+    range <- range(spct[["w.length"]], na.rm = TRUE)
+  } else {
+    if (is.na(range[1])) {
+      range[1] <- min(spct[["w.length"]], na.rm = TRUE)
+    }
+    if (is.na(range[2])) {
+      range[2] <- max(spct[["w.length"]], na.rm = TRUE)
     }
   }
 
@@ -562,8 +587,8 @@ q_plot <- function(spct,
                             time.unit = photobiology::getTimeUnit(spct),
                             y.max = y.max,
                             y.min = y.min,
-                            x.max = max(spct),
-                            x.min = min(spct),
+                            x.max = range[2],
+                            x.min = range[1],
                             annotations = annotations,
                             by.group = by.group,
                             label.qty = label.qty,
