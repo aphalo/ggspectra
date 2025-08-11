@@ -30,6 +30,8 @@
 #'   \code{FALSE}, the default, a single layer is added per panel.
 #' @param w.band a waveband object or a list of waveband objects or numeric
 #'   vector of at least length two.
+#' @param range an R object on which \code{range()} returns a vector of length
+#'   2, with minimum and maximum wavelengths (nm).
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
 #'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param label.fmt character string giving a format definition for formating
@@ -114,6 +116,7 @@ stat_wb_label <- function(mapping = NULL,
                           ...,
                           by.group = FALSE,
                           w.band = NULL,
+                          range = NULL,
                           chroma.type = "CMF",
                           label.fmt = "%s",
                           ypos.fixed = 0,
@@ -125,6 +128,7 @@ stat_wb_label <- function(mapping = NULL,
       stat = StatWbLabelG, data = data, mapping = mapping, geom = geom,
       position = position, show.legend = show.legend, inherit.aes = inherit.aes,
       params = list(w.band = w.band,
+                    range = range,
                     chroma.type = chroma.type,
                     label.fmt = label.fmt,
                     ypos.fixed = ypos.fixed,
@@ -136,6 +140,7 @@ stat_wb_label <- function(mapping = NULL,
       stat = StatWbLabel, data = data, mapping = mapping, geom = geom,
       position = position, show.legend = show.legend, inherit.aes = inherit.aes,
       params = list(w.band = w.band,
+                    range = range,
                     chroma.type = chroma.type,
                     label.fmt = label.fmt,
                     ypos.fixed = ypos.fixed,
@@ -151,10 +156,21 @@ stat_wb_label <- function(mapping = NULL,
 compute_wb_label <- function(data,
                              scales,
                              w.band,
+                             range,
                              chroma.type,
                              label.fmt,
                              ypos.fixed) {
-  x.range <- range(data[["x"]])
+  if (is.null(range)) {
+    x.range <- range(data[["x"]])
+  } else if (is.numeric(range)) {
+    x.range <- range(range, na.rm = TRUE)
+  } else if (is.waveband(range) || is.any_spct(range)) {
+    x.range <- wl_range(range)
+  }
+  if (!is.numeric(x.range) || length(x.range) != 2L) {
+    stop("Bad 'range' argument!")
+  }
+
   if (length(w.band) == 0) {
     w.band <- waveband(x.range)
   }
