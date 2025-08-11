@@ -27,6 +27,12 @@ test_that("cps_spct", {
                               autoplot(white_led.cps_spct, range = c(500, NA)))
   vdiffr::expect_doppelganger("cps-range-num-expand",
                               autoplot(white_led.cps_spct, range = c(100, 1300)))
+  vdiffr::expect_doppelganger("cps-range-num-expand-long",
+                              autoplot(white_led.cps_spct, range = c(100, 600, 1300)))
+  vdiffr::expect_doppelganger("cps-range-num-expand-r",
+                              autoplot(white_led.cps_spct, range = c(NA, 1300)))
+  vdiffr::expect_doppelganger("cps-range-num-expand-l",
+                              autoplot(white_led.cps_spct, range = c(100, NA)))
   vdiffr::expect_doppelganger("cps-range-wb",
                               autoplot(white_led.cps_spct, range = waveband(c(500, 700))))
   vdiffr::expect_doppelganger("cps-no-annotations",
