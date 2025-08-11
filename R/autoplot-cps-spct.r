@@ -78,6 +78,18 @@ cps_plot <- function(spct,
   if (!is.null(w.band)) {
     w.band <- photobiology::trim_wl(w.band, range = range(spct))
   }
+  # replace NULL and NAs in range
+  if (is.null(range)) {
+    range <- range(spct[["w.length"]], na.rm = TRUE)
+  } else {
+    if (is.na(range[1])) {
+      range[1] <- min(spct[["w.length"]], na.rm = TRUE)
+    }
+    if (is.na(range[2])) {
+      range[2] <- max(spct[["w.length"]], na.rm = TRUE)
+    }
+  }
+
   cps.cols <- names(spct)[grep("^cps", names(spct))]
   num.cps.cols <- length(cps.cols)
   # if individual spectra have multiple columns we force facets
@@ -191,8 +203,8 @@ cps_plot <- function(spct,
   plot <- plot + decoration(w.band = w.band,
                             y.max = y.max,
                             y.min = y.min,
-                            x.max = max(spct),
-                            x.min = min(spct),
+                            x.max = range[2],
+                            x.min = range[1],
                             annotations = annotations,
                             by.group = by.group,
                             label.qty = label.qty,
