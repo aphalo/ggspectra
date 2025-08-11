@@ -417,6 +417,18 @@ q_plot <- function(spct,
     }
   }
 
+  # replace NULL and NAs in range
+  if (is.null(range)) {
+    range <- range(spct[["w.length"]], na.rm = TRUE)
+  } else {
+    if (is.na(range[1])) {
+      range[1] <- min(spct[["w.length"]], na.rm = TRUE)
+    }
+    if (is.na(range[2])) {
+      range[2] <- max(spct[["w.length"]], na.rm = TRUE)
+    }
+  }
+
   duration.label <- NA
   if (photobiology::is_scaled(spct)) {
     if (pc.out) {
@@ -575,8 +587,8 @@ q_plot <- function(spct,
                             time.unit = photobiology::getTimeUnit(spct),
                             y.max = y.max,
                             y.min = y.min,
-                            x.max = max(spct$w.length, range, na.rm = TRUE),
-                            x.min = min(spct$w.length, range, na.rm = TRUE),
+                            x.max = range[2],
+                            x.min = range[1],
                             annotations = annotations,
                             by.group = by.group,
                             label.qty = label.qty,
