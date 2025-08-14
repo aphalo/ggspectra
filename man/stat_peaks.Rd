@@ -41,7 +41,7 @@ stat_valleys(
   position = "identity",
   ...,
   span = 5,
-  global.threshold = 0.01,
+  global.threshold = -0.99,
   local.threshold = NULL,
   local.reference = "median",
   strict = FALSE,

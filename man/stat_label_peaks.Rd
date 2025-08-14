@@ -38,7 +38,7 @@ stat_label_valleys(
   position = "identity",
   ...,
   span = 5,
-  global.threshold = 0.01,
+  global.threshold = -0.99,
   strict = FALSE,
   chroma.type = "CMF",
   label.fmt = "\%.3g",
