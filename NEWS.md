@@ -10,8 +10,9 @@ The main new feature is in `autoplot()` methods support arguments to `range`
 that expand the limits of the wavelength axis past the range of the spectral
 data. "Filtering" of peaks as newly implemented in (== 0.3.16) has been
 adjusted, resulting in a code breaking change. In addition, the changes in
-`autoplot()` methods may result in plots that slightly differ from those in
-proveious versions.
+`autoplot()` methods may result in plots that differ from those created with
+previous versions. Thus, changes marked as "Breaking" below only alter how plots
+look.
 
 - Breaking: In `stat_peaks()`, `stat_valleys()`, `stat_label_peaks()` 
 and `stat_label_valleys()` parameter `ignore_threshold` replaced by 
@@ -24,6 +25,8 @@ the name of the factor used to group the data by spectrum with multiple spectra.
 - Fix bug in mapping of id.factor in `ggplot()` methods.
 - Enhance handling of parameter `range` in `autoplot()` methods. Support `NA`
 to indicate default limit and implement _x_ limits expansion.
+- Breaking: plots created with `autoplot.waveband()` method can be drastically
+different because of new defaults for `w.length` and `range`.
 - Add parameter `range` to `stat_wb_label()` and `stat_wl_strip()` and edit
 `decoration()` pass `x.min` and `x.max` when calling these statistics.
 

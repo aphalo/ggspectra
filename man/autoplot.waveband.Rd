@@ -8,7 +8,7 @@
   object,
   ...,
   w.length = NULL,
-  range = c(280, 800),
+  range = NULL,
   fill = 0,
   span = NULL,
   wls.target = "HM",
@@ -84,23 +84,34 @@ Construct a ggplot object with an annotated plot of a \code{waveband} object.
 }
 \details{
 A \code{response_spct} object is created based on the
-  \code{waveband} object. A \code{waveband} object can describe either a
+  \code{waveband} object and the argument passed to parameter \code{w.length}.
+  By default wavelengths spanning the waveband definition expanded by
+  1 nm at each end are used. A \code{waveband} object can describe either a
   simple wavelength range or a (biological) spectral weighting function
-  (BSWF). See
-  \code{\link{autoplot.response_spct}} for additional details.
+  (BSWF). An effectiveness is a response expressed per unit of excitation,
+  and in most cases normalised.
 
-  Effectiveness spectra are plotted expressing the spectral effectiveness
-  either as \eqn{1 mol^{-1} nm} photons of \eqn{1 J^{-1} nm} which can be
-  selected through formal argument \code{unit.out}. The value of
-  \code{unit.in} has no effect on the result when uisng BSWFs, as BSWFs are
-  defined based on a certain base of expression, which is enforced. In
-  contrast, for wavebands which only define a wavelength range, changing the
-  assumed reference irradiance units, changes the responsivity according to
-  Plank's law.
+  Effectiveness spectra can be plotted expressing the spectral effectiveness
+  either per mol of photons (\eqn{1 mol^{-1} nm}) or per joule of energy
+  (\eqn{1 J^{-1} nm}), selected through formal argument \code{unit.out}. The
+  value of \code{unit.in} has no direct effect on the result for BSWFs,
+  as BSWFs are defined based on a certain base of expression, which is
+  enforced. Indirectly it affects plots as \code{unit.out} defaults to
+  \code{unit.in}. In contrast, for wavebands which only define a wavelength
+  range, changing the assumed reference irradiance units, changes the
+  responsivity according to Plank's law, i.e., the four possible combinations
+  of pairs of values for \code{unit.in} and \code{unit.out} produce four
+  different plots. _Only in rare cases \code{unit.in} and \code{unit.out}
+  is useful as normally the dependency on base of expresion is encoded in
+  the \code{waveband} definition as a BSWF._
 
-  Unused arguments are passed along,
-  which means that other plot aspects can be controlled by providing
-  arguments for the plot method of the \code{response_spct} class.
+  While \code{w.length}` provides the wavelengths of the generated
+  response spectrum, `range` sets the wavelength range of the \eqn{x}-axis
+  of the plot.
+
+  Unused named arguments are forwarded to
+  \code{\link{autoplot.response_spct}()}, allowing control of additional plot
+  properties.
 }
 \section{Plot Annotations}{
  The recognized annotation names are: \code{"summaries"}, \code{"peaks"},
@@ -136,6 +147,8 @@ A \code{response_spct} object is created based on the
 \examples{
 
 autoplot(waveband(c(400, 500)))
+autoplot(waveband(c(400, 500)), w.length = c(300,600))
+autoplot(waveband(c(400, 500)), range = c(300,600))
 autoplot(waveband(c(400, 500)), geom = "spct")
 
 }

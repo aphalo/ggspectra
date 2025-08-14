@@ -3,23 +3,34 @@
 #' Construct a ggplot object with an annotated plot of a \code{waveband} object.
 #'
 #' @details A \code{response_spct} object is created based on the
-#'   \code{waveband} object. A \code{waveband} object can describe either a
+#'   \code{waveband} object and the argument passed to parameter \code{w.length}.
+#'   By default wavelengths spanning the waveband definition expanded by
+#'   1 nm at each end are used. A \code{waveband} object can describe either a
 #'   simple wavelength range or a (biological) spectral weighting function
-#'   (BSWF). See
-#'   \code{\link{autoplot.response_spct}} for additional details.
+#'   (BSWF). An effectiveness is a response expressed per unit of excitation,
+#'   and in most cases normalised.
 #'
-#'   Effectiveness spectra are plotted expressing the spectral effectiveness
-#'   either as \eqn{1 mol^{-1} nm} photons of \eqn{1 J^{-1} nm} which can be
-#'   selected through formal argument \code{unit.out}. The value of
-#'   \code{unit.in} has no effect on the result when uisng BSWFs, as BSWFs are
-#'   defined based on a certain base of expression, which is enforced. In
-#'   contrast, for wavebands which only define a wavelength range, changing the
-#'   assumed reference irradiance units, changes the responsivity according to
-#'   Plank's law.
+#'   Effectiveness spectra can be plotted expressing the spectral effectiveness
+#'   either per mol of photons (\eqn{1 mol^{-1} nm}) or per joule of energy
+#'   (\eqn{1 J^{-1} nm}), selected through formal argument \code{unit.out}. The
+#'   value of \code{unit.in} has no direct effect on the result for BSWFs,
+#'   as BSWFs are defined based on a certain base of expression, which is
+#'   enforced. Indirectly it affects plots as \code{unit.out} defaults to
+#'   \code{unit.in}. In contrast, for wavebands which only define a wavelength
+#'   range, changing the assumed reference irradiance units, changes the
+#'   responsivity according to Plank's law, i.e., the four possible combinations
+#'   of pairs of values for \code{unit.in} and \code{unit.out} produce four
+#'   different plots. _Only in rare cases \code{unit.in} and \code{unit.out}
+#'   is useful as normally the dependency on base of expresion is encoded in
+#'   the \code{waveband} definition as a BSWF._
 #'
-#'   Unused arguments are passed along,
-#'   which means that other plot aspects can be controlled by providing
-#'   arguments for the plot method of the \code{response_spct} class.
+#'   While \code{w.length}` provides the wavelengths of the generated
+#'   response spectrum, `range` sets the wavelength range of the \eqn{x}-axis
+#'   of the plot.
+#'
+#'   Unused named arguments are forwarded to
+#'   \code{\link{autoplot.response_spct}()}, allowing control of additional plot
+#'   properties.
 #'
 #' @inheritSection decoration Plot Annotations
 #'
@@ -69,13 +80,15 @@
 #' @examples
 #'
 #' autoplot(waveband(c(400, 500)))
+#' autoplot(waveband(c(400, 500)), w.length = c(300,600))
+#' autoplot(waveband(c(400, 500)), range = c(300,600))
 #' autoplot(waveband(c(400, 500)), geom = "spct")
 #'
 autoplot.waveband <-
   function(object,
            ...,
            w.length = NULL,
-           range = c(280, 800),
+           range = NULL,
            fill = 0,
            span = NULL,
            wls.target = "HM",
@@ -100,16 +113,26 @@ autoplot.waveband <-
                 default = c("boxes", "labels", "colour.guide"))
     annotations <- c("=", decode_annotations(annotations,
                                              annotations.default))
-    if (!is.null(w.length)) {
-      w.length <- unique(sort(w.length, na.last = NA))
+    if (na.rm) {
+      w.length <- stats::na.omit(w.length)
     }
-    if (is.null(range)) {
-      if (is.null(w.length) || length(w.length) < 2) {
-        range <- range(w.band)
+    if (!is.null(w.length)) {
+      if (length(w.length) < 200) {
+        w.length <- seq(min(w.length), max(w.length), length.out = 200)
+      } else {
+        w.length <- unique(sort(w.length, na.last = NA))
       }
-    } else if (photobiology::is.waveband(range) ||
-               photobiology::is.any_spct(range)) {
-      range <- photobiology::wl_range(range)
+    } else {
+      w.length <- seq(wl_min(w.band) - 1, wl_max(w.band) + 1, length.out = 200)
+    }
+
+    if (is.null(range)) {
+      range <- range(w.length)
+    } else if (photobiology::is.waveband(range)) {
+      range <- c(photobiology::wl_min(range) - 1,
+                 photobiology::wl_max(range) + 1)
+    } else if (photobiology::is.any_spct(range)) {
+      range <- wl_range(range)
     } else if (is.numeric(range) &&
                (length(range) > 2L || !anyNA(range))) {
       range <- range(range, na.rm = TRUE)
@@ -119,18 +142,12 @@ autoplot.waveband <-
       range <- rep(NA_real_, 2)
     }
 
-    w.length <- w.length[w.length > range[1] & w.length < range[2]]
-    if (is.null(w.length)) {
-      w.length <- seq(range[1], range[2], length.out = 200)
-    } else if (length(w.length) < 200) {
-      range <- range(w.length)
-      w.length <- seq(range[1], range[2], length.out = 200)
-    }
+    # add "hinges" to wavelengths vector if within its range
     if (!is.null(w.band$hinges) & length(w.band$hinges) > 0) {
-      hinges <- with(w.band, hinges[hinges > range[1] & hinges < range[2]])
+      hinges <- with(w.band, hinges[hinges > min(w.length) & hinges < max(w.length)])
       w.length <- c(w.length, hinges)
+      w.length <- unique(sort(w.length))
     }
-    w.length <- unique(sort(w.length))
     s.response <-
       photobiology::calc_multipliers(w.length, w.band,
                                      unit.out = unit.in, unit.in = unit.in,
@@ -141,15 +158,9 @@ autoplot.waveband <-
     } else if (unit.in %in% c("photon", "quantum")) {
       spct <- photobiology::response_spct(w.length = w.length, s.q.response = s.response)
     }
-    if (photobiology::is_effective(w.band)) {
-      w.band.range <-
-        photobiology::waveband(w.band,
-                               wb.name = paste("Range of", labels(w.band)[["label"]]))
-    } else {
-      w.band.range <- w.band
-    }
     autoplot(spct,
-             w.band = w.band.range,
+             w.band = w.band,
+             range = range,
              annotations = annotations,
              by.group = by.group,
              norm = norm,

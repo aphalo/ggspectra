@@ -5,7 +5,9 @@ library(photobiology)
 test_that("waveband", {
   set_annotations_default()
   vdiffr::expect_doppelganger("wb-default-cie",
-                              autoplot(CIE(), range = c(230, 430)))
+                              autoplot(CIE()))
+  vdiffr::expect_doppelganger("wb-default-cie-wl",
+                              autoplot(CIE(), w.length = c(230, 430)))
   vdiffr::expect_doppelganger("wb-default-cie-wl-range-shrink",
                               autoplot(CIE(),
                                        w.length = 200:400,
@@ -14,16 +16,18 @@ test_that("waveband", {
                               autoplot(CIE(),
                                        w.length = 200:400,
                                        range = c(230, 300, 380)))
-  # vdiffr::expect_doppelganger("wb-default-cie-wl-range-expand",
-  #                             autoplot(CIE(),
-  #                                      w.length = 250:350,
-  #                                      range = c(200, 400)))
-  # vdiffr::expect_doppelganger("wb-default-cie-range-r",
-  #                             autoplot(CIE(), range = c(NA, 340)))
-  # vdiffr::expect_doppelganger("wb-default-cie",
-  #                             autoplot(CIE(), range = c(250, NA)))
+  vdiffr::expect_doppelganger("wb-default-cie-wl-range-expand",
+                              autoplot(CIE(),
+                                       w.length = 280:350,
+                                       range = c(200, 450)))
+  vdiffr::expect_doppelganger("wb-default-cie-range-r",
+                              autoplot(CIE(), range = c(NA, 450)))
+  vdiffr::expect_doppelganger("wb-default-cie-range-l",
+                              autoplot(CIE(), range = c(200, NA)))
   vdiffr::expect_doppelganger("wb-default-red",
                               autoplot(Red()))
+  vdiffr::expect_doppelganger("wb-default-red-vis",
+                              autoplot(Red(), range = VIS()))
   vdiffr::expect_doppelganger("wb-default-ylim",
                               autoplot(Red(), ylim = c(-0.2, 1.2)))
   vdiffr::expect_doppelganger("wb-text-size",
