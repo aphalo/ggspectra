@@ -316,8 +316,10 @@ autoplot.cps_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
+    if (is.null(norm) || is.na(norm)) {
+      norm = "update"
+    }
     force(object.label)
-    object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor)
     object <- rename_idfactor(object, idfactor)
 
@@ -359,6 +361,24 @@ autoplot.cps_spct <-
                    object.label = object.label,
                    na.rm = na.rm)
         )
+      }
+    }
+
+    # remove normalization if not updating it
+    # helps handle old objects with no normalization metadata
+    if (is.numeric(norm) ||
+        (is.character(norm) && norm %in% c("max", "min", "skip"))) {
+      photobiology::setNormalised(object, FALSE)
+    }
+    # apply normalization
+    object <- apply_normalization(x = object, norm = norm)
+
+    if (is.null(label.qty)) {
+      if (photobiology::is_normalized(object) ||
+          photobiology::is_scaled(object)) {
+        label.qty = "contribution"
+      } else {
+        label.qty = "total"
       }
     }
 
@@ -428,7 +448,6 @@ autoplot.cps_mspct <-
            na.rm = TRUE) {
 
     force(object.label)
-    object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
     # We trim the spectra to avoid unnecessary computations later
@@ -454,6 +473,7 @@ autoplot.cps_mspct <-
         any(c("cps", "cps_1") %in% names(z))) {
       autoplot(object = z,
                range = range, # trimmed above, needed for expansion
+               norm = norm,
                pc.out = pc.out,
                by.group = by.group,
                idfactor = NULL, # use idfactor already set in z
@@ -466,6 +486,7 @@ autoplot.cps_mspct <-
       autoplot(object = z,
                y.name = paste("cps", plot.data, sep = "."),
                range = range, # trimmed above, needed for expansion
+               norm = norm,
                pc.out = pc.out,
                by.group = by.group,
                idfactor = NULL, # use idfactor already set in z

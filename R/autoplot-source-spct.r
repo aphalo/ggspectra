@@ -880,10 +880,11 @@ autoplot.source_spct <-
       object <- photobiology::normalize(object, norm = norm)
       norm <- "skip"
     }
-    # Change units if needed, and update normalization
+    # Change units if needed, obeying norm = "update"
     object <- switch(unit.out,
                      photon = photobiology::e2q(object, action = "replace"),
                      energy = photobiology::q2e(object, action = "replace"))
+    # apply other normalizations anew
     object <- apply_normalization(x = object, norm = norm)
 
     if (is.null(label.qty)) {
@@ -997,7 +998,6 @@ autoplot.source_mspct <-
     stopifnot("Bad 'unit.out' argument" =
                 unit.out %in% c("energy", "photon"))
     force(object.label)
-    object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
     # We trim the spectra to avoid unnecessary computations later
@@ -1028,6 +1028,7 @@ autoplot.source_mspct <-
     if (photobiology::is.source_spct(z) && any(col.name %in% names(z))) {
       ggplot2::autoplot(object = z,
                         range = range, # trimmed above, needed for expansion
+                        norm = norm,
                         unit.out = unit.out,
                         pc.out = pc.out,
                         idfactor = NULL, # use idfactor already set in z
@@ -1041,6 +1042,7 @@ autoplot.source_mspct <-
       ggplot2::autoplot(object = z,
                         y.name = paste(col.name[unit.out], plot.data, sep = "."),
                         range = range, # trimmed above, needed for expansion
+                        norm = norm,
                         pc.out = pc.out,
                         idfactor = NULL, # use idfactor already set in z
                         by.group = by.group,

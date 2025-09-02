@@ -619,8 +619,10 @@ autoplot.response_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
+    if (is.null(norm) || is.na(norm)) {
+      norm = "update"
+    }
     force(object.label)
-    object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor)
     object <- rename_idfactor(object, idfactor)
 
@@ -664,10 +666,21 @@ autoplot.response_spct <-
       }
     }
 
-    # Change units if needed, and update normalization
+    # remove normalization if not updating it
+    # helps handle old objects with no normalization metadata
+    if (is.numeric(norm) ||
+        (is.character(norm) && norm %in% c("max", "min", "skip"))) {
+      photobiology::setNormalised(object, FALSE)
+    } else if (norm == "undo") {
+      object <- photobiology::normalize(object, norm = norm)
+      norm <- "skip"
+    }
+    # Change units if needed, and obeying norm = "update"
     object <- switch(unit.out,
                      photon = photobiology::e2q(object, action = "replace"),
                      energy = photobiology::q2e(object, action = "replace"))
+    # apply other normalizations anew
+    object <- apply_normalization(x = object, norm = norm)
 
     if (is.null(label.qty)) {
       if (photobiology::is_normalized(object) ||
@@ -775,7 +788,6 @@ autoplot.response_mspct <-
            na.rm = TRUE) {
 
     force(object.label)
-    object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
     # We trim the spectra to avoid unnecessary computations later
@@ -806,6 +818,7 @@ autoplot.response_mspct <-
     if (photobiology::is.response_spct(z) && any(col.name %in% names(z))) {
       autoplot(object = z,
                range = range, # trimmed above, needed for expansion
+               norm = norm,
                unit.out = unit.out,
                pc.out = pc.out,
                facets = facets,
@@ -820,6 +833,7 @@ autoplot.response_mspct <-
                y.name = paste(col.name[unit.out], plot.data, sep = "."),
                range = range, # trimmed above, needed for expansion
                pc.out = pc.out,
+               norm = norm,
                facets = facets,
                idfactor = NULL, # use idfactor already set in z
                by.group = by.group,

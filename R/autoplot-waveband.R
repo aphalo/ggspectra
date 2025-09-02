@@ -105,6 +105,9 @@ autoplot.waveband <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
+    if (is.null(norm) || is.na(norm)) {
+      norm = "update"
+    }
     force(object.label)
     w.band <- object
 

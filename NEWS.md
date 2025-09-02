@@ -26,10 +26,13 @@ the name of the factor used to group the data by spectrum with multiple spectra.
 - Fix bug in mapping of id.factor in `ggplot()` methods.
 - Enhance handling of parameter `range` in `autoplot()` methods. Support `NA`
 to indicate default limit and implement _x_ limits expansion.
+- Enhance handling of parameter `norm` in `autoplot()` methods. Gracefully
+handle old objects with missing normalization metadata, when possible.
 - Changing: plots created with `autoplot.waveband()` method can be drastically
 different because of new defaults for `w.length` and `range`.
 - Add parameter `range` to `stat_wb_label()` and `stat_wl_strip()` and edit
-`decoration()` pass `x.min` and `x.max` when calling these statistics.
+`decoration()` to allow passing `x.min` and `x.max` when calling these 
+statistics.
 
 # ggspectra 0.3.16
 
