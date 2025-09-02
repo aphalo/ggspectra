@@ -76,11 +76,6 @@ duration2character <- function(time.unit) {
 #'
 apply_normalization <- function(x,
                                 norm) {
-  if (is.null(norm) || !is.na(norm)) {
-    message("Normalization 'norm =", norm, "'applied before plotting.")
-    photobiology::normalize(x)
-  } else {
-    x
-  }
+  message("Normalization 'norm = ", norm, "' applied before plotting.")
+  photobiology::normalize(x, norm)
 }
-

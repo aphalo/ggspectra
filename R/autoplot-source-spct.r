@@ -824,7 +824,9 @@ autoplot.source_spct <-
     stopifnot("Bad 'unit.out' argument" =
                 unit.out %in% c("energy", "photon"))
     force(object.label)
-    object <- apply_normalization(object, norm)
+    if (is.null(norm) || is.na(norm)) {
+      norm = "update"
+    }
     idfactor <- check_idfactor_arg(object, idfactor)
     object <- rename_idfactor(object, idfactor)
 
@@ -842,7 +844,8 @@ autoplot.source_spct <-
             decode_annotations(c("-", "summaries"), annotations)
         }
       } else {
-        # compute parallel summaries across spectra
+        # convert to collection and call method for collections of spectra
+        # which handles computation of summaries
         return(
           autoplot(object = photobiology::subset2mspct(object),
                    w.band = w.band,
@@ -869,10 +872,19 @@ autoplot.source_spct <-
       }
     }
 
+    # remove normalization if not updating it
+    if (is.numeric(norm) ||
+        (is.character(norm) && norm %in% c("max", "min", "skip"))) {
+      photobiology::setNormalised(object, FALSE)
+    } else if (norm == "undo") {
+      object <- photobiology::normalize(object, norm = norm)
+      norm <- "skip"
+    }
     # Change units if needed, and update normalization
     object <- switch(unit.out,
                      photon = photobiology::e2q(object, action = "replace"),
                      energy = photobiology::q2e(object, action = "replace"))
+    object <- apply_normalization(x = object, norm = norm)
 
     if (is.null(label.qty)) {
       if (photobiology::is_normalized(object) ||
