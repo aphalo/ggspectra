@@ -307,8 +307,10 @@ autoplot.calibration_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
+    if (is.null(norm) || is.na(norm)) {
+      norm = "update"
+    }
     force(object.label)
-    object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor = idfactor)
 
     annotations.default <-
@@ -351,6 +353,15 @@ autoplot.calibration_spct <-
         )
       }
     }
+
+    # remove normalization if not updating it
+    # helps handle old objects with no normalization metadata
+    if (is.numeric(norm) ||
+        (is.character(norm) && norm %in% c("max", "min", "skip"))) {
+      photobiology::setNormalised(object, FALSE)
+    }
+    # apply normalization
+    object <- apply_normalization(x = object, norm = norm)
 
     if (length(w.band) == 0) {
       if (is.null(range)) {
@@ -418,7 +429,6 @@ autoplot.calibration_mspct <-
            na.rm = TRUE) {
 
     force(object.label)
-    object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
     # We trim the spectra to avoid unnecessary computations later
@@ -440,6 +450,7 @@ autoplot.calibration_mspct <-
     if (is.calibration_spct(z) && "irrad.mult" %in% names(z)) {
       autoplot(object = z,
                range = range, # trimmed above, needed for expansion
+               norm = norm,
                unit.out = unit.out,
                pc.out = pc.out,
                by.group = by.group,
@@ -453,6 +464,7 @@ autoplot.calibration_mspct <-
       autoplot(object = z,
                y.name = paste("irrad.mult", plot.data, sep = "."),
                range = range, # trimmed above, needed for expansion
+               norm = norm,
                unit.out = unit.out,
                pc.out = pc.out,
                by.group = by.group,

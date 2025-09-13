@@ -350,8 +350,10 @@ autoplot.raw_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
+    if (is.null(norm) || is.na(norm)) {
+      norm = "update"
+    }
     force(object.label)
-    object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor)
     object <- rename_idfactor(object, idfactor)
 
@@ -396,6 +398,15 @@ autoplot.raw_spct <-
         )
       }
     }
+
+    # remove normalization if not updating it
+    # helps handle old objects with no normalization metadata
+    if (is.numeric(norm) ||
+        (is.character(norm) && norm %in% c("max", "min", "skip"))) {
+      photobiology::setNormalised(object, FALSE)
+    }
+    # apply normalization
+    object <- apply_normalization(x = object, norm = norm)
 
     if (length(w.band) == 0) {
       if (is.null(range)) {
@@ -461,7 +472,6 @@ autoplot.raw_mspct <-
            na.rm = TRUE) {
 
     force(object.label)
-    object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
     # We trim the spectra to avoid unnecesary computaions later
@@ -487,6 +497,7 @@ autoplot.raw_mspct <-
         any(c("counts", "counts_1") %in% names(z))) {
       autoplot(object = z,
                range = range, # trimmed above, needed for expansion
+               norm = norm,
                unit.out = unit.out,
                pc.out = pc.out,
                by.group = by.group,
@@ -500,6 +511,7 @@ autoplot.raw_mspct <-
       autoplot(object = z,
                y.name = paste("counts", plot.data, sep = "."),
                range = range, # trimmed above, needed for expansion
+               norm = norm,
                pc.out = pc.out,
                by.group = by.group,
                idfactor = NULL, # use idfactor already set in z

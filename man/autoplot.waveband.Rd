@@ -35,7 +35,7 @@
 \item{range}{an R object on which range() returns a vector of length 2, with
 min annd max wavelengths (nm).}
 
-\item{fill}{value to use as response for wavelngths outside the waveband
+\item{fill}{value to use as response for wavelengths outside the waveband
 range.}
 
 \item{span}{a peak is defined as an element in a sequence which is greater
