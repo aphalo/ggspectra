@@ -39,7 +39,7 @@
 #' @param w.length numeric vector of wavelengths (nm).
 #' @param range an R object on which range() returns a vector of length 2, with
 #'   min annd max wavelengths (nm).
-#' @param fill value to use as response for wavelngths outside the waveband
+#' @param fill value to use as response for wavelengths outside the waveband
 #'   range.
 #' @param span a peak is defined as an element in a sequence which is greater
 #'   than all other elements within a window of width span centered at that

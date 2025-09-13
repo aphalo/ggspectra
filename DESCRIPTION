@@ -2,7 +2,7 @@ Package: ggspectra
 Type: Package
 Title: Extensions to 'ggplot2' for Radiation Spectra
 Version: 0.3.16.9003
-Date: 2025-09-03
+Date: 2025-09-13
 Authors@R:
    c(
     person("Pedro J.", "Aphalo", email = "pedro.aphalo@helsinki.fi", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-3385-972X")),
@@ -38,5 +38,5 @@ URL: https://docs.r4photobiology.info/ggspectra/,
     https://github.com/aphalo/ggspectra/
 BugReports: https://github.com/aphalo/ggspectra/issues/
 Encoding: UTF-8
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 VignetteBuilder: knitr

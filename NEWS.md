@@ -6,9 +6,9 @@ editor_options:
 
 # ggspectra 0.4.0
 
-The main new feature is in `autoplot()` methods support arguments to `range`
-that expand the limits of the wavelength axis past the range of the spectral
-data. "Filtering" of peaks as newly implemented in (== 0.3.16) has been
+The support  in `autoplot()` methods of arguments to `range` that expand the
+limits of the wavelength axis past the range of the spectral data is the main
+new feature. "Filtering" of peaks as newly implemented in (== 0.3.16) has been
 adjusted, resulting in a code breaking change. In addition, the changes in
 `autoplot()` methods may result in plots that differ from those created with
 previous versions (marked "Changing" below).
@@ -22,7 +22,8 @@ and `stat_label_valleys()` parameter `ignore_threshold` replaced by
 `global.threshold = 0.01` in `stat_label_peaks()` and `stat_label_valleys()`.
 - Add parameter `idfactor` to `ggplot()` methods making it possible to select
 the name of the factor used to group the data by spectrum with multiple spectra.
-- Update handling of user-supplied mappings in `ggplot()`.
+- Update handling of user-supplied mappings in `ggplot()` methods for spectra 
+and for collections of spectra.
 - Fix bug in mapping of id.factor in `ggplot()` methods.
 - Enhance handling of parameter `range` in `autoplot()` methods. Support `NA`
 to indicate default limit and implement _x_ limits expansion.
