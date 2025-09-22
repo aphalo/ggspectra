@@ -385,7 +385,8 @@ T_plot <- function(spct,
       pc.out <- FALSE
     }
     scale.factor <- 1
-    norm <- round(photobiology::getNormalization(spct)[["norm.wl"]], 1)
+#    norm <- round(photobiology::getNormalization(spct)[["norm.wl"]], 1)
+    norm <- normalization_label(spct, digits = 1)
     s.Tfr.label <- bquote(.(Tfr.name)~~spectral~~transmittance~~T[lambda]^{.(Tfr.tag)}/T[lambda==.(norm)]^{.(Tfr.tag)}~~("rel."))
     Tfr.label.total  <- paste("atop(T^{", Tfr.tag,
                               "}, T[lambda == ", norm, "]^{", Tfr.tag, "}",
@@ -651,13 +652,14 @@ A_plot <- function(spct,
     A.label.total  <- paste("k %*% A^{", Tfr.tag, "}", sep = "")
     A.label.avg  <- paste("bar(k %*% A[lambda]^{", Tfr.tag, "})", sep = "")
   } else if (photobiology::is_normalized(spct)) {
-    norm <- round(getNormalization(spct)[["norm.wl"]], 1)
-    s.A.label <- bquote(.(Tfr.name)~~spectral~~absorbance~~A[lambda]^{.(Tfr.tag)}/A[lambda==.(norm)]^{.(Tfr.tag)}~~("rel."))
+#    norm <- round(getNormalization(spct)[["norm.wl"]], 1)
+    norm.wl <- normalization_label(spct, digits = 1)
+    s.A.label <- bquote(.(Tfr.name)~~spectral~~absorbance~~A[lambda]^{.(Tfr.tag)}/A[lambda==.(norm.wl)]^{.(Tfr.tag)}~~("rel."))
     A.label.total  <- paste("atop(A^{", Tfr.tag,
-                              "}, A[lambda == ", norm, "]^{", Tfr.tag, "}",
+                              "}, A[lambda == ", norm.wl, "]^{", Tfr.tag, "}",
                               sep = "")
     A.label.avg  <- paste("atop(bar(A[lambda]^{", Tfr.tag,
-                            "}), A[lambda == ", norm, "]^{", Tfr.tag, "}",
+                            "}), A[lambda == ", norm.wl, "]^{", Tfr.tag, "}",
                             sep = "")
   } else {
     s.A.label <- bquote(.(Tfr.name)~~spectral~~absorbance~~A[lambda]^{.(Tfr.tag)}~~(AU))
@@ -904,13 +906,14 @@ R_plot <- function(spct,
     Rfr.label.total  <- paste("k %*% R^{", Rfr.tag, "}", sep = "")
     Rfr.label.avg  <- paste("bar(k %*% R[lambda]^{", Rfr.tag, "})", sep = "")
   } else if (photobiology::is_normalized(spct)) {
-    norm <- round(photobiology::getNormalization(spct)[["norm.wl"]], 1)
-    s.Rfr.label <- bquote(.(Rfr.name)~~spectral~~reflectance~~R[lambda]^{.(Rfr.tag)}/R[lambda==.(norm)]^{.(Rfr.tag)}~~("rel."))
+#    norm <- round(photobiology::getNormalization(spct)[["norm.wl"]], 1)
+    norm.wl <- normalization_label(spct, digits = 1)
+    s.Rfr.label <- bquote(.(Rfr.name)~~spectral~~reflectance~~R[lambda]^{.(Rfr.tag)}/R[lambda==.(norm.wl)]^{.(Rfr.tag)}~~("rel."))
     Rfr.label.total  <- paste("atop(R^{", Rfr.tag,
-                            "}, R[lambda == ", norm, "]^{", Rfr.tag, "})",
+                            "}, R[lambda == ", norm.wl, "]^{", Rfr.tag, "})",
                             sep = "")
     Rfr.label.avg  <- paste("atop(bar(R[lambda]^{", Rfr.tag,
-                          "}), R[lambda == ", norm, "]^{", Rfr.tag, "})",
+                          "}), R[lambda == ", norm.wl, "]^{", Rfr.tag, "})",
                           sep = "")
   } else  if (!pc.out) {
     scale.factor <- 1

@@ -111,12 +111,13 @@ e_rsp_plot <- function(spct,
     } else {
       multiplier.label <- "%"
     }
-    norm.ls <- photobiology::getNormalization(spct)
-    if (is.numeric(norm.ls[["norm.wl"]])) {
-      norm.wl <- round(norm.ls[["norm.wl"]], digits = 1)
-    } else {
-      norm.wl <- norm.ls[["norm.type"]]
-    }
+    # norm.ls <- photobiology::getNormalization(spct)
+    # if (is.numeric(norm.ls[["norm.wl"]])) {
+    #   norm.wl <- round(norm.ls[["norm.wl"]], digits = 1)
+    # } else {
+    #   norm.wl <- norm.ls[["norm.type"]]
+    # }
+    norm.wl <- normalization_label(spct, digits = 1)
     s.rsp.label <-
       bquote(Spectral~~energy~~response~~R[E~lambda]/R[E~lambda==.(norm.wl)]~~(.(multiplier.label)))
     rsp.label.total  <- bquote(atop(integral(R[E]/R[E~lambda==.(norm.wl)], min, max), (.(multiplier.label))))
@@ -385,12 +386,13 @@ q_rsp_plot <- function(spct,
      } else {
       multiplier.label <- "%"
     }
-    norm.ls <- photobiology::getNormalization(spct)
-    if (is.numeric(norm.ls[["norm.wl"]])) {
-      norm.wl <- round(norm.ls[["norm.wl"]], digits = 1)
-    } else {
-      norm.wl <- norm.ls[["norm.type"]]
-    }
+    # norm.ls <- photobiology::getNormalization(spct)
+    # if (is.numeric(norm.ls[["norm.wl"]])) {
+    #   norm.wl <- round(norm.ls[["norm.wl"]], digits = 1)
+    # } else {
+    #   norm.wl <- norm.ls[["norm.type"]]
+    # }
+    norm.wl <- normalization_label(spct, digits = 1)
     s.rsp.label <-
       bquote(Spectral~~photon~~response~~R[Q~lambda]/R[Q~lambda==.(norm.wl)]~~(.(multiplier.label)))
     rsp.label.total  <- bquote(atop(integral(R[Q~lambda], min, max), (.(multiplier.label))))

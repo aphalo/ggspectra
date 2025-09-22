@@ -86,3 +86,43 @@ apply_normalization <- function(x,
     photobiology::normalize(x, norm = norm)
   }
 }
+
+#' Get a normalization label
+#'
+#' Handle numeric and non-numeric values, as well as long form spectra
+#'
+#' @keywords internal
+#'
+normalization_label <- function(spct, digits = 1L) {
+  stopifnot(is_normalised(spct))
+  normalization <- photobiology::getNormalization(spct)
+  if (all(is.na(normalization))) {
+    return("NA")
+  }
+  if (photobiology::getMultipleWl(spct) == 1L) {
+    # one normalization record
+    if (is.numeric(normalization[["norm.wl"]])) {
+      return(round(normalization[["norm.wl"]], digits = digits))
+    }
+    if (is.character(normalization[["norm.type"]])) {
+      return(normalization[["norm.type"]])
+    } else {
+      round(photobiology::getNormalized(spct, .force.numeric = TRUE),
+            digits = digits)
+    }
+  } else {
+    # list with one normalization record per spectrum
+    # use "norm.wls" if consistent
+    norm.wls <- unique(sapply(normalization, `[[`, i = "norm.wl"))
+    if (length(norm.wls) == 1L && !is.na(norm.wls)) {
+      return(norm.wls)
+    }
+    # use "norm.type" if consistent
+    norm.types <- unique(sapply(normalization, `[[`, i = "norm.type"))
+    if (length(norm.types) == 1L && !is.na(norm.types)) {
+      return(norm.types)
+    } else {
+      return("norm")
+    }
+  }
+}

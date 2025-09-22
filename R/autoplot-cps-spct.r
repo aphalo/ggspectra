@@ -115,8 +115,9 @@ cps_plot <- function(spct,
       bquote(Pixel~~response~~rate~~k %*% N[lambda]~~("rel."))
     cps.label <- ""
   } else if (photobiology::is_normalized(spct)) {
-    norm.ls <- photobiology::getNormalization(spct)
-    norm.wl <- round(norm.ls[["norm.wl"]], digits = 1)
+    # norm.ls <- photobiology::getNormalization(spct)
+    # norm.wl <- round(norm.ls[["norm.wl"]], digits = 1)
+    norm.wl <- normalization_label(spct, digits = 1)
     if (pc.out) {
       multiplier.label <- "%"
     } else {

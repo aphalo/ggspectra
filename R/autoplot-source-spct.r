@@ -118,10 +118,11 @@ e_plot <- function(spct,
     } else {
       multiplier.label <- "%"
     }
-    norm <- round(photobiology::getNormalization(spct)[["norm.wl"]], digits = 1)
-    s.irrad.label <- bquote(Spectral~~energy~~irradiance~~E[lambda]/E[lambda==.(norm)]~~(.(multiplier.label)))
+#    norm <- round(photobiology::getNormalization(spct)[["norm.wl"]], digits = 1)
+    norm.wl <- normalization_label(spct, digits = 1)
+    s.irrad.label <- bquote(Spectral~~energy~~irradiance~~E[lambda]/E[lambda==.(norm.wl)]~~(.(multiplier.label)))
     irrad.label.total <- "atop(E, (\"rel.\"))"
-    irrad.label.avg <- bquote(atop(bar(E[lambda]), E[lambda==.(norm)]))
+    irrad.label.avg <- bquote(atop(bar(E[lambda]), E[lambda==.(norm.wl)]))
     scale.factor <- 1
   } else {
     if (pc.out) {
@@ -439,16 +440,17 @@ q_plot <- function(spct,
     irrad.label.total <- "atop(k %*% Q, (\"rel.\"))"
     irrad.label.avg <- "atop(bar(Q[lambda]), (\"rel.\"))"
     scale.factor <- 1
-  } else  if (photobiology::is_normalized(spct)) {
+  } else if (photobiology::is_normalized(spct)) {
     if (!pc.out) {
       multiplier.label <- "rel."
     } else {
       multiplier.label <- "%"
     }
-    norm <- round(photobiology::getNormalization(spct)[["norm.wl"]], digits = 1)
-    s.irrad.label <- bquote(Spectral~~photon~~exposure~~Q[lambda]/Q[lambda==.(norm)]~~(.(multiplier.label)))
+#    norm <- round(photobiology::getNormalization(spct)[["norm.wl"]], digits = 1)
+    norm.wl <- normalization_label(spct, digits = 1)
+    s.irrad.label <- bquote(Spectral~~photon~~exposure~~Q[lambda]/Q[lambda==.(norm.wl)]~~(.(multiplier.label)))
     irrad.label.total <- "atop(Q, (\"rel.\"))"
-    irrad.label.avg <- bquote(atop(bar(Q[lambda]), Q[lambda==.(norm)]))
+    irrad.label.avg <- bquote(atop(bar(Q[lambda]), Q[lambda==.(norm.wl)]))
     scale.factor <- 1
   } else {
     if (pc.out) {
