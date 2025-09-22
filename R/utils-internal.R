@@ -94,7 +94,7 @@ apply_normalization <- function(x,
 #' @keywords internal
 #'
 normalization_label <- function(spct, digits = 1L) {
-  stopifnot(is_normalised(spct))
+  stopifnot(all(unlist(is_normalised(spct), use.names = FALSE)))
   normalization <- photobiology::getNormalization(spct)
   if (all(is.na(normalization))) {
     return("NA")
