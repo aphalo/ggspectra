@@ -230,9 +230,8 @@ autoplot(photodiode.spct, unit.out = "photon")
 autoplot(photodiode.spct, annotations = "")
 
 two_sensors.mspct <-
- response_mspct(list("Photodiode" = photodiode.spct,
-                     "Coupled charge device" = ccd.spct)) |>
- normalize()
+ response_mspct(list("Photodiode" = photodiode.spct * 1.5e-5,
+                     "Coupled charge device" = ccd.spct))
 
 autoplot(two_sensors.mspct, unit.out = "photon")
 autoplot(two_sensors.mspct, idfactor = "Spectra")
