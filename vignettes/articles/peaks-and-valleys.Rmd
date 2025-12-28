@@ -642,8 +642,8 @@ The colours used above for `fill` are computed from the wavelength of each peak.
 
 ## Exploring the data returned by statistics
 
-With `geom_debug()` from package 'gginnards' we can explore the `data` data
-frame passed by the statistic to the geometry. `geom_debug()` by default
+With `geom_debug_group()` from package 'gginnards' we can explore the `data` data
+frame passed by the statistic to the geometry. `geom_debug_group()` by default
 prints the value returned by `head()` as a tibble without adding a layer to the 
 plot. Thus, its behaviour is atypical.
 
@@ -653,7 +653,7 @@ library(gginnards)
 ggplot(sun.spct) +
   geom_spct() +
   stat_peaks(span = 31,
-             geom = "debug",
+             geom = "debug_group",
              dbgfun.data = "head", 
              dbgfun.data.args = list(n = 20))
 ```
@@ -668,7 +668,7 @@ ggplot(sun.spct) +
              span = NULL, refine.wl = TRUE,
              y.label.fmt = "%.3f~W~m^{-2}~nm^{-1}", 
              colour = "white", vjust = "bottom",
-             geom = "debug", 
+             geom = "debug_group", 
              dbgfun.data = "head") +
   expand_limits(y = 0.85) +
   scale_fill_identity()
