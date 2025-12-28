@@ -17,6 +17,8 @@
 #'   as a string.
 #' @param position Position adjustment, either as a string, or the result of a
 #'   call to a position adjustment function.
+#' @param outline.type character One of "both", "upper", "lower", or "full",
+#'   controlling which borders of the filled area have an outline.
 #' @param na.rm If FALSE (the default), removes missing values with a warning.
 #'   If TRUE silently removes missing values.
 #' @param show.legend logical. Should this layer be included in the legends?
@@ -45,6 +47,7 @@ geom_spct <- function(mapping = NULL,
                       data = NULL,
                       stat = "identity",
                       position = "identity",
+                      outline.type = "upper",
                       ...,
                       na.rm = FALSE,
                       show.legend = NA,
@@ -58,6 +61,7 @@ geom_spct <- function(mapping = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     params = list(
+      outline.type = outline.type,
       na.rm = na.rm,
       ...
     )
