@@ -185,7 +185,16 @@ colour_guide_function <- function(data,
                             range = range,
                             trim = TRUE)
   }
-  fast_wb2rect_df(w.band = w.band, chroma.type = chroma.type)
+  rect.df <- fast_wb2rect_df(w.band = w.band, chroma.type = chroma.type)
+
+  groups <- unique(data[["group"]])
+  if (length(groups) == 1L) {
+    rect.df[["group"]] <- groups
+  } else {
+    rect.df[["group"]] <- -1L
+  }
+
+  rect.df
 }
 
 #' @rdname gg2spectra-ggproto

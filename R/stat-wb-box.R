@@ -209,6 +209,13 @@ compute_wb_box <- function(data,
   integ.df[["ymax"]] <- with(integ.df, y + (wb.ymax - wb.ymin) * box.height / 2)
   integ.df[["ymin"]] <- with(integ.df, y - (wb.ymax - wb.ymin) * box.height / 2)
 
+  groups <- unique(data[["group"]])
+  if (length(groups) == 1L) {
+    integ.df[["group"]] <- groups
+  } else {
+    integ.df[["group"]] <- -1L
+  }
+
   integ.df
 }
 

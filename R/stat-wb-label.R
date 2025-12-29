@@ -205,7 +205,14 @@ compute_wb_label <- function(data,
     integ.df[["y"]] <- ypos.fixed
   }
   integ.df$wb.label <- sprintf(label.fmt, integ.df$wb.name)
-  #                     print(integ.df)
+
+  groups <- unique(data[["group"]])
+  if (length(groups) == 1L) {
+    integ.df[["group"]] <- groups
+  } else {
+    integ.df[["group"]] <- -1L
+  }
+
   integ.df
 }
 
