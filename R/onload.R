@@ -1,12 +1,11 @@
 utils::globalVariables(c(
   "from_theme",
-  "colour",
   "ink",
-  "fill",
   "paper",
-  "fontsize",
-  "linewidth",
-  "linetype"
+  "colour",
+  "fill",
+  "borderwidth",
+  "bordertype"
 ))
 
 .onLoad <- function(libname, pkgname) {

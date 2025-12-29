@@ -9,6 +9,7 @@ geom_spct(
   data = NULL,
   stat = "identity",
   position = "identity",
+  outline.type = "upper",
   ...,
   na.rm = FALSE,
   show.legend = NA,
@@ -28,6 +29,9 @@ as a string.}
 
 \item{position}{Position adjustment, either as a string, or the result of a
 call to a position adjustment function.}
+
+\item{outline.type}{character One of "both", "upper", "lower", or "full",
+controlling which borders of the filled area have an outline.}
 
 \item{...}{other arguments passed on to \code{\link[ggplot2]{layer}}. This
 can include aesthetics whose values you want to set, not map. See
