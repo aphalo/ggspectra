@@ -70,10 +70,7 @@ e_plot <- function(spct,
     stop("e_plot() can only plot source_spct objects.")
   }
   spct[["s.q.irrad"]] <- NULL
-  if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
-    warning("'geom = ", geom, "' not supported, using default instead.")
-    geom <- NULL
-  }
+  geom <- validate_geom_arg(geom)
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
   }
@@ -235,10 +232,18 @@ e_plot <- function(spct,
     }
   }
 
-  if (!is.null(geom) && geom %in% c("area", "spct")) {
+  if ("col" %in% geom) {
+    plot <- plot + geom_col(fill = "black", colour = NA, alpha = 0.2)
+  }
+  if (any(c("area", "spct") %in% geom)) {
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
-  plot <- plot + ggplot2::geom_line(na.rm = na.rm)
+  if (!length(geom) || "line" %in% geom) {
+    plot <- plot + ggplot2::geom_line(na.rm = na.rm)
+  }
+  if ("point" %in% geom) {
+    plot <- plot + geom_point()
+  }
   plot <- plot + ggplot2::labs(x = bquote("Wavelength, "*lambda~(nm)), y = s.irrad.label)
 
   if (length(annotations) == 1 && annotations == "") {
@@ -397,10 +402,7 @@ q_plot <- function(spct,
     stop("q_plot() can only plot source_spct objects.")
   }
   spct[["s.e.irrad"]] <- NULL
-  if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
-    warning("'geom = ", geom, "' not supported, using default instead.")
-    geom <- NULL
-  }
+  geom <- validate_geom_arg(geom)
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
   }
@@ -564,10 +566,18 @@ q_plot <- function(spct,
     }
   }
 
-  if (!is.null(geom) && geom %in% c("area", "spct")) {
+  if ("col" %in% geom) {
+    plot <- plot + geom_col(fill = "black", colour = NA, alpha = 0.2)
+  }
+  if (any(c("area", "spct") %in% geom)) {
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
-  plot <- plot + ggplot2::geom_line(na.rm = na.rm)
+  if (!length(geom) || "line" %in% geom) {
+    plot <- plot + ggplot2::geom_line(na.rm = na.rm)
+  }
+  if ("point" %in% geom) {
+    plot <- plot + geom_point()
+  }
   plot <- plot +
     ggplot2::labs(x = bquote("Wavelength, "*lambda~(nm)), y = s.irrad.label)
 

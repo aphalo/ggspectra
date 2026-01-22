@@ -23,6 +23,8 @@ test_that("source_spct", {
                               autoplot(white_led.source_spct))
   vdiffr::expect_doppelganger("src-default-geom-spct",
                               autoplot(white_led.source_spct, geom = "spct"))
+  vdiffr::expect_doppelganger("src-default-geom-spct-line",
+                              autoplot(white_led.source_spct, geom = c("spct", "line")))
   vdiffr::expect_doppelganger("src-ylim1",
                               autoplot(white_led.source_spct, ylim = c(NA, 1)))
   vdiffr::expect_doppelganger("src-ylim2",
@@ -217,6 +219,8 @@ test_that("source_mspct", {
                               autoplot(two_leds.mspct, idfactor = "spectrum"))
   vdiffr::expect_doppelganger("src-mspct-default-geom-spct",
                               autoplot(two_leds.mspct, geom = "spct"))
+  vdiffr::expect_doppelganger("src-mspct-default-geom-spct-line",
+                              autoplot(two_leds.mspct, geom = c("spct", "line")))
   vdiffr::expect_doppelganger("src-mspct-ylim",
                               autoplot(two_leds.mspct, ylim = c(-0.1, 1.2)))
   vdiffr::expect_doppelganger("src-mspct-default-range-shrink",
@@ -284,5 +288,7 @@ test_that("source_mspct", {
                               autoplot(two_leds.mspct, facets = TRUE))
   vdiffr::expect_doppelganger("src-mspct-facetsT-geom-spct",
                               autoplot(two_leds.mspct, facets = TRUE, geom = "spct"))
+  vdiffr::expect_doppelganger("src-mspct-facetsT-geom-spct-line",
+                              autoplot(two_leds.mspct, facets = TRUE, geom = c("spct", "line")))
 
 })

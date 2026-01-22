@@ -75,10 +75,7 @@ cal_plot <- function(spct,
   if (!is.calibration_spct(spct)) {
     stop("cal_plot() can only plot calibration_spct objects.")
   }
-  if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
-    warning("'geom = ", geom, "' not supported, using default instead.")
-    geom <- NULL
-  }
+  geom <- validate_geom_arg(geom)
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
   }
@@ -213,10 +210,18 @@ cal_plot <- function(spct,
     }
   }
 
-  if (!is.null(geom) && geom %in% c("area", "spct")) {
+  if ("col" %in% geom) {
+    plot <- plot + geom_col(fill = "black", colour = NA, alpha = 0.2)
+  }
+  if (any(c("area", "spct") %in% geom)) {
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
-  plot <- plot + geom_line(na.rm = na.rm)
+  if (!length(geom) || "line" %in% geom) {
+    plot <- plot + ggplot2::geom_line(na.rm = na.rm)
+  }
+  if ("point" %in% geom) {
+    plot <- plot + geom_point()
+  }
   plot <- plot + labs(x = bquote("Wavelength, "*lambda~(nm)), y = s.counts.label)
 
   if (length(annotations) == 1 && annotations == "") {

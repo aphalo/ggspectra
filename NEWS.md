@@ -33,6 +33,10 @@ and for collections of spectra.
 to indicate default limit and implement _x_ limits expansion.
 - Enhance handling of parameter `norm` in `autoplot()` methods. Gracefully
 handle old objects with missing normalization metadata, when possible.
+- Accept `"col"` and `"point"` as argument to `geom` in `autoplot()` methods.
+- Accept a vector of geom names as argument to `geom` in `autoplot()` methods.
+- Changing: when passing `geom = "spct"` no longer a line is overplotted.
+To obtain the previous rendering use `geom = c("spct", "line")`.
 - Changing: plots created with `autoplot.waveband()` method can be drastically
 different because of new defaults for `w.length` and `range`.
 - Add parameter `range` to `stat_wb_label()` and `stat_wl_strip()` and edit

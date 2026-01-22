@@ -64,7 +64,7 @@ Afr_plot <- function(spct,
   if (!photobiology::is.filter_spct(spct)) {
     stop("Afr_plot() can only plot filter_spct objects.")
   }
-
+  geom <- validate_geom_arg(geom)
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
   }
@@ -191,12 +191,18 @@ Afr_plot <- function(spct,
     }
   }
 
-  if (!is.null(geom) && geom %in% c("area", "spct")) {
-    plot <-
-      plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
+  if ("col" %in% geom) {
+    plot <- plot + geom_col(fill = "black", colour = NA, alpha = 0.2)
   }
-  plot <-
-    plot + ggplot2::geom_line(na.rm = na.rm)
+  if (any(c("area", "spct") %in% geom)) {
+    plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
+  }
+  if (!length(geom) || "line" %in% geom) {
+    plot <- plot + ggplot2::geom_line(na.rm = na.rm)
+  }
+  if ("point" %in% geom) {
+    plot <- plot + geom_point()
+  }
   plot <-
     plot + ggplot2::labs(x = bquote("Wavelength, "*lambda~(nm)),
                          y = s.Afr.label)
@@ -321,10 +327,7 @@ T_plot <- function(spct,
   if (!photobiology::is.filter_spct(spct)) {
     stop("T_plot() can only plot filter_spct objects.")
   }
-  if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
-    warning("'geom = ", geom, "' not supported, using default instead.")
-    geom <- NULL
-  }
+  geom <- validate_geom_arg(geom)
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
   }
@@ -478,10 +481,18 @@ T_plot <- function(spct,
     }
   }
 
-  if (!is.null(geom) && geom %in% c("area", "spct")) {
+  if ("col" %in% geom) {
+    plot <- plot + geom_col(fill = "black", colour = NA, alpha = 0.2)
+  }
+  if (any(c("area", "spct") %in% geom)) {
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
-  plot <- plot + ggplot2::geom_line(na.rm = na.rm)
+  if (!length(geom) || "line" %in% geom) {
+    plot <- plot + ggplot2::geom_line(na.rm = na.rm)
+  }
+  if ("point" %in% geom) {
+    plot <- plot + geom_point()
+  }
   plot <- plot + labs(x = bquote("Wavelength, "*lambda~(nm)), y = s.Tfr.label)
 
   if (length(annotations) == 1 && annotations == "") {
@@ -600,10 +611,7 @@ A_plot <- function(spct,
   if (!photobiology::is.filter_spct(spct)) {
     stop("A_plot() can only plot filter_spct objects.")
   }
-  if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
-    warning("'geom = ", geom, "' not supported, using default instead.")
-    geom <- NULL
-  }
+  geom <- validate_geom_arg(geom)
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
   }
@@ -732,10 +740,18 @@ A_plot <- function(spct,
     }
   }
 
-  if (!is.null(geom) && geom %in% c("area", "spct")) {
+  if ("col" %in% geom) {
+    plot <- plot + geom_col(fill = "black", colour = NA, alpha = 0.2)
+  }
+  if (any(c("area", "spct") %in% geom)) {
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
-  plot <- plot + geom_line(na.rm = na.rm)
+  if (!length(geom) || "line" %in% geom) {
+    plot <- plot + ggplot2::geom_line(na.rm = na.rm)
+  }
+  if ("point" %in% geom) {
+    plot <- plot + geom_point()
+  }
   plot <- plot + labs(x = bquote("Wavelength, "*lambda~(nm)), y = s.A.label)
 
   if (length(annotations) == 1 && annotations == "") {
@@ -847,10 +863,7 @@ R_plot <- function(spct,
   if (!photobiology::is.reflector_spct(spct)) {
     stop("R_plot() can only plot reflector_spct objects.")
   }
-  if (!is.null(geom) && !geom %in% c("area", "line", "spct")) {
-    warning("'geom = ", geom, "' not supported, using default instead.")
-    geom <- NULL
-  }
+  geom <- validate_geom_arg(geom)
   if (is.null(ylim) || !is.numeric(ylim)) {
     ylim <- rep(NA_real_, 2L)
   }
@@ -997,10 +1010,18 @@ R_plot <- function(spct,
     }
   }
 
-  if (!is.null(geom) && geom %in% c("area", "spct")) {
+  if ("col" %in% geom) {
+    plot <- plot + geom_col(fill = "black", colour = NA, alpha = 0.2)
+  }
+  if (any(c("area", "spct") %in% geom)) {
     plot <- plot + geom_spct(fill = "black", colour = NA, alpha = 0.2)
   }
-  plot <- plot + ggplot2::geom_line(na.rm = na.rm)
+  if (!length(geom) || "line" %in% geom) {
+    plot <- plot + ggplot2::geom_line(na.rm = na.rm)
+  }
+  if ("point" %in% geom) {
+    plot <- plot + geom_point()
+  }
   plot <- plot + labs(x = bquote("Wavelength, "*lambda~(nm)),
                       y = s.Rfr.label)
 
