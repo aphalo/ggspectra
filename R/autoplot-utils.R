@@ -7,13 +7,6 @@
 #'
 #' @keywords internal
 #'
-#' @examples
-#' validate_geom_arg()
-#' validate_geom_arg("line")
-#' validate_geom_arg(c("line", "point"))
-#' validate_geom_arg(c("bad", "point"))
-#' validate_geom_arg(c("bad", "bad2"))
-#'
 validate_geom_arg <-
   function(geoms = character(),
            supported.geoms = c("area", "line", "spct", "col", "point"),

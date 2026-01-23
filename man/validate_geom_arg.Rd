@@ -17,12 +17,4 @@ validate_geom_arg(
 \code{autoplot()} methods have a geom parameter that supports a subset of
 existing geoms. This function factors this check out of the methods' code.
 }
-\examples{
-validate_geom_arg()
-validate_geom_arg("line")
-validate_geom_arg(c("line", "point"))
-validate_geom_arg(c("bad", "point"))
-validate_geom_arg(c("bad", "bad2"))
-
-}
 \keyword{internal}
