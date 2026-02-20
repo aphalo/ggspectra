@@ -352,10 +352,7 @@ autoplot(my_sun.spct, by.group = TRUE, label.qty = "sirrad",
                     state_length = 1)
 ```
 
-**Currently, when `unit.out` is set through an R option but not in the call, an error is triggered when the plot is animated.**
-
-```{r, eval=FALSE}
-# broken!!
+```{r}
 photon_as_default()
 autoplot(my_sun.spct, by.group = TRUE) +
   transition_states(tod,
