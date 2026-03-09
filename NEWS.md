@@ -6,16 +6,16 @@ editor_options:
 
 # ggspectra 0.4.0
 
-One enhancement in this release is support in `autoplot()` methods of `range` 
-arguments that expand the limits of the wavelength axis past the range of the 
+One enhancement in this release is support in `autoplot()` methods of `range`
+arguments that expand the limits of the wavelength axis past the range of the
 spectral data. Support added for some new features from 'ggplot2' (>= 4.0.0)
 including the geom element of themes. "Filtering" in the detection of peaks and
-valleys as implemented in 'ggspectra' (== 0.3.16) has been tuned, and a 
-parameter renamed, 
-resulting in a code breaking change. In addition, the updates to `autoplot()` 
-methods can result in plots that differ from those created with previous 
-versions (marked "Changing" below). The support for themes' geom element can,
-as in 'ggplot2' (>= 4.0.0), also result in differently-looking rendered plots.
+valleys as implemented in 'ggspectra' (== 0.3.16) has been tuned, and a
+parameter renamed, resulting in a code breaking change. In addition, the updates
+to `autoplot()` methods can result in plots that differ from those created with
+previous versions (marked "Changing" below). The support for themes' geom
+element can, as in 'ggplot2' (>= 4.0.0), also result in differently-looking
+rendered plots.
 
 - Support theme's element geom and parameter `outline.type` in `geom_spct()`.
 - Breaking: In `stat_peaks()`, `stat_valleys()`, `stat_label_peaks()` 
