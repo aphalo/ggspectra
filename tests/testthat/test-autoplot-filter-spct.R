@@ -27,6 +27,8 @@ test_that("filter_spct default", {
                                               range = c(400,700), set.scaled = TRUE)))
   vdiffr::expect_doppelganger("flt-default-tot-normalized",
                               autoplot(normalize(Ler_leaf_trns.spct, norm = "max")))
+  vdiffr::expect_doppelganger("flt-default-tot-norm-autoplot",
+                              autoplot(Ler_leaf_trns.spct, norm = "max"))
 
   vdiffr::expect_doppelganger("flt-default-tot",
                               autoplot(Ler_leaf_trns.spct))
@@ -72,6 +74,10 @@ test_that("filter_spct default", {
                               autoplot(Ler_leaf_trns.spct, annotations = c("-", "summaries")))
   vdiffr::expect_doppelganger("flt-plus-annotations-tot",
                               autoplot(Ler_leaf_trns.spct, annotations = c("+", "boundaries")))
+  vdiffr::expect_doppelganger("flt-plus-valleys",
+                              autoplot(Ler_leaf_trns.spct, annotations = c("+", "valleys"), span = 11))
+  vdiffr::expect_doppelganger("src-plus-segments",
+                              autoplot(Ler_leaf_trns.spct, annotations = c("+", "segments"), span = 11))
 
   vdiffr::expect_doppelganger("flt-default-scaled",
                               autoplot(fscale(Ler_leaf_trns_i.spct, target = 0.06,
@@ -251,6 +257,16 @@ test_that("filter_mspct", {
                                       half = Ler_leaf_trns_i.spct / 2))
   vdiffr::expect_doppelganger("flt-mspct-default",
                               autoplot(two_leaves.mspct))
+  vdiffr::expect_doppelganger("flt-mspct-norm-max",
+                              autoplot(two_leaves.mspct, norm = "max"))
+  vdiffr::expect_doppelganger("flt-mspct-norm-780",
+                              autoplot(two_leaves.mspct, norm = 780))
+
+  expect_error(autoplot(two_leaves.mspct, norm = "bad"))
+  expect_error(autoplot(two_leaves.mspct, norm = 0))
+  expect_warning(autoplot(two_leaves.mspct, norm = 150))
+  expect_warning(autoplot(two_leaves.mspct, norm = 1000))
+
   vdiffr::expect_doppelganger("flt-mspct-default-ylim",
                               autoplot(two_leaves.mspct, ylim = c(-0.2, 1.2)))
   vdiffr::expect_doppelganger("flt-mspct-default-range-shrink",

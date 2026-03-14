@@ -17,6 +17,8 @@ previous versions (marked "Changing" below). The support for themes' geom
 element can, as in 'ggplot2' (>= 4.0.0), also result in differently-looking
 rendered plots.
 
+- Depend on 'photobiology' (>= 0.14.2), as a bug in 'photobiology' (== 0.14.1)
+affected `autoplot()` methods.
 - Support theme's element geom and parameter `outline.type` in `geom_spct()`.
 - Breaking: In `stat_peaks()`, `stat_valleys()`, `stat_label_peaks()` 
 and `stat_label_valleys()` parameter `ignore_threshold` replaced by 
@@ -38,7 +40,7 @@ handle old objects with missing normalization metadata, when possible.
 as argument to `geom` in `autoplot()` methods.
 - Accept a vector containing more than one geom name as argument to `geom` 
 in `autoplot()` methods.
-- Changing: when passing `geom = "spct"` no longer a line is overplotted.
+- Changing: when passing `geom = "spct"` no longer a line is over-plotted.
 To obtain the former rendering use `geom = c("spct", "line")`.
 - Changing: plots created with `autoplot.waveband()` method can be drastically
 different because of new defaults for `w.length` and `range`.

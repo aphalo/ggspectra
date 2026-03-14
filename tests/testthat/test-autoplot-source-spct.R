@@ -18,6 +18,23 @@ test_that("source_spct", {
                               autoplot(normalize(white_led.source_spct)))
   vdiffr::expect_doppelganger("src-default-norm-550",
                               autoplot(normalize(white_led.source_spct, norm = 550)))
+  vdiffr::expect_doppelganger("src-default-norm-550-update",
+                              autoplot(normalize(white_led.source_spct, norm = 550),
+                                       norm = "update"))
+  vdiffr::expect_doppelganger("src-default-norm-550-autoplot",
+                              autoplot(white_led.source_spct, norm = 550))
+  vdiffr::expect_doppelganger("src-default-norm-550-undo",
+                              autoplot(normalize(white_led.source_spct, norm = 550),
+                                       norm = "undo"))
+  vdiffr::expect_doppelganger("src-default-norm-550-skip-skip",
+                              autoplot(normalize(white_led.source_spct, norm = "skip"),
+                                       norm = "skip"))
+  # Not the expected behaviour
+  # vdiffr::expect_doppelganger("src-default-norm-550-skip",
+  #                             autoplot(normalize(white_led.source_spct, norm = 550),
+  #                                      norm = "skip"))
+  vdiffr::expect_doppelganger("src-default-norm-not",
+                              autoplot(white_led.source_spct))
 
   vdiffr::expect_doppelganger("src-default",
                               autoplot(white_led.source_spct))
@@ -75,11 +92,43 @@ test_that("source_spct", {
                               autoplot(white_led.source_spct, annotations = c("-", "summaries")))
   vdiffr::expect_doppelganger("src-plus-annotations",
                               autoplot(white_led.source_spct, annotations = c("+", "boundaries")))
+  vdiffr::expect_doppelganger("src-plus-valleys",
+                              autoplot(sun.spct, annotations = c("+", "valleys"), span = 11))
+  vdiffr::expect_doppelganger("src-plus-segments",
+                              autoplot(white_led.source_spct, annotations = c("+", "segments"), span = 11))
 
   vdiffr::expect_doppelganger("src-default-q-scaled",
-                              autoplot(fscale(white_led.source_spct), unit.out = "photon"))
+                              autoplot(fscale(white_led.source_spct),
+                                       unit.out = "photon"))
   vdiffr::expect_doppelganger("src-default-q-normalized",
-                              autoplot(normalize(white_led.source_spct), unit.out = "photon"))
+                              autoplot(normalize(white_led.source_spct),
+                                       unit.out = "photon"))
+  vdiffr::expect_doppelganger("src-default-q-norm-550",
+                              autoplot(normalize(white_led.source_spct, norm = 550),
+                                       unit.out = "photon"))
+  vdiffr::expect_doppelganger("src-default-q-norm-550-update",
+                              autoplot(normalize(white_led.source_spct, norm = 550),
+                                       norm = "update",
+                                       unit.out = "photon"))
+  vdiffr::expect_doppelganger("src-default-q-norm-550-autoplot",
+                              autoplot(white_led.source_spct, norm = 550,
+                                       unit.out = "photon"))
+  vdiffr::expect_doppelganger("src-default-q-norm-550-undo",
+                              autoplot(normalize(white_led.source_spct, norm = 550),
+                                       norm = "undo",
+                                       unit.out = "photon"))
+  vdiffr::expect_doppelganger("src-default-q-norm-550-skip-skip",
+                              autoplot(normalize(white_led.source_spct, norm = "skip"),
+                                       norm = "skip",
+                                       unit.out = "photon"))
+  # Not the expected behaviour
+  # vdiffr::expect_doppelganger("src-default-q-norm-550-skip",
+  #                             autoplot(normalize(white_led.source_spct, norm = 550),
+  #                                      norm = "skip",
+  #                                      unit.out = "photon"))
+  vdiffr::expect_doppelganger("src-default-q-norm-not",
+                              autoplot(white_led.source_spct,
+                                       unit.out = "photon"))
 
   vdiffr::expect_doppelganger("src-default-q",
                               autoplot(white_led.source_spct, unit.out = "photon"))
@@ -215,6 +264,16 @@ test_that("source_mspct", {
 
   vdiffr::expect_doppelganger("src-mspct-default",
                               autoplot(two_leds.mspct))
+  vdiffr::expect_doppelganger("src-mspct-norm-max",
+                              autoplot(two_leds.mspct, norm = "max"))
+  vdiffr::expect_doppelganger("src-mspct-norm-550",
+                              autoplot(two_leds.mspct, norm = 550))
+
+  expect_error(autoplot(two_leds.mspct, norm = "bad"))
+  expect_error(autoplot(two_leds.mspct, norm = 0))
+  expect_warning(autoplot(two_leds.mspct, norm = 150))
+  expect_warning(autoplot(two_leds.mspct, norm = 1000))
+
   vdiffr::expect_doppelganger("src-mspct-default-idfactor",
                               autoplot(two_leds.mspct, idfactor = "spectrum"))
   vdiffr::expect_doppelganger("src-mspct-default-geom-spct",
