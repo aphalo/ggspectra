@@ -94,8 +94,10 @@ selects between them based on \code{stacked}.}
 \item{tz}{character Time zone to use for title and/or subtitle.}
 
 \item{norm}{numeric or character. Normalization to apply before plotting, If
-\code{object} is already normalized, the normalization is updated when a
-unit conversion applied.}
+\code{object} is already normalized, by default the normalization is
+updated when a unit conversion applied. A wavelength in nanometres as a
+numeric value or one of the strings \code{"max"}, \code{"min"},
+\code{"update"}, \code{"skip"} or \code{"undo"} are accepted.}
 
 \item{text.size}{numeric size of text in the plot decorations.}
 
@@ -156,13 +158,18 @@ The \code{autoplot()} methods  from 'ggspectra' are convenience
   \code{\link[photobiology]{photobiology}}.
 
   For details about normalization and arguments to parameter \code{norm},
-  please, see \code{\link[photobiology]{normalize}()}. If \code{norm = NA},
-  the default, \code{normalize()} is not called. All other values passed
-  as argument to \code{norm} result in a call to \code{normalize()} with
-  this value as its argument. In the case of objects
-  created with 'photobiology' (<= 0.10.9) \code{norm = "undo"} is not
-  supported. Be aware that calls to \code{normalize()} remove any scaling
-  previously applied with \code{\link[photobiology]{fscale}()} methods.
+  please, see \code{\link[photobiology]{normalize}()}. If \code{norm = NULL},
+  the default, if the object is normalized \code{norm = "update"} is used and
+  otherwise \code{norm = "skip"}. Values passed as argument to \code{norm}
+  are passed to a call to \code{normalize()} with this value as its argument.
+  In the case of objects created with 'photobiology' (<= 0.10.9) \code{norm =
+  "undo"} is not supported. Be aware that calls to \code{normalize()} remove
+  any scaling previously applied with \code{\link[photobiology]{fscale}()}
+  methods. In practice, the only difference between \code{"skip"} and
+  \code{"update"} is that with \code{"skip"} a message is issued when an
+  update of the normalization is necessary because of a conversion between
+  quantities or bases of expression that are wavelength dependent or
+  non-linear.
 
   For multiple spectra in long form spectral objects, with \code{idfactor
   = NULL}, the default, the name of the factor is retrieved from metadata. If

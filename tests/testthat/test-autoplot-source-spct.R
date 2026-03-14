@@ -29,11 +29,7 @@ test_that("source_spct", {
   vdiffr::expect_doppelganger("src-default-norm-550-skip-skip",
                               autoplot(normalize(white_led.source_spct, norm = "skip"),
                                        norm = "skip"))
-  # Not the expected behaviour
-  # vdiffr::expect_doppelganger("src-default-norm-550-skip",
-  #                             autoplot(normalize(white_led.source_spct, norm = 550),
-  #                                      norm = "skip"))
-  vdiffr::expect_doppelganger("src-default-norm-not",
+   vdiffr::expect_doppelganger("src-default-norm-not",
                               autoplot(white_led.source_spct))
 
   vdiffr::expect_doppelganger("src-default",

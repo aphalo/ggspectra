@@ -408,7 +408,7 @@ autoplot.raw_spct <-
     # remove normalization if not updating it
     # helps handle old objects with no normalization metadata
     if (is.numeric(norm) ||
-        (is.character(norm) && norm %in% c("max", "min", "skip"))) {
+        (is.character(norm) && norm %in% c("max", "min"))) {
       photobiology::setNormalised(object, FALSE)
     }
     # apply normalization

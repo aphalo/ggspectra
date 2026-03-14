@@ -115,7 +115,6 @@ e_plot <- function(spct,
     } else {
       multiplier.label <- "%"
     }
-#    norm <- round(photobiology::getNormalization(spct)[["norm.wl"]], digits = 1)
     norm.wl <- normalization_label(spct, digits = 1)
     s.irrad.label <- bquote(Spectral~~energy~~irradiance~~E[lambda]/E[lambda==.(norm.wl)]~~(.(multiplier.label)))
     irrad.label.total <- "atop(E, (\"rel.\"))"
@@ -682,8 +681,10 @@ q_plot <- function(spct,
 #'   2, with minimum and maximum wavelengths (nm). Used to trim the spectrum or
 #'   to expand the wavelength limits of the plot.
 #' @param norm numeric or character. Normalization to apply before plotting, If
-#'   \code{object} is already normalized, the normalization is updated when a
-#'   unit conversion applied.
+#'   \code{object} is already normalized, by default the normalization is
+#'   updated when a unit conversion applied. A wavelength in nanometres as a
+#'   numeric value or one of the strings \code{"max"}, \code{"min"},
+#'   \code{"update"}, \code{"skip"} or \code{"undo"} are accepted.
 #' @param unit.out character string indicating type of radiation units to use
 #'   for plotting: \code{"photon"} or its synonym \code{"quantum"}, or
 #'   \code{"energy"}.
@@ -756,13 +757,18 @@ q_plot <- function(spct,
 #'   \code{\link[photobiology]{photobiology}}.
 #'
 #'   For details about normalization and arguments to parameter \code{norm},
-#'   please, see \code{\link[photobiology]{normalize}()}. If \code{norm = NA},
-#'   the default, \code{normalize()} is not called. All other values passed
-#'   as argument to \code{norm} result in a call to \code{normalize()} with
-#'   this value as its argument. In the case of objects
-#'   created with 'photobiology' (<= 0.10.9) \code{norm = "undo"} is not
-#'   supported. Be aware that calls to \code{normalize()} remove any scaling
-#'   previously applied with \code{\link[photobiology]{fscale}()} methods.
+#'   please, see \code{\link[photobiology]{normalize}()}. If \code{norm = NULL},
+#'   the default, if the object is normalized \code{norm = "update"} is used and
+#'   otherwise \code{norm = "skip"}. Values passed as argument to \code{norm}
+#'   are passed to a call to \code{normalize()} with this value as its argument.
+#'   In the case of objects created with 'photobiology' (<= 0.10.9) \code{norm =
+#'   "undo"} is not supported. Be aware that calls to \code{normalize()} remove
+#'   any scaling previously applied with \code{\link[photobiology]{fscale}()}
+#'   methods. In practice, the only difference between \code{"skip"} and
+#'   \code{"update"} is that with \code{"skip"} a message is issued when an
+#'   update of the normalization is necessary because of a conversion between
+#'   quantities or bases of expression that are wavelength dependent or
+#'   non-linear.
 #'
 #'   For multiple spectra in long form spectral objects, with \code{idfactor
 #'   = NULL}, the default, the name of the factor is retrieved from metadata. If
@@ -835,10 +841,19 @@ autoplot.source_spct <-
 
     stopifnot("Bad 'unit.out' argument" =
                 unit.out %in% c("energy", "photon"))
-    force(object.label)
     if (is.null(norm) || is.na(norm)) {
-      norm = "update"
+      norm <- "update"
     }
+    if (norm == "skip" &&
+        photobiology::is_normalized(object) &&
+        (photobiology::is_photon_based(object) && unit.out == "energy" ||
+         photobiology::is_energy_based(object) && unit.out == "photon")) {
+      message("Quantity conversion needed! ",
+              "Using 'norm == \"update\"' instead of 'norm == \"skip\"'.")
+      norm <- "update"
+    }
+    force(object.label)
+
     idfactor <- check_idfactor_arg(object, idfactor)
     object <- rename_idfactor(object, idfactor)
 
@@ -886,8 +901,8 @@ autoplot.source_spct <-
 
     # remove normalization if not updating it
     if (is.numeric(norm) ||
-        (is.character(norm) && norm %in% c("max", "min", "skip"))) {
-      photobiology::setNormalised(object, FALSE)
+        (is.character(norm) && norm %in% c("max", "min"))) {
+      photobiology::setNormalised(object, norm = FALSE)
     } else if (norm == "undo") {
       object <- photobiology::normalize(object, norm = norm)
       norm <- "skip"
@@ -896,7 +911,7 @@ autoplot.source_spct <-
     object <- switch(unit.out,
                      photon = photobiology::e2q(object, action = "replace"),
                      energy = photobiology::q2e(object, action = "replace"))
-    # apply other normalizations anew
+    # apply normalization
     object <- apply_normalization(x = object, norm = norm)
 
     if (is.null(label.qty)) {

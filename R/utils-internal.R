@@ -76,7 +76,7 @@ duration2character <- function(time.unit) {
 #'
 apply_normalization <- function(x,
                                 norm) {
-  if (is.na(norm)) {
+  if (is.na(norm) || norm == "skip") {
     x
   } else {
     if (norm != "update") {
@@ -115,7 +115,7 @@ normalization_label <- function(spct, digits = 1L) {
     # use "norm.wls" if consistent
     norm.wls <- unique(sapply(normalization, `[[`, i = "norm.wl"))
     if (length(norm.wls) == 1L && !is.na(norm.wls)) {
-      return(norm.wls)
+      return(round(norm.wls, digits = digits))
     }
     # use "norm.type" if consistent
     norm.types <- unique(sapply(normalization, `[[`, i = "norm.type"))

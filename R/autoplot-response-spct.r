@@ -638,9 +638,20 @@ autoplot.response_spct <-
            object.label = deparse(substitute(object)),
            na.rm = TRUE) {
 
+    stopifnot("Bad 'unit.out' argument" =
+                unit.out %in% c("energy", "photon"))
     if (is.null(norm) || is.na(norm)) {
       norm = "update"
     }
+    if (norm == "skip" &&
+        photobiology::is_normalized(object) &&
+        (photobiology::is_photon_based(object) && unit.out == "energy" ||
+         photobiology::is_energy_based(object) && unit.out == "photon")) {
+      message("Quantity conversion needed! ",
+              "Using 'norm == \"update\"' instead of 'norm == \"skip\"'.")
+      norm <- "update"
+    }
+
     force(object.label)
     idfactor <- check_idfactor_arg(object, idfactor)
     object <- rename_idfactor(object, idfactor)
@@ -688,7 +699,7 @@ autoplot.response_spct <-
     # remove normalization if not updating it
     # helps handle old objects with no normalization metadata
     if (is.numeric(norm) ||
-        (is.character(norm) && norm %in% c("max", "min", "skip"))) {
+        (is.character(norm) && norm %in% c("max", "min"))) {
       photobiology::setNormalised(object, FALSE)
     } else if (norm == "undo") {
       object <- photobiology::normalize(object, norm = norm)

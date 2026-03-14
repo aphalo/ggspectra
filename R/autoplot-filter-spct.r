@@ -1422,7 +1422,7 @@ autoplot.filter_spct <-
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PhR())),
            range = getOption("ggspectra.wlrange", default = NULL),
-           norm = NA,
+           norm = NULL,
            plot.qty = getOption("photobiology.filter.qty",
                                 default = "transmittance"),
            pc.out = getOption("ggspectra.pc.out",
@@ -1445,6 +1445,19 @@ autoplot.filter_spct <-
            na.rm = TRUE) {
 
     force(object.label)
+    if (is.null(norm) || is.na(norm)) {
+      norm <- "update"
+    }
+    if (norm == "skip" &&
+        photobiology::is_normalized(object) &&
+        (photobiology::is_transmittance_based(object) && plot.qty != "transmittance" ||
+         photobiology::is_absorptance_based(object) && plot.qty != "absorptance" ||
+         photobiology::is_absorbance_based(object) && plot.qty != "absorbance" )) {
+      message("Quantity conversion needed! ",
+              "Using 'norm == \"update\"' instead of 'norm == \"skip\"'.")
+      norm <- "update"
+    }
+
     object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor)
     object <- rename_idfactor(object, idfactor)
@@ -1591,7 +1604,7 @@ autoplot.filter_mspct <-
   function(object,
            ...,
            range = getOption("ggspectra.wlrange", default = NULL),
-           norm = NA,
+           norm = NULL,
            plot.qty = getOption("photobiology.filter.qty",
                                 default = "transmittance"),
            pc.out = getOption("ggspectra.pc.out",
@@ -1604,6 +1617,18 @@ autoplot.filter_mspct <-
            na.rm = TRUE) {
 
     force(object.label)
+    if (is.null(norm) || is.na(norm)) {
+      norm <- "update"
+    }
+    if (norm == "skip" &&
+        photobiology::is_normalized(object) &&
+        (photobiology::is_transmittance_based(object) && plot.qty != "transmittance" ||
+         photobiology::is_absorptance_based(object) && plot.qty != "absorptance" ||
+         photobiology::is_absorbance_based(object) && plot.qty != "absorbance" )) {
+      message("Quantity conversion needed! ",
+              "Using 'norm == \"update\"' instead of 'norm == \"skip\"'.")
+      norm <- "update"
+    }
     object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
@@ -1699,7 +1724,7 @@ autoplot.reflector_spct <-
            w.band=getOption("photobiology.plot.bands",
                             default = list(UVC(), UVB(), UVA(), PhR())),
            range = getOption("ggspectra.wlrange", default = NULL),
-           norm = NA,
+           norm = NULL,
            plot.qty = getOption("photobiology.reflector.qty",
                                 default = "reflectance"),
            pc.out = getOption("ggspectra.pc.out",
@@ -1722,6 +1747,9 @@ autoplot.reflector_spct <-
            na.rm = TRUE) {
 
     force(object.label)
+    if (is.null(norm) || is.na(norm)) {
+      norm <- "update"
+    }
     object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor)
     object <- rename_idfactor(object, idfactor)
@@ -1834,7 +1862,7 @@ autoplot.reflector_mspct <-
   function(object,
            ...,
            range = getOption("ggspectra.wlrange", default = NULL),
-           norm = NA,
+           norm = NULL,
            plot.qty = getOption("photobiology.reflector.qty",
                                 default = "reflectance"),
            pc.out = getOption("ggspectra.pc.out",
@@ -1847,6 +1875,9 @@ autoplot.reflector_mspct <-
            na.rm = TRUE) {
 
     force(object.label)
+    if (is.null(norm) || is.na(norm)) {
+      norm <- "update"
+    }
     object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 
@@ -1951,7 +1982,7 @@ autoplot.object_spct <-
            w.band = getOption("photobiology.plot.bands",
                               default = list(UVC(), UVB(), UVA(), PhR())),
            range = getOption("ggspectra.wlrange", default = NULL),
-           norm = NA,
+           norm = NULL,
            plot.qty = "all",
            pc.out = getOption("ggspectra.pc.out",
                               default = FALSE),
@@ -1975,12 +2006,18 @@ autoplot.object_spct <-
 
     force(object.label)
 
+    if (is.null(norm) || is.na(norm)) {
+      norm <- "update"
+    }
     if (is.null(plot.qty)) {
       plot.qty <- "all"
     }
 
     if (plot.qty == "all") {
-      object <- apply_normalization(object, norm)
+      if (!norm %in% c("skip", "update")) {
+        warning("Discarding 'norm = ", norm, "'! ",
+                "Invalid when 'plot.qty == \"all\"'")
+      }
       idfactor <- check_idfactor_arg(object, idfactor)
       object <- rename_idfactor(object, idfactor)
 
@@ -2116,7 +2153,7 @@ autoplot.object_mspct <-
   function(object,
            ...,
            range = getOption("ggspectra.wlrange", default = NULL),
-           norm = NA,
+           norm = NULL,
            plot.qty = getOption("photobiology.filter.qty",
                                 default = "all"),
            pc.out = getOption("ggspectra.pc.out",
@@ -2129,6 +2166,14 @@ autoplot.object_mspct <-
            na.rm = TRUE) {
 
     force(object.label)
+    if (is.null(norm) || is.na(norm)) {
+      norm <- "update"
+    }
+    if (plot.qty == "all" && !norm %in% c("skip", "update")) {
+      warning("Discarding 'norm = ", norm, "'! ",
+              "Invalid when 'plot.qty == \"all\"'")
+      norm <- "skip"
+    }
     object <- apply_normalization(object, norm)
     idfactor <- check_idfactor_arg(object, idfactor = idfactor, default = TRUE)
 

@@ -51,8 +51,10 @@ to the y aesthetic.}
 to expand the wavelength limits of the plot.}
 
 \item{norm}{numeric or character. Normalization to apply before plotting, If
-\code{object} is already normalized, the normalization is updated when a
-unit conversion applied.}
+\code{object} is already normalized, by default the normalization is
+updated when a unit conversion applied. A wavelength in nanometres as a
+numeric value or one of the strings \code{"max"}, \code{"min"},
+\code{"update"}, \code{"skip"} or \code{"undo"} are accepted.}
 
 \item{label.qty}{character string giving the type of summary quantity to use
 for labels, one of \code{"mean"}, \code{"total"}, \code{"contribution"},
