@@ -28,22 +28,23 @@ and `stat_label_valleys()` parameter `ignore_threshold` replaced by
 - Changing: Changed defaults into `strict = FALSE` and 
 `global.threshold = 0.01` in `stat_label_peaks()` and `stat_label_valleys()`.
 - Add parameter `idfactor` to `ggplot()` methods making it possible to select
-the name of the factor used to group the data by spectrum with multiple spectra.
+or change the name of the factor used to group the data by spectrum with 
+multiple spectra.
 - Update handling of user-supplied mappings in `ggplot()` methods for spectra 
-and for collections of spectra.
-- Fix bug in mapping of `id.factor` in `ggplot()` methods.
+and for collections of spectra, supporting adding mappings to the default ones.
+- Fix bug in mapping of attribute `id.factor` in `ggplot()` methods.
 - Enhance handling of parameter `range` in `autoplot()` methods. Support `NA`
 to indicate default limit and implement _x_ limits expansion.
 - Enhance handling of parameter `norm` in `autoplot()` methods. Gracefully
 handle old objects with missing normalization metadata, when possible.
 - Accept `"col"` and `"point"` in addition to `"line"`, `"area"` and `"spct"`
-as argument to `geom` in `autoplot()` methods.
+as argument to parameter `geom` in `autoplot()` methods.
 - Accept a vector containing more than one geom name as argument to `geom` 
 in `autoplot()` methods.
 - Changing: when passing `geom = "spct"` no longer a line is over-plotted.
 To obtain the former rendering use `geom = c("spct", "line")`.
-- Changing: plots created with `autoplot.waveband()` method can be drastically
-different because of new defaults for `w.length` and `range`.
+- Changing: plots created with `autoplot.waveband()` method can differ from
+earlier versions because of new defaults for `w.length` and `range`.
 - Add parameter `range` to `stat_wb_label()` and `stat_wl_strip()` and edit
 `decoration()` to allow passing `x.min` and `x.max` when calling these 
 statistics.

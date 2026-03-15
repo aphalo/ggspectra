@@ -23,6 +23,7 @@
   ...,
   range = NULL,
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
+  idfactor = NULL,
   by.group = FALSE,
   environment = parent.frame()
 )
@@ -33,6 +34,7 @@
   ...,
   range = NULL,
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
+  idfactor = NULL,
   by.group = FALSE,
   environment = parent.frame()
 )
@@ -43,6 +45,7 @@
   ...,
   range = NULL,
   plot.qty = getOption("photobiology.filter.qty", default = "transmittance"),
+  idfactor = NULL,
   by.group = FALSE,
   environment = parent.frame()
 )
@@ -53,6 +56,7 @@
   ...,
   range = NULL,
   plot.qty = NULL,
+  idfactor = NULL,
   by.group = FALSE,
   environment = parent.frame()
 )
@@ -62,6 +66,7 @@
   mapping = NULL,
   ...,
   range = NULL,
+  idfactor = NULL,
   by.group = FALSE,
   environment = parent.frame()
 )
@@ -71,6 +76,7 @@
   mapping = NULL,
   ...,
   range = NULL,
+  idfactor = NULL,
   by.group = FALSE,
   environment = parent.frame()
 )
@@ -80,6 +86,7 @@
   mapping = NULL,
   ...,
   range = NULL,
+  idfactor = NULL,
   by.group = FALSE,
   environment = parent.frame()
 )
@@ -90,6 +97,7 @@
   ...,
   range = NULL,
   plot.qty = getOption("photobiology.object.qty", default = "all"),
+  idfactor = NULL,
   environment = parent.frame()
 )
 
@@ -99,6 +107,7 @@
   ...,
   range = NULL,
   spct_class,
+  idfactor = NULL,
   environment = parent.frame()
 )
 
@@ -160,6 +169,14 @@ min and max wavelengths (nm).}
 plotting spectral irradiance or spectral response, \code{"photon"} or
 \code{"energy"}.}
 
+\item{idfactor}{logical or character If \code{idfactor = <character>}
+an index factor is added to \code{data} when none is already present, or
+renames the existing one if present. The default is
+\code{idfactor = TRUE} for \code{_mspct} objects and
+\code{idfactor = NULL} for \code{_spct} objects. If \code{idfactor = TRUE}
+and no index factor is already present, the added factor is named
+\code{spct.idx}. If \code{idfactor = NULL} no renaming takes places.}
+
 \item{by.group}{logical flag If \code{FALSE}, the default, individual spectra
 are mapped to the \code{group} aesthetic to ensure separate lines are
 plotted. Must be set to \code{by.group = TRUE} when plots are animated with
@@ -183,12 +200,6 @@ match those expected by the class constructor (see
 \code{\link[photobiology]{setGenericSpct}}); other arguments should be
 passed by name). If the argument is \code{"generic_spct"}, \code{"tibble"}
 or \code{"data.frame"} no aesthetic mapping will be set auutomatically.}
-
-\item{idfactor}{logical or character Generates an index column of
-\code{factor} type. Default is (\code{idfactor=TRUE}) for both lists and
-\code{_mspct} objects. If \code{idfactor=TRUE} then the column is auto
-named \code{spct.idx}. Alternatively the column name can be directly
-provided to \code{idfactor} as a character string.}
 }
 \value{
 A ggplot object, containing data and mapping of data to aesthetics
@@ -305,7 +316,8 @@ ggplot(Ler_leaf.spct, plot.qty = "absorptance") + geom_line()
 \seealso{
 Method \code{link[ggspectra]{autoplot}} provides further automation
   of plot creation. Function \code{\link[photobiology]{rbindspct}} is used to
-  convert collections of spectra into "long-form" spectral objects. The
-  generic of method \code{link[ggplot2](ggplot)} is defined in package
-  'ggplot2'.
+  convert collections of spectra into "long-form" spectral objects. Function
+  \code{\link[photobiology]{setIdFactor}()} is used to set the indexing
+  factor of spectral objects multiple spectra in "long-form". The generic of
+  method \code{link[ggplot2](ggplot)} is defined in package 'ggplot2'.
 }

@@ -38,6 +38,29 @@ test_that("source_spct", {
   vdiffr::expect_doppelganger("source-ggplot-p",
                               ggplot(white_led.source_spct, unit.out = "photon") +
                                 geom_line())
+  vdiffr::expect_doppelganger("source-ggplot-long",
+                              ggplot(sun_evening.spct) + geom_line())
+  vdiffr::expect_doppelganger("source-ggplot-long-p",
+                              ggplot(sun_evening.spct, unit.out = "photon") +
+                                geom_line())
+  vdiffr::expect_doppelganger("source-ggplot-aes",
+                              ggplot(sun_evening.spct,
+                                     aes(colour = spct.idx)) +
+                                geom_line())
+  vdiffr::expect_doppelganger("source-ggplot-aes-p",
+                              ggplot(sun_evening.spct,
+                                     aes(colour = spct.idx),
+                                     unit.out = "photon") +
+                                geom_line())
+  vdiffr::expect_doppelganger("source-ggplot-idfactor",
+                              ggplot(sun_evening.spct, idfactor = "time",
+                                     aes(colour = time)) +
+                                geom_line())
+  vdiffr::expect_doppelganger("source-ggplot-idfactor-p",
+                              ggplot(sun_evening.spct, idfactor = "time",
+                                     aes(colour = time),
+                                     unit.out = "photon") +
+                                geom_line())
   expect_error(ggplot(white_led.source_spct, unit.out = "zzz") + geom_line())
 })
 
@@ -49,9 +72,25 @@ test_that("source_mspct", {
                                 aes(linetype = spct.idx) +
                                 geom_line())
   vdiffr::expect_doppelganger("source-mspct-ggplot-p",
-                              ggplot(two_leds.mspct, unit.out = "photon") +
+                              ggplot(two_leds.mspct,
+                                     unit.out = "photon") +
                                 aes(linetype = spct.idx) +
                                 geom_line())
+  vdiffr::expect_doppelganger("source-mspct-ggplot-idfactor",
+                              ggplot(two_leds.mspct,
+                                     idfactor = "LED",
+                                     aes(colour = LED)) +
+                                geom_line())
+  vdiffr::expect_doppelganger("source-mspct-ggplot-idfactor-p",
+                              ggplot(two_leds.mspct,
+                                     unit.out = "photon",
+                                     idfactor = "LED",
+                                     aes(colour = LED)) +
+                                geom_line())
+  expect_warning(ggplot(two_leds.mspct,
+                        idfactor = FALSE,
+                        aes(linetype = spct.idx)) +
+                   geom_line())
   expect_error(ggplot(two_leds.mspct, unit.out = "zzz") +
                  aes(linetype = spct.idx) +
                  geom_line())
@@ -66,24 +105,50 @@ test_that("response_spct", {
   vdiffr::expect_doppelganger("response-ggplot-p",
                               ggplot(ccd.spct, unit.out = "photon") +
                                 geom_line())
+  expect_error(ggplot(ccd.spct, idfactor = "sensor",
+                      aes(colour = sensor)) +
+                 geom_line())
+  expect_error(ggplot(ccd.spct, idfactor = "sensor",
+                      aes(colour = sensor),
+                      unit.out = "photon") +
+                 geom_line())
   expect_error(ggplot(ccd.spct, unit.out = "zzz") + geom_line())
 })
 
 test_that("response_mspct", {
   two_ccd.mspct <- response_mspct(list(one = ccd.spct,
                                         half = ccd.spct / 2))
-  vdiffr::expect_doppelganger("response-mspect-ggplot",
+  vdiffr::expect_doppelganger("response-mspct-ggplot",
                               ggplot(two_ccd.mspct) +
                                 aes(linetype = spct.idx) +
                                 geom_line())
-  vdiffr::expect_doppelganger("response-mspect-ggplot-e",
+  vdiffr::expect_doppelganger("response-mspct-ggplot-e",
                               ggplot(two_ccd.mspct, unit.out = "energy") +
                                 aes(linetype = spct.idx) +
                                 geom_line())
-  vdiffr::expect_doppelganger("response-mspect-ggplot-p",
+  vdiffr::expect_doppelganger("response-mspct-ggplot-p",
                               ggplot(two_ccd.mspct, unit.out = "photon") +
                                 aes(linetype = spct.idx) +
                                 geom_line())
+  vdiffr::expect_doppelganger("response-mspct-ggplot-idfactor",
+                              ggplot(two_ccd.mspct,
+                                     idfactor = "sensor",
+                                     aes(linetype = sensor)) +
+                                geom_line())
+  vdiffr::expect_doppelganger("response-mspct-ggplot-idfactor-null",
+                              ggplot(two_ccd.mspct,
+                                     idfactor = NULL,
+                                     aes(linetype = spct.idx)) +
+                                geom_line())
+  vdiffr::expect_doppelganger("response-mspct-ggplot-idfactor-true",
+                              ggplot(two_ccd.mspct,
+                                     idfactor = TRUE,
+                                     aes(linetype = spct.idx)) +
+                                geom_line())
+  expect_warning(ggplot(two_ccd.mspct,
+                        idfactor = FALSE,
+                        aes(linetype = spct.idx)) +
+                   geom_line())
   expect_error(ggplot(two_ccd.mspct, unit.out = "zzz") +
                  aes(linetype = spct.idx) +
                  geom_line())
@@ -125,6 +190,17 @@ test_that("filter_mspct", {
                               ggplot(two_polyester.mspct,
                                      plot.qty = "transmittance") +
                                 aes(linetype = spct.idx) +
+                                geom_line())
+  vdiffr::expect_doppelganger("filter-mspct-ggplot-aes-Tfr",
+                              ggplot(two_polyester.mspct,
+                                     plot.qty = "transmittance",
+                                     aes(linetype = spct.idx)) +
+                                geom_line())
+  vdiffr::expect_doppelganger("filter-mspct-ggplot-norm-Tfr",
+                              ggplot(two_polyester.mspct,
+                                     idfactor = "idx",
+                                     plot.qty = "transmittance",
+                                     aes(linetype = idx)) +
                                 geom_line())
   expect_error(ggplot(two_polyester.mspct, plot.qty = "zzz") +
                  aes(linetype = spct.idx) +

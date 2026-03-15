@@ -54,6 +54,13 @@
 #'   plotted. Must be set to \code{by.group = TRUE} when plots are animated with
 #'   'gganimate' "by group" as the grouping for animation is NOT set using
 #'   \code{aes}.
+#' @param idfactor logical or character If \code{idfactor = <character>}
+#'   an index factor is added to \code{data} when none is already present, or
+#'   renames the existing one if present. The default is
+#'   \code{idfactor = TRUE} for \code{_mspct} objects and
+#'   \code{idfactor = NULL} for \code{_spct} objects. If \code{idfactor = TRUE}
+#'   and no index factor is already present, the added factor is named
+#'   \code{spct.idx}. If \code{idfactor = NULL} no renaming takes places.
 #' @param environment If a variable defined in the aesthetic mapping is not
 #'   found in the data, ggplot will look for it in this environment. It defaults
 #'   to using the environment in which \code{ggplot()} is called. The use of
@@ -109,9 +116,10 @@
 #'
 #' @seealso Method \code{link[ggspectra]{autoplot}} provides further automation
 #'   of plot creation. Function \code{\link[photobiology]{rbindspct}} is used to
-#'   convert collections of spectra into "long-form" spectral objects. The
-#'   generic of method \code{link[ggplot2](ggplot)} is defined in package
-#'   'ggplot2'.
+#'   convert collections of spectra into "long-form" spectral objects. Function
+#'   \code{\link[photobiology]{setIdFactor}()} is used to set the indexing
+#'   factor of spectral objects multiple spectra in "long-form". The generic of
+#'   method \code{link[ggplot2](ggplot)} is defined in package 'ggplot2'.
 #'
 #' @export
 #' @examples
@@ -148,8 +156,14 @@ ggplot.source_spct <-
            range = NULL,
            unit.out = getOption("photobiology.radiation.unit",
                                 default = "energy"),
+           idfactor = NULL,
            by.group = FALSE,
            environment = parent.frame()) {
+
+    if (is.character(idfactor)) {
+      # rename or set
+      id_factor(data) <- idfactor
+    }
 
     if (!is.null(range)) {
       data <- photobiology::trim_wl(data,
@@ -206,8 +220,15 @@ ggplot.response_spct <-
            range = NULL,
            unit.out = getOption("photobiology.radiation.unit",
                                 default = "energy"),
+           idfactor = NULL,
            by.group = FALSE,
            environment = parent.frame()) {
+
+    if (is.character(idfactor)) {
+      # rename or set
+      id_factor(data) <- idfactor
+    }
+
     if (!is.null(range)) {
       data <- photobiology::trim_wl(data,
                                     range = range,
@@ -263,8 +284,15 @@ ggplot.filter_spct <-
            range = NULL,
            plot.qty = getOption("photobiology.filter.qty",
                                 default = "transmittance"),
+           idfactor = NULL,
            by.group = FALSE,
            environment = parent.frame()) {
+
+    if (is.character(idfactor)) {
+      # rename or set
+      id_factor(data) <- idfactor
+    }
+
     if (!is.null(range)) {
       data <- photobiology::trim_wl(data,
                                     range = range,
@@ -324,8 +352,15 @@ ggplot.reflector_spct <-
            ...,
            range = NULL,
            plot.qty = NULL,
+           idfactor = NULL,
            by.group = FALSE,
            environment = parent.frame()) {
+
+    if (is.character(idfactor)) {
+      # rename or set
+      id_factor(data) <- idfactor
+    }
+
     if (!is.null(range)) {
       data <- photobiology::trim_wl(data,
                                     range = range,
@@ -371,8 +406,15 @@ ggplot.cps_spct <-
            mapping = NULL,
            ...,
            range = NULL,
+           idfactor = NULL,
            by.group = FALSE,
            environment = parent.frame()) {
+
+    if (is.character(idfactor)) {
+      # rename or set
+      id_factor(data) <- idfactor
+    }
+
     if (!is.null(range)) {
       data <- photobiology::trim_wl(data,
                                     range = range,
@@ -422,8 +464,15 @@ ggplot.calibration_spct <-
            mapping = NULL,
            ...,
            range = NULL,
+           idfactor = NULL,
            by.group = FALSE,
            environment = parent.frame()) {
+
+    if (is.character(idfactor)) {
+      # rename or set
+      id_factor(data) <- idfactor
+    }
+
     if (!is.null(range)) {
       data <- photobiology::trim_wl(data,
                                     range = range,
@@ -473,8 +522,15 @@ ggplot.raw_spct <-
            mapping = NULL,
            ...,
            range = NULL,
+           idfactor = NULL,
            by.group = FALSE,
            environment = parent.frame()) {
+
+    if (is.character(idfactor)) {
+      # rename or set
+      id_factor(data) <- idfactor
+    }
+
     if (!is.null(range)) {
       data <- photobiology::trim_wl(data,
                                     range = range,
@@ -525,7 +581,14 @@ ggplot.object_spct <-
            ...,
            range = NULL,
            plot.qty = getOption("photobiology.object.qty", default = "all"),
+           idfactor = NULL,
            environment = parent.frame()) {
+
+    if (is.character(idfactor)) {
+      # rename or set
+      id_factor(data) <- idfactor
+    }
+
     if (!is.null(range)) {
       data <- photobiology::trim_wl(data,
                                     range = range,
@@ -600,10 +663,16 @@ ggplot.generic_spct <-
            ...,
            range = NULL,
            spct_class,
+           idfactor = NULL,
            environment = parent.frame()) {
 
     if (!spct_class %in% photobiology::spct_classes()) {
       stop("Invalid 'spct_class' argument: \"", spct_class)
+    }
+
+    if (is.character(idfactor)) {
+      # rename or set
+      id_factor(data) <- idfactor
     }
 
     if (!is.null(range)) {
@@ -639,8 +708,6 @@ ggplot.generic_spct <-
 
 #' @rdname ggplot
 #'
-#' @inheritParams photobiology::rbindspct
-#'
 #' @export
 #'
 ggplot.generic_mspct <-
@@ -655,6 +722,11 @@ ggplot.generic_mspct <-
                                     range = range,
                                     use.hinges = TRUE,
                                     fill = NULL)
+    }
+    if (is.logical(idfactor) && !idfactor) {
+      warning("Using 'idfactor = \"spct.idx\"' instead of Invalid: \"",
+              idfactor, "\"")
+      idfactor <- TRUE
     }
     spct <- photobiology::rbindspct(l = data, idfactor = idfactor)
     ggplot2::ggplot(data = spct,
@@ -694,6 +766,11 @@ ggplot.filter_mspct <-
         stop("Invalid 'plot.qty' argument value: '", plot.qty, "'")
       }
     }
+    if (is.logical(idfactor) && !idfactor) {
+      warning("Using 'idfactor = \"spct.idx\"' instead of Invalid: \"",
+              idfactor, "\"")
+      idfactor <- TRUE
+    }
     spct <- photobiology::rbindspct(l = data, idfactor = idfactor)
     ggplot(data = spct,
            mapping = mapping,
@@ -731,6 +808,11 @@ ggplot.source_mspct <-
         stop("Invalid 'unit.out' argument value: '", unit.out, "'")
       }
     }
+    if (is.logical(idfactor) && !idfactor) {
+      warning("Using 'idfactor = \"spct.idx\"' instead of Invalid: \"",
+              idfactor, "\"")
+      idfactor <- TRUE
+    }
     spct <- photobiology::rbindspct(l = data, idfactor = idfactor)
     ggplot(data = spct,
            mapping = mapping,
@@ -758,6 +840,11 @@ ggplot.object_mspct <-
                                     range = range,
                                     use.hinges = TRUE,
                                     fill = NULL)
+    }
+    if (is.logical(idfactor) && !idfactor) {
+      warning("Using 'idfactor = \"spct.idx\"' instead of Invalid: \"",
+              idfactor, "\"")
+      idfactor <- TRUE
     }
     spct <- photobiology::rbindspct(l = data, idfactor = idfactor)
     ggplot(data = spct,
