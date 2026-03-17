@@ -26,27 +26,32 @@ theme_set(theme_bw())
 ggplot(sun.spct) + geom_line()
 
 ## -----------------------------------------------------------------------------
-ggplot(two_suns.spct) + aes(color = spct.idx) + geom_line()
+ggplot(two_suns.spct, aes(color = spct.idx)) + geom_line()
 
 ## -----------------------------------------------------------------------------
 ggplot(two_suns.spct, aes(w.length, s.e.irrad, color = spct.idx)) + geom_line()
 
 ## -----------------------------------------------------------------------------
+ggplot(two_suns.spct, aes(linetype = Spectrum), idfactor = "Spectrum") +
+  geom_line()
+
+## -----------------------------------------------------------------------------
+ggplot(two_suns.spct, aes(linetype = `Two spectra`), idfactor = "Two spectra") +
+  geom_line()
+
+## -----------------------------------------------------------------------------
 ggplot(sun.spct, unit.out = "photon") + geom_line()
-
-## -----------------------------------------------------------------------------
-photon_as_default()
-ggplot(sun.spct) + geom_line()
-ggplot(sun.spct, unit.out = "energy") + geom_line()
-
-## -----------------------------------------------------------------------------
-unset_user_defaults()
 
 ## -----------------------------------------------------------------------------
 ggplot(yellow_gel.spct) + geom_line()
 
 ## -----------------------------------------------------------------------------
 ggplot(yellow_gel.spct, plot.qty = "absorbance") + geom_line()
+
+## -----------------------------------------------------------------------------
+ggplot(Ler_leaf.spct, aes(fill = variable)) +
+  geom_area() +
+  scale_fill_grey(name = "", end = 0.5, start = 0.8)
 
 ## -----------------------------------------------------------------------------
 Afr_as_default()
@@ -256,28 +261,40 @@ ggplot(green_leaf.spct) +
   scale_y_Rfr_continuous(Rfr.type = getRfrType(green_leaf.spct))
 
 ## -----------------------------------------------------------------------------
-ggplot(sun.spct) + geom_line() + stat_peaks(color = "red")
+ggplot(sun.spct) + 
+  geom_line() + 
+  stat_peaks(color = "red")
 
 ## -----------------------------------------------------------------------------
-ggplot(sun.spct, unit.out = "photon") + geom_line() + stat_peaks(color = "red")
+ggplot(sun.spct, unit.out = "photon") + 
+  geom_line() + 
+  stat_peaks(color = "red")
 
 ## -----------------------------------------------------------------------------
-ggplot(sun.spct) + geom_line() + stat_valleys(color = "blue")
+ggplot(sun.spct) + 
+  geom_line() + 
+  stat_valleys(color = "blue")
 
 ## -----------------------------------------------------------------------------
-ggplot(yellow_gel.spct) + geom_line() + stat_find_wls(color = "orange")
+ggplot(yellow_gel.spct) + 
+  geom_line() + 
+  stat_find_wls(color = "orange")
 
 ## -----------------------------------------------------------------------------
-ggplot(sun.spct) + geom_line() + 
-  stat_peaks(shape = 21, color = "black") + scale_fill_identity()
+ggplot(sun.spct) + 
+  geom_line() + 
+  stat_peaks(shape = 21, color = "black") +
+  scale_fill_identity()
 
 ## -----------------------------------------------------------------------------
-ggplot(sun.spct) + geom_line() + 
+ggplot(sun.spct) + 
+  geom_line() + 
   stat_peaks(span = 35, shape = 4, color = "red", size = 2) +
   stat_peaks(span = 35, color = "red", geom = "rug", sides = "b")
 
 ## -----------------------------------------------------------------------------
-ggplot(sun.spct) + geom_line() + 
+ggplot(sun.spct) + 
+  geom_line() + 
   stat_peaks(geom = "text", 
              span = 35,
              color = "red", 
@@ -285,7 +302,8 @@ ggplot(sun.spct) + geom_line() +
              position = position_nudge(y = 0.01)) 
 
 ## -----------------------------------------------------------------------------
-ggplot(sun.spct) + geom_line() + 
+ggplot(sun.spct) + 
+  geom_line() + 
   stat_peaks(shape = 21, 
              span = 35, 
              size = 2) + 
@@ -299,7 +317,8 @@ ggplot(sun.spct) + geom_line() +
   expand_limits(y = 0.9)
 
 ## -----------------------------------------------------------------------------
-ggplot(sun.spct) + geom_line() + 
+ggplot(sun.spct) + 
+  geom_line() + 
   stat_peaks(shape = 21, 
              span = 35, 
              size = 2) + 
@@ -314,12 +333,14 @@ ggplot(sun.spct) + geom_line() +
   expand_limits(y = 0.9)
 
 ## -----------------------------------------------------------------------------
-ggplot(sun.spct) + geom_line() + 
+ggplot(sun.spct) + 
+  geom_line() + 
   stat_peaks(span = NULL, geom = "vline", linetype = "dotted", color = "red") +
   stat_peaks(span = NULL, geom = "hline", linetype = "dotted", color = "red")
 
 ## -----------------------------------------------------------------------------
-ggplot(sun.spct) + geom_line() + 
+ggplot(sun.spct) + 
+  geom_line() + 
   stat_peaks(shape = 21, span = 35, size = 2) + 
   stat_label_peaks(aes(label = after_stat(y.label)),
                    span = 35, geom = "label", size = 3,
@@ -329,7 +350,8 @@ ggplot(sun.spct) + geom_line() +
   scale_fill_identity() + scale_color_identity()
 
 ## -----------------------------------------------------------------------------
-ggplot(sun.spct) + geom_line() + 
+ggplot(sun.spct) + 
+  geom_line() + 
   stat_valleys(shape = 21, 
                span = 35, 
                size = 2) + 
@@ -343,7 +365,8 @@ ggplot(sun.spct) + geom_line() +
   scale_color_identity()
 
 ## -----------------------------------------------------------------------------
-ggplot(sun.spct) + geom_line() + 
+ggplot(sun.spct) + 
+  geom_line() + 
   stat_peaks(shape = 21, span = 35, size = 2) + 
   stat_label_peaks(segment.colour = "black", 
                    span = 35, geom = "label_repel", size = 3,
@@ -357,7 +380,8 @@ ggplot(sun.spct) + geom_line() +
   scale_color_identity()
 
 ## -----------------------------------------------------------------------------
-ggplot(sun.spct) + geom_line() + 
+ggplot(sun.spct) + 
+  geom_line() + 
   stat_valleys(shape = 21, span = 35, size = 2) + 
   stat_label_valleys(segment.colour = "black", 
                      span = 35, geom = "label_repel", size = 3,
@@ -371,14 +395,16 @@ ggplot(sun.spct) + geom_line() +
   scale_color_identity()
 
 ## -----------------------------------------------------------------------------
-ggplot(sun.spct) + geom_line() + 
+ggplot(sun.spct) + 
+  geom_line() + 
   stat_peaks(span = NULL, color = "red") +
   stat_peaks(span = NULL, geom = "text", vjust = -0.5, color = "red", 
              aes(label = paste(after_stat(y.label), "at", after_stat(x.label), "nm"))) +
   expand_limits(y = c(NA, 0.9))
 
 ## -----------------------------------------------------------------------------
-ggplot(sun.spct) + geom_line() + 
+ggplot(sun.spct) + 
+  geom_line() + 
   stat_peaks(span = 21, geom = "point", colour = "red") +
   stat_valleys(span = 21, geom = "point", colour = "blue") +
   stat_peaks(span = 51, geom = "text", colour = "red", 
@@ -387,8 +413,9 @@ ggplot(sun.spct) + geom_line() +
                vjust = 1.2, label.fmt = "%3.0f nm")
 
 ## -----------------------------------------------------------------------------
-ggplot(two_suns.spct) + aes(color = spct.idx) +
-  geom_line() + ylim(NA, 0.9) +
+ggplot(two_suns.spct, aes(color = spct.idx)) +
+  geom_line() +
+  ylim(NA, 0.9) +
   stat_peaks(span = NULL, color = "black") +
   stat_peaks(span = NULL, geom = "text", vjust = -0.5, size = 3, 
              color = "black", 
@@ -827,6 +854,11 @@ ggplot(sun.spct) +
 
 ## -----------------------------------------------------------------------------
 ggplot(sun.spct) + 
+  wl_guide(alpha = 0.4, range = c(400, 700)) +
+  geom_line()
+
+## -----------------------------------------------------------------------------
+ggplot(sun.spct) + 
   wl_guide(ymax = -0.025) +
   geom_line() 
 
@@ -852,6 +884,14 @@ color_chart(grep("blue", colors(), value = TRUE), ncol = 5, text.size = 4)
  color_chart(w_length2rgb(570:689, color.name = as.character(570:689)), 
             use.names = TRUE, text.size = 4) +
   ggtitle("Reddish colors", subtitle = "Labels: wavelength (nm)")
+
+## -----------------------------------------------------------------------------
+photon_as_default()
+ggplot(sun.spct) + geom_line()
+ggplot(sun.spct, unit.out = "energy") + geom_line()
+
+## -----------------------------------------------------------------------------
+unset_user_defaults()
 
 ## -----------------------------------------------------------------------------
 ggplot(sun.spct) + 

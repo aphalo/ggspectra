@@ -199,18 +199,37 @@ supplied with a `mapping` argument with an user-defined `aes()`.
 ggplot(sun.spct) + geom_line()
 ```
 
-It is possible to add to the defaults by means of `+` and `aes()` as
-shown below.
+Data can be normalized on-the-fly similarly as described for `autoplot()` 
+methods in _User Guide 2_.
+
+It is possible to add to the aesthetics mapped by default, by passing a mapping
+created with `aes()` to parameter `mapping`. 
 
 ```{r}
-ggplot(two_suns.spct) + aes(color = spct.idx) + geom_line()
+ggplot(two_suns.spct, aes(color = spct.idx)) + geom_line()
 ```
 
-If a mapping is supplied directly through `ggplot`, $x$ and $y$ should
-be included.
+If a mapping to $x$ or $y$ is included in the call to `aes()`, mappings to both
+$x$ and $y$ should be included.
 
 ```{r}
 ggplot(two_suns.spct, aes(w.length, s.e.irrad, color = spct.idx)) + geom_line()
+```
+
+With an argument passed to `idfactor` we can rename the index factor in `data`
+before plotting, thus the mapping should match the new name. 
+
+```{r}
+ggplot(two_suns.spct, aes(linetype = Spectrum), idfactor = "Spectrum") +
+  geom_line()
+```
+
+If the name is not a syntactical R name, when mapping it, it should be enclosed
+in back ticks.
+
+```{r}
+ggplot(two_suns.spct, aes(linetype = `Two spectra`), idfactor = "Two spectra") +
+  geom_line()
 ```
 
 In the case of `ggplot.source_spct()` an additional parameter allows
@@ -224,23 +243,6 @@ convenience functions for this.
 
 ```{r}
 ggplot(sun.spct, unit.out = "photon") + geom_line()
-```
-
-After evaluation of `photon_as_default()`, a new default is in effect,
-but we can override it with an explicit argument if needed.
-
-```{r}
-photon_as_default()
-ggplot(sun.spct) + geom_line()
-ggplot(sun.spct, unit.out = "energy") + geom_line()
-```
-
-This new default will remain active for the rest of the R session,
-unless changed. We can easily either unset this default, or all
-photobiology-package related user set defaults.
-
-```{r}
-unset_user_defaults()
 ```
 
 The next example is for spectral properties of filters.
@@ -257,13 +259,19 @@ In the case of `ggplot.filter_spct()` the additional parameter is called
 ggplot(yellow_gel.spct, plot.qty = "absorbance") + geom_line()
 ```
 
-In the case of `ggplot.object_spct()` three values (`"reflectance"`,
-`"transmittance"` and `"all"` are accepted. Passing `"all"` as argument
-results in the spectral data being molten into a long form, using
-`value` and `variable` as value and key columns, respectively. The
-column `variable` has three levels `Tfr`, `Rfr` and `Afr` indexing the
-`Tfr` and `Rfr` from the `object_spct` object plus newly calculated
-absorptance values.
+In the case of `ggplot.object_spct()` four values (`"reflectance"`,
+`"transmittance"`, `"absorptance"`, `"absorbance"` and `"all"` are accepted.
+Passing `"all"` as argument results in the spectral data being molten into a
+long form, using `value` and `variable` as value and key columns, respectively.
+The column `variable` has three levels `Tfr`, `Rfr` and `Afr` indexing the `Tfr`
+and `Rfr` from the `object_spct` object plus newly calculated absorptance
+values.
+
+```{r}
+ggplot(Ler_leaf.spct, aes(fill = variable)) +
+  geom_area() +
+  scale_fill_grey(name = "", end = 0.5, start = 0.8)
+```
 
 This parameter has a default value that can be modified through option
 `"photobiology.filter.qty"`. Package 'photobiology' defines convenience
@@ -700,7 +708,9 @@ The examples that follow, apply with minimal changes to `stat_peaks()`,
 `stat_valleys()`, `stat_find_wls()` and `stat_find_qtys()`.
 
 ```{r}
-ggplot(sun.spct) + geom_line() + stat_peaks(color = "red")
+ggplot(sun.spct) + 
+  geom_line() + 
+  stat_peaks(color = "red")
 ```
 
 Because of the conversion, the location of maxima and minima when an
@@ -708,20 +718,26 @@ irradiance or response spectrum is expressed in photon- vs. energy-based
 units may differ. This is expected and not a bug.
 
 ```{r}
-ggplot(sun.spct, unit.out = "photon") + geom_line() + stat_peaks(color = "red")
+ggplot(sun.spct, unit.out = "photon") + 
+  geom_line() + 
+  stat_peaks(color = "red")
 ```
 
 The complement to `stat_peaks()` is `stat_valleys`.
 
 ```{r}
-ggplot(sun.spct) + geom_line() + stat_valleys(color = "blue")
+ggplot(sun.spct) + 
+  geom_line() + 
+  stat_valleys(color = "blue")
 ```
 
 Stats `stat_find_wls()` and `stat_find_qtys()` are another complementary
 pair. The default target, used in this example, is the half maximum.
 
 ```{r}
-ggplot(yellow_gel.spct) + geom_line() + stat_find_wls(color = "orange")
+ggplot(yellow_gel.spct) + 
+  geom_line() + 
+  stat_find_wls(color = "orange")
 ```
 
 One of the values calculated and mapped is colour as seen by humans
@@ -732,15 +748,18 @@ correct colours are displayed using the colour definitions in the
 calculated data instead of a palette.
 
 ```{r}
-ggplot(sun.spct) + geom_line() + 
-  stat_peaks(shape = 21, color = "black") + scale_fill_identity()
+ggplot(sun.spct) + 
+  geom_line() + 
+  stat_peaks(shape = 21, color = "black") +
+  scale_fill_identity()
 ```
 
 We can use any of the aesthetics affecting the default *geom*,
 `"point"`, and also with other \_geom_s.
 
 ```{r}
-ggplot(sun.spct) + geom_line() + 
+ggplot(sun.spct) + 
+  geom_line() + 
   stat_peaks(span = 35, shape = 4, color = "red", size = 2) +
   stat_peaks(span = 35, color = "red", geom = "rug", sides = "b")
 ```
@@ -751,7 +770,8 @@ or both. If we want to have the bottom edge of the label 0.01 *y*-data
 units above its natural position we can use.
 
 ```{r}
-ggplot(sun.spct) + geom_line() + 
+ggplot(sun.spct) + 
+  geom_line() + 
   stat_peaks(geom = "text", 
              span = 35,
              color = "red", 
@@ -770,7 +790,8 @@ variable `BW.color` which is set to `"white"` or `"white"` for maximum
 contrast with the computed variable `fill`.
 
 ```{r}
-ggplot(sun.spct) + geom_line() + 
+ggplot(sun.spct) + 
+  geom_line() + 
   stat_peaks(shape = 21, 
              span = 35, 
              size = 2) + 
@@ -788,7 +809,8 @@ Using a larger number as argument to span reduces the number of peaks
 detected.
 
 ```{r}
-ggplot(sun.spct) + geom_line() + 
+ggplot(sun.spct) + 
+  geom_line() + 
   stat_peaks(shape = 21, 
              span = 35, 
              size = 2) + 
@@ -809,7 +831,8 @@ of a local one. In this case we use geoms `"vline"` and `"hline"` taking
 advantage that suitable aesthetics are set by the stats.
 
 ```{r}
-ggplot(sun.spct) + geom_line() + 
+ggplot(sun.spct) + 
+  geom_line() + 
   stat_peaks(span = NULL, geom = "vline", linetype = "dotted", color = "red") +
   stat_peaks(span = NULL, geom = "hline", linetype = "dotted", color = "red")
 ```
@@ -820,7 +843,8 @@ changed to give to a label giving the *y*-value at the peak. We cannot
 pass `nudge_y` directly, we need to the nudge as a `position`.
 
 ```{r}
-ggplot(sun.spct) + geom_line() + 
+ggplot(sun.spct) + 
+  geom_line() + 
   stat_peaks(shape = 21, span = 35, size = 2) + 
   stat_label_peaks(aes(label = after_stat(y.label)),
                    span = 35, geom = "label", size = 3,
@@ -831,7 +855,8 @@ ggplot(sun.spct) + geom_line() +
 ```
 
 ```{r}
-ggplot(sun.spct) + geom_line() + 
+ggplot(sun.spct) + 
+  geom_line() + 
   stat_valleys(shape = 21, 
                span = 35, 
                size = 2) + 
@@ -851,7 +876,8 @@ has additional parameters to which we need to pass arguments to get a
 satisfactory positioning of labels.
 
 ```{r}
-ggplot(sun.spct) + geom_line() + 
+ggplot(sun.spct) + 
+  geom_line() + 
   stat_peaks(shape = 21, span = 35, size = 2) + 
   stat_label_peaks(segment.colour = "black", 
                    span = 35, geom = "label_repel", size = 3,
@@ -866,7 +892,8 @@ ggplot(sun.spct) + geom_line() +
 ```
 
 ```{r}
-ggplot(sun.spct) + geom_line() + 
+ggplot(sun.spct) + 
+  geom_line() + 
   stat_valleys(shape = 21, span = 35, size = 2) + 
   stat_label_valleys(segment.colour = "black", 
                      span = 35, geom = "label_repel", size = 3,
@@ -885,7 +912,8 @@ As *aesthetics* can use values computed on-the-fly we can even use
 text.
 
 ```{r}
-ggplot(sun.spct) + geom_line() + 
+ggplot(sun.spct) + 
+  geom_line() + 
   stat_peaks(span = NULL, color = "red") +
   stat_peaks(span = NULL, geom = "text", vjust = -0.5, color = "red", 
              aes(label = paste(after_stat(y.label), "at", after_stat(x.label), "nm"))) +
@@ -897,7 +925,8 @@ can also choose to use different spans as demonstrated here, resulting
 in more maxima being marked by points than labelled with text.
 
 ```{r}
-ggplot(sun.spct) + geom_line() + 
+ggplot(sun.spct) + 
+  geom_line() + 
   stat_peaks(span = 21, geom = "point", colour = "red") +
   stat_valleys(span = 21, geom = "point", colour = "blue") +
   stat_peaks(span = 51, geom = "text", colour = "red", 
@@ -913,8 +942,9 @@ searched and labels generated once for each group, in this case each
 *facet*.
 
 ```{r}
-ggplot(two_suns.spct) + aes(color = spct.idx) +
-  geom_line() + ylim(NA, 0.9) +
+ggplot(two_suns.spct, aes(color = spct.idx)) +
+  geom_line() +
+  ylim(NA, 0.9) +
   stat_peaks(span = NULL, color = "black") +
   stat_peaks(span = NULL, geom = "text", vjust = -0.5, size = 3, 
              color = "black", 
@@ -1667,6 +1697,14 @@ ggplot(sun.spct) +
   geom_line()
 ```
 
+The wavelength range of the guide can be constrained.
+
+```{r}
+ggplot(sun.spct) + 
+  wl_guide(alpha = 0.4, range = c(400, 700)) +
+  geom_line()
+```
+
 ```{r}
 ggplot(sun.spct) + 
   wl_guide(ymax = -0.025) +
@@ -1710,7 +1748,26 @@ color_chart(grep("blue", colors(), value = TRUE), ncol = 5, text.size = 4)
   ggtitle("Reddish colors", subtitle = "Labels: wavelength (nm)")
 ```
 
-## Changing the default arguments
+## Changing defaults
+
+### Using `options` to change default arguments
+
+After evaluation of `photon_as_default()`, a new default is in effect,
+but we can override it with an explicit argument if needed.
+
+```{r}
+photon_as_default()
+ggplot(sun.spct) + geom_line()
+ggplot(sun.spct, unit.out = "energy") + geom_line()
+```
+
+This new default will remain active for the rest of the R session,
+unless changed. We can easily either unset this default, or all
+photobiology-package related user set defaults.
+
+```{r}
+unset_user_defaults()
+```
 
 We can disable the use of symbols in axis labels by passing `axis.symbols = FALSE` each time we call a scale.
 
@@ -1733,3 +1790,10 @@ ggplot(sun.spct) +
 
 set_axis_symbols_default(old.axis.symbols) # optionally restore
 ```
+
+### Using 'ggplot2' themes
+
+When used under 'ggplot2' (>= 4.0.0) the geom element of themes, added in this
+version of 'ggplot2' is supported by the geoms defined in 'ggspectra', but not
+yet fully. All theme elements existing in 'ggplot2' (< 4.0.0) are supported as
+closely as possible as in related _geoms_ from 'ggplot2'.

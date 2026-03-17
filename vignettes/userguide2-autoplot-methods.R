@@ -26,7 +26,12 @@ summary(sun_evening.mspct)
 theme_set(theme_bw(10))
 
 ## -----------------------------------------------------------------------------
+# the classes
 spct_classes()
+
+## -----------------------------------------------------------------------------
+# autoplot methods for spectra
+grep("_spct*$", methods("autoplot"), value = TRUE)
 
 ## -----------------------------------------------------------------------------
 autoplot(sun.spct)
@@ -38,22 +43,36 @@ autoplot(sun.spct, unit.out = "photon")
 autoplot(sun.spct, geom = "spct")
 
 ## -----------------------------------------------------------------------------
+autoplot(sun.spct, geom = c("spct", "line"))
+
+## -----------------------------------------------------------------------------
 autoplot(sun_evening.spct)
 
 ## -----------------------------------------------------------------------------
+autoplot(sun_evening.spct, idfactor = "Time")
+
+## -----------------------------------------------------------------------------
+# the classes
 mspct_classes()
+
+## -----------------------------------------------------------------------------
+# autoplot methods for collections of spectra
+grep("_mspct*$", methods("autoplot"), value = TRUE)
 
 ## -----------------------------------------------------------------------------
 autoplot(sun_evening.mspct)
 
 ## -----------------------------------------------------------------------------
-autoplot(sun_evening.mspct, idfactor = "Spectra")
+autoplot(sun_evening.mspct, idfactor = "Time")
 
 ## -----------------------------------------------------------------------------
 autoplot(sun_evening.spct, facets = TRUE)
 
 ## -----------------------------------------------------------------------------
 autoplot(sun_evening.mspct, facets = 2)
+
+## -----------------------------------------------------------------------------
+autoplot(sun_evening.mspct, geom = "spct", facets = 2)
 
 ## -----------------------------------------------------------------------------
 p1 <- autoplot(sun.spct)
@@ -73,6 +92,9 @@ autoplot(sun.spct, w.band = NULL)
 
 ## ----eval=FALSE---------------------------------------------------------------
 # set_w.band_default(w.band = Plant_bands())
+
+## -----------------------------------------------------------------------------
+autoplot(sun.spct, geom = "spct", norm = "max")
 
 ## -----------------------------------------------------------------------------
 autoplot(sun_evening.mspct, plot.data = "mean")
@@ -145,7 +167,7 @@ getTimeUnit(sun.daily.spct)
 autoplot(sun.daily.spct)
 
 ## -----------------------------------------------------------------------------
-autoplot(sun_evening.spct, facets = 3) +
+autoplot(sun_evening.spct, facets = 2) +
   geom_vline(xintercept = c(400, 700), linetype = "dashed")
 
 ## -----------------------------------------------------------------------------
@@ -167,15 +189,19 @@ autoplot(yellow_gel.spct, plot.qty = "absorbance", wls.target = 2,
 # autoplot(yellow_gel.spct, plot.qty = "absorptance", annotations = c("-", "peaks"))
 
 ## -----------------------------------------------------------------------------
-autoplot(sun.spct) + geom_spct(fill = color_of(sun.spct)) + 
-  geom_spct(data = yellow_gel.spct * sun.spct, color = "black", 
-            fill = color_of(yellow_gel.spct * sun.spct))
+autoplot(sun.spct, 
+         w.band = UV_bands("CIE"), 
+         geom = c("spct", "line"), 
+         range = c(280, 400),
+         unit.out = "photon") +
+  geom_vline(xintercept = c(280, 315, 340, 400), linetype = "dotted")
 
 ## -----------------------------------------------------------------------------
 autoplot(yellow_gel.spct, annotations = c("+", "boundaries"))
 
 ## -----------------------------------------------------------------------------
-autoplot(white_led.raw_spct, annotations = c("+", "boundaries"))
+autoplot(white_led.raw_spct, 
+         annotations = list(c("+", "boundaries"), c("-", "peaks")))
 
 ## ----eval=FALSE, message = FALSE----------------------------------------------
 # autoplot(white_led.raw_spct[ , c("w.length", "counts_1")],
@@ -183,7 +209,7 @@ autoplot(white_led.raw_spct, annotations = c("+", "boundaries"))
 
 ## ----eval=FALSE---------------------------------------------------------------
 # autoplot(white_led.raw_spct[ , c("w.length", "counts_1", "counts_3")],
-#      annotations = c("+", "boundaries"))
+#      annotations = list(c("+", "boundaries"), c("-", "peaks")))
 
 ## ----eval=FALSE---------------------------------------------------------------
 # # Not run so as to pass CRAN checks!!
@@ -210,8 +236,8 @@ autoplot(PAR(), range = c(200, 1000), geom = "spct",
          unit.in = "photon", unit.out = "energy")
 
 ## -----------------------------------------------------------------------------
-autoplot(CIE(), range = CIE(), annotations = c("-", "color.guide"))
+autoplot(CIE(), geom = "spct", annotations = c("-", "color.guide"))
 
 ## -----------------------------------------------------------------------------
-autoplot(DNA_N(), range = c(270, 420), annotations = c("-", "color.guide"))
+autoplot(DNA_N(),  geom = "spct", annotations = c("-", "color.guide"))
 
