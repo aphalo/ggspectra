@@ -171,23 +171,23 @@ ggplot(sun.spct) +
   \code{\link[photobiology]{fast_color_of_wl}}, which are used in the
   implementation.
 
-Other stats functions: 
-\code{\link{stat_color}()},
-\code{\link{stat_find_qtys}()},
-\code{\link{stat_find_wls}()},
-\code{\link{stat_label_peaks}()},
-\code{\link{stat_peaks}()},
-\code{\link{stat_spikes}()},
-\code{\link{stat_wb_box}()},
-\code{\link{stat_wb_column}()},
-\code{\link{stat_wb_contribution}()},
-\code{\link{stat_wb_hbar}()},
-\code{\link{stat_wb_irrad}()},
-\code{\link{stat_wb_label}()},
-\code{\link{stat_wb_mean}()},
-\code{\link{stat_wb_relative}()},
-\code{\link{stat_wb_sirrad}()},
-\code{\link{stat_wb_total}()},
-\code{\link{stat_wl_summary}()}
+Other stats functions:
+\code{\link[=stat_color]{stat_color()}},
+\code{\link[=stat_find_qtys]{stat_find_qtys()}},
+\code{\link[=stat_find_wls]{stat_find_wls()}},
+\code{\link[=stat_label_peaks]{stat_label_peaks()}},
+\code{\link[=stat_peaks]{stat_peaks()}},
+\code{\link[=stat_spikes]{stat_spikes()}},
+\code{\link[=stat_wb_box]{stat_wb_box()}},
+\code{\link[=stat_wb_column]{stat_wb_column()}},
+\code{\link[=stat_wb_contribution]{stat_wb_contribution()}},
+\code{\link[=stat_wb_hbar]{stat_wb_hbar()}},
+\code{\link[=stat_wb_irrad]{stat_wb_irrad()}},
+\code{\link[=stat_wb_label]{stat_wb_label()}},
+\code{\link[=stat_wb_mean]{stat_wb_mean()}},
+\code{\link[=stat_wb_relative]{stat_wb_relative()}},
+\code{\link[=stat_wb_sirrad]{stat_wb_sirrad()}},
+\code{\link[=stat_wb_total]{stat_wb_total()}},
+\code{\link[=stat_wl_summary]{stat_wl_summary()}}
 }
 \concept{stats functions}

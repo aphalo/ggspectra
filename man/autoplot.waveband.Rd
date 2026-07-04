@@ -156,14 +156,14 @@ autoplot(waveband(c(400, 500)), geom = "spct")
 \code{\link{autoplot.response_spct}},
   \code{\link[photobiology]{waveband}}.
 
-Other autoplot methods: 
-\code{\link{autoplot.calibration_spct}()},
-\code{\link{autoplot.cps_spct}()},
-\code{\link{autoplot.filter_spct}()},
-\code{\link{autoplot.object_spct}()},
-\code{\link{autoplot.raw_spct}()},
-\code{\link{autoplot.reflector_spct}()},
-\code{\link{autoplot.response_spct}()},
-\code{\link{autoplot.source_spct}()}
+Other autoplot methods:
+\code{\link[=autoplot.calibration_spct]{autoplot.calibration_spct()}},
+\code{\link[=autoplot.cps_spct]{autoplot.cps_spct()}},
+\code{\link[=autoplot.filter_spct]{autoplot.filter_spct()}},
+\code{\link[=autoplot.object_spct]{autoplot.object_spct()}},
+\code{\link[=autoplot.raw_spct]{autoplot.raw_spct()}},
+\code{\link[=autoplot.reflector_spct]{autoplot.reflector_spct()}},
+\code{\link[=autoplot.response_spct]{autoplot.response_spct()}},
+\code{\link[=autoplot.source_spct]{autoplot.source_spct()}}
 }
 \concept{autoplot methods}

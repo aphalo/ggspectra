@@ -15,8 +15,8 @@ Description: Additional annotations, stats, geoms and scales for plotting
     stored in objects of classes defined in package 'photobiology'. Part of the 
     'r4photobiology' suite, Aphalo P. J. (2015) <doi:10.19232/uv4pb.2015.1.14>.
 License: GPL (>= 2)
-LazyLoad: TRUE
-ByteCompile: TRUE
+LazyLoad: true
+ByteCompile: true
 Depends:
     R (>= 4.1.0),
     photobiology (>= 0.14.2),
@@ -38,5 +38,5 @@ URL: https://docs.r4photobiology.info/ggspectra/,
     https://github.com/aphalo/ggspectra/
 BugReports: https://github.com/aphalo/ggspectra/issues/
 Encoding: UTF-8
-RoxygenNote: 7.3.3
 VignetteBuilder: knitr
+Config/roxygen2/version: 8.0.0

@@ -264,14 +264,14 @@ autoplot(Ler_leaf.spct, plot.qty = "transmittance")
   \code{\link[photobiologyWavebands]{photobiologyWavebands-package}} and
   \code{\link[ggplot2]{autoplot}}
 
-Other autoplot methods: 
-\code{\link{autoplot.calibration_spct}()},
-\code{\link{autoplot.cps_spct}()},
-\code{\link{autoplot.filter_spct}()},
-\code{\link{autoplot.raw_spct}()},
-\code{\link{autoplot.reflector_spct}()},
-\code{\link{autoplot.response_spct}()},
-\code{\link{autoplot.source_spct}()},
-\code{\link{autoplot.waveband}()}
+Other autoplot methods:
+\code{\link[=autoplot.calibration_spct]{autoplot.calibration_spct()}},
+\code{\link[=autoplot.cps_spct]{autoplot.cps_spct()}},
+\code{\link[=autoplot.filter_spct]{autoplot.filter_spct()}},
+\code{\link[=autoplot.raw_spct]{autoplot.raw_spct()}},
+\code{\link[=autoplot.reflector_spct]{autoplot.reflector_spct()}},
+\code{\link[=autoplot.response_spct]{autoplot.response_spct()}},
+\code{\link[=autoplot.source_spct]{autoplot.source_spct()}},
+\code{\link[=autoplot.waveband]{autoplot.waveband()}}
 }
 \concept{autoplot methods}
