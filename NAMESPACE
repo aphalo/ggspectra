@@ -174,7 +174,9 @@ import(ggplot2)
 import(ggrepel)
 import(photobiology)
 import(photobiologyWavebands)
-importFrom(ggplot2,autoplot)
-importFrom(ggplot2,ggplot)
+importFrom(ggplot2,
+  autoplot,
+  ggplot
+)
 importFrom(graphics,plot)
 importFrom(rlang,.data)

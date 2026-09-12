@@ -953,28 +953,35 @@ ggplot(two_suns.spct, aes(color = spct.idx)) +
   facet_grid(rows = vars(spct.idx))
 ```
 
-An additional statistics, `stat_spikes()`, returns the same computed
-variables as `stat_peaks()` and `stat_valleys()` but detects only very
-narrow peaks and valleys, usually called spikes. They are common in
-Raman spectra but can also appear occasionally in any measurement with
-array spectrometers when integration times are long or if some pixels in
-an array detector are defective (e.g., hot pixels and dead pixels).
-Usually spikes are considered "noise" to be removed, but occasionally we
-may want to highlight in a plot the spikes. (Spikes can be replaced by values
-interpolated from neighbours with function `despike()` from package 
-'photobiology'.)
+An additional statistics, `stat_spikes()`, returns the same computed variables
+as `stat_peaks()` and `stat_valleys()` but detects only very narrow peaks and
+valleys, usually called spikes. They are common in Raman spectra but can also
+appear occasionally in any measurement with array spectrometers when integration
+times are long or if some pixels in an array detector are defective (e.g., hot
+pixels and dead pixels). Usually spikes are considered "noise" to be removed,
+but occasionally we may want to highlight in a plot the spikes. (Spikes can be
+replaced by values interpolated from neighbours with function `despike()` from
+package 'photobiology'.)
 
 ```{r}
 ggplot(white_led.raw_spct, aes(w.length, counts_3)) + 
   geom_line() + 
-  stat_spikes(color = "red", z.threshold = 8, max.spike.width = 7)
+  stat_spikes(colour = "red",
+              height.threshold = 30, spike.direction = "up")
 ```
 
 ```{r}
-ggplot(despike(white_led.raw_spct, z.threshold = 8, max.spike.width = 7), 
+ggplot(despike(white_led.raw_spct, 
+               height.threshold = 30, spike.direction = "up"), 
        aes(w.length, counts_3)) + 
   geom_line() + 
-  stat_spikes(color = "red", z.threshold = 8, max.spike.width = 7)
+  stat_spikes(color = "red", height.threshold = 30, spike.direction = "up")
+```
+
+```{r}
+ggplot(white_led.raw_spct, aes(w.length, counts_3)) + 
+  geom_line() + 
+  stat_spikes(geom = "label", height.threshold = 30, spike.direction = "up")
 ```
 
 ## Color from wavelength

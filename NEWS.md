@@ -4,6 +4,15 @@ editor_options:
     wrap: 72
 ---
 
+# ggspectra 0.4.1
+
+- Breaking: The algorithm used to find spikes implemented in 'photobiology' 
+(< 0.14.3) would detect steep slopes as spikes and had to be replaced. The new 
+algorithm uses a different parametrization, making it code breaking. 
+Calls to `stat_spikes()` are affected. Use of the old parametrization
+results in a warning if an argument to `max.spike.width` is passed, and uses the
+new defaults, which will most likely result in changes to the rendered plot.
+
 # ggspectra 0.4.0
 
 One enhancement in this release is support in `autoplot()` methods of `range`

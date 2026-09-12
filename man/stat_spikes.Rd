@@ -10,8 +10,11 @@ stat_spikes(
   geom = "point",
   position = "identity",
   ...,
+  height.threshold = 10,
   z.threshold = 9,
-  max.spike.width = 8,
+  k = 20,
+  spike.direction = "both",
+  max.spike.width = NA,
   chroma.type = "CMF",
   label.fmt = "\%.3g",
   x.label.fmt = label.fmt,
@@ -45,11 +48,20 @@ on this layer}
 include aesthetics whose values you want to set, not map. See
 \code{\link[ggplot2]{layer}} for more details.}
 
-\item{z.threshold}{numeric Modified Z values larger than \code{z.threshold}
-are considered to be spikes.}
+\item{height.threshold}{numeric The minimum height of spikes expressed
+relative to the median amplitude of the baseline local variation of
+\code{x}.}
 
-\item{max.spike.width}{integer Wider regions with high Z values are not detected as
-spikes.}
+\item{z.threshold}{numeric Modified local \eqn{Z} values larger than
+\code{z.threshold} are detected as boundaries of spikes.}
+
+\item{k}{integer width of median window used for smoothing; must be odd}
+
+\item{spike.direction}{character Controls the direction of spikes to be
+detected. Accepted arguments are \code{"up"}, \code{"down"},
+\code{"both"}.}
+
+\item{max.spike.width}{integer No longer in use.}
 
 \item{chroma.type}{character one of "CMF" (color matching function) or "CC"
 (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.}
@@ -139,43 +151,104 @@ Required by the statistic and need to be set with \code{aes()}.
 }
 }
 
+\section{Spike detection}{
+
+
+  Spikes are detected based on a modified \eqn{Z} score calculated
+  from the differenced spectrum. The \eqn{Z} threshold used should be
+  adjusted to the characteristics of the input and desired sensitivity. The
+  lower the threshold the more stringent the test becomes, with shorter
+  spikes being detected.
+
+  \strong{The algorithms assume a consistent step size for the underlying
+  independent variable, e.g., wavelength or time, and should not be applied
+  if the data do not fulfil this assumption, at least approximately. As
+  \code{find_spkikes()} operates on a single vector, checking this remains
+  the responsibility of calling functions or methods such as
+  \code{\link[photobiology]{spikes}()} and \code{\link[photobiology]{despike}()}.}
+
+  The algorithm uses running differences to detect abrupt changes in value,
+  compared to an estimate of the baseline variation of the differences,
+  approximating a baseline \eqn{Z} from MAD and a baseline value from the
+  median differences. Currently, a single estimate of MAD is used but running
+  medians, when possible, as baseline. This comparison detects running
+  differences that are unusually large, in most cases signalling a transition
+  between values near the baseline and far from it, in both directions.
+
+  Transitions into- and out of spikes are distinguished based on the median
+  of the non-differenced values, as a descriptor of the data baseline. As for
+  the median of the differences, a running median is used when possible.
+
+  This function thus detects the start and end of each spike, and
+  distinguishes upward and downward spikes.
+
+  \code{k} is the width in number of observations of the window used for
+  running median smoothing to extract the baseline. A value several times the
+  width of the broader spike but narrow enough to track broader peaks needs
+  to be manually set in most cases.
+
+  With \code{na.rm = TRUE}, \code{NA} values are omitted before searching for
+  spikes and set to \code{0L} in the returned vector.
+
+  If all spikes are guaranteed to be one observation-wide and either going up
+  or down from the baseline, it is possible to detect them based purely on
+  the \code{z.threshold} by passing \code{height.threshold = NA} and either
+  \code{spike.direction = "up"} or \code{spike.direction = "down"}, which
+  ensures very fast computation.
+
+  Parameters of the algorithm need to be adjusted depending on the data, so
+  inspection of returned values is needed together with adjustment by trial
+  and error of suitable values for \code{z.threshold},
+  \code{height.threshold}, and \code{k}.
+
+}
+
 \examples{
 
 # ggplot() methods for spectral objects set a default mapping for x and y.
 
 # two spurious(?) spikes
 ggplot(sun.spct) +
-  geom_line() +
-  stat_spikes(colour = "red", alpha = 0.3)
+  stat_spikes(colour = "red") +
+  geom_line()
 
 # no spikes detected
 ggplot(sun.spct) +
-  geom_line() +
-  stat_spikes(colour = "red", alpha = 0.3,
-              max.spike.width = 3,
-              z.threshold = 12)
+  stat_spikes(colour = "red", z.threshold = 12) +
+  geom_line()
 
 # small noise spikes detected
 ggplot(white_led.raw_spct) +
-  geom_line() +
-  stat_spikes(colour = "red", alpha = 0.3)
+  stat_spikes(colour = "red") +
+  geom_line()
 
 ggplot(white_led.raw_spct) +
-  geom_line() +
-  stat_spikes(colour = "red", alpha = 0.3) +
+  stat_spikes(colour = "red") +
   stat_spikes(geom = "text", colour = "red", check_overlap = TRUE,
-             vjust = -0.5, label.fmt = "\%3.0f nm")
+             vjust = -0.5, label.fmt = "\%3.0f nm") +
+  geom_line()
 
+# noisy data
 ggplot(white_led.raw_spct, aes(w.length, counts_2)) +
+  stat_spikes(colour = "red",
+              z.threshold = 10) +
+  geom_line()
+
+# with height.threshold to ignore minor spikes
+ggplot(white_led.raw_spct, aes(w.length, counts_2)) +
+  stat_spikes(colour = "red", height.threshold = 15, z.threshold = 10) +
+  geom_line()
+
+# colour from wavelengths (here black for UV and NIR)
+ggplot(white_led.raw_spct, aes(w.length, counts_2)) +
+  stat_spikes(mapping = aes(colour = after_stat(wl.color)),
+              height.threshold = 15, z.threshold = 10) +
   geom_line() +
-  stat_spikes(colour = "red", alpha = 0.3,
-              max.spike.width = 3,
-              z.threshold = 12)
+  scale_colour_identity()
 
 }
 \seealso{
-\code{\link[photobiology]{find_spikes}}, which is used internally,
-  for a description of the algorithm used.
+\code{\link[photobiology]{find_spikes}}, which is used internally.
 
 Other stats functions:
 \code{\link[=stat_color]{stat_color()}},

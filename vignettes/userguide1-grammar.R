@@ -426,13 +426,20 @@ ggplot(two_suns.spct, aes(color = spct.idx)) +
 ## -----------------------------------------------------------------------------
 ggplot(white_led.raw_spct, aes(w.length, counts_3)) + 
   geom_line() + 
-  stat_spikes(color = "red", z.threshold = 8, max.spike.width = 7)
+  stat_spikes(colour = "red",
+              height.threshold = 30, spike.direction = "up")
 
 ## -----------------------------------------------------------------------------
-ggplot(despike(white_led.raw_spct, z.threshold = 8, max.spike.width = 7), 
+ggplot(despike(white_led.raw_spct, 
+               height.threshold = 30, spike.direction = "up"), 
        aes(w.length, counts_3)) + 
   geom_line() + 
-  stat_spikes(color = "red", z.threshold = 8, max.spike.width = 7)
+  stat_spikes(color = "red", height.threshold = 30, spike.direction = "up")
+
+## -----------------------------------------------------------------------------
+ggplot(white_led.raw_spct, aes(w.length, counts_3)) + 
+  geom_line() + 
+  stat_spikes(geom = "label", height.threshold = 30, spike.direction = "up")
 
 ## -----------------------------------------------------------------------------
 ggplot(sun.spct) + 

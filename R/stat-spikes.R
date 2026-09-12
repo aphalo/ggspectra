@@ -4,6 +4,7 @@
 #' Spikes can be either upwards or downwards from the baseline.
 #' \strong{Axis flipping is currently not supported.}
 #'
+#' @inheritParams photobiology::find_spikes height.threshold z.threshold k spike.direction
 #' @param mapping The aesthetic mapping, usually constructed with
 #'    \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be set
 #'    at the layer level if you are overriding the plot defaults.
@@ -24,10 +25,7 @@
 #'   \code{\link[ggplot2]{layer}} for more details.
 #' @param na.rm	a logical value indicating whether NA values should be
 #'   stripped before the computation proceeds.
-#' @param z.threshold numeric Modified Z values larger than \code{z.threshold}
-#'   are considered to be spikes.
-#' @param max.spike.width integer Wider regions with high Z values are not detected as
-#'   spikes.
+#' @param max.spike.width integer No longer in use.
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
 #'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param label.fmt,x.label.fmt,y.label.fmt character  strings giving a format
@@ -70,8 +68,9 @@
 #'   \item{y}{numeric, a spectral quantity}
 #' }
 #'
-#' @seealso \code{\link[photobiology]{find_spikes}}, which is used internally,
-#'   for a description of the algorithm used.
+#' @seealso \code{\link[photobiology]{find_spikes}}, which is used internally.
+#'
+#' @inheritSection photobiology::find_spikes Spike detection
 #'
 #' @details This stat uses \code{geom_point} by default as it is the geom most
 #'   likely to work well in almost any situation without need of tweaking. The
@@ -97,32 +96,42 @@
 #'
 #' # two spurious(?) spikes
 #' ggplot(sun.spct) +
-#'   geom_line() +
-#'   stat_spikes(colour = "red", alpha = 0.3)
+#'   stat_spikes(colour = "red") +
+#'   geom_line()
 #'
 #' # no spikes detected
 #' ggplot(sun.spct) +
-#'   geom_line() +
-#'   stat_spikes(colour = "red", alpha = 0.3,
-#'               max.spike.width = 3,
-#'               z.threshold = 12)
+#'   stat_spikes(colour = "red", z.threshold = 12) +
+#'   geom_line()
 #'
 #' # small noise spikes detected
 #' ggplot(white_led.raw_spct) +
-#'   geom_line() +
-#'   stat_spikes(colour = "red", alpha = 0.3)
+#'   stat_spikes(colour = "red") +
+#'   geom_line()
 #'
 #' ggplot(white_led.raw_spct) +
-#'   geom_line() +
-#'   stat_spikes(colour = "red", alpha = 0.3) +
+#'   stat_spikes(colour = "red") +
 #'   stat_spikes(geom = "text", colour = "red", check_overlap = TRUE,
-#'              vjust = -0.5, label.fmt = "%3.0f nm")
+#'              vjust = -0.5, label.fmt = "%3.0f nm") +
+#'   geom_line()
 #'
+#' # noisy data
 #' ggplot(white_led.raw_spct, aes(w.length, counts_2)) +
+#'   stat_spikes(colour = "red",
+#'               z.threshold = 10) +
+#'   geom_line()
+#'
+#' # with height.threshold to ignore minor spikes
+#' ggplot(white_led.raw_spct, aes(w.length, counts_2)) +
+#'   stat_spikes(colour = "red", height.threshold = 15, z.threshold = 10) +
+#'   geom_line()
+#'
+#' # colour from wavelengths (here black for UV and NIR)
+#' ggplot(white_led.raw_spct, aes(w.length, counts_2)) +
+#'   stat_spikes(mapping = aes(colour = after_stat(wl.color)),
+#'               height.threshold = 15, z.threshold = 10) +
 #'   geom_line() +
-#'   stat_spikes(colour = "red", alpha = 0.3,
-#'               max.spike.width = 3,
-#'               z.threshold = 12)
+#'   scale_colour_identity()
 #'
 #' @export
 #'
@@ -133,8 +142,11 @@ stat_spikes <- function(mapping = NULL,
                         geom = "point",
                         position = "identity",
                         ...,
+                        height.threshold = 10,
                         z.threshold = 9,
-                        max.spike.width = 8,
+                        k = 20,
+                        spike.direction = "both",
+                        max.spike.width = NA,
                         chroma.type = "CMF",
                         label.fmt = "%.3g",
                         x.label.fmt = label.fmt,
@@ -145,6 +157,11 @@ stat_spikes <- function(mapping = NULL,
                         na.rm = FALSE,
                         show.legend = FALSE,
                         inherit.aes = TRUE) {
+  if (!is.na(max.spike.width)) {
+    warning("The spike detection algorithm has been updated.\n",
+            "Parameter 'max.spike.width' has been replaced.\n",
+            "Please, update your code.")
+  }
   if (!(is.function(x.label.transform) &&
         is.function(y.label.transform) &&
         is.function(x.colour.transform))) {
@@ -154,8 +171,10 @@ stat_spikes <- function(mapping = NULL,
   ggplot2::layer(
     stat = StatSpikes, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
-    params = list(z.threshold = z.threshold,
-                  max.spike.width = max.spike.width,
+    params = list(height.threshold = height.threshold,
+                  z.threshold = z.threshold,
+                  k = k,
+                  spike.direction = spike.direction,
                   chroma.type = chroma.type,
                   label.fmt = label.fmt,
                   x.label.fmt = x.label.fmt,
@@ -176,8 +195,10 @@ StatSpikes <-
   ggplot2::ggproto("StatSpikes", ggplot2::Stat,
                    compute_group = function(data,
                                             scales,
+                                            height.threshold,
                                             z.threshold,
-                                            max.spike.width,
+                                            k,
+                                            spike.direction,
                                             chroma.type,
                                             label.fmt,
                                             x.label.fmt,
@@ -188,14 +209,14 @@ StatSpikes <-
 
                      photobiology::check_wl_stepsize(data[["x"]])
 
-                     force(z.threshold)
-                     force(max.spike.width)
-
                      spikes.df <-
                        data[photobiology::find_spikes(data[["y"]],
                                                       x.is.delta = FALSE,
+                                                      height.threshold = height.threshold,
                                                       z.threshold = z.threshold,
-                                                      max.spike.width = max.spike.width),
+                                                      k = k,
+                                                      spike.direction = spike.direction,
+                                                      na.rm = FALSE),
                             , drop = FALSE]
                      spikes.df[["x.label"]] <-
                        sprintf(x.label.fmt, x.label.transform(spikes.df[["x"]]))
@@ -211,9 +232,7 @@ StatSpikes <-
                    default_aes = ggplot2::aes(label = after_stat(x.label),
                                               fill = after_stat(wl.color),
                                               xintercept = after_stat(x),
-                                              yintercept = after_stat(y),
-                                              hjust = 0.5,
-                                              vjust = 0.5),
+                                              yintercept = after_stat(y)),
                    required_aes = c("x", "y")
   )
 
