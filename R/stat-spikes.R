@@ -4,7 +4,7 @@
 #' Spikes can be either upwards or downwards from the baseline.
 #' \strong{Axis flipping is currently not supported.}
 #'
-#' @inheritParams photobiology::find_spikes height.threshold z.threshold k spike.direction
+#' @inheritParams photobiology::find_spikes height.threshold z.threshold k spike.direction max.spike.width
 #' @param mapping The aesthetic mapping, usually constructed with
 #'    \code{\link[ggplot2]{aes}} or \code{\link[ggplot2]{aes_}}. Only needs to be set
 #'    at the layer level if you are overriding the plot defaults.
@@ -25,7 +25,6 @@
 #'   \code{\link[ggplot2]{layer}} for more details.
 #' @param na.rm	a logical value indicating whether NA values should be
 #'   stripped before the computation proceeds.
-#' @param max.spike.width integer No longer in use.
 #' @param chroma.type character one of "CMF" (color matching function) or "CC"
 #'   (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.
 #' @param label.fmt,x.label.fmt,y.label.fmt character  strings giving a format
@@ -157,11 +156,6 @@ stat_spikes <- function(mapping = NULL,
                         na.rm = FALSE,
                         show.legend = FALSE,
                         inherit.aes = TRUE) {
-  if (!is.na(max.spike.width)) {
-    warning("The spike detection algorithm has been updated.\n",
-            "Parameter 'max.spike.width' has been replaced.\n",
-            "Please, update your code.")
-  }
   if (!(is.function(x.label.transform) &&
         is.function(y.label.transform) &&
         is.function(x.colour.transform))) {
@@ -216,6 +210,7 @@ StatSpikes <-
                                                       z.threshold = z.threshold,
                                                       k = k,
                                                       spike.direction = spike.direction,
+                                                      max.spike.width = max.spike.width,
                                                       na.rm = FALSE),
                             , drop = FALSE]
                      spikes.df[["x.label"]] <-

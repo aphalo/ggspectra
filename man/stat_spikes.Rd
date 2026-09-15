@@ -61,7 +61,8 @@ relative to the median amplitude of the baseline local variation of
 detected. Accepted arguments are \code{"up"}, \code{"down"},
 \code{"both"}.}
 
-\item{max.spike.width}{integer No longer in use.}
+\item{max.spike.width}{integer Sets an upper limit to the width in "pixels"
+of the features detected as spikes. \code{NA}, the default, sets no limit.}
 
 \item{chroma.type}{character one of "CMF" (color matching function) or "CC"
 (color coordinates) or a \code{\link[photobiology]{chroma_spct}} object.}
@@ -200,6 +201,11 @@ Required by the statistic and need to be set with \code{aes()}.
   inspection of returned values is needed together with adjustment by trial
   and error of suitable values for \code{z.threshold},
   \code{height.threshold}, and \code{k}.
+
+  The argument to parameter \code{max.spike.width} is used in a final stage
+  to discard spikes detected by the algorithms described above but considered
+  to be too wide (as a run of successive observations, i.e., detector pixels
+  in the case of array spectrometers).
 
 }
 
