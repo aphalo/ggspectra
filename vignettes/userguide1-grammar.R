@@ -430,16 +430,17 @@ ggplot(white_led.raw_spct, aes(w.length, counts_3)) +
               height.threshold = 30, spike.direction = "up")
 
 ## -----------------------------------------------------------------------------
+ggplot(white_led.raw_spct, aes(w.length, counts_3)) + 
+  geom_line() + 
+  stat_spikes(geom = "text", height.threshold = 30, spike.direction = "up",
+              colour = "red", vjust = -0.3, label.fmt = "%3.0f")
+
+## -----------------------------------------------------------------------------
 ggplot(despike(white_led.raw_spct, 
                height.threshold = 30, spike.direction = "up"), 
        aes(w.length, counts_3)) + 
   geom_line() + 
   stat_spikes(color = "red", height.threshold = 30, spike.direction = "up")
-
-## -----------------------------------------------------------------------------
-ggplot(white_led.raw_spct, aes(w.length, counts_3)) + 
-  geom_line() + 
-  stat_spikes(geom = "label", height.threshold = 30, spike.direction = "up")
 
 ## -----------------------------------------------------------------------------
 ggplot(sun.spct) + 

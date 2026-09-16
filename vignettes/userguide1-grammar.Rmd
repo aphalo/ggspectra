@@ -971,6 +971,19 @@ ggplot(white_led.raw_spct, aes(w.length, counts_3)) +
 ```
 
 ```{r}
+ggplot(white_led.raw_spct, aes(w.length, counts_3)) + 
+  geom_line() + 
+  stat_spikes(geom = "text", height.threshold = 30, spike.direction = "up",
+              colour = "red", vjust = -0.3, label.fmt = "%3.0f")
+```
+
+Method `despike()` from package 'photobiology' uses the same code to detect
+spikes as `stat_spikes()`, detecting spikes consistently with `stat_spikes()`
+when the same arguments are passed in the call. Method `despike()` replaces the
+observations detected as spikes with an interpolated value based on neighbouring
+observations.
+
+```{r}
 ggplot(despike(white_led.raw_spct, 
                height.threshold = 30, spike.direction = "up"), 
        aes(w.length, counts_3)) + 
@@ -978,11 +991,6 @@ ggplot(despike(white_led.raw_spct,
   stat_spikes(color = "red", height.threshold = 30, spike.direction = "up")
 ```
 
-```{r}
-ggplot(white_led.raw_spct, aes(w.length, counts_3)) + 
-  geom_line() + 
-  stat_spikes(geom = "label", height.threshold = 30, spike.direction = "up")
-```
 
 ## Color from wavelength
 
